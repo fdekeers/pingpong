@@ -100,6 +100,10 @@ def change_file(fpath):
                 new_packet["dst_ip"] = layers[json_key_ip][json_key_ip + ".dst"]
                 new_packet["dst_port"] = int(layers[json_key_tcp][json_key_tcp + ".dstport"])
 
+                # JV: Also include src so we can see what device initiates the traffic
+                new_packet["src_ip"] = layers[json_key_ip][json_key_ip + ".src"]
+                new_packet["src_port"] = int(layers[json_key_tcp][json_key_tcp + ".srcport"])
+
                 # Go through all HTTP fields and extract the ones that are needed
                 http_data = layers[json_key_http]
                 for http_key in http_data:
@@ -148,17 +152,6 @@ def change_file(fpath):
                     continue
 
                 new_packet["ts"] = layers[json_key_frame][json_key_frame_ts]
-
-                # Now extract and parse the packet comment
-                if (json_key_pkt_comment not in layers or
-                            json_key_frame_comment not in layers[json_key_pkt_comment]):
-                    print "WARNING: no packet comment found!" + frame_num
-                    continue
-
-                comment = layers[json_key_pkt_comment][json_key_frame_comment]
-                comment_data = json.loads(comment)
-                for key in comment_data:
-                    new_packet[str(key)] = str(comment_data[key])
 
                 # Create a unique key for each packet to keep consistent with ReCon
                 # Also good in case packets end up in different files
