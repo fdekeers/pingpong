@@ -43,17 +43,18 @@ def save_to_file(tbl_header, dictionary, filename_out):
 def main():
     """ Main function
     """
-	if len(sys.argv) < 5:
-		print "Usage: python", sys.argv[0], "<input_file> <output_file> <device_name> <mac_address>"
-		return
-	# Parse the file for the specified MAC address
-	time_freq = parse_json(sys.argv[1], sys.argv[4])
-	# Write statistics into file
-	save_to_file(sys.argv[3], time_freq, sys.argv[2])
-	print "====================================================================="
-	for time in time_freq.keys():
-		print time, " => ", time_freq[time]
-	print "====================================================================="
+    if len(sys.argv) < 5:
+        print "Usage: python", sys.argv[0], "<input_file> <output_file> <device_name> <mac_address>"
+        return
+    # Parse the file for the specified MAC address
+    time_freq = parse_json(sys.argv[1], sys.argv[4])
+    # Write statistics into file
+    save_to_file(sys.argv[3], time_freq, sys.argv[2])
+    print "====================================================================="
+    #for time in time_freq.keys():
+    for key in sorted(time_freq):
+        print key, " => ", time_freq[key]
+    print "====================================================================="
 
 
 # Convert JSON file containing DNS traffic to a map in which a hostname points to its set of associated IPs.
@@ -63,44 +64,44 @@ def parse_json(file_path, mac_address):
             file_path: path of the read file
             mac_address: MAC address of a device to analyze
     """
-	# Maps timestamps to frequencies of packets
-	time_freq = dict()
-	with open(file_path) as jf:
-		# Read JSON.
+    # Maps timestamps to frequencies of packets
+    time_freq = dict()
+    with open(file_path) as jf:
+        # Read JSON.
         # data becomes reference to root JSON object (or in our case json array)
-		data = json.load(jf)
-		# Loop through json objects in data
-		# Each entry is a pcap entry (request/response (packet) and associated metadata)
-		for p in data:
-			# p is a JSON object, not an index
-			layers = p[JSON_KEY_SOURCE][JSON_KEY_LAYERS]
-			# Get timestamp
-			frame = layers.get(JSON_KEY_FRAME, None)
-			date_time = frame.get(JSON_KEY_FRAME_TIME, None)
-     		# Get into the Ethernet address part
-			eth = layers.get(JSON_KEY_ETH, None)
-			# Skip any non DNS traffic
-			if eth is None:
-				print "[ WARNING: Packet has no ethernet address! ]"
-				continue
-		    # Get source and destination MAC addresses
-			src = eth.get(JSON_KEY_ETH_SRC, None)
-			dst = eth.get(JSON_KEY_ETH_DST, None)
-			# Get just the time part
-			date_time_obj = parser.parse(date_time)
-			# Remove the microsecond part
-			time_str = str(date_time_obj.time())[:8]
-			print str(time_str) + " - src:" + str(src) + " - dest:" + str(dst)
-			# Get and count the traffic for the specified MAC address
-			if src == mac_address or dst == mac_address:
-			    # Check if timestamp already exists in the map
-			    # If yes, then just increment the frequency value...
-			    if time_str in time_freq:
-			        time_freq[time_str] = time_freq[time_str] + 1
-			    else: # If not, then put the value one there
-			        time_freq[time_str] = 1
-	return time_freq
+        data = json.load(jf)
+        # Loop through json objects in data
+        # Each entry is a pcap entry (request/response (packet) and associated metadata)
+        for p in data:
+            # p is a JSON object, not an index
+            layers = p[JSON_KEY_SOURCE][JSON_KEY_LAYERS]
+            # Get timestamp
+            frame = layers.get(JSON_KEY_FRAME, None)
+            date_time = frame.get(JSON_KEY_FRAME_TIME, None)
+            # Get into the Ethernet address part
+            eth = layers.get(JSON_KEY_ETH, None)
+            # Skip any non DNS traffic
+            if eth is None:
+                print "[ WARNING: Packet has no ethernet address! ]"
+                continue
+            # Get source and destination MAC addresses
+            src = eth.get(JSON_KEY_ETH_SRC, None)
+            dst = eth.get(JSON_KEY_ETH_DST, None)
+            # Get just the time part
+            date_time_obj = parser.parse(date_time)
+            # Remove the microsecond part
+            time_str = str(date_time_obj.time())[:8]
+            print str(time_str) + " - src:" + str(src) + " - dest:" + str(dst)
+            # Get and count the traffic for the specified MAC address
+            if src == mac_address or dst == mac_address:
+                # Check if timestamp already exists in the map
+                # If yes, then just increment the frequency value...
+                if time_str in time_freq:
+                    time_freq[time_str] = time_freq[time_str] + 1
+                else: # If not, then put the value one there
+                    time_freq[time_str] = 1
+    return time_freq
 
 if __name__ == '__main__':
-	main()
+    main()
 
