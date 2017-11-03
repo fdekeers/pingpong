@@ -18,7 +18,14 @@ import tldextract
 import networkx as nx
 import sys
 
+import parse_dns
+
 def parse_json(file_path):
+
+    maps_tuple = parse_dns.parse_json_dns("./dns.json")
+    hn_ip_map = maps_tuple[0]
+    ip_hn_map = maps_tuple[1]
+
     # Init empty graph
     G = nx.DiGraph() 
     with open(file_path) as jf:
@@ -27,10 +34,18 @@ def parse_json(file_path):
         data = json.load(jf)
         # Loop through json objects in data
         for k in data:
+            #print "k is:",k
             # Fetch source and destination IPs.
             # Each of these become a Node in the Graph.
             src_ip = data[k]["src_ip"]
             dst_ip = data[k]["dst_ip"]
+
+            if dst_ip in ip_hn_map:
+                # hack to get first element in set
+                for e in ip_hn_map[dst_ip]:
+                    break
+                dst_ip = e
+
             ''' Graph construction '''
             # No need to check if the Nodes and/or Edges we add already exist:
             # NetworkX won't add already existing nodes/edges (except in the case of a MultiGraph or MultiDiGraph (see NetworkX doc)).

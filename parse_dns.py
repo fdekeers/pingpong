@@ -24,7 +24,7 @@ def main():
 	if len(sys.argv) < 2:
 		print "Usage: python", sys.argv[0], "input_file"
 		return
-	maps_tuple = parse_json(sys.argv[1])
+	maps_tuple = parse_json_dns(sys.argv[1])
 	
 	# print hostname to ip map
 	hn_ip_map = maps_tuple[0]
@@ -36,7 +36,7 @@ def main():
 	print "====================================================================="
 	
 	print " "
-	
+
 	# print ip to hostname map
 	ip_hn_map = maps_tuple[1]
 	for ip in ip_hn_map.keys():
@@ -49,7 +49,7 @@ def main():
 # Convert JSON file containing DNS traffic to a tuple with two maps.
 # Index 0 of the tuple is a map in which a hostname points to its set of associated IPs.
 # Index 1 of the tuple is a map in which an ip points to its set of associated hostnames.
-def parse_json(file_path):
+def parse_json_dns(file_path):
 	# Maps hostnames to IPs
 	host_ip_mappings = defaultdict(set)
 	# Maps ips to hostnames
