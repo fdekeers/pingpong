@@ -46,6 +46,46 @@ def main():
 			print "    -", hn
 	print "====================================================================="
 
+class DeviceDNSMap:
+	def __init__(self, mac_address):
+		# MAC address of device
+		self.mac = mac_address
+		# Maps an external IP to a list of (timestamp,hostname) tuples.
+		# Entries in the list should be interpreted as follows:
+		# the timestamp indicates WHEN this device mapped the given ip (key in dict) to the hostname.
+		self.ip_mappings = defaultdict(list)
+
+	def hostname_for_ip_at_time(self, ip, timestamp):
+		# Does device have a mapping for the given IP?
+		if not ip in self.ip_mappings:
+			return None
+		if not self.ip_mappings[ip]:
+			# If list of (timestamp,hostname) tuples is empty, there is no mapping to report.
+			return None
+		# Best fit mapping: the mapping immediately BEFORE timestamp parameter.
+		# Start with random pick (element 0).
+		best_fit = self.ip_mappings[ip][0]
+		for t in self.ip_mappings[ip]:
+			# t is a (timestamp,hostname) tuple
+			if t[0] < timestamp and t[0] > best_fit[0]:
+				# t is a better fit if it happened BEFORE the input timestamp
+				# and is LATER than the current best_fit
+				best_fit = t
+		return best_fit
+
+	def add_mapping(self, ip, timestamp_hostname_tuple):
+		self.ip_mappings[ip].add(timestamp_hostname_tuple)
+
+	# --------------------------------------------------------------------------
+	# Define eq and hash such that instances of the class can be used as keys in dictionaries.
+	# Equality is based on MAC as a MAC uniquely identifies the device.
+	def __eq__(self, another):
+    	return hasattr(another, 'mac') and self.mac == another.mac
+	def __hash__(self):
+		return hash(self.data)
+	# --------------------------------------------------------------------------
+
+
 # Convert JSON file containing DNS traffic to a tuple with two maps.
 # Index 0 of the tuple is a map in which a hostname points to its set of associated IPs.
 # Index 1 of the tuple is a map in which an ip points to its set of associated hostnames.
