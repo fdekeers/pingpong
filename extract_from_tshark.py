@@ -36,6 +36,11 @@ json_key_frame_comment = json_key_frame + ".comment"
 json_key_frame_ts = json_key_frame + ".time_epoch"
 
 
+JSON_KEY_ETH = "eth"
+JSON_KEY_ETH_SRC = "eth.src"
+JSON_KEY_ETH_DST = "eth.dst"
+
+
 def make_unique(key, dct):
     counter = 0
     unique_key = key
@@ -103,6 +108,9 @@ def change_file(fpath):
                 # JV: Also include src so we can see what device initiates the traffic
                 new_packet["src_ip"] = layers[json_key_ip][json_key_ip + ".src"]
                 new_packet["src_port"] = int(layers[json_key_tcp][json_key_tcp + ".srcport"])
+                #JV: Also include eth soure/destination info so that we can map traffic to physical device using MAC
+                new_packet[JSON_KEY_ETH_SRC] = layers[JSON_KEY_ETH][JSON_KEY_ETH_SRC]
+                new_packet[JSON_KEY_ETH_DST] = layers[JSON_KEY_ETH][JSON_KEY_ETH_DST]
 
                 # Go through all HTTP fields and extract the ones that are needed
                 http_data = layers[json_key_http]

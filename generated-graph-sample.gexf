@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf version="1.2" xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance">
+  <graph defaultedgetype="directed" mode="static" name="">
+    <meta>
+      <creator>NetworkX 2.0</creator>
+      <lastmodified>05/11/2017</lastmodified>
+    </meta>
+    <nodes>
+      <node id="94:10:3e:36:60:09" label="94:10:3e:36:60:09" />
+      <node id="d0:52:a8:a3:60:0f" label="d0:52:a8:a3:60:0f" />
+      <node id="diagnostics.meethue.com" label="diagnostics.meethue.com" />
+      <node id="68:37:e9:d2:26:0d" label="68:37:e9:d2:26:0d" />
+      <node id="dcp.cpp.philips.com" label="dcp.cpp.philips.com" />
+      <node id="00:17:88:69:ee:e4" label="00:17:88:69:ee:e4" />
+    </nodes>
+    <edges>
+      <edge id="0" source="d0:52:a8:a3:60:0f" target="94:10:3e:36:60:09" />
+      <edge id="1" source="68:37:e9:d2:26:0d" target="00:17:88:69:ee:e4" />
+      <edge id="2" source="00:17:88:69:ee:e4" target="dcp.cpp.philips.com" />
+      <edge id="3" source="00:17:88:69:ee:e4" target="diagnostics.meethue.com" />
+    </edges>
+  </graph>
+</gexf>

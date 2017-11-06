@@ -82,7 +82,8 @@ class DeviceDNSMap:
 				# t is a better fit if it happened BEFORE the input timestamp
 				# and is LATER than the current best_fit
 				best_fit = t
-		return best_fit
+		# return the matching hostname
+		return best_fit[1]
 
 	def add_mapping(self, ip, timestamp_hostname_tuple):
 		self.ip_mappings[ip].append(timestamp_hostname_tuple)
