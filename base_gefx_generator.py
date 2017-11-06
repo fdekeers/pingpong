@@ -19,14 +19,14 @@ import networkx as nx
 import sys
 from decimal import *
 
-import parse_dns
+import parser.parse_dns
 
 JSON_KEY_ETH_SRC = "eth.src"
 JSON_KEY_ETH_DST = "eth.dst"
 
 def parse_json(file_path):
 
-    device_dns_mappings = parse_dns.parse_json_dns("./dns.json")
+    device_dns_mappings = parser.parse_dns.parse_json_dns("./json/dns.json")
 
     # Init empty graph
     G = nx.DiGraph() 
