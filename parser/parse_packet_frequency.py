@@ -18,6 +18,8 @@ JSON_KEY_ETH_DST = "eth.dst"
 JSON_KEY_ETH_SRC = "eth.src"
 JSON_KEY_FRAME = "frame"
 JSON_KEY_FRAME_TIME = "frame.time"
+TABLE_HEADER_X = "Timestamp (hh:mm:ss)"
+TABLE_HEADER_Y = "Packet frequency (pps)"
 
 
 def save_to_file(tbl_header, dictionary, filename_out):
@@ -30,11 +32,13 @@ def save_to_file(tbl_header, dictionary, filename_out):
     # Appending, not overwriting!
     f = open(filename_out, 'a')
     # Write the table header
-    f.write("\n\n" + str(tbl_header) + "\n");
+    f.write("# " + TABLE_HEADER_X + " " + TABLE_HEADER_Y + "\n");
     # Iterate over dictionary and write (key, value) pairs
-    #for key, value in dictionary.iteritems():
     for key in sorted(dictionary):
-        f.write(str(key) + ", " + str(dictionary[key]) + "\n")
+        # Comma separated
+        #f.write(str(key) + ", " + str(dictionary[key]) + "\n")
+        # Space separated
+        f.write(str(key) + " " + str(dictionary[key]) + "\n")
 
     f.close()
     print "Writing output to file: ", filename_out
