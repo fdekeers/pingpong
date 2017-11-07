@@ -1,0 +1,150 @@
+# Script to plot time series graphs for network traffic analysis
+#
+# by Rahmadi Trimananda (rahmadi.trimananda@uci.edu)
+# Programming Language Research Group @ University of California, Irvine
+# Fall 2017
+
+# ************ #
+# BASIC SETUP  #
+# ************ #
+#set terminal postscript landscape "Arial, 18"
+#set terminal postscript eps font 'Helvetica,20' enhanced color 
+set terminal pngcairo enhanced font 'Verdana,10'
+set autoscale
+unset key
+unset log
+unset label
+set xtics 600
+set ytics auto
+set xlabel "Packet Timestamp (hh:mm:ss)"
+set ylabel "Packet Frequency (pps)"
+set xdata time
+set timefmt "%H:%M:%S"
+#set xrange ["06:00:00":"10:00:00"]
+#set yrange [0:200]
+set xrange [:]
+set yrange [0:]
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# WeMo switch
+#set output 'wemo_switch.ps'
+#set output 'wemo_switch.eps'
+set output '../result/wemo_switch.png'
+set title "WeMo Switch Time Series Plot of Packets"
+plot "../result/wemo_switch.dat" using 1:2 with lines
+
+#set output 'wemo_switch2.ps'
+#plot "wemo_switch.dat" using 1:2
+
+# WeMo switch
+#set output '../result/wemo_switch.ps'
+#set output '../result/wemo_switch.eps'
+set output '../result/wemo_switch.png'
+set title "WeMo Switch"
+plot "../result/wemo_switch.dat" using 1:2 with lines
+
+# WeMo Insight
+#set output '../result/wemo_insight.eps'
+set output '../result/wemo_insight.png'
+set title "WeMo Insight"
+plot "../result/wemo_insight.dat" using 1:2 with lines
+
+# TP-Link switch
+#set output '../result/tplink_switch.eps'
+set output '../result/tplink_switch.png'
+set title "TP-Link Switch"
+plot "../result/tplink_switch.dat" using 1:2 with lines
+
+# D-Link switch
+#set output '../result/dlink_switch.eps'
+set output '../result/dlink_switch.png'
+set title "D-Link Switch"
+plot "../result/dlink_switch.dat" using 1:2 with lines
+
+# Amcrest camera
+#set output '../result/amcrest_camera.eps'
+set output '../result/amcrest_camera.png'
+set title "Amcrest Camera"
+plot "../result/amcrest_camera.dat" using 1:2 with lines
+
+# Netgear Arlo camera
+#set output '../result/netgear_arlo_camera.eps'
+set output '../result/netgear_arlo_camera.png'
+set title "Netgear Arlo Camera"
+plot "../result/netgear_arlo_camera.dat" using 1:2 with lines
+
+# LiFX light bulb
+#set output '../result/lifx_lightbulb_1.eps'
+set output '../result/lifx_lightbulb_1.png'
+set title "LiFX Light Bulb #1"
+plot "../result/lifx_lightbulb_1.dat" using 1:2 with lines
+
+# LiFX light bulb
+#set output '../result/lifx_lightbulb_2.eps'
+set output '../result/lifx_lightbulb_2.png'
+set title "LiFX Light Bulb #2"
+plot "../result/lifx_lightbulb_2.dat" using 1:2 with lines
+
+# Philips Hue
+#set output '../result/philips_hue.eps'
+set output '../result/philips_hue.png'
+set title "Philips Hue"
+plot "../result/philips_hue.dat" using 1:2 with lines
+
+# TP-Link Light Bulb
+#set output '../result/tplink_lightbulb.eps'
+set output '../result/tplink_lightbulb.png'
+set title "TP-Link Light Bulb"
+plot "../result/tplink_lightbulb.dat" using 1:2 with lines
+
+# Nxeco sprinkler
+#set output '../result/nxeco_sprinkler.eps'
+set output '../result/nxeco_sprinkler.png'
+set title "Nxeco Sprinkler"
+plot "../result/nxeco_sprinkler.dat" using 1:2 with lines
+
+# Blossom sprinkler
+#set output '../result/blossom_sprinkler.eps'
+set output '../result/blossom_sprinkler.png'
+set title "Blossom Sprinkler"
+plot "../result/blossom_sprinkler.dat" using 1:2 with lines
+
+# D-Link alarm
+#set output '../result/dlink_alarm.eps'
+set output '../result/dlink_alarm.png'
+set title "D-Link Alarm"
+plot "../result/dlink_alarm.dat" using 1:2 with lines
+
+# D-Link alarm
+#set output '../result/dlink_alarm.eps'
+set output '../result/dlink_alarm.png'
+set title "D-Link Alarm"
+plot "../result/dlink_alarm.dat" using 1:2 with lines
+
+# D-Link motion sensor
+#set output '../result/dlink_motion_sensor.eps'
+set output '../result/dlink_motion_sensor.png'
+set title "D-Link Motion Sensor"
+plot "../result/dlink_motion_sensor.dat" using 1:2 with lines
+
+# Nest Thermostat
+#set output '../result/nest_thermostat.eps'
+set output '../result/nest_thermostat.png'
+set title "Nest Thermostat"
+plot "../result/nest_thermostat.dat" using 1:2 with lines
+
+# Amazon Echo Dot
+#set output '../result/amazon_echo_dot.eps'
+set output '../result/amazon_echo_dot.png'
+set title "Amazon Ech Odit"
+plot "../result/amazon_echo_dot.dat" using 1:2 with lines
+
+# SmartThings hub
+#set output '../result/smartthings_hub.eps'
+set output '../result/smartthings_hub.png'
+set title "SmartThings Hub"
+plot "../result/smartthings_hub.dat" using 1:2 with lines
+
+

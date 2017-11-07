@@ -39,6 +39,9 @@ def save_to_file(tbl_header, dictionary, filename_out):
         #f.write(str(key) + ", " + str(dictionary[key]) + "\n")
         # Space separated
         f.write(str(key) + " " + str(dictionary[key]) + "\n")
+    # Write "0 0" if dictionary is empty
+    if not dictionary:
+        f.write("0 0");
 
     f.close()
     print "Writing output to file: ", filename_out
