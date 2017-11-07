@@ -17,14 +17,34 @@ import json
 import tldextract
 import networkx as nx
 import sys
+import csv
 from decimal import *
 
 import parser.parse_dns
+
+DEVICE_MAC_LIST = "devicelist.dat"
+COLUMN_MAC = "MAC_address"
+COLUMN_DEVICE_NAME = "device_name"
 
 JSON_KEY_ETH_SRC = "eth.src"
 JSON_KEY_ETH_DST = "eth.dst"
 
 def parse_json(file_path):
+
+    # Open the device MAC list file
+    with open(DEVICE_MAC_LIST) as csvfile:
+        maclist = csv.DictReader(csvfile, (COLUMN_MAC, COLUMN_DEVICE_NAME))
+        crudelist = list()
+        for item in maclist:
+            crudelist.append(item)
+            #print(item)
+    # Create key-value dictionary
+    devlist = dict()
+    for item in crudelist:
+        devlist[item[COLUMN_MAC]] = item[COLUMN_DEVICE_NAME]
+        #print item["MAC_address"] + " => " + item["device_name"]
+    #for key, value in devlist.iteritems():
+    #    print key + " => " + value
 
     device_dns_mappings = parser.parse_dns.parse_json_dns("./json/dns.json")
 
@@ -44,18 +64,20 @@ def parse_json(file_path):
             # Traffic can be both outbound and inbound.
             # Determine which one of the two by looking up device MAC in DNS map.
             iot_device = None
+            src = eth_src + "-" + devlist[eth_src]
+            dst = eth_dst + "-" + devlist[eth_dst]
             if eth_src in device_dns_mappings:
                 iot_device = eth_src
             elif eth_dst in device_dns_mappings:
                 iot_device = eth_dst
             else:
-                print "[ WARNING: DNS mapping not found for device with MAC", eth_src, "OR", eth_dst, "]"
+#                print "[ WARNING: DNS mapping not found for device with MAC", eth_src, "OR", eth_dst, "]"
                 # This must be local communication between two IoT devices OR an IoT device talking to a hardcoded IP.
                 # For now let's assume local communication.
                 # Add a node for each device and an edge between them.
-                G.add_node(eth_src)
-                G.add_node(eth_dst)
-                G.add_edge(eth_src, eth_dst)
+                G.add_node(src)
+                G.add_node(dst)
+                G.add_edge(src, dst)
                 # TODO add regex check on src+dst IP to figure out if hardcoded server IP (e.g. check if one of the two are NOT a 192.168.x.y IP)
                 continue
             # It is outbound traffic if iot_device matches src, otherwise it must be inbound traffic.
@@ -67,7 +89,8 @@ def parse_json(file_path):
             
             # Add a node for each host.
             # First add node for IoT device.
-            G.add_node(iot_device)
+            device = iot_device + "-" + devlist[iot_device]
+            G.add_node(device)
             # Then add node for the server.
             # For this we need to distinguish between outbound and inbound traffic so that we look up the proper IP in our DNS map.
             # For outbound traffic, the server's IP is the destination IP.
@@ -79,17 +102,17 @@ def parse_json(file_path):
                 # However, we only get here for the DNS that have not performed any DNS lookups
                 # We should use a regex check early in the loop to see if it is two local devices communicating.
                 # This way we would not have to consider these corner cases later on.
-                print "[ WARNING: no ip-hostname mapping found for ip", server_ip, " -- adding eth.src->eth.dst edge, but note that this may be incorrect if IoT device has hardcoded server IP ]"
-                G.add_node(eth_src)
-                G.add_node(eth_dst)
-                G.add_edge(eth_src, eth_dst)
+#                print "[ WARNING: no ip-hostname mapping found for ip", server_ip, " -- adding eth.src->eth.dst edge, but note that this may be incorrect if IoT device has hardcoded server IP ]"
+                G.add_node(src)
+                G.add_node(dst)
+                G.add_edge(src, dst)
                 continue
             G.add_node(hostname)
             # Connect the two nodes we just added.
             if outbound_traffic:
-                G.add_edge(iot_device, hostname)
+                G.add_edge(device, hostname)
             else:
-                G.add_edge(hostname, iot_device)
+                G.add_edge(hostname, device)
     return G
 
 # ------------------------------------------------------
