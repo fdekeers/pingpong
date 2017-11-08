@@ -23,8 +23,8 @@ TABLE_HEADER_X = "Timestamp (hh:mm:ss)"
 TABLE_HEADER_Y = "Packet frequency (pps)"
 
 # Use this constant as a flag
-WINDOW_SIZE = 3
-USE_MOVING_AVERAGE = False
+WINDOW_SIZE = 5
+USE_MOVING_AVERAGE = True
 
 
 def moving_average(array, window=3):
@@ -32,6 +32,8 @@ def moving_average(array, window=3):
         Args:
             array: array of numbers
             window: window of moving average (default = 3)
+        Adapted from: 
+            https://stackoverflow.com/questions/14313510/how-to-calculate-moving-average-using-numpy
     """
     # Check if window > len(array)
     if window > len(array):
