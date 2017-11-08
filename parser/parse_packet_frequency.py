@@ -7,6 +7,7 @@ the traffic frequency of a certain device at a certain time.
 
 import sys
 import json
+import numpy as np
 from collections import defaultdict
 from dateutil import parser
 
@@ -21,6 +22,32 @@ JSON_KEY_FRAME_TIME = "frame.time"
 TABLE_HEADER_X = "Timestamp (hh:mm:ss)"
 TABLE_HEADER_Y = "Packet frequency (pps)"
 
+# Use this constant as a flag
+WINDOW_SIZE = 3
+USE_MOVING_AVERAGE = False
+
+
+def moving_average(array, window=3):
+    """ Calculate moving average
+        Args:
+            array: array of numbers
+            window: window of moving average (default = 3)
+    """
+    # Check if window > len(array)
+    if window > len(array):
+        window = len(array)
+    # Calculate cumulative sum of each array element
+    retarr = np.cumsum(array, dtype=float)
+    # Adjust cumulative sum of each array element
+    #   based on window size
+    retarr[window:] = retarr[window:] - retarr[:-window]
+    # Pad the first array elements with zeroes
+    retarr[:window - 1] = np.zeros(window - 1)
+    # Calculate moving average starting from the element
+    #   at window size, e.g. element 4 for window=5
+    retarr[window - 1:] = retarr[window - 1:] / window
+    return retarr
+
 
 def save_to_file(tbl_header, dictionary, filename_out):
     """ Show summary of statistics of PCAP file
@@ -33,16 +60,31 @@ def save_to_file(tbl_header, dictionary, filename_out):
     f = open(filename_out, 'a')
     # Write the table header
     f.write("# " + TABLE_HEADER_X + " " + TABLE_HEADER_Y + "\n");
-    # Iterate over dictionary and write (key, value) pairs
-    for key in sorted(dictionary):
-        # Comma separated
-        #f.write(str(key) + ", " + str(dictionary[key]) + "\n")
-        # Space separated
-        f.write(str(key) + " " + str(dictionary[key]) + "\n")
     # Write "0 0" if dictionary is empty
     if not dictionary:
         f.write("0 0");
+        f.close()
+        print "Writing zeroes to file: ", filename_out
+        return
 
+    if USE_MOVING_AVERAGE:
+        # Use moving average if this flag is true
+        sortedarr = []
+        for key in sorted(dictionary):
+            sortedarr.append(dictionary[key])
+        valarr = moving_average(sortedarr, WINDOW_SIZE)
+        #print vallist
+        # Iterate over dictionary and write (key, value) pairs
+        ind = 0
+        for key in sorted(dictionary):
+            # Space separated
+            f.write(str(key) + " " + str(valarr[ind]) + "\n")
+            ind += 1
+    else:
+        # Iterate over dictionary and write (key, value) pairs
+        for key in sorted(dictionary):
+            # Space separated
+            f.write(str(key) + " " + str(dictionary[key]) + "\n")
     f.close()
     print "Writing output to file: ", filename_out
 
@@ -59,9 +101,9 @@ def main():
     save_to_file(sys.argv[3], time_freq, sys.argv[2])
     print "====================================================================="
     #for time in time_freq.keys():
-    for key in sorted(time_freq):
-        print key, " => ", time_freq[key]
-    print "====================================================================="
+    #for key in sorted(time_freq):
+    #    print key, " => ", time_freq[key]
+    #print "====================================================================="
 
 
 # Convert JSON file containing DNS traffic to a map in which a hostname points to its set of associated IPs.
@@ -108,6 +150,7 @@ def parse_json(file_path, mac_address):
                 else: # If not, then put the value one there
                     time_freq[time_str] = 1
     return time_freq
+
 
 if __name__ == '__main__':
     main()
