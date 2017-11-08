@@ -125,7 +125,7 @@ def parse_json_dns(file_path):
 			dns = layers.get(JSON_KEY_DNS, None)
 			# Skip any non DNS traffic
 			if dns is None:
-				print "[ WARNING: Non DNS traffic ]"
+				#print "[ WARNING: Non DNS traffic ]"
 				continue
 			# We only care about DNS responses as these also contain a copy of the query that they answer
 			answers = dns.get(JSON_KEY_ANSWERS, None)
