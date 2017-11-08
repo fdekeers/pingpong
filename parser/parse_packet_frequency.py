@@ -21,10 +21,13 @@ JSON_KEY_FRAME = "frame"
 JSON_KEY_FRAME_TIME = "frame.time"
 TABLE_HEADER_X = "Timestamp (hh:mm:ss)"
 TABLE_HEADER_Y = "Packet frequency (pps)"
+INCOMING_APPENDIX = "_incoming"
+OUTGOING_APPENDIX = "_outgoing"
+FILE_APPENDIX = ".dat"
 
 # Use this constant as a flag
 WINDOW_SIZE = 5
-USE_MOVING_AVERAGE = True
+USE_MOVING_AVERAGE = False
 
 
 def moving_average(array, window=3):
@@ -51,22 +54,23 @@ def moving_average(array, window=3):
     return retarr
 
 
-def save_to_file(tbl_header, dictionary, filename_out):
+def save_to_file(tblheader, dictionary, filenameout):
     """ Show summary of statistics of PCAP file
         Args:
-            tbl_header: header for the saved table
+            tblheader: header for the saved table
             dictionary: dictionary to be saved
             filename_out: file name to save
     """
     # Appending, not overwriting!
-    f = open(filename_out, 'a')
+    f = open(filenameout, 'a')
     # Write the table header
-    f.write("# " + TABLE_HEADER_X + " " + TABLE_HEADER_Y + "\n");
+    f.write("# " + tblheader + "\n")
+    f.write("# " + TABLE_HEADER_X + " " + TABLE_HEADER_Y + "\n")
     # Write "0 0" if dictionary is empty
     if not dictionary:
-        f.write("0 0");
+        f.write("0 0")
         f.close()
-        print "Writing zeroes to file: ", filename_out
+        print "Writing zeroes to file: ", filenameout
         return
 
     if USE_MOVING_AVERAGE:
@@ -88,7 +92,7 @@ def save_to_file(tbl_header, dictionary, filename_out):
             # Space separated
             f.write(str(key) + " " + str(dictionary[key]) + "\n")
     f.close()
-    print "Writing output to file: ", filename_out
+    print "Writing output to file: ", filenameout
 
 
 def main():
@@ -98,9 +102,15 @@ def main():
         print "Usage: python", sys.argv[0], "<input_file> <output_file> <device_name> <mac_address>"
         return
     # Parse the file for the specified MAC address
-    time_freq = parse_json(sys.argv[1], sys.argv[4])
+    timefreq_incoming = parse_json(sys.argv[1], sys.argv[4], True)
+    timefreq_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
     # Write statistics into file
-    save_to_file(sys.argv[3], time_freq, sys.argv[2])
+    print "====================================================================="
+    print "==> Analyzing incoming traffic ..."
+    save_to_file(sys.argv[3] + INCOMING_APPENDIX, timefreq_incoming, sys.argv[2] + INCOMING_APPENDIX + FILE_APPENDIX)
+    print "====================================================================="
+    print "==> Analyzing outgoing traffic ..."
+    save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timefreq_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
     print "====================================================================="
     #for time in time_freq.keys():
     #for key in sorted(time_freq):
@@ -109,15 +119,17 @@ def main():
 
 
 # Convert JSON file containing DNS traffic to a map in which a hostname points to its set of associated IPs.
-def parse_json(file_path, mac_address):
+def parse_json(filepath, macaddress, incomingoutgoing):
     """ Show summary of statistics of PCAP file
         Args:
-            file_path: path of the read file
-            mac_address: MAC address of a device to analyze
+            filepath: path of the read file
+            macaddress: MAC address of a device to analyze
+            incomingoutgoing: boolean to define whether we collect incoming or outgoing traffic
+                              True = incoming, False = outgoing
     """
     # Maps timestamps to frequencies of packets
-    time_freq = dict()
-    with open(file_path) as jf:
+    timefreq = dict()
+    with open(filepath) as jf:
         # Read JSON.
         # data becomes reference to root JSON object (or in our case json array)
         data = json.load(jf)
@@ -128,7 +140,7 @@ def parse_json(file_path, mac_address):
             layers = p[JSON_KEY_SOURCE][JSON_KEY_LAYERS]
             # Get timestamp
             frame = layers.get(JSON_KEY_FRAME, None)
-            date_time = frame.get(JSON_KEY_FRAME_TIME, None)
+            datetime = frame.get(JSON_KEY_FRAME_TIME, None)
             # Get into the Ethernet address part
             eth = layers.get(JSON_KEY_ETH, None)
             # Skip any non DNS traffic
@@ -139,19 +151,29 @@ def parse_json(file_path, mac_address):
             src = eth.get(JSON_KEY_ETH_SRC, None)
             dst = eth.get(JSON_KEY_ETH_DST, None)
             # Get just the time part
-            date_time_obj = parser.parse(date_time)
+            datetimeobj = parser.parse(datetime)
             # Remove the microsecond part
-            time_str = str(date_time_obj.time())[:8]
-            print str(time_str) + " - src:" + str(src) + " - dest:" + str(dst)
+            timestr = str(datetimeobj.time())[:8]
+            print str(timestr) + " - src:" + str(src) + " - dest:" + str(dst)
             # Get and count the traffic for the specified MAC address
-            if src == mac_address or dst == mac_address:
-                # Check if timestamp already exists in the map
-                # If yes, then just increment the frequency value...
-                if time_str in time_freq:
-                    time_freq[time_str] = time_freq[time_str] + 1
-                else: # If not, then put the value one there
-                    time_freq[time_str] = 1
-    return time_freq
+            if incomingoutgoing:           
+                if dst == macaddress:
+                    # Check if timestamp already exists in the map
+                    # If yes, then just increment the frequency value...
+                    if timestr in timefreq:
+                        timefreq[timestr] = timefreq[timestr] + 1
+                    else: # If not, then put the value one there
+                        timefreq[timestr] = 1
+            else:
+                if src == macaddress:
+                    # Check if timestamp already exists in the map
+                    # If yes, then just increment the frequency value...
+                    if timestr in timefreq:
+                        timefreq[timestr] = timefreq[timestr] + 1
+                    else: # If not, then put the value one there
+                        timefreq[timestr] = 1
+
+    return timefreq
 
 
 if __name__ == '__main__':

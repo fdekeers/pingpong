@@ -29,122 +29,167 @@ set yrange [0:]
 # PER DEVICE SETUP  #
 # ***************** #
 # WeMo switch
-#set output 'wemo_switch.ps'
-#set output 'wemo_switch.eps'
-set output '../result/wemo_switch.png'
-set title "WeMo Switch Time Series Plot of Packets"
-plot "../result/wemo_switch.dat" using 1:2 with lines
+#set output '../result/wemo_switch_incoming.ps'
+#set output '../result/wemo_switch_incoming.eps'
+set output '../result/wemo_switch_incoming.png'
+set title "WeMo Switch Incoming Traffic"
+plot "../result/wemo_switch_incoming.dat" using 1:2 with lines
+set output '../result/wemo_switch_outgoing.png'
+set title "WeMo Switch Outgoing Traffic"
+plot "../result/wemo_switch_outgoing.dat" using 1:2 with lines
 
-#set output 'wemo_switch2.ps'
-#plot "wemo_switch.dat" using 1:2
-
-# WeMo switch
-#set output '../result/wemo_switch.ps'
-#set output '../result/wemo_switch.eps'
-set output '../result/wemo_switch.png'
-set title "WeMo Switch"
-plot "../result/wemo_switch.dat" using 1:2 with lines
 
 # WeMo Insight
-#set output '../result/wemo_insight.eps'
-set output '../result/wemo_insight.png'
-set title "WeMo Insight"
-plot "../result/wemo_insight.dat" using 1:2 with lines
+#set output '../result/wemo_insight_incoming.eps'
+set output '../result/wemo_insight_incoming.png'
+set title "WeMo Insight Incoming Traffic"
+plot "../result/wemo_insight_incoming.dat" using 1:2 with lines
+set output '../result/wemo_insight_outgoing.png'
+set title "WeMo Insight Outgoing Traffic"
+plot "../result/wemo_insight_outgoing.dat" using 1:2 with lines
 
 # TP-Link switch
-#set output '../result/tplink_switch.eps'
-set output '../result/tplink_switch.png'
-set title "TP-Link Switch"
-plot "../result/tplink_switch.dat" using 1:2 with lines
+#set output '../result/tplink_switch_incoming.eps'
+set output '../result/tplink_switch_incoming.png'
+set title "TP-Link Switch Incoming Traffic"
+plot "../result/tplink_switch_incoming.dat" using 1:2 with lines
+set output '../result/tplink_switch_outgoing.png'
+set title "TP-Link Switch Outgoing Traffic"
+plot "../result/tplink_switch_outgoing.dat" using 1:2 with lines
 
 # D-Link switch
-#set output '../result/dlink_switch.eps'
-set output '../result/dlink_switch.png'
-set title "D-Link Switch"
-plot "../result/dlink_switch.dat" using 1:2 with lines
+#set output '../result/dlink_switch_incoming.eps'
+set output '../result/dlink_switch_incoming.png'
+set title "D-Link Switch Incoming Traffic"
+plot "../result/dlink_switch_incoming.dat" using 1:2 with lines
+set output '../result/dlink_switch_outgoing.png'
+set title "D-Link Switch Outgoing Traffic"
+plot "../result/dlink_switch_outgoing.dat" using 1:2 with lines
+
 
 # Amcrest camera
-#set output '../result/amcrest_camera.eps'
-set output '../result/amcrest_camera.png'
-set title "Amcrest Camera"
-plot "../result/amcrest_camera.dat" using 1:2 with lines
+#set output '../result/amcrest_camera_incoming.eps'
+set output '../result/amcrest_camera_incoming.png'
+set title "Amcrest Camera Incoming Traffic"
+plot "../result/amcrest_camera_incoming.dat" using 1:2 with lines
+set output '../result/amcrest_camera_outgoing.png'
+set title "Amcrest Camera Outgoing Traffic"
+plot "../result/amcrest_camera_outgoing.dat" using 1:2 with lines
 
 # Netgear Arlo camera
-#set output '../result/netgear_arlo_camera.eps'
-set output '../result/netgear_arlo_camera.png'
-set title "Netgear Arlo Camera"
-plot "../result/netgear_arlo_camera.dat" using 1:2 with lines
+#set output '../result/netgear_arlo_camera_incoming.eps'
+set output '../result/netgear_arlo_camera_incoming.png'
+set title "Netgear Arlo Camera Incoming Traffic"
+plot "../result/netgear_arlo_camera_incoming.dat" using 1:2 with lines
+set output '../result/netgear_arlo_camera_outgoing.png'
+set title "Netgear Arlo Camera Outgoing Traffic"
+plot "../result/netgear_arlo_camera_outgoing.dat" using 1:2 with lines
 
 # LiFX light bulb
-#set output '../result/lifx_lightbulb_1.eps'
-set output '../result/lifx_lightbulb_1.png'
-set title "LiFX Light Bulb #1"
-plot "../result/lifx_lightbulb_1.dat" using 1:2 with lines
+#set output '../result/lifx_lightbulb_1_incoming.eps'
+set output '../result/lifx_lightbulb_1_incoming.png'
+set title "LiFX Light Bulb #1 Incoming Traffic"
+plot "../result/lifx_lightbulb_1_incoming.dat" using 1:2 with lines
+set output '../result/lifx_lightbulb_1_outgoing.png'
+set title "LiFX Light Bulb #1 Outgoing Traffic"
+plot "../result/lifx_lightbulb_1_outgoing.dat" using 1:2 with lines
 
 # LiFX light bulb
-#set output '../result/lifx_lightbulb_2.eps'
-set output '../result/lifx_lightbulb_2.png'
-set title "LiFX Light Bulb #2"
-plot "../result/lifx_lightbulb_2.dat" using 1:2 with lines
+#set output '../result/lifx_lightbulb_2_incoming.eps'
+set output '../result/lifx_lightbulb_2_incoming.png'
+set title "LiFX Light Bulb #2 Incoming Traffic"
+plot "../result/lifx_lightbulb_2_incoming.dat" using 1:2 with lines
+set output '../result/lifx_lightbulb_2_outgoing.png'
+set title "LiFX Light Bulb #2 Outgoing Traffic"
+plot "../result/lifx_lightbulb_2_outgoing.dat" using 1:2 with lines
 
 # Philips Hue
-#set output '../result/philips_hue.eps'
-set output '../result/philips_hue.png'
-set title "Philips Hue"
-plot "../result/philips_hue.dat" using 1:2 with lines
+#set output '../result/philips_hue_incoming.eps'
+set output '../result/philips_hue_incoming.png'
+set title "Philips Hue Incoming Traffic"
+plot "../result/philips_hue_incoming.dat" using 1:2 with lines
+set output '../result/philips_hue_outgoing.png'
+set title "Philips Hue Outgoing Traffic"
+plot "../result/philips_hue_outgoing.dat" using 1:2 with lines
 
 # TP-Link Light Bulb
-#set output '../result/tplink_lightbulb.eps'
-set output '../result/tplink_lightbulb.png'
-set title "TP-Link Light Bulb"
-plot "../result/tplink_lightbulb.dat" using 1:2 with lines
+#set output '../result/tplink_lightbulb_incoming.eps'
+set output '../result/tplink_lightbulb_incoming.png'
+set title "TP-Link Light Bulb Incoming Traffic"
+plot "../result/tplink_lightbulb_incoming.dat" using 1:2 with lines
+set output '../result/tplink_lightbulb_outgoing.png'
+set title "TP-Link Light Bulb Outgoing Traffic"
+plot "../result/tplink_lightbulb_outgoing.dat" using 1:2 with lines
 
 # Nxeco sprinkler
-#set output '../result/nxeco_sprinkler.eps'
-set output '../result/nxeco_sprinkler.png'
-set title "Nxeco Sprinkler"
-plot "../result/nxeco_sprinkler.dat" using 1:2 with lines
+#set output '../result/nxeco_sprinkler_incoming.eps'
+set output '../result/nxeco_sprinkler_incoming.png'
+set title "Nxeco Sprinkler Incoming Traffic"
+plot "../result/nxeco_sprinkler_incoming.dat" using 1:2 with lines
+set output '../result/nxeco_sprinkler_outgoing.png'
+set title "Nxeco Sprinkler Outgoing Traffic"
+plot "../result/nxeco_sprinkler_outgoing.dat" using 1:2 with lines
 
 # Blossom sprinkler
-#set output '../result/blossom_sprinkler.eps'
-set output '../result/blossom_sprinkler.png'
-set title "Blossom Sprinkler"
-plot "../result/blossom_sprinkler.dat" using 1:2 with lines
+#set output '../result/blossom_sprinkler_incoming.eps'
+set output '../result/blossom_sprinkler_incoming.png'
+set title "Blossom Sprinkler Incoming Traffic"
+plot "../result/blossom_sprinkler_incoming.dat" using 1:2 with lines
+set output '../result/blossom_sprinkler_outgoing.png'
+set title "Blossom Sprinkler Outgoing Traffic"
+plot "../result/blossom_sprinkler_outgoing.dat" using 1:2 with lines
 
 # D-Link alarm
-#set output '../result/dlink_alarm.eps'
-set output '../result/dlink_alarm.png'
-set title "D-Link Alarm"
-plot "../result/dlink_alarm.dat" using 1:2 with lines
+#set output '../result/dlink_alarm_incoming.eps'
+set output '../result/dlink_alarm_incoming.png'
+set title "D-Link Alarm Incoming Traffic"
+plot "../result/dlink_alarm_incoming.dat" using 1:2 with lines
+set output '../result/dlink_alarm_outgoing.png'
+set title "D-Link Alarm Outgoing Traffic"
+plot "../result/dlink_alarm_outgoing.dat" using 1:2 with lines
 
 # D-Link alarm
-#set output '../result/dlink_alarm.eps'
-set output '../result/dlink_alarm.png'
-set title "D-Link Alarm"
-plot "../result/dlink_alarm.dat" using 1:2 with lines
+#set output '../result/dlink_alarm_incoming.eps'
+set output '../result/dlink_alarm_incoming.png'
+set title "D-Link Alarm Incoming Traffic"
+plot "../result/dlink_alarm_incoming.dat" using 1:2 with lines
+set output '../result/dlink_alarm_outgoing.png'
+set title "D-Link Alarm Outgoing Traffic"
+plot "../result/dlink_alarm_outgoing.dat" using 1:2 with lines
 
 # D-Link motion sensor
-#set output '../result/dlink_motion_sensor.eps'
-set output '../result/dlink_motion_sensor.png'
-set title "D-Link Motion Sensor"
-plot "../result/dlink_motion_sensor.dat" using 1:2 with lines
+#set output '../result/dlink_motion_sensor_incoming.eps'
+set output '../result/dlink_motion_sensor_incoming.png'
+set title "D-Link Motion Sensor Incoming Traffic"
+plot "../result/dlink_motion_sensor_incoming.dat" using 1:2 with lines
+set output '../result/dlink_motion_sensor_outgoing.png'
+set title "D-Link Motion Sensor Outgoing"
+plot "../result/dlink_motion_sensor_outgoing.dat" using 1:2 with lines
 
 # Nest Thermostat
-#set output '../result/nest_thermostat.eps'
-set output '../result/nest_thermostat.png'
-set title "Nest Thermostat"
-plot "../result/nest_thermostat.dat" using 1:2 with lines
+#set output '../result/nest_thermostat_incoming.eps'
+set output '../result/nest_thermostat_incoming.png'
+set title "Nest Thermostat Incoming Traffic"
+plot "../result/nest_thermostat_incoming.dat" using 1:2 with lines
+set output '../result/nest_thermostat_outgoing.png'
+set title "Nest Thermostat Outgoing Traffic"
+plot "../result/nest_thermostat_outgoing.dat" using 1:2 with lines
 
 # Amazon Echo Dot
-#set output '../result/amazon_echo_dot.eps'
-set output '../result/amazon_echo_dot.png'
-set title "Amazon Ech Odit"
-plot "../result/amazon_echo_dot.dat" using 1:2 with lines
+#set output '../result/amazon_echo_dot_incoming.eps'
+set output '../result/amazon_echo_dot_incoming.png'
+set title "Amazon Echo Dot Incoming Traffic"
+plot "../result/amazon_echo_dot_incoming.dat" using 1:2 with lines
+set output '../result/amazon_echo_dot_outgoing.png'
+set title "Amazon Echo Dot Outgoing Traffic"
+plot "../result/amazon_echo_dot_outgoing.dat" using 1:2 with lines
 
 # SmartThings hub
-#set output '../result/smartthings_hub.eps'
-set output '../result/smartthings_hub.png'
-set title "SmartThings Hub"
-plot "../result/smartthings_hub.dat" using 1:2 with lines
-
+#set output '../result/smartthings_hub_incoming.eps'
+set output '../result/smartthings_hub_incoming.png'
+set title "SmartThings Hub Incoming Traffic"
+plot "../result/smartthings_hub_incoming.dat" using 1:2 with lines
+set output '../result/smartthings_hub_outgoing.png'
+set title "SmartThings Hub Outgoing Traffic"
+plot "../result/smartthings_hub_outgoing.dat" using 1:2 with lines
 
