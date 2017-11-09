@@ -23,14 +23,16 @@ from decimal import *
 
 import parser.parse_dns
 
+# List of devices
 DEVICE_MAC_LIST = "devicelist.dat"
+EXCLUSION_MAC_LIST = "exclusion.dat"
 COLUMN_MAC = "MAC_address"
 COLUMN_DEVICE_NAME = "device_name"
-
-
+# Fields
 JSON_KEY_SOURCE = "_source"
 JSON_KEY_LAYERS = "layers"
 JSON_KEY_FRAME = "frame"
+JSON_KEY_FRAME_PROTOCOLS = "frame.protocols"
 JSON_KEY_FRAME_TIME_EPOCH = "frame.time_epoch"
 JSON_KEY_ETH = "eth"
 JSON_KEY_ETH_SRC = "eth.src"
@@ -42,7 +44,8 @@ JSON_KEY_IP_DST = "ip.dst"
 JSON_KEY_UDP = "udp"
 JSON_KEY_TCP = "tcp"
 # List of checked protocols
-listchkprot = [ "bootp",
+listchkprot = [ "arp",
+                "bootp",
                 "dhcpv6",
                 "dns",
                 "llmnr",
@@ -50,28 +53,43 @@ listchkprot = [ "bootp",
                 "ssdp" ]
 
 
-def parse_json(file_path):
-
+def create_device_list(dev_list_file):
+    """ Create list for smart home devices from a CSV file
+        Args:
+            dev_list_file: CSV file path that contains list of device MAC addresses
+    """
     # Open the device MAC list file
-    with open(DEVICE_MAC_LIST) as csvfile:
-        maclist = csv.DictReader(csvfile, (COLUMN_MAC, COLUMN_DEVICE_NAME))
-        crudelist = list()
-        for item in maclist:
-            crudelist.append(item)
-            #print(item)
+    with open(dev_list_file) as csvfile:
+        mac_list = csv.DictReader(csvfile, (COLUMN_MAC, COLUMN_DEVICE_NAME))
+        crude_list = list()
+        for item in mac_list:
+            crude_list.append(item)
     # Create key-value dictionary
-    devlist = dict()
-    for item in crudelist:
-        devlist[item[COLUMN_MAC]] = item[COLUMN_DEVICE_NAME]
+    dev_list = dict()
+    for item in crude_list:
+        dev_list[item[COLUMN_MAC]] = item[COLUMN_DEVICE_NAME]
         #print item["MAC_address"] + " => " + item["device_name"]
     #for key, value in devlist.iteritems():
     #    print key + " => " + value
+
+    return dev_list
+
+
+def parse_json(file_path):
+
+    # Create a smart home device list
+    dev_list = create_device_list(DEVICE_MAC_LIST)
+    # Create an exclusion list
+    exc_list = create_device_list(EXCLUSION_MAC_LIST)
 
     # First parse the file once, constructing a map that contains information about individual devices' DNS resolutions.
     device_dns_mappings = parser.parse_dns.parse_json_dns(file_path) # "./json/eth1.dump.json"
     
     # Init empty graph
-    G = nx.DiGraph() 
+    G = nx.DiGraph()
+    # Mapping from node to a set of protocols
+    node2prot = dict()
+
     # Parse file again, this time constructing a graph of device<->server and device<->device communication.
     with open(file_path) as jf:
         # Read JSON.
@@ -95,9 +113,6 @@ def parse_json(file_path):
             if JSON_KEY_UDP not in layers and JSON_KEY_TCP not in layers:
                 continue
 
-            # Fetch timestamp of packet (router's timestamp)
-            packet_timestamp = Decimal(layers[JSON_KEY_FRAME][JSON_KEY_FRAME_TIME_EPOCH])
-            print "timestamp", packet_timestamp
             # Fetch source and destination MACs
             eth = layers.get(JSON_KEY_ETH, None)
             if eth is None:
@@ -105,6 +120,38 @@ def parse_json(file_path):
                 continue
             eth_src = eth.get(JSON_KEY_ETH_SRC, None)
             eth_dst = eth.get(JSON_KEY_ETH_DST, None)
+            # Exclude devices in the exclusion list
+            if eth_src in exc_list:
+                print "[ WARNING: Source ", eth_src, " is excluded from graph! ]"
+                continue
+            if eth_dst in exc_list:
+                print "[ WARNING: Destination ", eth_dst, " is excluded from graph! ]"
+                continue
+
+            # Fetch timestamp of packet (router's timestamp)
+            timestamp = Decimal(layers[JSON_KEY_FRAME][JSON_KEY_FRAME_TIME_EPOCH])
+            # Get the protocol and strip just the name of it
+            long_protocol = layers[JSON_KEY_FRAME][JSON_KEY_FRAME_PROTOCOLS]
+            # Split once starting from the end of the string and get it
+            protocol = long_protocol.rsplit(':', 1)[1]
+            print "timestamp: ", timestamp, "\n"
+
+            # Store protocol into the set (source)
+            src_protocols = None
+            dst_protocols = None
+            if eth_src not in node2prot:
+                node2prot[eth_src] = set()
+            src_protocols = node2prot[eth_src]
+            src_protocols.add(protocol)
+            src_protocols_str = ', '.join(src_protocols)
+            print "source protocols: ", src_protocols_str, "\n"
+            # Store protocol into the set (destination)
+            if eth_dst not in node2prot:
+                node2prot[eth_dst] = set()
+            dst_protocols = node2prot[eth_dst]
+            dst_protocols.add(protocol)
+            dst_protocols_str = ', '.join(dst_protocols)
+            print "destination protocols: ", dst_protocols_str, "\n"
             # And source and destination IPs
             ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
             ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
@@ -113,37 +160,38 @@ def parse_json(file_path):
             ipre = re.compile(r'\b192.168.[0-9.]+')
             src_is_local = ipre.search(ip_src) 
             dst_is_local = ipre.search(ip_dst)
-            print "ip.src =", ip_src, "ip.dst =", ip_dst
-
+            print "ip.src =", ip_src, "ip.dst =", ip_dst, "\n"
+            
             src_node = None
             dst_node = None
             if src_is_local:
-                G.add_node(eth_src, Name=devlist[eth_src])
+                G.add_node(eth_src, Name=dev_list[eth_src], Protocol=src_protocols_str)
                 src_node = eth_src
             else:
                 hostname = None
                 # Check first if the key (eth_dst) exists in the dictionary
                 if eth_dst in device_dns_mappings:
                     # If the source is not local, then it's inbound traffic, and hence the eth_dst is the MAC of the IoT device.
-                    hostname = device_dns_mappings[eth_dst].hostname_for_ip_at_time(ip_src, packet_timestamp)                   
+                    hostname = device_dns_mappings[eth_dst].hostname_for_ip_at_time(ip_src, timestamp)                   
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_src
-                G.add_node(hostname)
+                G.add_node(hostname, Protocol=src_protocols_str)
                 src_node = hostname
+
             if dst_is_local:
-                G.add_node(eth_dst, Name=devlist[eth_src])
+                G.add_node(eth_dst, Name=dev_list[eth_dst], Protocol=dst_protocols_str)
                 dst_node = eth_dst
             else:
                 hostname = None
                 # Check first if the key (eth_dst) exists in the dictionary
                 if eth_src in device_dns_mappings:
                     # If the destination is not local, then it's outbound traffic, and hence the eth_src is the MAC of the IoT device.
-                    hostname = device_dns_mappings[eth_src].hostname_for_ip_at_time(ip_dst, packet_timestamp)
+                    hostname = device_dns_mappings[eth_src].hostname_for_ip_at_time(ip_dst, timestamp)
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_dst
-                G.add_node(hostname)
+                G.add_node(hostname, Protocol=dst_protocols_str)
                 dst_node = hostname
             G.add_edge(src_node, dst_node)
 
@@ -153,6 +201,7 @@ def parse_json(file_path):
 		ddm.print_mappings()
     
     return G
+
 
 # ------------------------------------------------------
 # Not currently used.
@@ -170,6 +219,7 @@ def is_IP(addr):
     except socket.error:
         return False
 # ------------------------------------------------------
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:

@@ -25,3 +25,4 @@ b0:b9:8a:73:69:8f, RouterPort_ETH1
 b0:b9:8a:73:69:90, RouterPort_WLAN0
 b0:b9:8a:73:69:91, RouterPort_WLAN1
 74:da:38:0d:05:55, RaspberryPi_Controller
+ff:ff:ff:ff:ff:ff, Broadcast_MAC
