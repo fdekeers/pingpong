@@ -88,7 +88,7 @@ def parse_json(file_path):
     # Init empty graph
     G = nx.DiGraph()
     # Mapping from node to a set of protocols
-    node2prot = dict()
+    edge_to_prot = dict()
 
     # Parse file again, this time constructing a graph of device<->server and device<->device communication.
     with open(file_path) as jf:
@@ -133,25 +133,27 @@ def parse_json(file_path):
             # Get the protocol and strip just the name of it
             long_protocol = layers[JSON_KEY_FRAME][JSON_KEY_FRAME_PROTOCOLS]
             # Split once starting from the end of the string and get it
-            protocol = long_protocol.rsplit(':', 1)[1]
-            print "timestamp: ", timestamp, "\n"
+            #protocol = long_protocol.rsplit(':', 1)[1]
+            split_protocol = long_protocol.split(':')
+            protocol = None
+            if len(split_protocol) < 5:
+                last_index = len(split_protocol) - 1
+                protocol = split_protocol[last_index]
+            else:
+                protocol = split_protocol[3] + ":" + split_protocol[4]
+            print "timestamp: ", timestamp, " - new protocol added: ", protocol, "\n"
 
             # Store protocol into the set (source)
-            src_protocols = None
-            dst_protocols = None
-            if eth_src not in node2prot:
-                node2prot[eth_src] = set()
-            src_protocols = node2prot[eth_src]
-            src_protocols.add(protocol)
-            src_protocols_str = ', '.join(src_protocols)
-            print "source protocols: ", src_protocols_str, "\n"
-            # Store protocol into the set (destination)
-            if eth_dst not in node2prot:
-                node2prot[eth_dst] = set()
-            dst_protocols = node2prot[eth_dst]
-            dst_protocols.add(protocol)
-            dst_protocols_str = ', '.join(dst_protocols)
-            print "destination protocols: ", dst_protocols_str, "\n"
+            protocols = None
+            # Key to search for protocol list in the dictionary is
+            #   <src-mac-address>-<dst-mac_address>
+            protocol_key = eth_src + "-" + eth_dst
+            if protocol_key not in edge_to_prot:
+                edge_to_prot[protocol_key] = set()
+            protocols = edge_to_prot[protocol_key]
+            protocols.add(protocol)
+            protocols_str = ', '.join(protocols)
+            print "protocols: ", protocols_str, "\n"
             # And source and destination IPs
             ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
             ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
@@ -165,7 +167,7 @@ def parse_json(file_path):
             src_node = None
             dst_node = None
             if src_is_local:
-                G.add_node(eth_src, Name=dev_list[eth_src], Protocol=src_protocols_str)
+                G.add_node(eth_src, Name=dev_list[eth_src])
                 src_node = eth_src
             else:
                 hostname = None
@@ -176,11 +178,11 @@ def parse_json(file_path):
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_src
-                G.add_node(hostname, Protocol=src_protocols_str)
+                G.add_node(hostname)
                 src_node = hostname
 
             if dst_is_local:
-                G.add_node(eth_dst, Name=dev_list[eth_dst], Protocol=dst_protocols_str)
+                G.add_node(eth_dst, Name=dev_list[eth_dst])
                 dst_node = eth_dst
             else:
                 hostname = None
@@ -191,9 +193,9 @@ def parse_json(file_path):
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_dst
-                G.add_node(hostname, Protocol=dst_protocols_str)
+                G.add_node(hostname)
                 dst_node = hostname
-            G.add_edge(src_node, dst_node)
+            G.add_edge(src_node, dst_node, Protocol=protocols_str)
 
     # Print DNS mapping for reference
 	for mac in device_dns_mappings:
