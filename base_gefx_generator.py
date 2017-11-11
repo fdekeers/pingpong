@@ -75,8 +75,68 @@ def create_device_list(dev_list_file):
     return dev_list
 
 
-def parse_json(file_path):
+def traverse_and_merge_nodes(G, dev_list_file):
+    """ Merge nodes that have similar properties, e.g. same protocols
+        But, we only do this for leaves (outer nodes), and not for
+        nodes that are in the middle/have many neighbors.
+        The pre-condition is that the node:
+        (1) only has one neighbor, and
+        (2) not a smarthome device.
+        then we compare the edges, whether they use the same protocols
+        or not. If yes, then we collapse that node and we attach
+        it to the very first node that uses that set of protocols.
+        Args:
+            G: a complete networkx graph
+            dev_list_file: CSV file path that contains list of device MAC addresses
+    """
+    nodes = G.nodes()
+    #print "Nodes: ", nodes
+    node_to_merge = dict()
+    # Create list of smarthome devices
+    dev_list = create_device_list(DEVICE_MAC_LIST)
+    # Traverse every node
+    # Check that the node is not a smarthome device
+    for node in nodes:
+        neighbors = G.neighbors(node)
+        #print "Neighbors: ", neighbors, "\n"
+        # Skip if the node is a smarthome device
+        if node in dev_list:
+            continue
+        # Skip if the node has many neighbors (non-leaf) or no neighbor at all
+        if len(neighbors) is not 1:
+            continue
+        #print "Node: ", node
+        neighbor = neighbors[0]
+        #print "Neighbor: ", neighbors
+        protocols = G[node][neighbor]['Protocol']
+        #print "Protocol: ", protocols
+        # Store neighbor-protocol as key in dictionary
+        neigh_proto = neighbor + "-" + protocols
+        if neigh_proto not in node_to_merge:
+            node_to_merge[neigh_proto] = node
+        else:
+        # Merge this node if there is already an entry
+            # First delete
+            G.remove_node(node)
+            node_to_merge_with = node_to_merge[neigh_proto]
+            merged_nodes = G.node[node_to_merge_with]['Merged']
+            # Check if this is the first node
+            if merged_nodes is '':
+                merged_nodes = node
+            else:
+            # Put comma if there is already one or more nodes
+                merged_nodes += ", " + node
+            # Then attach as attribute
+            G.node[node_to_merge_with]['Merged'] = merged_nodes
 
+    return G
+
+
+def parse_json(file_path):
+    """ Parse JSON file and create graph
+        Args:
+            file_path: path to the JSON file
+    """
     # Create a smart home device list
     dev_list = create_device_list(DEVICE_MAC_LIST)
     # Create an exclusion list
@@ -178,7 +238,8 @@ def parse_json(file_path):
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_src
-                G.add_node(hostname)
+                # Non-smarthome devices can be merged later
+                G.add_node(hostname, Merged='')
                 src_node = hostname
 
             if dst_is_local:
@@ -193,14 +254,15 @@ def parse_json(file_path):
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_dst
-                G.add_node(hostname)
+                # Non-smarthome devices can be merged later
+                G.add_node(hostname, Merged='')
                 dst_node = hostname
             G.add_edge(src_node, dst_node, Protocol=protocols_str)
 
     # Print DNS mapping for reference
-	for mac in device_dns_mappings:
-		ddm = device_dns_mappings[mac]
-		ddm.print_mappings()
+	#for mac in device_dns_mappings:
+	#	ddm = device_dns_mappings[mac]
+	#	ddm.print_mappings()
     
     return G
 
@@ -236,5 +298,7 @@ if __name__ == '__main__':
     print "[ output_file =", output_file, "]"
     # Construct graph from JSON
     G = parse_json(input_file)
+    # Contract nodes that have the same properties, i.e. same protocols
+    G = traverse_and_merge_nodes(G, DEVICE_MAC_LIST)
     # Write Graph in Graph Exchange XML format
     nx.write_gexf(G, output_file)
