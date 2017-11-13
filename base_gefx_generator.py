@@ -34,6 +34,7 @@ JSON_KEY_LAYERS = "layers"
 JSON_KEY_FRAME = "frame"
 JSON_KEY_FRAME_PROTOCOLS = "frame.protocols"
 JSON_KEY_FRAME_TIME_EPOCH = "frame.time_epoch"
+JSON_KEY_FRAME_LENGTH = "frame.len"
 JSON_KEY_ETH = "eth"
 JSON_KEY_ETH_SRC = "eth.src"
 JSON_KEY_ETH_DST = "eth.dst"
@@ -132,6 +133,94 @@ def traverse_and_merge_nodes(G, dev_list_file):
     return G
 
 
+def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers, 
+        edge_to_prot, edge_to_vol):
+    """ Place nodes and edges on the graph
+        Args:
+            G: the complete graph
+            eth_src: MAC address of source
+            eth_dst: MAC address of destination
+            device_dns_mappings: device to DNS mappings (data structure)
+            dev_list: list of existing smarthome devices
+            layers: layers of JSON file structure
+            edge_to_prot: edge to protocols mappings
+            edge_to_vol: edge to traffic volume mappings
+    """
+    # Get timestamp of packet (router's timestamp)
+    timestamp = Decimal(layers[JSON_KEY_FRAME][JSON_KEY_FRAME_TIME_EPOCH])
+    # Get packet length
+    packet_len = Decimal(layers[JSON_KEY_FRAME][JSON_KEY_FRAME_LENGTH])
+    # Get the protocol and strip just the name of it
+    long_protocol = layers[JSON_KEY_FRAME][JSON_KEY_FRAME_PROTOCOLS]
+    # Split once starting from the end of the string and get it
+    split_protocol = long_protocol.split(':')
+    protocol = None
+    if len(split_protocol) < 5:
+        last_index = len(split_protocol) - 1
+        protocol = split_protocol[last_index]
+    else:
+        protocol = split_protocol[3] + ":" + split_protocol[4]
+    print "timestamp: ", timestamp, " - new protocol added: ", protocol, "\n"
+    # Store protocol into the set (source)
+    protocols = None
+    # Key to search in the dictionary is <src-mac-address>-<dst-mac_address>
+    dict_key = eth_src + "-" + eth_dst
+    if dict_key not in edge_to_prot:
+        edge_to_prot[dict_key] = set()
+    protocols = edge_to_prot[dict_key]
+    protocols.add(protocol)
+    protocols_str = ', '.join(protocols)
+    print "protocols: ", protocols_str, "\n"
+    # Check packet length and accumulate to get traffic volume
+    if dict_key not in edge_to_vol:
+        edge_to_vol[dict_key] = 0;
+    edge_to_vol[dict_key] = edge_to_vol[dict_key] + packet_len
+    volume = str(edge_to_vol[dict_key])
+    # And source and destination IPs
+    ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
+    ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
+    # Categorize source and destination IP addresses: local vs. non-local
+    ip_re = re.compile(r'\b192.168.[0-9.]+')
+    src_is_local = ip_re.search(ip_src) 
+    dst_is_local = ip_re.search(ip_dst)
+    print "ip.src =", ip_src, "ip.dst =", ip_dst, "\n"
+    # Place nodes and edges
+    src_node = None
+    dst_node = None
+    if src_is_local:
+        G.add_node(eth_src, Name=dev_list[eth_src])
+        src_node = eth_src
+    else:
+        hostname = None
+        # Check first if the key (eth_dst) exists in the dictionary
+        if eth_dst in device_dns_mappings:
+            # If the source is not local, then it's inbound traffic, and hence the eth_dst is the MAC of the IoT device.
+            hostname = device_dns_mappings[eth_dst].hostname_for_ip_at_time(ip_src, timestamp)                   
+        if hostname is None:
+            # Use IP if no hostname mapping
+            hostname = ip_src
+        # Non-smarthome devices can be merged later
+        G.add_node(hostname, Merged='')
+        src_node = hostname
+
+    if dst_is_local:
+        G.add_node(eth_dst, Name=dev_list[eth_dst])
+        dst_node = eth_dst
+    else:
+        hostname = None
+        # Check first if the key (eth_dst) exists in the dictionary
+        if eth_src in device_dns_mappings:
+            # If the destination is not local, then it's outbound traffic, and hence the eth_src is the MAC of the IoT device.
+            hostname = device_dns_mappings[eth_src].hostname_for_ip_at_time(ip_dst, timestamp)
+        if hostname is None:
+            # Use IP if no hostname mapping
+            hostname = ip_dst
+        # Non-smarthome devices can be merged later
+        G.add_node(hostname, Merged='')
+        dst_node = hostname
+    G.add_edge(src_node, dst_node, Protocol=protocols_str, Volume=volume)
+
+
 def parse_json(file_path):
     """ Parse JSON file and create graph
         Args:
@@ -141,25 +230,21 @@ def parse_json(file_path):
     dev_list = create_device_list(DEVICE_MAC_LIST)
     # Create an exclusion list
     exc_list = create_device_list(EXCLUSION_MAC_LIST)
-
     # First parse the file once, constructing a map that contains information about individual devices' DNS resolutions.
     device_dns_mappings = parser.parse_dns.parse_json_dns(file_path) # "./json/eth1.dump.json"
-    
     # Init empty graph
     G = nx.DiGraph()
-    # Mapping from node to a set of protocols
+    # Mapping from edge to a set of protocols
     edge_to_prot = dict()
-
+    # Mapping from edge to traffic volume
+    edge_to_vol = dict()
     # Parse file again, this time constructing a graph of device<->server and device<->device communication.
     with open(file_path) as jf:
-        # Read JSON.
-        # data becomes reference to root JSON object (or in our case json array)
+        # Read JSON; data becomes reference to root JSON object (or in our case json array)
         data = json.load(jf)
-
         # Loop through json objects (packets) in data
         for p in data:
-            # p is a JSON object, not an index
-            # Drill down to object containing data from the different layers
+            # p is a JSON object, not an index - drill down to object containing data from the different layers
             layers = p[JSON_KEY_SOURCE][JSON_KEY_LAYERS]
 
             iscontinue = False
@@ -187,77 +272,10 @@ def parse_json(file_path):
             if eth_dst in exc_list:
                 print "[ WARNING: Destination ", eth_dst, " is excluded from graph! ]"
                 continue
-
-            # Fetch timestamp of packet (router's timestamp)
-            timestamp = Decimal(layers[JSON_KEY_FRAME][JSON_KEY_FRAME_TIME_EPOCH])
-            # Get the protocol and strip just the name of it
-            long_protocol = layers[JSON_KEY_FRAME][JSON_KEY_FRAME_PROTOCOLS]
-            # Split once starting from the end of the string and get it
-            #protocol = long_protocol.rsplit(':', 1)[1]
-            split_protocol = long_protocol.split(':')
-            protocol = None
-            if len(split_protocol) < 5:
-                last_index = len(split_protocol) - 1
-                protocol = split_protocol[last_index]
-            else:
-                protocol = split_protocol[3] + ":" + split_protocol[4]
-            print "timestamp: ", timestamp, " - new protocol added: ", protocol, "\n"
-
-            # Store protocol into the set (source)
-            protocols = None
-            # Key to search for protocol list in the dictionary is
-            #   <src-mac-address>-<dst-mac_address>
-            protocol_key = eth_src + "-" + eth_dst
-            if protocol_key not in edge_to_prot:
-                edge_to_prot[protocol_key] = set()
-            protocols = edge_to_prot[protocol_key]
-            protocols.add(protocol)
-            protocols_str = ', '.join(protocols)
-            print "protocols: ", protocols_str, "\n"
-            # And source and destination IPs
-            ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
-            ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
-
-            # Categorize source and destination IP addresses: local vs. non-local
-            ipre = re.compile(r'\b192.168.[0-9.]+')
-            src_is_local = ipre.search(ip_src) 
-            dst_is_local = ipre.search(ip_dst)
-            print "ip.src =", ip_src, "ip.dst =", ip_dst, "\n"
-            
-            src_node = None
-            dst_node = None
-            if src_is_local:
-                G.add_node(eth_src, Name=dev_list[eth_src])
-                src_node = eth_src
-            else:
-                hostname = None
-                # Check first if the key (eth_dst) exists in the dictionary
-                if eth_dst in device_dns_mappings:
-                    # If the source is not local, then it's inbound traffic, and hence the eth_dst is the MAC of the IoT device.
-                    hostname = device_dns_mappings[eth_dst].hostname_for_ip_at_time(ip_src, timestamp)                   
-                if hostname is None:
-                    # Use IP if no hostname mapping
-                    hostname = ip_src
-                # Non-smarthome devices can be merged later
-                G.add_node(hostname, Merged='')
-                src_node = hostname
-
-            if dst_is_local:
-                G.add_node(eth_dst, Name=dev_list[eth_dst])
-                dst_node = eth_dst
-            else:
-                hostname = None
-                # Check first if the key (eth_dst) exists in the dictionary
-                if eth_src in device_dns_mappings:
-                    # If the destination is not local, then it's outbound traffic, and hence the eth_src is the MAC of the IoT device.
-                    hostname = device_dns_mappings[eth_src].hostname_for_ip_at_time(ip_dst, timestamp)
-                if hostname is None:
-                    # Use IP if no hostname mapping
-                    hostname = ip_dst
-                # Non-smarthome devices can be merged later
-                G.add_node(hostname, Merged='')
-                dst_node = hostname
-            G.add_edge(src_node, dst_node, Protocol=protocols_str)
+           
+            # Place nodes and edges in graph
+            place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers, 
+                edge_to_prot, edge_to_vol)
 
     # Print DNS mapping for reference
 	#for mac in device_dns_mappings:
