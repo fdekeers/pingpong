@@ -1,0 +1,36 @@
+# Script to plot inter-arrival timestamp graphs for network traffic analysis
+#
+# by Rahmadi Trimananda (rahmadi.trimananda@uci.edu)
+# Programming Language Research Group @ University of California, Irvine
+# Fall 2017
+
+# ************ #
+# BASIC SETUP  #
+# ************ #
+#set terminal postscript landscape "Arial, 18"
+#set terminal postscript eps font 'Helvetica,20' enhanced color 
+set terminal pngcairo enhanced font 'Verdana,10'
+set autoscale
+unset key
+unset log
+unset label
+set xtics auto
+set ytics auto
+set xlabel "Packet Number"
+set ylabel "Time (seconds)"
+set xrange [:]
+set yrange [0:]
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# WeMo switch
+#set output '../result/wemo_switch_incoming.ps'
+#set output '../result/wemo_switch_incoming.eps'
+set output '../result/wemo_switch_inter_arrival_incoming.png'
+set title "WeMo Switch Inter-Arrival Incoming Traffic"
+plot "../result/test_incoming.dat" using 1:2 with lines
+#set output '../result/wemo_switch_outgoing.png'
+#set title "WeMo Switch Inter-Arrival Outgoing Traffic"
+#plot "../result/wemo_switch_outgoing.dat" using 1:2 with lines
+
