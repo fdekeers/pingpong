@@ -25,12 +25,12 @@ set yrange [0:]
 # PER DEVICE SETUP  #
 # ***************** #
 # WeMo switch
-#set output '../result/wemo_switch_incoming.ps'
-#set output '../result/wemo_switch_incoming.eps'
-set output '../result/wemo_switch_inter_arrival_incoming.png'
+#set output '../result_ia/wemo_switch_incoming.ps'
+#set output '../result_ia/wemo_switch_incoming.eps'
+set output '../result_ia/wemo_switch_inter_arrival_incoming.png'
 set title "WeMo Switch Inter-Arrival Incoming Traffic"
-plot "../result/test_incoming.dat" using 1:2 with lines
-#set output '../result/wemo_switch_outgoing.png'
-#set title "WeMo Switch Inter-Arrival Outgoing Traffic"
-#plot "../result/wemo_switch_outgoing.dat" using 1:2 with lines
+plot "../result_ia/wemo_switch_incoming.dat" using 1:2 with lines
+set output '../result_ia/wemo_switch_inter_arrival_outgoing.png'
+set title "WeMo Switch Inter-Arrival Outgoing Traffic"
+plot "../result_ia/wemo_switch_outgoing.dat" using 1:2 with lines
 

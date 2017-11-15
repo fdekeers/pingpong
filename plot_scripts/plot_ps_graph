@@ -1,0 +1,40 @@
+# Script to plot packet size graphs for network traffic analysis
+#
+# by Rahmadi Trimananda (rahmadi.trimananda@uci.edu)
+# Programming Language Research Group @ University of California, Irvine
+# Fall 2017
+
+# ************ #
+# BASIC SETUP  #
+# ************ #
+#set terminal postscript landscape "Arial, 18"
+#set terminal postscript eps font 'Helvetica,20' enhanced color 
+set terminal pngcairo enhanced font 'Verdana,10'
+set autoscale
+unset key
+unset log
+unset label
+set xtics 600
+set ytics auto
+set xlabel "Packet Timestamp (hh:mm:ss)"
+set ylabel "Packet Size (bytes)"
+set xdata time
+set timefmt "%H:%M:%S"
+#set xrange ["06:00:00":"10:00:00"]
+#set yrange [0:200]
+set xrange [:]
+set yrange [0:]
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# WeMo switch
+#set output '../result_ps/wemo_switch_incoming.ps'
+#set output '../result_ps/wemo_switch_incoming.eps'
+set output '../result_ps/wemo_switch_packet_size_incoming.png'
+set title "WeMo Switch Packet Size Incoming Traffic"
+plot "../result_ps/wemo_switch_incoming.dat" using 1:2
+set output '../result_ps/wemo_switch_packet_size_outgoing.png'
+set title "WeMo Switch Packet Size Outgoing Traffic"
+plot "../result_ps/wemo_switch_outgoing.dat" using 1:2
+
