@@ -4,7 +4,7 @@
 # Check input arguments - we need 2 arguments
 if [ $# -ne 2 ]
     then
-        echo "Usage: ia_analysis_run.sh <path-and-json-file, e.g./a/b/c/d.json> <path-to-output-file, e.g. result_ps/>"
+        echo "Usage: ia_analysis_run.sh <path-and-json-file, e.g./a/b/c/d.json> <path-to-output-file, e.g. result_tb/>"
         exit 1
 fi
 

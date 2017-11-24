@@ -10,6 +10,8 @@ import json
 import numpy as np
 from collections import defaultdict
 from dateutil import parser
+from datetime import datetime
+from decimal import *
 
 JSON_KEY_SOURCE = "_source"
 JSON_KEY_LAYERS = "layers"
@@ -28,6 +30,10 @@ FILE_APPENDIX = ".dat"
 # Use this constant as a flag
 WINDOW_SIZE = 5
 USE_MOVING_AVERAGE = False
+USE_BINNING = True
+# Range = 6, i.e. 3 to left and 3 to right (in seconds)
+TOTAL_RANGE = 60 # TOTAL_RANGE = 2 x RANGE
+RANGE = 30
 
 
 def moving_average(array, window=3):
@@ -53,6 +59,36 @@ def moving_average(array, window=3):
     retarr[window - 1:] = retarr[window - 1:] / window
     return retarr
 
+def hms_to_seconds(t):
+    """ Calculate hms to seconds
+        Args:
+            t = time in hh:mm:ss string
+        Adapted from:
+            https://stackoverflow.com/questions/10742296/python-time-conversion-hms-to-seconds
+    """
+    h, m, s = [int(i) for i in t.split(':')]
+    return 3600*h + 60*m + s
+    
+def seconds_to_hms(t):
+    """ Calculate seconds to hms
+        Args:
+            t = time in seconds
+        Adapted from:
+            https://stackoverflow.com/questions/10742296/python-time-conversion-hms-to-seconds
+    """
+    h = t / 3600
+    m = (t - (h * 3600)) / 60
+    s = t - (h * 3600) - (m * 60)
+    hh = str(h)
+    if len(hh) is 1:
+        hh = "0" + hh
+    mm = str(m)
+    if len(mm) is 1:
+        mm = "0" + mm
+    ss = str(s) 
+    if len(ss) is 1:
+        ss = "0" + ss
+    return hh + ":" + mm + ":" + ss
 
 def save_to_file(tblheader, dictionary, filenameout):
     """ Show summary of statistics of PCAP file
@@ -86,6 +122,47 @@ def save_to_file(tblheader, dictionary, filenameout):
             # Space separated
             f.write(str(key) + " " + str(valarr[ind]) + "\n")
             ind += 1
+    elif USE_BINNING:
+        sortedlist = []
+        # Iterate over dictionary and write (key, value) pairs
+        ind = 0
+        first = 0
+        last = 0
+        for key in sorted(dictionary):
+            sortedlist.append(key)
+            print "Key: ", key, " - Value: ", dictionary[key], " - Ind: ", ind
+            ind += 1
+        first = hms_to_seconds(sortedlist[0])
+        #print "First: ", key
+        last = hms_to_seconds(sortedlist[ind-1])
+        #print "Last: ", key
+        resultdict = dict()
+        # Put new binning keys
+        time_ind = first
+        ind = 0
+        while time_ind < last:
+            # Initialize with the first key in the list
+            curr_key = sortedlist[ind]
+            curr_key_secs = hms_to_seconds(curr_key)
+            # Initialize with 0 first
+            resultdict[time_ind] = 0
+            # Check if this is still within RANGE - bin the value if it is
+            while time_ind - RANGE <= curr_key_secs and curr_key_secs <= time_ind + RANGE:
+                resultdict[time_ind] += dictionary[curr_key]
+                print "Time index: ", seconds_to_hms(time_ind), " Value: ", resultdict[time_ind]
+                ind += 1
+                if ind > len(dictionary)-1:
+                    break
+                # Initialize with the key in the list
+                curr_key = sortedlist[ind]
+                curr_key_secs = hms_to_seconds(curr_key)
+            # Increment time index
+            time_ind += TOTAL_RANGE
+        # Now write to file after binning
+        for key in sorted(resultdict):
+            # Space separated
+            f.write(seconds_to_hms(key) + " " + str(resultdict[key]) + "\n")
+            #print seconds_to_hms(key) + " " + str(resultdict[key])
     else:
         # Iterate over dictionary and write (key, value) pairs
         for key in sorted(dictionary):
@@ -103,15 +180,15 @@ def main():
         return
     # Parse the file for the specified MAC address
     timefreq_incoming = parse_json(sys.argv[1], sys.argv[4], True)
-    timefreq_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
+    #timefreq_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
     # Write statistics into file
     print "====================================================================="
     print "==> Analyzing incoming traffic ..."
     save_to_file(sys.argv[3] + INCOMING_APPENDIX, timefreq_incoming, sys.argv[2] + INCOMING_APPENDIX + FILE_APPENDIX)
     print "====================================================================="
-    print "==> Analyzing outgoing traffic ..."
-    save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timefreq_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
-    print "====================================================================="
+    #print "==> Analyzing outgoing traffic ..."
+    #save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timefreq_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
+    #print "====================================================================="
     #for time in time_freq.keys():
     #for key in sorted(time_freq):
     #    print key, " => ", time_freq[key]
