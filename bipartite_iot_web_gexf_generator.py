@@ -101,9 +101,12 @@ def parse_json(file_path):
             if JSON_KEY_UDP not in layers and JSON_KEY_TCP not in layers:
                 continue
 
+            # Skip any non IP traffic
+            if JSON_KEY_IP not in layers:
+                continue
+            
             # Fetch timestamp of packet (router's timestamp)
             packet_timestamp = Decimal(layers[JSON_KEY_FRAME][JSON_KEY_FRAME_TIME_EPOCH])
-            print "timestamp", packet_timestamp
             # Fetch source and destination MACs
             eth = layers.get(JSON_KEY_ETH, None)
             if eth is None:
@@ -115,7 +118,6 @@ def parse_json(file_path):
             ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
             ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
 
-            print "ip.src =", ip_src, "ip.dst =", ip_dst
             src_is_local = ip_src.startswith("192.168.") 
             dst_is_local = ip_dst.startswith("192.168.")
 
@@ -135,7 +137,13 @@ def parse_json(file_path):
                 src_node = eth_src
             else:
                 # If the source is not local, then it's inbound traffic, and hence the eth_dst is the MAC of the IoT device.
-                hostname = device_dns_mappings[eth_dst].hostname_for_ip_at_time(ip_src, packet_timestamp)
+                hostname = None
+                # Guard against cases where a device does not perform DNS lookups (or the lookups occur before data collection starts)
+                if eth_dst in device_dns_mappings:
+                    hostname = device_dns_mappings[eth_dst].hostname_for_ip_at_time(ip_src, packet_timestamp)
+                else:
+                    print "[ WARNING: No entry for", eth_dst, "in DNS query map ]"
+
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_src
@@ -146,7 +154,12 @@ def parse_json(file_path):
                 dst_node = eth_dst
             else:
                 # If the destination is not local, then it's outbound traffic, and hence the eth_src is the MAC of the IoT device.
-                hostname = device_dns_mappings[eth_src].hostname_for_ip_at_time(ip_dst, packet_timestamp)
+                hostname = None
+                # Guard against cases where a device does not perform DNS lookups (or the lookups occur before data collection starts)
+                if eth_src in device_dns_mappings:
+                    hostname = device_dns_mappings[eth_src].hostname_for_ip_at_time(ip_dst, packet_timestamp)
+                else:
+                    print "[ WARNING: No entry for", eth_src, "in DNS query map ]"
                 if hostname is None:
                     # Use IP if no hostname mapping
                     hostname = ip_dst
