@@ -89,6 +89,30 @@ def seconds_to_hms(t):
     if len(ss) is 1:
         ss = "0" + ss
     return hh + ":" + mm + ":" + ss
+    
+def include_timestamps_zero_packets(timefreq):
+    """ Include every second that has zero packets (no packets/transmission)
+        Args:
+            timefreq = dictionary that maps timestamps to number of packets
+    """
+    sortedkeylist = []
+    for key in sorted(timefreq):
+        sortedkeylist.append(key)
+    first = sortedkeylist[0]
+    last = sortedkeylist[len(sortedkeylist)-1]
+    # Calculate the number of seconds between first and last packets
+    first_seconds = hms_to_seconds(first)
+    last_seconds = hms_to_seconds(last)
+    seconds = last_seconds - first_seconds
+    # Start counting and filling in timestamps with zero packets
+    counter = 0
+    while counter < seconds:
+        timestamp = seconds_to_hms(first_seconds + counter)
+        if timestamp not in timefreq:
+            timefreq[timestamp] = 0
+        counter += 1
+    return timefreq
+    
 
 def save_to_file(tblheader, dictionary, filenameout):
     """ Show summary of statistics of PCAP file
@@ -122,6 +146,7 @@ def save_to_file(tblheader, dictionary, filenameout):
             # Space separated
             f.write(str(key) + " " + str(valarr[ind]) + "\n")
             ind += 1
+
     elif USE_BINNING:
         sortedlist = []
         # Iterate over dictionary and write (key, value) pairs
@@ -163,6 +188,7 @@ def save_to_file(tblheader, dictionary, filenameout):
             # Space separated
             f.write(seconds_to_hms(key) + " " + str(resultdict[key]) + "\n")
             #print seconds_to_hms(key) + " " + str(resultdict[key])
+
     else:
         # Iterate over dictionary and write (key, value) pairs
         for key in sorted(dictionary):
@@ -180,15 +206,17 @@ def main():
         return
     # Parse the file for the specified MAC address
     timefreq_incoming = parse_json(sys.argv[1], sys.argv[4], True)
-    #timefreq_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
+    timefreq_incoming = include_timestamps_zero_packets(timefreq_incoming)
+    timefreq_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
+    timefreq_outgoing = include_timestamps_zero_packets(timefreq_outgoing)
     # Write statistics into file
     print "====================================================================="
     print "==> Analyzing incoming traffic ..."
     save_to_file(sys.argv[3] + INCOMING_APPENDIX, timefreq_incoming, sys.argv[2] + INCOMING_APPENDIX + FILE_APPENDIX)
     print "====================================================================="
-    #print "==> Analyzing outgoing traffic ..."
-    #save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timefreq_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
-    #print "====================================================================="
+    print "==> Analyzing outgoing traffic ..."
+    save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timefreq_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
+    print "====================================================================="
     #for time in time_freq.keys():
     #for key in sorted(time_freq):
     #    print key, " => ", time_freq[key]
