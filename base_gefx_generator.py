@@ -53,6 +53,9 @@ listchkprot = [ "arp",
                 "mdns",
                 "ssdp" ]
 
+# Switch to generate graph that only shows local communication
+ONLY_INCLUDE_LOCAL_COMMUNICATION = True
+
 
 def create_device_list(dev_list_file):
     """ Create list for smart home devices from a CSV file
@@ -98,7 +101,7 @@ def traverse_and_merge_nodes(G, dev_list_file):
     # Traverse every node
     # Check that the node is not a smarthome device
     for node in nodes:
-        neighbors = G.neighbors(node)
+        neighbors = G[node] #G.neighbors(node)
         #print "Neighbors: ", neighbors, "\n"
         # Skip if the node is a smarthome device
         if node in dev_list:
@@ -107,7 +110,7 @@ def traverse_and_merge_nodes(G, dev_list_file):
         if len(neighbors) is not 1:
             continue
         #print "Node: ", node
-        neighbor = neighbors[0]
+        neighbor = neighbors.keys()[0] #neighbors[0]
         #print "Neighbor: ", neighbors
         protocols = G[node][neighbor]['Protocol']
         #print "Protocol: ", protocols
@@ -160,7 +163,7 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
         protocol = split_protocol[last_index]
     else:
         protocol = split_protocol[3] + ":" + split_protocol[4]
-    print "timestamp: ", timestamp, " - new protocol added: ", protocol, "\n"
+    #print "timestamp: ", timestamp, " - new protocol added: ", protocol, "\n"
     # Store protocol into the set (source)
     protocols = None
     # Key to search in the dictionary is <src-mac-address>-<dst-mac_address>
@@ -170,7 +173,7 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
     protocols = edge_to_prot[dict_key]
     protocols.add(protocol)
     protocols_str = ', '.join(protocols)
-    print "protocols: ", protocols_str, "\n"
+    #print "protocols: ", protocols_str, "\n"
     # Check packet length and accumulate to get traffic volume
     if dict_key not in edge_to_vol:
         edge_to_vol[dict_key] = 0;
@@ -183,12 +186,21 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
     ip_re = re.compile(r'\b192.168.[0-9.]+')
     src_is_local = ip_re.search(ip_src) 
     dst_is_local = ip_re.search(ip_dst)
-    print "ip.src =", ip_src, "ip.dst =", ip_dst, "\n"
+
+    # Skip device to cloud communication if we are interested in the local graph.
+    # TODO should this go before the protocol dict is changed?
+    if ONLY_INCLUDE_LOCAL_COMMUNICATION and not (src_is_local and dst_is_local):
+        return
+
+    #print "ip.src =", ip_src, "ip.dst =", ip_dst, "\n"
     # Place nodes and edges
     src_node = None
     dst_node = None
+    # Integer values used for tagging nodes, indicating to Gephi if they are local IoT devices or web servers.
+    remote_node = 0
+    local_node = 1
     if src_is_local:
-        G.add_node(eth_src, Name=dev_list[eth_src])
+        G.add_node(eth_src, Name=dev_list[eth_src], islocal=local_node)
         src_node = eth_src
     else:
         hostname = None
@@ -200,11 +212,11 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
             # Use IP if no hostname mapping
             hostname = ip_src
         # Non-smarthome devices can be merged later
-        G.add_node(hostname, Merged='')
+        G.add_node(hostname, Merged='', islocal=remote_node)
         src_node = hostname
 
     if dst_is_local:
-        G.add_node(eth_dst, Name=dev_list[eth_dst])
+        G.add_node(eth_dst, Name=dev_list[eth_dst], islocal=local_node)
         dst_node = eth_dst
     else:
         hostname = None
@@ -216,7 +228,7 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
             # Use IP if no hostname mapping
             hostname = ip_dst
         # Non-smarthome devices can be merged later
-        G.add_node(hostname, Merged='')
+        G.add_node(hostname, Merged='', islocal=remote_node)
         dst_node = hostname
     G.add_edge(src_node, dst_node, Protocol=protocols_str, Volume=volume)
 
@@ -317,6 +329,6 @@ if __name__ == '__main__':
     # Construct graph from JSON
     G = parse_json(input_file)
     # Contract nodes that have the same properties, i.e. same protocols
-    G = traverse_and_merge_nodes(G, DEVICE_MAC_LIST)
+    #G = traverse_and_merge_nodes(G, DEVICE_MAC_LIST)
     # Write Graph in Graph Exchange XML format
     nx.write_gexf(G, output_file)
