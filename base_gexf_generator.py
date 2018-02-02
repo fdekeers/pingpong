@@ -6,6 +6,11 @@ An edge between two hosts indicate that the hosts communicate.
 Hosts are labeled and identified by their IPs.
 The graph is written to a file in Graph Exchange XML format for later import and visual inspection in Gephi.
 
+Update per February 2, 2018:
+Extension of base_gefx_generator.py.
+This script constructs a bipartite graph with IoT devices on one side and Internet hosts on the other side.
+As a result, this graph does NOT show inter IoT device communication.
+
 The input to this script is the JSON output by extract_from_tshark.py by Anastasia Shuba.
 
 This script is a simplification of Milad Asgari's parser_data_to_gephi.py script.
@@ -19,9 +24,9 @@ import networkx as nx
 import sys
 import csv
 import re
-from decimal import *
-
 import parser.parse_dns
+from decimal import *
+from networkx.algorithms import bipartite
 
 # List of devices
 DEVICE_MAC_LIST = "devicelist.dat"
@@ -54,7 +59,7 @@ listchkprot = [ "arp",
                 "ssdp" ]
 
 # Switch to generate graph that only shows local communication
-ONLY_INCLUDE_LOCAL_COMMUNICATION = True
+ONLY_INCLUDE_LOCAL_COMMUNICATION = False
 
 
 def create_device_list(dev_list_file):
@@ -199,8 +204,11 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
     # Integer values used for tagging nodes, indicating to Gephi if they are local IoT devices or web servers.
     remote_node = 0
     local_node = 1
+    # Values for the 'bipartite' attribute of a node when constructing the bipartite graph
+    bipartite_iot = 0
+    bipartite_web_server = 1
     if src_is_local:
-        G.add_node(eth_src, Name=dev_list[eth_src], islocal=local_node)
+        G.add_node(eth_src, Name=dev_list[eth_src], islocal=local_node, bipartite=bipartite_iot)
         src_node = eth_src
     else:
         hostname = None
@@ -212,11 +220,11 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
             # Use IP if no hostname mapping
             hostname = ip_src
         # Non-smarthome devices can be merged later
-        G.add_node(hostname, Merged='', islocal=remote_node)
+        G.add_node(hostname, Merged='', islocal=remote_node, bipartite=bipartite_web_server)
         src_node = hostname
 
     if dst_is_local:
-        G.add_node(eth_dst, Name=dev_list[eth_dst], islocal=local_node)
+        G.add_node(eth_dst, Name=dev_list[eth_dst], islocal=local_node, bipartite=bipartite_iot)
         dst_node = eth_dst
     else:
         hostname = None
@@ -228,7 +236,7 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
             # Use IP if no hostname mapping
             hostname = ip_dst
         # Non-smarthome devices can be merged later
-        G.add_node(hostname, Merged='', islocal=remote_node)
+        G.add_node(hostname, Merged='', islocal=remote_node, bipartite=bipartite_web_server)
         dst_node = hostname
     G.add_edge(src_node, dst_node, Protocol=protocols_str, Volume=volume)
 
@@ -329,6 +337,6 @@ if __name__ == '__main__':
     # Construct graph from JSON
     G = parse_json(input_file)
     # Contract nodes that have the same properties, i.e. same protocols
-    #G = traverse_and_merge_nodes(G, DEVICE_MAC_LIST)
+    G = traverse_and_merge_nodes(G, DEVICE_MAC_LIST)
     # Write Graph in Graph Exchange XML format
     nx.write_gexf(G, output_file)
