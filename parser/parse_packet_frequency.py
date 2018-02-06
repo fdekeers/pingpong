@@ -21,8 +21,9 @@ JSON_KEY_ETH_DST = "eth.dst"
 JSON_KEY_ETH_SRC = "eth.src"
 JSON_KEY_FRAME = "frame"
 JSON_KEY_FRAME_TIME = "frame.time"
+JSON_KEY_FRAME_LEN = "frame.len"
 TABLE_HEADER_X = "Timestamp (hh:mm:ss)"
-TABLE_HEADER_Y = "Packet frequency (pps)"
+TABLE_HEADER_Y = "Packet frequency"
 INCOMING_APPENDIX = "_incoming"
 OUTGOING_APPENDIX = "_outgoing"
 FILE_APPENDIX = ".dat"
@@ -32,9 +33,10 @@ WINDOW_SIZE = 5
 USE_MOVING_AVERAGE = False
 USE_BINNING = True
 # Range = 6, i.e. 3 to left and 3 to right (in seconds)
-TOTAL_RANGE = 60 # TOTAL_RANGE = 2 x RANGE
-RANGE = 30
-
+#TOTAL_RANGE = 60 # TOTAL_RANGE = 2 x RANGE
+#RANGE = 30
+TOTAL_RANGE = 20 # TOTAL_RANGE = 2 x RANGE
+RANGE = 10
 
 def moving_average(array, window=3):
     """ Calculate moving average
@@ -90,13 +92,13 @@ def seconds_to_hms(t):
         ss = "0" + ss
     return hh + ":" + mm + ":" + ss
     
-def include_timestamps_zero_packets(timefreq):
+def include_timestamps_zero_packets(timelen):
     """ Include every second that has zero packets (no packets/transmission)
         Args:
-            timefreq = dictionary that maps timestamps to number of packets
+            timelen = dictionary that maps timestamps to packet length
     """
     sortedkeylist = []
-    for key in sorted(timefreq):
+    for key in sorted(timelen):
         sortedkeylist.append(key)
     first = sortedkeylist[0]
     last = sortedkeylist[len(sortedkeylist)-1]
@@ -108,10 +110,10 @@ def include_timestamps_zero_packets(timefreq):
     counter = 0
     while counter < seconds:
         timestamp = seconds_to_hms(first_seconds + counter)
-        if timestamp not in timefreq:
-            timefreq[timestamp] = 0
+        if timestamp not in timelen:
+            timelen[timestamp] = 0
         counter += 1
-    return timefreq
+    return timelen
     
 
 def save_to_file(tblheader, dictionary, filenameout):
@@ -205,17 +207,17 @@ def main():
         print "Usage: python", sys.argv[0], "<input_file> <output_file> <device_name> <mac_address>"
         return
     # Parse the file for the specified MAC address
-    timefreq_incoming = parse_json(sys.argv[1], sys.argv[4], True)
-    timefreq_incoming = include_timestamps_zero_packets(timefreq_incoming)
-    timefreq_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
-    timefreq_outgoing = include_timestamps_zero_packets(timefreq_outgoing)
+    timelen_incoming = parse_json(sys.argv[1], sys.argv[4], True)
+    timelen_incoming = include_timestamps_zero_packets(timelen_incoming)
+    timelen_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
+    timelen_outgoing = include_timestamps_zero_packets(timelen_outgoing)
     # Write statistics into file
     print "====================================================================="
     print "==> Analyzing incoming traffic ..."
-    save_to_file(sys.argv[3] + INCOMING_APPENDIX, timefreq_incoming, sys.argv[2] + INCOMING_APPENDIX + FILE_APPENDIX)
+    save_to_file(sys.argv[3] + INCOMING_APPENDIX, timelen_incoming, sys.argv[2] + INCOMING_APPENDIX + FILE_APPENDIX)
     print "====================================================================="
     print "==> Analyzing outgoing traffic ..."
-    save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timefreq_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
+    save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timelen_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
     print "====================================================================="
     #for time in time_freq.keys():
     #for key in sorted(time_freq):
@@ -232,8 +234,8 @@ def parse_json(filepath, macaddress, incomingoutgoing):
             incomingoutgoing: boolean to define whether we collect incoming or outgoing traffic
                               True = incoming, False = outgoing
     """
-    # Maps timestamps to frequencies of packets
-    timefreq = dict()
+    # Maps timestamps to lengths of packets
+    timelen = dict()
     with open(filepath) as jf:
         # Read JSON.
         # data becomes reference to root JSON object (or in our case json array)
@@ -246,6 +248,8 @@ def parse_json(filepath, macaddress, incomingoutgoing):
             # Get timestamp
             frame = layers.get(JSON_KEY_FRAME, None)
             datetime = frame.get(JSON_KEY_FRAME_TIME, None)
+            # Get frame length
+            length = frame.get(JSON_KEY_FRAME_LEN, None)
             # Get into the Ethernet address part
             eth = layers.get(JSON_KEY_ETH, None)
             # Skip any non DNS traffic
@@ -259,26 +263,26 @@ def parse_json(filepath, macaddress, incomingoutgoing):
             datetimeobj = parser.parse(datetime)
             # Remove the microsecond part
             timestr = str(datetimeobj.time())[:8]
-            print str(timestr) + " - src:" + str(src) + " - dest:" + str(dst)
+            print str(timestr) + " - src:" + str(src) + " - dest:" + str(dst) + " - length: ", length
             # Get and count the traffic for the specified MAC address
             if incomingoutgoing:           
                 if dst == macaddress:
                     # Check if timestamp already exists in the map
                     # If yes, then just increment the frequency value...
-                    if timestr in timefreq:
-                        timefreq[timestr] = timefreq[timestr] + 1
+                    if timestr in timelen:
+                        timelen[timestr] = timelen[timestr] + int(length)
                     else: # If not, then put the value one there
-                        timefreq[timestr] = 1
+                        timelen[timestr] = int(length)
             else:
                 if src == macaddress:
                     # Check if timestamp already exists in the map
                     # If yes, then just increment the frequency value...
-                    if timestr in timefreq:
-                        timefreq[timestr] = timefreq[timestr] + 1
+                    if timestr in timelen:
+                        timelen[timestr] = timelen[timestr] + int(length)
                     else: # If not, then put the value one there
-                        timefreq[timestr] = 1
+                        timelen[timestr] = int(length)
 
-    return timefreq
+    return timelen
 
 
 if __name__ == '__main__':

@@ -1,0 +1,42 @@
+# Script to plot time series graphs for network traffic analysis
+#
+# by Rahmadi Trimananda (rahmadi.trimananda@uci.edu)
+# Programming Language Research Group @ University of California, Irvine
+# Winter 2018
+
+# ************ #
+# BASIC SETUP  #
+# ************ #
+set terminal pngcairo enhanced font 'Verdana,10'
+set autoscale
+unset key
+unset log
+unset label
+set xtics 200
+set ytics auto
+set xlabel "Packet Timestamp (hh:mm:ss)"
+set ylabel "Packet Size (bytes)"
+set xdata time
+set timefmt "%H:%M:%S"
+set xrange [:]
+set yrange [0:]
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# WeMo switch local
+set output './result/wemo_switch_timestamp_local_incoming.png'
+set title "WeMo Switch Incoming Local Traffic"
+plot "./result/wemo_switch_local_incoming.dat" using 1:2 with lines
+set output './result/wemo_switch_timestamp_local_outgoing.png'
+set title "WeMo Switch Outgoing Local Traffic"
+plot "./result/wemo_switch_local_outgoing.dat" using 1:2 with lines
+
+# WeMo switch internet
+set output './result/wemo_switch_timestamp_internet_incoming.png'
+set title "WeMo Switch Incoming Internet Traffic"
+plot "./result/wemo_switch_internet_incoming.dat" using 1:2 with lines
+set output './result/wemo_switch_timestamp_internet_outgoing.png'
+set title "WeMo Switch Outgoing Internet Traffic"
+plot "./result/wemo_switch_internet_outgoing.dat" using 1:2 with lines
+
