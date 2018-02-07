@@ -43,6 +43,7 @@ JSON_KEY_FRAME_LENGTH = "frame.len"
 JSON_KEY_ETH = "eth"
 JSON_KEY_ETH_SRC = "eth.src"
 JSON_KEY_ETH_DST = "eth.dst"
+JSON_KEY_IPV6 = "ipv6"
 JSON_KEY_IP = "ip"
 JSON_KEY_IP_SRC = "ip.src"
 JSON_KEY_IP_DST = "ip.dst"
@@ -292,7 +293,10 @@ def parse_json(file_path):
             if eth_dst in exc_list:
                 print "[ WARNING: Destination ", eth_dst, " is excluded from graph! ]"
                 continue
-           
+            # Exclude if IP does not exist in layers - this means IPv6
+            if JSON_KEY_IP not in layers and JSON_KEY_IPV6 in layers:
+                continue
+            
             # Place nodes and edges in graph
             place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers, 
                 edge_to_prot, edge_to_vol)

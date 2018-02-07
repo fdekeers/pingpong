@@ -25,18 +25,51 @@ set yrange [0:]
 # PER DEVICE SETUP  #
 # ***************** #
 # WeMo switch local
-set output './result/wemo_switch_timestamp_local_incoming.png'
-set title "WeMo Switch Incoming Local Traffic"
-plot "./result/wemo_switch_local_incoming.dat" using 1:2 with lines
-set output './result/wemo_switch_timestamp_local_outgoing.png'
-set title "WeMo Switch Outgoing Local Traffic"
-plot "./result/wemo_switch_local_outgoing.dat" using 1:2 with lines
+# eth0
+set output './result/wemo_switch_eth_timestamp_local_incoming.png'
+set title "WeMo Switch Incoming Local Traffic (eth0)"
+plot "./result/wemo_switch_eth_local_incoming.dat" using 1:2 with lines
+set output './result/wemo_switch_eth_timestamp_local_outgoing.png'
+set title "WeMo Switch Outgoing Local Traffic (eth0)"
+plot "./result/wemo_switch_eth_local_outgoing.dat" using 1:2 with lines
+# wlan1
+set output './result/wemo_switch_wlan_timestamp_local_incoming.png'
+set title "WeMo Switch Incoming Local Traffic (wlan1)"
+plot "./result/wemo_switch_wlan_local_incoming.dat" using 1:2 with lines
+set output './result/wemo_switch_wlan_timestamp_local_outgoing.png'
+set title "WeMo Switch Outgoing Local Traffic (wlan1)"
+plot "./result/wemo_switch_wlan_local_outgoing.dat" using 1:2 with lines
 
 # WeMo switch internet
-set output './result/wemo_switch_timestamp_internet_incoming.png'
-set title "WeMo Switch Incoming Internet Traffic"
-plot "./result/wemo_switch_internet_incoming.dat" using 1:2 with lines
-set output './result/wemo_switch_timestamp_internet_outgoing.png'
-set title "WeMo Switch Outgoing Internet Traffic"
-plot "./result/wemo_switch_internet_outgoing.dat" using 1:2 with lines
+# eth0
+set output './result/wemo_switch_eth_timestamp_internet_incoming.png'
+set title "WeMo Switch Incoming Internet Traffic (eth0)"
+plot "./result/wemo_switch_eth_internet_incoming.dat" using 1:2 with lines
+set output './result/wemo_switch_eth_timestamp_internet_outgoing.png'
+set title "WeMo Switch Outgoing Internet Traffic (eth0)"
+plot "./result/wemo_switch_eth_internet_outgoing.dat" using 1:2 with lines
+# wlan1
+set output './result/wemo_switch_wlan_timestamp_internet_incoming.png'
+set title "WeMo Switch Incoming Internet Traffic (wlan1)"
+plot "./result/wemo_switch_wlan_internet_incoming.dat" using 1:2 with lines
+set output './result/wemo_switch_wlan_timestamp_internet_outgoing.png'
+set title "WeMo Switch Outgoing Internet Traffic (wlan1)"
+plot "./result/wemo_switch_wlan_internet_outgoing.dat" using 1:2 with lines
+
+# WeMo phone local
+# wlan1
+set output './result/wemo_phone_wlan_timestamp_local_incoming.png'
+set title "WeMo Phone Incoming Local Traffic (wlan1)"
+plot "./result/wemo_phone_wlan_local_incoming.dat" using 1:2 with lines
+set output './result/wemo_phone_wlan_timestamp_local_outgoing.png'
+set title "WeMo Phone Outgoing Local Traffic (wlan1)"
+plot "./result/wemo_phone_wlan_local_outgoing.dat" using 1:2 with lines
+# WeMo phone internet
+# wlan1
+set output './result/wemo_phone_wlan_timestamp_internet_incoming.png'
+set title "WeMo Phone Incoming Internet Traffic (wlan1)"
+plot "./result/wemo_phone_wlan_internet_incoming.dat" using 1:2 with lines
+set output './result/wemo_phone_wlan_timestamp_internet_outgoing.png'
+set title "WeMo Phone Outgoing Internet Traffic (wlan1)"
+plot "./result/wemo_phone_wlan_internet_outgoing.dat" using 1:2 with lines
 
