@@ -1,0 +1,45 @@
+# Script to plot time series graphs for network traffic analysis
+#
+# by Rahmadi Trimananda (rahmadi.trimananda@uci.edu)
+# Programming Language Research Group @ University of California, Irvine
+# Winter 2018
+
+# ************ #
+# BASIC SETUP  #
+# ************ #
+set terminal pngcairo enhanced font 'Verdana,10'
+set autoscale
+set key
+unset log
+unset label
+set xtics 50
+set xtics rotate by 60 right
+set ytics auto
+set xlabel "Packet Timestamp (hh:mm:ss)"
+set ylabel "Packet Size (bytes)"
+set xdata time
+set timefmt "%H:%M:%S"
+set xrange [:]
+set yrange [0:]
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# TPLink switch local
+# wlan1 / eth0
+set output './result/tplink_switch_wlan_timestamp_local_incoming.png'
+set title "TP-Link Switch Incoming Local Traffic (wlan1/eth0)"
+plot "./result/tplink_switch_wlan_local_incoming.dat" using 1:2 with lines title "wlan1", "./result/tplink_switch_eth_local_incoming.dat" using 1:2 with lines title "eth0", "./result/tplink_phone_wlan_local_outgoing.dat" using 1:2 with lines title "wlan1-phone-outgoing", "./result/tplink_phone_wlan_local_incoming.dat" using 1:2 with lines title "wlan1-phone-incoming"
+set output './result/tplink_switch_wlan_timestamp_local_outgoing.png'
+set title "TP-Link Switch Outgoing Local Traffic (wlan1/eth0)"
+plot "./result/tplink_switch_wlan_local_outgoing.dat" using 1:2 with lines title "wlan1", "./result/tplink_switch_eth_local_outgoing.dat" using 1:2 with lines title "eth0", "./result/tplink_phone_wlan_local_outgoing.dat" using 1:2 with lines title "wlan1-phone-outgoing", "./result/tplink_phone_wlan_local_incoming.dat" using 1:2 with lines title "wlan1-phone-incoming"
+
+# TPLink switch remote
+# wlan1 / eth0
+set output './result/tplink_switch_wlan_timestamp_remote_incoming.png'
+set title "TP-Link Switch Incoming Remote Traffic (wlan1/eth0)"
+plot "./result/tplink_switch_wlan_remote_incoming.dat" using 1:2 with lines title "wlan1", "./result/tplink_switch_eth_remote_incoming.dat" using 1:2 with lines title "eth0"
+set output './result/tplink_switch_wlan_timestamp_remote_outgoing.png'
+set title "TP-Link Switch Outgoing Remote Traffic (wlan1/eth0)"
+plot "./result/tplink_switch_wlan_remote_outgoing.dat" using 1:2 with lines title "wlan1", "./result/tplink_switch_eth_remote_outgoing.dat" using 1:2 with lines title "eth0"
+

@@ -18,4 +18,3 @@ fi
 python ./base_gexf_generator.py $1 $2.gexf
 python ./parser/parse_packet_frequency.py $1 $2 $3 $4
 
-

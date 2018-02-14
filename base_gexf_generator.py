@@ -170,10 +170,18 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
     else:
         protocol = split_protocol[3] + ":" + split_protocol[4]
     #print "timestamp: ", timestamp, " - new protocol added: ", protocol, "\n"
+    # And source and destination IPs
+    ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
+    ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
+    # Categorize source and destination IP addresses: local vs. non-local
+    ip_re = re.compile(r'\b192.168.[0-9.]+')
+    src_is_local = ip_re.search(ip_src) 
+    dst_is_local = ip_re.search(ip_dst)
     # Store protocol into the set (source)
     protocols = None
     # Key to search in the dictionary is <src-mac-address>-<dst-mac_address>
-    dict_key = eth_src + "-" + eth_dst
+    dict_key = ip_src + "-" + ip_dst
+    #print "Key: ", dict_key
     if dict_key not in edge_to_prot:
         edge_to_prot[dict_key] = set()
     protocols = edge_to_prot[dict_key]
@@ -185,13 +193,6 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
         edge_to_vol[dict_key] = 0;
     edge_to_vol[dict_key] = edge_to_vol[dict_key] + packet_len
     volume = str(edge_to_vol[dict_key])
-    # And source and destination IPs
-    ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
-    ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
-    # Categorize source and destination IP addresses: local vs. non-local
-    ip_re = re.compile(r'\b192.168.[0-9.]+')
-    src_is_local = ip_re.search(ip_src) 
-    dst_is_local = ip_re.search(ip_dst)
 
     # Skip device to cloud communication if we are interested in the local graph.
     # TODO should this go before the protocol dict is changed?

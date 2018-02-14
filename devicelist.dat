@@ -18,6 +18,7 @@ c4:12:f5:e3:dc:17, MotionSensor_D-Link
 d0:52:a8:a3:60:0f, ZigBeeHub_Samsung_SmartThings
 64:bc:0c:43:3f:40, Smartphone_Nexus_5_White
 64:89:9a:86:a9:7d, Smartphone_Nexus_5_Black
+a8:96:75:2f:0c:9c, Smartphone_Motorola
 60:f1:89:96:45:f6, Samsung_S7_Edge
 60:57:18:8e:aa:94, Laptop_PC_HP
 b0:b9:8a:73:69:8e, RouterPort_Bridge-LAN
@@ -27,4 +28,5 @@ b0:b9:8a:73:69:91, RouterPort_WLAN1
 74:da:38:0d:05:55, RaspberryPi_Controller
 d4:6a:6a:4f:e2:33, Dell_laptop
 80:e6:50:25:70:72, Apple_MAC
+68:a8:6d:06:e5:5e, Apple_MAC_PLRG
 ff:ff:ff:ff:ff:ff, Broadcast_MAC
