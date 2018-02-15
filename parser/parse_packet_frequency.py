@@ -207,17 +207,23 @@ def main():
         print "Usage: python", sys.argv[0], "<input_file> <output_file> <device_name> <mac_address>"
         return
     # Parse the file for the specified MAC address
+    print "====================================================================="
+    print "Analyzing file: ", sys.argv[1]
     timelen_incoming = parse_json(sys.argv[1], sys.argv[4], True)
-    timelen_incoming = include_timestamps_zero_packets(timelen_incoming)
+    if len(timelen_incoming) > 0:
+        timelen_incoming = include_timestamps_zero_packets(timelen_incoming)
+        print "==> Printing incoming traffic ..."
+        save_to_file(sys.argv[3] + INCOMING_APPENDIX, timelen_incoming, sys.argv[2] + INCOMING_APPENDIX + FILE_APPENDIX)
+    else:
+        print "No incoming traffic to this MAC address!"
+    print "====================================================================="
     timelen_outgoing = parse_json(sys.argv[1], sys.argv[4], False)
-    timelen_outgoing = include_timestamps_zero_packets(timelen_outgoing)
-    # Write statistics into file
-    print "====================================================================="
-    print "==> Analyzing incoming traffic ..."
-    save_to_file(sys.argv[3] + INCOMING_APPENDIX, timelen_incoming, sys.argv[2] + INCOMING_APPENDIX + FILE_APPENDIX)
-    print "====================================================================="
-    print "==> Analyzing outgoing traffic ..."
-    save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timelen_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
+    if len(timelen_outgoing) > 0:
+        timelen_outgoing = include_timestamps_zero_packets(timelen_outgoing)
+        print "==> Printing outgoing traffic ..."
+        save_to_file(sys.argv[3] + OUTGOING_APPENDIX, timelen_outgoing, sys.argv[2] + OUTGOING_APPENDIX + FILE_APPENDIX)
+    else:
+        print "No outgoing traffic from this MAC address!"
     print "====================================================================="
     #for time in time_freq.keys():
     #for key in sorted(time_freq):
@@ -263,7 +269,7 @@ def parse_json(filepath, macaddress, incomingoutgoing):
             datetimeobj = parser.parse(datetime)
             # Remove the microsecond part
             timestr = str(datetimeobj.time())[:8]
-            print str(timestr) + " - src:" + str(src) + " - dest:" + str(dst) + " - length: ", length
+            #print str(timestr) + " - src:" + str(src) + " - dest:" + str(dst) + " - length: ", length
             # Get and count the traffic for the specified MAC address
             if incomingoutgoing:           
                 if dst == macaddress:

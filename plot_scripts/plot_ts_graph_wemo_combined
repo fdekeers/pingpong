@@ -27,18 +27,18 @@ set yrange [0:]
 # ***************** #
 # WeMo switch local
 # wlan1 / eth0
-set output './result/wemo_switch_wlan_timestamp_local_incoming.png'
+set output './result/wemo_switch_wlan_timestamp_local_incoming_combined.png'
 set title "WeMo Switch Incoming Local Traffic (wlan1/eth0)"
 plot "./result/wemo_switch_wlan_local_incoming.dat" using 1:2 with lines title "wlan1", "./result/wemo_switch_eth_local_incoming.dat" using 1:2 with lines title "eth0", "./result/wemo_phone_wlan_local_outgoing.dat" using 1:2 with lines title "wlan1-phone-outgoing", "./result/wemo_phone_wlan_local_incoming.dat" using 1:2 with lines title "wlan1-phone-incoming"
-set output './result/wemo_switch_wlan_timestamp_local_outgoing.png'
+set output './result/wemo_switch_wlan_timestamp_local_outgoing_combined.png'
 set title "WeMo Switch Outgoing Local Traffic (wlan1/eth0)"
 plot "./result/wemo_switch_wlan_local_outgoing.dat" using 1:2 with lines title "wlan1", "./result/wemo_switch_eth_local_outgoing.dat" using 1:2 with lines title "eth0", "./result/wemo_phone_wlan_local_outgoing.dat" using 1:2 with lines title "wlan1-phone-outgoing", "./result/wemo_phone_wlan_local_incoming.dat" using 1:2 with lines title "wlan1-phone-incoming"
 
 # WeMo switch remote
 # wlan1
-set output './result/wemo_switch_wlan_timestamp_remote_incoming.png'
+set output './result/wemo_switch_wlan_timestamp_remote_incoming_combined.png'
 set title "WeMo Switch Incoming Remote Traffic (wlan1/eth0)"
 plot "./result/wemo_switch_wlan_remote_incoming.dat" using 1:2 with lines title "wlan1", "./result/wemo_switch_eth_remote_incoming.dat" using 1:2 with lines title "eth0"
-set output './result/wemo_switch_wlan_timestamp_remote_outgoing.png'
+set output './result/wemo_switch_wlan_timestamp_remote_outgoing_combined.png'
 set title "WeMo Switch Outgoing Remote Traffic (wlan1/eth0)"
 plot "./result/wemo_switch_wlan_remote_outgoing.dat" using 1:2 with lines title "wlan1", "./result/wemo_switch_eth_remote_outgoing.dat" using 1:2 with lines title "eth0"

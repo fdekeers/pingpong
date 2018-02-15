@@ -174,7 +174,8 @@ def place_in_graph(G, eth_src, eth_dst, device_dns_mappings, dev_list, layers,
     ip_src = layers[JSON_KEY_IP][JSON_KEY_IP_SRC]
     ip_dst = layers[JSON_KEY_IP][JSON_KEY_IP_DST]
     # Categorize source and destination IP addresses: local vs. non-local
-    ip_re = re.compile(r'\b192.168.[0-9.]+')
+    #ip_re = re.compile(r'\b192.168.[0-9.]+')
+    ip_re = re.compile(r'\b192.168.1.[0-9.]+')
     src_is_local = ip_re.search(ip_src) 
     dst_is_local = ip_re.search(ip_dst)
     # Store protocol into the set (source)

@@ -26,6 +26,7 @@ b0:b9:8a:73:69:8f, RouterPort_ETH1
 b0:b9:8a:73:69:90, RouterPort_WLAN0
 b0:b9:8a:73:69:91, RouterPort_WLAN1
 74:da:38:0d:05:55, RaspberryPi_Controller
+74:da:38:68:72:84, RaspberryPi_3_Vigilia
 d4:6a:6a:4f:e2:33, Dell_laptop
 80:e6:50:25:70:72, Apple_MAC
 68:a8:6d:06:e5:5e, Apple_MAC_PLRG
