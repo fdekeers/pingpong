@@ -106,7 +106,7 @@ def traverse_and_merge_nodes(G, dev_list_file):
     dev_list = create_device_list(DEVICE_MAC_LIST)
     # Traverse every node
     # Check that the node is not a smarthome device
-    for node in nodes:
+    for node in list(nodes):
         neighbors = G[node] #G.neighbors(node)
         #print "Neighbors: ", neighbors, "\n"
         # Skip if the node is a smarthome device
