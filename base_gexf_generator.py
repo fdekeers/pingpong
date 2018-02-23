@@ -254,7 +254,7 @@ def parse_json(file_path):
     # Create an exclusion list
     exc_list = create_device_list(EXCLUSION_MAC_LIST)
     # First parse the file once, constructing a map that contains information about individual devices' DNS resolutions.
-    device_dns_mappings = parser.parse_dns.parse_json_dns(file_path) # "./json/eth1.dump.json"
+    device_dns_mappings = parser.parse_dns.parse_json_dns(file_path)
     # Init empty graph
     G = nx.DiGraph()
     # Mapping from edge to a set of protocols
@@ -262,6 +262,7 @@ def parse_json(file_path):
     # Mapping from edge to traffic volume
     edge_to_vol = dict()
     # Parse file again, this time constructing a graph of device<->server and device<->device communication.
+    i = 0
     with open(file_path) as jf:
         # Read JSON; data becomes reference to root JSON object (or in our case json array)
         data = json.load(jf)

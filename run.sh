@@ -30,57 +30,71 @@ PHONE_MAC=a8:96:75:2f:0c:9c
 #PATH_LOCAL=/scratch/traffic_measurements/Switches-Feb2018/wemo-insight/local
 #PATH_REMOTE=/scratch/traffic_measurements/Switches-Feb2018/wemo-insight/remote
 
-PREFIX=dlink
-DEVICE=DLink_Switch
-DEVICE_MAC=90:8d:78:e3:81:0c
-PATH_SETUP=/scratch/traffic_measurements/Switches-Feb2018/dlink/setup
-PATH_LOCAL=/scratch/traffic_measurements/Switches-Feb2018/dlink/local
-PATH_REMOTE=/scratch/traffic_measurements/Switches-Feb2018/dlink/remote
+#PREFIX=dlink
+#DEVICE=DLink_Switch
+#DEVICE_MAC=90:8d:78:e3:81:0c
+#PATH_SETUP=/scratch/traffic_measurements/Switches-Feb2018/dlink/setup
+#PATH_LOCAL=/scratch/traffic_measurements/Switches-Feb2018/dlink/local
+#PATH_REMOTE=/scratch/traffic_measurements/Switches-Feb2018/dlink/remote
 
-#PREFIX=smartthings-plug
-#DEVICE=SmartThings_Plug
-#DEVICE_MAC=d0:52:a8:a3:60:0f
-#PATH_SETUP=/scratch/traffic_measurements/Switches-Feb2018/smartthings/setup
-#PATH_LOCAL=/scratch/traffic_measurements/Switches-Feb2018/smartthings/local
-#PATH_REMOTE=/scratch/traffic_measurements/Switches-Feb2018/smartthings/remote
+PREFIX=smartthings-plug
+DEVICE=SmartThings_Plug
+DEVICE_MAC=d0:52:a8:a3:60:0f
+PATH_SETUP=/scratch/traffic_measurements/Switches-Feb2018/smartthings/setup
+PATH_LOCAL=/scratch/traffic_measurements/Switches-Feb2018/smartthings/local
+PATH_REMOTE=/scratch/traffic_measurements/Switches-Feb2018/smartthings/remote
 
-PATH_SETUP_WLAN_JSON=$PREFIX.wlan1.setup.json
-PATH_SETUP_ETH_JSON=$PREFIX.eth0.setup.json
-PATH_LOCAL_WLAN_DNS_JSON=$PREFIX.wlan1.local.dns.json
-PATH_LOCAL_WLAN_JSON=$PREFIX.wlan1.local.json
-PATH_LOCAL_ETH_DNS_JSON=$PREFIX.eth0.local.dns.json
-PATH_LOCAL_ETH_JSON=$PREFIX.eth0.local.json
-PATH_REMOTE_WLAN_DNS_JSON=$PREFIX.wlan1.remote.dns.json
-PATH_REMOTE_WLAN_JSON=$PREFIX.wlan1.remote.json
-PATH_REMOTE_ETH_DNS_JSON=$PREFIX.eth0.remote.dns.json
-PATH_REMOTE_ETH_JSON=$PREFIX.eth0.remote.json
+PATH_SETUP_WLAN1_JSON=$PREFIX.wlan1.setup.json
+PATH_SETUP_ETH0_JSON=$PREFIX.eth0.setup.json
+PATH_SETUP_ETH1_JSON=$PREFIX.eth1.setup.json
+PATH_LOCAL_WLAN1_DNS_JSON=$PREFIX.wlan1.local.dns.json
+PATH_LOCAL_WLAN1_JSON=$PREFIX.wlan1.local.json
+
+PATH_LOCAL_ETH0_DNS_JSON=$PREFIX.eth0.local.dns.json
+PATH_LOCAL_ETH0_JSON=$PREFIX.eth0.local.json
+PATH_LOCAL_ETH1_DNS_JSON=$PREFIX.eth1.local.dns.json
+PATH_LOCAL_ETH1_JSON=$PREFIX.eth1.local.json
+PATH_REMOTE_WLAN1_DNS_JSON=$PREFIX.wlan1.remote.dns.json
+PATH_REMOTE_WLAN1_JSON=$PREFIX.wlan1.remote.json
+PATH_REMOTE_ETH0_DNS_JSON=$PREFIX.eth0.remote.dns.json
+PATH_REMOTE_ETH0_JSON=$PREFIX.eth0.remote.json
+PATH_REMOTE_ETH1_DNS_JSON=$PREFIX.eth1.remote.dns.json
+PATH_REMOTE_ETH1_JSON=$PREFIX.eth1.remote.json
 PATH_GNUPLOT=./plot_scripts/plot_ts_graph_$PREFIX
 PATH_GNUPLOT_COMBINED=./plot_scripts/plot_ts_graph_$PREFIX\_combined
 PATH_DIR_RESULT=result
-PATH_RESULT_SETUP_WLAN=$PREFIX\_switch_wlan_setup
-PATH_RESULT_SETUP_ETH=$PREFIX\_switch_eth_setup
-PATH_RESULT_LOCAL_WLAN=$PREFIX\_switch_wlan_local
-PATH_RESULT_LOCAL_ETH=$PREFIX\_switch_eth_local
-PATH_RESULT_REMOTE_WLAN=$PREFIX\_switch_wlan_remote
-PATH_RESULT_REMOTE_ETH=$PREFIX\_switch_eth_remote
-PATH_RESULT_PHONE_LOCAL_WLAN=$PREFIX\_phone_wlan_local
-PATH_RESULT_PHONE_REMOTE_WLAN=$PREFIX\_phone_wlan_remote
+PATH_RESULT_SETUP_WLAN1=$PREFIX\_switch_wlan1_setup
+PATH_RESULT_SETUP_ETH1=$PREFIX\_switch_eth1_setup
+PATH_RESULT_SETUP_ETH0=$PREFIX\_switch_eth0_setup
+PATH_RESULT_LOCAL_WLAN1=$PREFIX\_switch_wlan1_local
+PATH_RESULT_LOCAL_ETH1=$PREFIX\_switch_eth1_local
+PATH_RESULT_LOCAL_ETH0=$PREFIX\_switch_eth0_local
+PATH_RESULT_REMOTE_WLAN1=$PREFIX\_switch_wlan1_remote
+PATH_RESULT_REMOTE_ETH1=$PREFIX\_switch_eth1_remote
+PATH_RESULT_REMOTE_ETH0=$PREFIX\_switch_eth0_remote
+PATH_RESULT_PHONE_LOCAL_WLAN1=$PREFIX\_phone_wlan1_local
+PATH_RESULT_PHONE_REMOTE_WLAN1=$PREFIX\_phone_wlan1_remote
 
-#python ./base_gexf_generator.py $PATH_SETUP/$PATH_SETUP_WLAN_JSON $PATH_DIR_RESULT/$PATH_RESULT_SETUP_WLAN.gexf
-#python ./base_gexf_generator.py $PATH_SETUP/$PATH_SETUP_ETH_JSON $PATH_DIR_RESULT/$PATH_RESULT_SETUP_ETH.gexf
+#python ./base_gexf_generator.py $PATH_SETUP/$PATH_SETUP_WLAN1_JSON $PATH_DIR_RESULT/$PATH_RESULT_SETUP_WLAN1.gexf
+#python ./base_gexf_generator.py $PATH_SETUP/$PATH_SETUP_ETH0_JSON $PATH_DIR_RESULT/$PATH_RESULT_SETUP_ETH0.gexf
+#python ./base_gexf_generator.py $PATH_SETUP/$PATH_SETUP_ETH1_JSON $PATH_DIR_RESULT/$PATH_RESULT_SETUP_ETH1.gexf
 
-python ./base_gexf_generator.py $PATH_LOCAL/$PATH_LOCAL_WLAN_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_WLAN.gexf
-python ./parser/parse_packet_frequency.py $PATH_LOCAL/$PATH_LOCAL_WLAN_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_WLAN $DEVICE $DEVICE_MAC
-python ./base_gexf_generator.py $PATH_LOCAL/$PATH_LOCAL_ETH_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_ETH.gexf
-python ./parser/parse_packet_frequency.py $PATH_LOCAL/$PATH_LOCAL_ETH_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_ETH $ROUTER $ROUTER_MAC
+#python ./base_gexf_generator.py $PATH_LOCAL/$PATH_LOCAL_WLAN1_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_WLAN1.gexf
+#python ./parser/parse_packet_frequency.py $PATH_LOCAL/$PATH_LOCAL_WLAN1_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_WLAN1 $DEVICE $DEVICE_MAC
+#python ./base_gexf_generator.py $PATH_LOCAL/$PATH_LOCAL_ETH0_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_ETH0.gexf
+#python ./parser/parse_packet_frequency.py $PATH_LOCAL/$PATH_LOCAL_ETH0_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_ETH0 $ROUTER $ROUTER_MAC
+#python ./base_gexf_generator.py $PATH_LOCAL/$PATH_LOCAL_ETH1_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_ETH1.gexf
+#python ./parser/parse_packet_frequency.py $PATH_LOCAL/$PATH_LOCAL_ETH1_JSON $PATH_DIR_RESULT/$PATH_RESULT_LOCAL_ETH1 $DEVICE $DEVICE_MAC
 
-python ./base_gexf_generator.py $PATH_REMOTE/$PATH_REMOTE_WLAN_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_WLAN.gexf
-python ./parser/parse_packet_frequency.py $PATH_REMOTE/$PATH_REMOTE_WLAN_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_WLAN $DEVICE $DEVICE_MAC
-python ./base_gexf_generator.py $PATH_REMOTE/$PATH_REMOTE_ETH_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_ETH.gexf
-python ./parser/parse_packet_frequency.py $PATH_REMOTE/$PATH_REMOTE_ETH_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_ETH $ROUTER $ROUTER_MAC
+#python ./base_gexf_generator.py $PATH_REMOTE/$PATH_REMOTE_WLAN1_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_WLAN1.gexf
+#python ./parser/parse_packet_frequency.py $PATH_REMOTE/$PATH_REMOTE_WLAN1_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_WLAN1 $DEVICE $DEVICE_MAC
+#python ./base_gexf_generator.py $PATH_REMOTE/$PATH_REMOTE_ETH0_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_ETH0.gexf
+#python ./parser/parse_packet_frequency.py $PATH_REMOTE/$PATH_REMOTE_ETH0_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_ETH0 $ROUTER $ROUTER_MAC
+#python ./base_gexf_generator.py $PATH_REMOTE/$PATH_REMOTE_ETH1_DNS_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_ETH1.gexf
+#python ./parser/parse_packet_frequency.py $PATH_REMOTE/$PATH_REMOTE_ETH1_JSON $PATH_DIR_RESULT/$PATH_RESULT_REMOTE_ETH1 $DEVICE $DEVICE_MAC
 
-python ./parser/parse_packet_frequency.py $PATH_LOCAL/$PATH_LOCAL_WLAN_JSON $PATH_DIR_RESULT/$PATH_RESULT_PHONE_LOCAL_WLAN $PHONE $PHONE_MAC
-python ./parser/parse_packet_frequency.py $PATH_REMOTE/$PATH_REMOTE_WLAN_JSON $PATH_DIR_RESULT/$PATH_RESULT_PHONE_REMOTE_WLAN $PHONE $PHONE_MAC
+#python ./parser/parse_packet_frequency.py $PATH_LOCAL/$PATH_LOCAL_WLAN1_JSON $PATH_DIR_RESULT/$PATH_RESULT_PHONE_LOCAL_WLAN1 $PHONE $PHONE_MAC
+#python ./parser/parse_packet_frequency.py $PATH_REMOTE/$PATH_REMOTE_WLAN1_JSON $PATH_DIR_RESULT/$PATH_RESULT_PHONE_REMOTE_WLAN1 $PHONE $PHONE_MAC
 
-gnuplot $PATH_GNUPLOT
+#gnuplot $PATH_GNUPLOT
 gnuplot $PATH_GNUPLOT_COMBINED
