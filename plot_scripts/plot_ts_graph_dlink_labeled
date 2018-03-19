@@ -1,0 +1,75 @@
+# Script to plot time series graphs for network traffic analysis
+#
+# by Rahmadi Trimananda (rahmadi.trimananda@uci.edu)
+# Programming Language Research Group @ University of California, Irvine
+# Winter 2018
+
+# ************ #
+# BASIC SETUP  #
+# ************ #
+set terminal pdfcairo enhanced font 'Verdana,10'
+set autoscale
+set key
+unset log
+unset label
+set xtics 50
+set xtics rotate by 60 right
+set ytics auto
+set xlabel "Packet Timestamp (hh:mm:ss)"
+set ylabel "Packet Size (bytes)"
+set xdata time
+set timefmt "%H:%M:%S"
+set xrange [:]
+set yrange [0:]
+
+# ************ #
+# ON/OFF LABEL #
+# ************ #
+set label "1-ON" at "15:07:05", 4000 tc rgb "blue"
+set label "1-OFF" at "15:08:08", 2000 tc rgb "red"
+set label "2-ON" at "15:09:12", 4000 tc rgb "blue"
+set label "2-OFF" at "15:10:19", 2000 tc rgb "red"
+set label "3-ON" at "15:11:15", 4000 tc rgb "blue"
+set label "3-OFF" at "15:12:16", 2000 tc rgb "red"
+set label "4-ON" at "15:14:25", 4000 tc rgb "blue"
+set label "4-OFF" at "15:15:24", 2000 tc rgb "red"
+set label "5-ON" at "15:16:28", 4000 tc rgb "blue"
+set label "5-OFF" at "15:17:29", 2000 tc rgb "red"
+set label "6-ON" at "15:18:31", 4000 tc rgb "blue"
+set label "6-OFF" at "15:19:33", 2000 tc rgb "red"
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# DLink switch local
+# wlan1
+set output './result/dlink_switch_wlan1_timestamp_local_incoming_outgoing.pdf'
+set title "DLink Switch Incoming/Outgoing Local Traffic (wlan1)"
+plot "./result/dlink_switch_wlan1_local_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/dlink_switch_wlan1_local_outgoing.dat" using 1:2 with lines title "Outgoing"
+
+# ************ #
+# ON/OFF LABEL #
+# ************ #
+set label "1-ON" at "15:23:58", 4000 tc rgb "blue"
+set label "1-OFF" at "15:24:55", 3000 tc rgb "red"
+set label "2-ON" at "15:25:56", 4000 tc rgb "blue"
+set label "2-OFF" at "15:26:56", 3000 tc rgb "red"
+set label "3-ON" at "15:27:58", 4000 tc rgb "blue"
+set label "3-OFF" at "15:28:58", 3000 tc rgb "red"
+set label "4-ON" at "15:31:11", 4000 tc rgb "blue"
+set label "4-OFF" at "15:32:08", 3000 tc rgb "red"
+set label "5-ON" at "15:33:09", 4000 tc rgb "blue"
+set label "5-OFF" at "15:34:10", 3000 tc rgb "red"
+set label "6-ON" at "15:35:12", 4000 tc rgb "blue"
+set label "6-OFF" at "15:36:15", 3000 tc rgb "red"
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# DLink switch remote
+# wlan1
+set output './result/dlink_switch_wlan1_timestamp_remote_incoming_outgoing.pdf'
+set title "DLink Switch Incoming Remote Traffic (wlan1)"
+plot "./result/dlink_switch_wlan1_remote_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/dlink_switch_wlan1_remote_outgoing.dat" using 1:2 with lines title "Outgoing"
+
+

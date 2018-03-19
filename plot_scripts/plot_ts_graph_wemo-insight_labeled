@@ -1,0 +1,74 @@
+# Script to plot time series graphs for network traffic analysis
+#
+# by Rahmadi Trimananda (rahmadi.trimananda@uci.edu)
+# Programming Language Research Group @ University of California, Irvine
+# Winter 2018
+
+# ************ #
+# BASIC SETUP  #
+# ************ #
+set terminal pdfcairo enhanced font 'Verdana,10'
+set autoscale
+set key
+unset log
+unset label
+set xtics 50
+set xtics rotate by 60 right
+set ytics auto
+set xlabel "Packet Timestamp (hh:mm:ss)"
+set ylabel "Packet Size (bytes)"
+set xdata time
+set timefmt "%H:%M:%S"
+set xrange [:]
+set yrange [0:]
+
+# ************ #
+# ON/OFF LABEL #
+# ************ #
+set label "1-ON" at "16:00:31", 60000 tc rgb "blue"
+set label "1-OFF" at "16:01:26", 50000 tc rgb "red"
+set label "2-ON" at "16:02:29", 60000 tc rgb "blue"
+set label "2-OFF" at "16:03:34", 50000 tc rgb "red"
+set label "3-ON" at "16:04:32", 60000 tc rgb "blue"
+set label "3-OFF" at "16:05:32", 50000 tc rgb "red"
+set label "4-ON" at "16:07:41", 60000 tc rgb "blue"
+set label "4-OFF" at "16:08:40", 50000 tc rgb "red"
+set label "5-ON" at "16:09:42", 60000 tc rgb "blue"
+set label "5-OFF" at "16:10:43", 50000 tc rgb "red"
+set label "6-ON" at "16:11:46", 60000 tc rgb "blue"
+set label "6-OFF" at "16:12:46", 50000 tc rgb "red"
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# WeMo Insight switch local
+# wlan1
+set output './result/wemo-insight_switch_wlan1_timestamp_local_incoming_outgoing.pdf'
+set title "WeMo Insight Switch Incoming/Outgoing Local Traffic (wlan1)"
+plot "./result/wemo-insight_switch_wlan1_local_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/wemo-insight_switch_wlan1_local_outgoing.dat" using 1:2 with lines title "Outgoing"
+
+# ************ #
+# ON/OFF LABEL #
+# ************ #
+set label "1-ON" at "16:18:55", 80000 tc rgb "blue"
+set label "1-OFF" at "16:19:56", 120000 tc rgb "red"
+set label "2-ON" at "16:20:59", 80000 tc rgb "blue"
+set label "2-OFF" at "16:22:00", 120000 tc rgb "red"
+set label "3-ON" at "16:23:03", 80000 tc rgb "blue"
+set label "3-OFF" at "16:24:07", 120000 tc rgb "red"
+set label "4-ON" at "16:26:13", 80000 tc rgb "blue"
+set label "4-OFF" at "16:27:09", 120000 tc rgb "red"
+set label "5-ON" at "16:28:15", 80000 tc rgb "blue"
+set label "5-OFF" at "16:29:12", 120000 tc rgb "red"
+set label "6-ON" at "16:30:13", 80000 tc rgb "blue"
+set label "6-OFF" at "16:31:18", 120000 tc rgb "red"
+
+# ***************** #
+# PER DEVICE SETUP  #
+# ***************** #
+# WeMo Insight switch remote
+# wlan1
+set output './result/wemo-insight_switch_wlan_timestamp_remote_incoming_outgoing.pdf'
+set title "WeMo Insight Switch Incoming/Outgoing Remote Traffic (wlan1)"
+plot "./result/wemo-insight_switch_wlan1_remote_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/wemo-insight_switch_wlan1_remote_outgoing.dat" using 1:2 with lines title "Outgoing"
+

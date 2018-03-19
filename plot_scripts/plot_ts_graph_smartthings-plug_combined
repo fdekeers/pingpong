@@ -31,14 +31,14 @@ set output './result/smartthings-plug_switch_wlan1_timestamp_local_incoming_comb
 set title "SmartThings Plug Switch Incoming Local Traffic (wlan1/eth0/eth1)"
 plot "./result/smartthings-plug_switch_eth0_local_incoming.dat" using 1:2 with lines title "eth0", "./result/smartthings-plug_switch_eth1_local_incoming.dat" using 1:2 with lines title "eth1", "./result/smartthings-plug_phone_wlan1_local_outgoing.dat" using 1:2 with lines title "wlan1-phone-outgoing", "./result/smartthings-plug_phone_wlan1_local_incoming.dat" using 1:2 with lines title "wlan1-phone-incoming"
 set output './result/smartthings-plug_switch_wlan1_timestamp_local_outgoing_combined.png'
-set title "SmartThings Plug Switch Outgoing Local Traffic (wlan1/eth0)"
+set title "SmartThings Plug Switch Outgoing Local Traffic (wlan1/eth0/eth1)"
 plot "./result/smartthings-plug_switch_wlan1_local_outgoing.dat" using 1:2 with lines title "wlan1", "./result/smartthings-plug_switch_eth0_local_outgoing.dat" using 1:2 with lines title "eth0", "./result/smartthings-plug_switch_eth1_local_outgoing.dat" using 1:2 with lines title "eth1", "./result/smartthings-plug_phone_wlan1_local_outgoing.dat" using 1:2 with lines title "wlan1-phone-outgoing", "./result/smartthings-plug_phone_wlan1_local_incoming.dat" using 1:2 with lines title "wlan1-phone-incoming"
 
 # SmartThings Plug switch remote
-# wlan1 / eth0 / eth1
+# eth0 / eth1
 set output './result/smartthings-plug_switch_wlan1_timestamp_remote_incoming_combined.png'
-set title "SmartThings Plug Switch Incoming Remote Traffic (wlan1/eth0/eth1)"
+set title "SmartThings Plug Switch Incoming Remote Traffic (eth0/eth1)"
 plot "./result/smartthings-plug_switch_eth0_remote_incoming.dat" using 1:2 with lines title "eth0", "./result/smartthings-plug_switch_eth1_remote_incoming.dat" using 1:2 with lines title "eth1"
 set output './result/smartthings-plug_switch_wlan1_timestamp_remote_outgoing_combined.png'
-set title "SmartThings Plug Switch Outgoing Remote Traffic (wlan1/eth0)"
+set title "SmartThings Plug Switch Outgoing Remote Traffic (eth0/eth1)"
 plot "./result/smartthings-plug_switch_eth0_remote_outgoing.dat" using 1:2 with lines title "eth0", "./result/smartthings-plug_switch_eth1_remote_outgoing.dat" using 1:2 with lines title "eth1"
