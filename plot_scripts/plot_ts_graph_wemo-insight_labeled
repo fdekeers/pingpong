@@ -16,7 +16,7 @@ set xtics 50
 set xtics rotate by 60 right
 set ytics auto
 set xlabel "Packet Timestamp (hh:mm:ss)"
-set ylabel "Packet Size (bytes)"
+set ylabel "Traffic Volume (bytes)"
 set xdata time
 set timefmt "%H:%M:%S"
 set xrange [:]
@@ -61,7 +61,7 @@ set label "4-OFF" at "16:27:09", 120000 tc rgb "red"
 set label "5-ON" at "16:28:15", 80000 tc rgb "blue"
 set label "5-OFF" at "16:29:12", 120000 tc rgb "red"
 set label "6-ON" at "16:30:13", 80000 tc rgb "blue"
-set label "6-OFF" at "16:31:18", 120000 tc rgb "red"
+set label "6-OFF" at "16:31:18", 60000 tc rgb "red"
 
 # ***************** #
 # PER DEVICE SETUP  #

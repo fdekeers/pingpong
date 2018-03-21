@@ -37,6 +37,7 @@ PHONE_MAC=64:89:9a:86:a9:7d
 #PATH_LOCAL=/scratch/traffic_measurements/Switches-Feb2018/dlink/local
 #PATH_REMOTE=/scratch/traffic_measurements/Switches-Feb2018/dlink/remote
 
+# For smartthings-plug we need to uncomment the eth1 command line below instead of wlan1
 PREFIX=smartthings-plug
 DEVICE=SmartThings_Plug
 DEVICE_MAC=d0:52:a8:a3:60:0f

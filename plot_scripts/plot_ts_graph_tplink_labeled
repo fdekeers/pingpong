@@ -16,7 +16,7 @@ set xtics 50
 set xtics rotate by 60 right
 set ytics auto
 set xlabel "Packet Timestamp (hh:mm:ss)"
-set ylabel "Packet Size (bytes)"
+set ylabel "Traffic Volume (bytes)"
 set xdata time
 set timefmt "%H:%M:%S"
 set xrange [:]
