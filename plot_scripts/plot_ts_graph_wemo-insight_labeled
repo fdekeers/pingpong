@@ -45,7 +45,7 @@ set label "6-OFF" at "16:12:46", 50000 tc rgb "red"
 # wlan1
 set output './result/wemo-insight_switch_wlan1_timestamp_local_incoming_outgoing.pdf'
 set title "WeMo Insight Switch Incoming/Outgoing Local Traffic (wlan1)"
-plot "./result/wemo-insight_switch_wlan1_local_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/wemo-insight_switch_wlan1_local_outgoing.dat" using 1:2 with lines title "Outgoing"
+plot "./result/wemo-insight_switch_wlan1_local_incoming.dat" using 1:2 with lines lc 8 dt 4 title "Incoming", "./result/wemo-insight_switch_wlan1_local_outgoing.dat" using 1:2 with lines lc 6 title "Outgoing"
 
 # ************ #
 # ON/OFF LABEL #
@@ -68,7 +68,7 @@ set label "6-OFF" at "16:31:18", 60000 tc rgb "red"
 # ***************** #
 # WeMo Insight switch remote
 # wlan1
-set output './result/wemo-insight_switch_wlan_timestamp_remote_incoming_outgoing.pdf'
+set output './result/wemo-insight_switch_wlan1_timestamp_remote_incoming_outgoing.pdf'
 set title "WeMo Insight Switch Incoming/Outgoing Remote Traffic (wlan1)"
-plot "./result/wemo-insight_switch_wlan1_remote_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/wemo-insight_switch_wlan1_remote_outgoing.dat" using 1:2 with lines title "Outgoing"
+plot "./result/wemo-insight_switch_wlan1_remote_incoming.dat" using 1:2 with lines lc 8 dt 4 title "Incoming", "./result/wemo-insight_switch_wlan1_remote_outgoing.dat" using 1:2 with lines lc 6 title "Outgoing"
 

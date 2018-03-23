@@ -46,7 +46,7 @@ set label "6-OFF" at "15:34:16", 4000 tc rgb "red"
 # eth1
 set output './result/smartthings-plug_switch_eth1_timestamp_local_incoming_outgoing.pdf'
 set title "SmartThings Plug Switch Incoming/Outgoing Local Traffic (eth1)"
-plot "./result/smartthings-plug_switch_eth1_local_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/smartthings-plug_switch_eth1_local_outgoing.dat" using 1:2 with lines title "Outgoing"
+plot "./result/smartthings-plug_switch_eth1_local_incoming.dat" using 1:2 with lines lc 8 dt 4 title "Incoming", "./result/smartthings-plug_switch_eth1_local_outgoing.dat" using 1:2 with lines lc 6 title "Outgoing"
 
 # ************ #
 # ON/OFF LABEL #
@@ -72,6 +72,6 @@ set label "6-OFF" at "15:50:42", 1000 tc rgb "red"
 # eth1
 set output './result/smartthings-plug_switch_eth1_timestamp_remote_incoming_outgoing.pdf'
 set title "SmartThings Plug Switch Incoming/Outgoing Remote Traffic (eth1)"
-plot "./result/smartthings-plug_switch_eth1_remote_incoming.dat" using 1:2 with lines dt 4 title "Incoming", "./result/smartthings-plug_switch_eth1_remote_outgoing.dat" using 1:2 with lines title "Outgoing"
+plot "./result/smartthings-plug_switch_eth1_remote_incoming.dat" using 1:2 with lines lc 8 dt 4 title "Incoming", "./result/smartthings-plug_switch_eth1_remote_outgoing.dat" using 1:2 with lines lc 6 title "Outgoing"
 
 
