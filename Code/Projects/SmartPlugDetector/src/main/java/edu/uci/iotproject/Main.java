@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         System.out.println("it works");
-        String file = "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+        String file = "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcapdump";
         
         try {
             Pcap data = Pcap.fromFile(file);
@@ -25,6 +25,8 @@ public class Main {
     private String cloudIPAddress(String hostName) {
         if (hostName.equals("events.tplinkra.com"))
             return "205.251.203.26";
+        else
+            return null;
     }
 
     // TODO move to separate class
