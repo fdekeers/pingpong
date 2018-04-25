@@ -52,23 +52,29 @@ public class EthernetFrame extends KaitaiStruct {
         this.dstMac = this._io.readBytes(6);
         this.srcMac = this._io.readBytes(6);
         this.etherType = EtherTypeEnum.byId(this._io.readU2be());
-        switch (etherType()) {
-        case IPV4: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new Ipv4Packet(_io__raw_body);
-            break;
-        }
-        case IPV6: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new Ipv6Packet(_io__raw_body);
-            break;
-        }
-        default: {
-            this.body = this._io.readBytesFull();
-            break;
-        }
+
+        // We skip if etherType is NULL
+        // Some packets, e.g. EAPOL and XID do not have etherType
+        //      and we are not interested in these packets
+        if(etherType() != null) {
+            switch (etherType()) {
+                case IPV4: {
+                    this._raw_body = this._io.readBytesFull();
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new Ipv4Packet(_io__raw_body);
+                    break;
+                }
+                case IPV6: {
+                    this._raw_body = this._io.readBytesFull();
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new Ipv6Packet(_io__raw_body);
+                    break;
+                }
+                default: {
+                    this.body = this._io.readBytesFull();
+                    break;
+                }
+            }
         }
     }
     private byte[] dstMac;
