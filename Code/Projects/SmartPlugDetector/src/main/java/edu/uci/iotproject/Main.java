@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class Main {
      */
     private Pcap pcap;
     private List<Pcap.Packet> listPacket;
-    private Map<String, List<byte[]>> mapHostnamesToIPAddresses;
+    private Map<String, String> mapIPAddressToHostname;
 
     /** 
      * Private class constants
@@ -43,7 +44,7 @@ public class Main {
 
         pcap = Pcap.fromFile(file);
         listPacket = pcap.packets();
-        mapHostnamesToIPAddresses = new HashMap<String, List<byte[]>>();
+        mapIPAddressToHostname = new HashMap<String, String>();
     }
 
 
@@ -64,8 +65,7 @@ public class Main {
                 if (ethFrame.etherType() == EthernetFrame.EtherTypeEnum.IPV4) {
                     Ipv4Packet ip4Packet = (Ipv4Packet) ethFrame.body();
 
-                    System.out.print(" - Protocol: " + ip4Packet.protocol());
-                    
+                    System.out.print(" - Protocol: " + ip4Packet.protocol());                   
                     if (ip4Packet.protocol() == Ipv4Packet.ProtocolEnum.UDP) {
                         // DNS is UDP port 53
                         UdpDatagram udpData = (UdpDatagram) ip4Packet.body();
@@ -76,14 +76,57 @@ public class Main {
                         if (udpData.srcPort() == DNS_PORT) {
                             KaitaiStream dnsStream = new ByteBufferKaitaiStream(udpData.body());
                             DnsPacket dnsPacket = new DnsPacket(dnsStream);
+                            ArrayList<DnsPacket.Query> queries = dnsPacket.queries();
                             ArrayList<DnsPacket.Answer> answers = dnsPacket.answers();
-                            System.out.print(" - this DNS packet has " + answers.size() + " answers.");
+                            String strDomainName = new String();
+                            for(DnsPacket.Query query : queries) {
+                                System.out.print(" - Queries: ");
+                                DnsPacket.DomainName domainName = query.name();
+                                ArrayList<DnsPacket.Label> labels = domainName.name();
+                                for(int i = 0; i < labels.size(); i++) {
+                                    System.out.print(labels.get(i).name());
+                                    strDomainName = strDomainName + labels.get(i).name();
+                                    if(i < labels.size()-2) {
+                                        System.out.print(".");
+                                        strDomainName = strDomainName + ".";
+                                    }
+                                }
+                                break;  // We are assuming that there is only one query
+                            }
+                            System.out.print(" - Answers " + answers.size());
+                            for(DnsPacket.Answer answer : answers) {
+                                System.out.print(" - TypeType: " + answer.type());
+                                System.out.print(" - ClassType: " + answer.answerClass());
+                                System.out.print("\n - Answers: ");
+                                DnsPacket.Address address = answer.address();
+                                if (answer.type() == DnsPacket.TypeType.A) {
+                                    String strAnswer = new String();
+                                    ArrayList<Integer> ipList = address.ip();
+                                    for(int i = 0; i < ipList.size(); i++) {
+                                        System.out.print(ipList.get(i));
+                                        strAnswer = strAnswer + Integer.toString(ipList.get(i));
+                                        if(i < ipList.size()-1) {
+                                            System.out.print(".");
+                                            strAnswer = strAnswer + ".";
+                                        }
+                                    }
+                                    mapIPAddressToHostname.put(strAnswer, strDomainName);
+                                }
+                            }
                         }
                     }
                 }
             }
             System.out.println();
         }
+//        for(Map.Entry<String, String> entry : mapIPAddressToHostname.entrySet()) {
+//            if (entry.getValue().equals("devs.tplinkcloud.com")) {
+//                System.out.println(entry.getKey() + " - " + entry.getValue());
+//            }
+//        }
+        System.out.println("Total map size: " + mapIPAddressToHostname.size());
+        System.out.println("Answer for 13.33.41.8: " + mapIPAddressToHostname.get("13.33.41.8"));
+        System.out.println("Answer for 34.226.240.125: " + mapIPAddressToHostname.get("34.226.240.125"));
     }
 
     /*private String cloudIPAddress(String hostName) {
@@ -104,8 +147,9 @@ public class Main {
     
     public static void main(String[] args) {
         System.out.println("it works");
-        //String file = "/scratch/traffic_measurements/Switches-Feb2018/wemo/wlan1/wlan1.setup.pcap";
-        String file = "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+        
+        //String file = "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+        String file = "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.remote.dns.pcap";
         
         try {
             Main main = new Main(file);
