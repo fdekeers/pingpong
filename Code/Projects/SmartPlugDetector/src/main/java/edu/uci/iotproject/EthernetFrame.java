@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class EthernetFrame extends KaitaiStruct {
+    private static int counter = 0;
     public static EthernetFrame fromFile(String fileName) throws IOException {
         return new EthernetFrame(new ByteBufferKaitaiStream(fileName));
     }
@@ -52,7 +53,6 @@ public class EthernetFrame extends KaitaiStruct {
         this.dstMac = this._io.readBytes(6);
         this.srcMac = this._io.readBytes(6);
         this.etherType = EtherTypeEnum.byId(this._io.readU2be());
-
         // We skip if etherType is NULL
         // Some packets, e.g. EAPOL and XID do not have etherType
         //      and we are not interested in these packets
@@ -64,12 +64,13 @@ public class EthernetFrame extends KaitaiStruct {
                     this.body = new Ipv4Packet(_io__raw_body);
                     break;
                 }
-                case IPV6: {
-                    this._raw_body = this._io.readBytesFull();
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new Ipv6Packet(_io__raw_body);
-                    break;
-                }
+                // TODO: Skip IPV6 for now and perhaps do it later
+                //case IPV6: {
+                //    this._raw_body = this._io.readBytesFull();
+                //    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                //    this.body = new Ipv6Packet(_io__raw_body);
+                //    break;
+                //}
                 default: {
                     this.body = this._io.readBytesFull();
                     break;

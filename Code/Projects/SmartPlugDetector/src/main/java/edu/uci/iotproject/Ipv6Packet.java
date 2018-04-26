@@ -107,7 +107,6 @@ public class Ipv6Packet extends KaitaiStruct {
         private void _read() {
             this.nextHeaderType = this._io.readU1();
             this.hdrExtLen = this._io.readU1();
-            this.body = this._io.readBytes((hdrExtLen() - 1));
             switch (nextHeaderType()) {
             case 0: {
                 this.nextHeader = new OptionHopByHop(this._io, this, _root);
