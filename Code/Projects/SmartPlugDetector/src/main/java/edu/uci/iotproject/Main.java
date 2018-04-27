@@ -9,12 +9,8 @@ import org.pcap4j.packet.namednumber.DnsResourceRecordType;
 import java.io.EOFException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 
 /**
  * This is a system that reads PCAP files to compare
@@ -32,10 +28,18 @@ public class Main {
     public static void main(String[] args) throws PcapNativeException, NotOpenException, EOFException, TimeoutException, UnknownHostException {
         final String fileName = "/users/varmarken/Desktop/wlan1.local.dns.pcap";
         List<DnsPacket> dnsPackets = extractDnsAnswerPackets(fileName);
-        Map<String, List<String>> ipToHostnameMap = constructIpToHostnameMap(dnsPackets);
+        Map<String, Set<String>> ipToHostnameMap = constructIpToHostnameMap(dnsPackets);
         ipToHostnameMap.forEach((k,v) -> System.out.println(String.format("%s => %s", k, v.toString())));
     }
 
+    /**
+     * Opens a PCAP file and extracts all DNS reply packets with non-empty answer sections.
+     * @param pcapFileName The name of the PCAP file.
+     * @return A list of DNS reply packets.
+     * @throws PcapNativeException
+     * @throws NotOpenException
+     * @throws TimeoutException
+     */
     private static List<DnsPacket> extractDnsAnswerPackets(String pcapFileName) throws PcapNativeException, NotOpenException, TimeoutException {
         PcapHandle handle;
         try {
@@ -64,8 +68,16 @@ public class Main {
         return result;
     }
 
-    private static Map<String, List<String>> constructIpToHostnameMap(List<DnsPacket> dnsPackets) throws UnknownHostException {
-        HashMap<String, List<String>> result = new HashMap<>();
+    /**
+     * Based on the information found in a list of DNS replies, this method constructs a {@link Map} that maps from an
+     * IP to a {@link Set} of hostnames associated with that IP.
+     *
+     * @param dnsPackets A list of DNS <em>reply</em> packets.
+     * @return A {@link Map} that maps from an IP to a {@link Set} of hostnames associated with that IP
+     * @throws UnknownHostException If an IP found in a {@code DnsPacket} is of incorrect length.
+     */
+    private static Map<String, Set<String>> constructIpToHostnameMap(List<DnsPacket> dnsPackets) throws UnknownHostException {
+        HashMap<String, Set<String>> result = new HashMap<>();
         for(DnsPacket dnsPacket : dnsPackets) {
             // The hostname that this DNS reply provides answers for.
             // TODO: safe to assume only one question?
@@ -85,12 +97,12 @@ public class Main {
                 byte[] ipBytes = answer.getRData().getRawData();
                 // Convert to string representation.
                 String ip = Inet4Address.getByAddress(ipBytes).getHostAddress();
-                List<String> hostnameList = new ArrayList<>();
-                hostnameList.add(hostname);
+                HashSet<String> hostnameSet = new HashSet<>();
+                hostnameSet.add(hostname);
                 // Update or insert depending on presence of key:
-                // Concat the existing list and the new list if ip already present as key,
-                // otherwise add an entry for ip pointing to new list.
-                result.merge(ip, hostnameList, (v1, v2) -> { v1.addAll(v2); return v1; });
+                // Concat the existing set and the new set if ip already present as key,
+                // otherwise add an entry for ip pointing to new set.
+                result.merge(ip, hostnameSet, (v1, v2) -> { v1.addAll(v2); return v1; });
             }
         }
         return result;
