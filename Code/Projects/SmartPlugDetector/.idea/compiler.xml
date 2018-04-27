@@ -20,8 +20,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="SmartPlugDetector_main" target="1.5" />
-      <module name="SmartPlugDetector_test" target="1.5" />
+      <module name="SmartPlugDetector_main" target="1.8" />
+      <module name="SmartPlugDetector_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
