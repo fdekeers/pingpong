@@ -16,8 +16,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
     // pcap4j
-    compile 'org.pcap4j:pcap4j-core:1.7.3'
-    compile 'org.pcap4j:pcap4j-packetfactory-static:1.7.3'
+    // Updated to v2 alpha as the stable release does not include packet timestamps
+    // v2 should add support for TCP session reassembly as well, although it does not appear to be part of the lib yet.
+    compile 'org.pcap4j:pcap4j-core:2.0.0-alpha'
+    compile 'org.pcap4j:pcap4j-packetfactory-static:2.0.0-alpha'
 
     // pcap4j logging dependency
     compile 'org.slf4j:slf4j-jdk14:1.8.0-beta2'

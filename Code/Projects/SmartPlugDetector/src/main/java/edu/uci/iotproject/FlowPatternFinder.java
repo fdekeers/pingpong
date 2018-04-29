@@ -3,11 +3,13 @@ package edu.uci.iotproject;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
+import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
 
 import java.io.EOFException;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
 
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeoutException;
 public class FlowPatternFinder {
 
     private final Map<String, Set<String>> dnsMap;
-    private final Map<Conversation, List<Packet>> connections = new HashMap<>();
+    private final Map<Conversation, List<PcapPacket>> connections = new HashMap<>();
 
     public FlowPatternFinder(Map<String, Set<String>> dnsMap) {
         this.dnsMap = Objects.requireNonNull(dnsMap);
@@ -31,7 +33,8 @@ public class FlowPatternFinder {
     public void findFlowPattern(PcapHandle pcap, FlowPattern pattern)
             throws PcapNativeException, NotOpenException, TimeoutException {
         try {
-            Packet packet;
+            PcapPacket packet;
+
             while ((packet = pcap.getNextPacketEx()) != null) {
 
                 // For now, we only work support pattern search in TCP over IPv4.
@@ -62,7 +65,7 @@ public class FlowPatternFinder {
                 // TODO: this is strictly not sufficient to differentiate one TCP session from another, but should suffice for now.
                 Conversation conversation = fromClient ? new Conversation(srcAddress, srcPort, dstAddress, dstPort) :
                         new Conversation(dstAddress, dstPort, srcAddress, srcPort);
-                List<Packet> listWrappedPacket = new ArrayList<>();
+                List<PcapPacket> listWrappedPacket = new ArrayList<>();
                 listWrappedPacket.add(packet);
                 // Create new conversation entry, or append packet to existing.
                 connections.merge(conversation, listWrappedPacket, (v1, v2) -> {
@@ -78,7 +81,7 @@ public class FlowPatternFinder {
 
     private void find(FlowPattern pattern) {
         for (Conversation con : connections.keySet()) {
-            List<Packet> packets = connections.get(con);
+            List<PcapPacket> packets = connections.get(con);
             if (packets.size() != pattern.getPacketOrder().size()) {
                 // Not a complete match if different number of packets.
                 continue;
@@ -92,7 +95,10 @@ public class FlowPatternFinder {
                 }
             }
             if (completeMatch) {
-                System.out.println(String.format("found a complete match for %s", pattern.getPatternId()));
+                PcapPacket firstPacketInFlow = packets.get(0);
+                System.out.println(
+                        String.format("[ detected a complete match of pattern '%s' at %s]",
+                                pattern.getPatternId(), firstPacketInFlow.getTimestamp().toString()));
             }
         }
     }
