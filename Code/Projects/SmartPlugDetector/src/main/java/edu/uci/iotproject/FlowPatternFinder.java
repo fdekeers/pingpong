@@ -69,7 +69,13 @@ public class FlowPatternFinder {
                 listWrappedPacket.add(packet);
                 // Create new conversation entry, or append packet to existing.
                 connections.merge(conversation, listWrappedPacket, (v1, v2) -> {
-                    v1.addAll(v2);
+                    // TODO: in theory, this is insufficient to detect retransmissions due to TCP seq.no. rollover.
+                    // TODO: bad for performance, O(n) for each packet added to flow (n being length of the flow).
+                    boolean retransmission = v1.stream().anyMatch(p -> p.get(TcpPacket.class).getHeader().getSequenceNumber() == v2.get(0).get(TcpPacket.class).getHeader().getSequenceNumber());
+                    if (!retransmission) {
+                        // Do not add if retransmission -> avoid duplicate packets in flow
+                        v1.addAll(v2);
+                    }
                     return v1;
                 });
             }
