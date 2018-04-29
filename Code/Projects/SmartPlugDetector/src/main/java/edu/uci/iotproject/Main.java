@@ -40,7 +40,7 @@ public class Main {
             handle = Pcaps.openOffline(fileName);
         }
         FlowPatternFinder fpf = new FlowPatternFinder(ipToHostnameMap);
-        fpf.findFlowPattern(handle, new FlowPattern("TP_LINK_LOCAL_ON", "events.tplinkra.com", new ArrayList<>()));
+        fpf.findFlowPattern(handle, FlowPattern.TP_LINK_LOCAL_ON);
 
         // ========================
     }

@@ -34,7 +34,6 @@ public class FlowPatternFinder {
             Packet packet;
             while ((packet = pcap.getNextPacketEx()) != null) {
 
-
                 // For now, we only work support pattern search in TCP over IPv4.
                 IpV4Packet ipPacket = packet.get(IpV4Packet.class);
                 TcpPacket tcpPacket = packet.get(TcpPacket.class);
@@ -53,6 +52,12 @@ public class FlowPatternFinder {
                     // Packet not related to pattern, skip it.
                     continue;
                 }
+                if (tcpPacket.getPayload() == null) {
+                    // We skip non-payload control packets as these are less predictable and should therefore not be
+                    // part of a signature (e.g. receiver can choose not to ACK immediately)
+                    continue;
+                }
+
                 // Identify conversations (connections/sessions) by the four-tuple (clientIp, clientPort, serverIp, serverPort).
                 // TODO: this is strictly not sufficient to differentiate one TCP session from another, but should suffice for now.
                 Conversation conversation = fromClient ? new Conversation(srcAddress, srcPort, dstAddress, dstPort) :
@@ -67,6 +72,28 @@ public class FlowPatternFinder {
             }
         } catch (EOFException eofe) {
             System.out.println("findFlowPattern: finished processing entire file");
+            find(pattern);
+        }
+    }
+
+    private void find(FlowPattern pattern) {
+        for (Conversation con : connections.keySet()) {
+            List<Packet> packets = connections.get(con);
+            if (packets.size() != pattern.getPacketOrder().size()) {
+                // Not a complete match if different number of packets.
+                continue;
+            }
+            boolean completeMatch = true;
+            for (int i = 0; i < packets.size(); i++) {
+                TcpPacket tcpPacket = packets.get(i).get(TcpPacket.class);
+                if (tcpPacket.getPayload().length() != pattern.getPacketOrder().get(i)) {
+                    completeMatch = false;
+                    break;
+                }
+            }
+            if (completeMatch) {
+                System.out.println(String.format("found a complete match for %s", pattern.getPatternId()));
+            }
         }
     }
 
