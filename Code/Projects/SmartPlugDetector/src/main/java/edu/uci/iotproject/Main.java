@@ -29,7 +29,20 @@ public class Main {
         final String fileName = "/users/varmarken/Desktop/wlan1.local.dns.pcap";
         List<DnsPacket> dnsPackets = extractDnsAnswerPackets(fileName);
         Map<String, Set<String>> ipToHostnameMap = constructIpToHostnameMap(dnsPackets);
-        ipToHostnameMap.forEach((k,v) -> System.out.println(String.format("%s => %s", k, v.toString())));
+//        ipToHostnameMap.forEach((k,v) -> System.out.println(String.format("%s => %s", k, v.toString())));
+
+
+        // ====== Debug code ======
+        PcapHandle handle;
+        try {
+            handle = Pcaps.openOffline(fileName, PcapHandle.TimestampPrecision.NANO);
+        } catch (PcapNativeException pne) {
+            handle = Pcaps.openOffline(fileName);
+        }
+        FlowPatternFinder fpf = new FlowPatternFinder(ipToHostnameMap);
+        fpf.findFlowPattern(handle, new FlowPattern("TP_LINK_LOCAL_ON", "events.tplinkra.com", new ArrayList<>()));
+
+        // ========================
     }
 
     /**
@@ -107,6 +120,8 @@ public class Main {
         }
         return result;
     }
+
+
 
 //    /**
 //     * Private class properties
