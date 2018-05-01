@@ -7,8 +7,10 @@ import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
+import org.pcap4j.packet.DnsPacket;
 
 import java.io.EOFException;
+import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
@@ -20,23 +22,25 @@ import java.util.concurrent.TimeoutException;
  */
 public class FlowPatternFinder {
 
-    private final Map<String, Set<String>> dnsMap;
+    /* Class properties */
     private final Map<Conversation, List<PcapPacket>> connections = new HashMap<>();
-
-    public FlowPatternFinder(Map<String, Set<String>> dnsMap) {
-        this.dnsMap = Objects.requireNonNull(dnsMap);
+    
+    private DnsMap dnsMap;
+    
+    public FlowPatternFinder() {
+        this.dnsMap = new DnsMap();
     }
-
-    private static final Set<String> EMPTY_SET = Collections.unmodifiableSet(new HashSet<>());
 
     // TODO clean up exceptions etc.
     public void findFlowPattern(PcapHandle pcap, FlowPattern pattern)
             throws PcapNativeException, NotOpenException, TimeoutException {
+        int counter = 0;
         try {
             PcapPacket packet;
-
             while ((packet = pcap.getNextPacketEx()) != null) {
 
+                // Check if this is a valid DNS packet
+                dnsMap.validateAndAddNewEntry(packet);
                 // For now, we only work support pattern search in TCP over IPv4.
                 IpV4Packet ipPacket = packet.get(IpV4Packet.class);
                 TcpPacket tcpPacket = packet.get(TcpPacket.class);
@@ -48,9 +52,9 @@ public class FlowPatternFinder {
                 int srcPort = tcpPacket.getHeader().getSrcPort().valueAsInt();
                 int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
                 // Is this packet related to the pattern and coming from the cloud server?
-                boolean fromServer = dnsMap.getOrDefault(srcAddress, EMPTY_SET).contains(pattern.getHostname());
+                boolean fromServer = dnsMap.isRelatedToCloudServer(srcAddress, pattern.getHostname());
                 // Is this packet related to the pattern and going to the cloud server?
-                boolean fromClient = dnsMap.getOrDefault(dstAddress, EMPTY_SET).contains(pattern.getHostname());
+                boolean fromClient = dnsMap.isRelatedToCloudServer(dstAddress, pattern.getHostname());
                 if (!fromServer && !fromClient) {
                     // Packet not related to pattern, skip it.
                     continue;
@@ -65,7 +69,7 @@ public class FlowPatternFinder {
                 // TODO: this is strictly not sufficient to differentiate one TCP session from another, but should suffice for now.
                 Conversation conversation = fromClient ? new Conversation(srcAddress, srcPort, dstAddress, dstPort) :
                         new Conversation(dstAddress, dstPort, srcAddress, srcPort);
-                List<PcapPacket> listWrappedPacket = new ArrayList<>();
+                List<PcapPacket> listWrappedPacket = new ArrayList<>();               
                 listWrappedPacket.add(packet);
                 // Create new conversation entry, or append packet to existing.
                 connections.merge(conversation, listWrappedPacket, (v1, v2) -> {
@@ -82,6 +86,9 @@ public class FlowPatternFinder {
         } catch (EOFException eofe) {
             System.out.println("findFlowPattern: finished processing entire file");
             find(pattern);
+        } catch (UnknownHostException ex) {
+            System.out.println(); 
+            ex.printStackTrace();
         }
     }
 
