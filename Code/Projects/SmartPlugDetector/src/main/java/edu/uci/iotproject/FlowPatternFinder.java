@@ -24,19 +24,28 @@ public class FlowPatternFinder {
 
     /* Class properties */
     private final Map<Conversation, List<PcapPacket>> connections = new HashMap<>();
-    
     private DnsMap dnsMap;
     
+    
+    /* Constructor */
     public FlowPatternFinder() {
         this.dnsMap = new DnsMap();
     }
 
+
+    /**
+     * Find pattern based on the FlowPattern object
+     *
+     * @param   pcap        PCAP file handler
+     * @param   pattern     FlowPattern class object as a comparator
+     */
     // TODO clean up exceptions etc.
     public void findFlowPattern(PcapHandle pcap, FlowPattern pattern)
             throws PcapNativeException, NotOpenException, TimeoutException {
         int counter = 0;
         try {
             PcapPacket packet;
+            Set<Integer> seqNumberSet = new HashSet<Integer>();
             while ((packet = pcap.getNextPacketEx()) != null) {
 
                 // Check if this is a valid DNS packet
@@ -73,12 +82,12 @@ public class FlowPatternFinder {
                 listWrappedPacket.add(packet);
                 // Create new conversation entry, or append packet to existing.
                 connections.merge(conversation, listWrappedPacket, (v1, v2) -> {
-                    // TODO: in theory, this is insufficient to detect retransmissions due to TCP seq.no. rollover.
-                    // TODO: bad for performance, O(n) for each packet added to flow (n being length of the flow).
-                    boolean retransmission = v1.stream().anyMatch(p -> p.get(TcpPacket.class).getHeader().getSequenceNumber() == v2.get(0).get(TcpPacket.class).getHeader().getSequenceNumber());
+                    int seqNumber = v2.get(0).get(TcpPacket.class).getHeader().getSequenceNumber();
+                    boolean retransmission = seqNumberSet.contains(seqNumber);
                     if (!retransmission) {
                         // Do not add if retransmission -> avoid duplicate packets in flow
                         v1.addAll(v2);
+                        seqNumberSet.add(seqNumber);
                     }
                     return v1;
                 });
@@ -91,6 +100,7 @@ public class FlowPatternFinder {
             ex.printStackTrace();
         }
     }
+
 
     private void find(FlowPattern pattern) {
         for (Conversation con : connections.keySet()) {
@@ -115,6 +125,7 @@ public class FlowPatternFinder {
             }
         }
     }
+
 
     /**
      * Immutable class used for identifying a conversation/connection/session/flow (packet's belonging to the same
