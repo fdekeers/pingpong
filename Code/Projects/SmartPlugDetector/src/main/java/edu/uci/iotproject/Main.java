@@ -35,8 +35,8 @@ public class Main {
         } catch (PcapNativeException pne) {
             handle = Pcaps.openOffline(fileName);
         }
-        FlowPatternFinder fpf = new FlowPatternFinder();
-        fpf.findFlowPattern(handle, FlowPattern.TP_LINK_LOCAL_ON);
+        FlowPatternFinder fpf = new FlowPatternFinder(handle, FlowPattern.TP_LINK_LOCAL_ON);
+        fpf.start();
 
         // ========================
     }

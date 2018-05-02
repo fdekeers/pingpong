@@ -54,10 +54,18 @@ public class FlowPattern {
 
     /**
      * Get the the sequence of packet lengths that defines this {@code FlowPattern}.
-     * @return the the sequence of packet lengths that defines this {@code FlowPattern}.
+     * @return the sequence of packet lengths that defines this {@code FlowPattern}.
      */
     public List<Integer> getPacketOrder() {
         return flowPacketOrder;
+    }
+    
+    /**
+     * Get the length of the List of {@code FlowPattern}.
+     * @return the length of the List of {@code FlowPattern}.
+     */
+    public int getLength() {
+        return flowPacketOrder.size();
     }
 
 }
