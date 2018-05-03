@@ -178,44 +178,4 @@ public class FlowPatternFinder {
         }
     }
 
-
-    /**
-     * Immutable class used for identifying a conversation/connection/session/flow (packet's belonging to the same
-     * session between a client and a server).
-     */
-    private static class Conversation {
-
-        private final String clientIp;
-        private final int clientPort;
-        private final String serverIp;
-        private final int serverPort;
-
-        public Conversation(String clientIp, int clientPort, String serverIp, int serverPort) {
-            this.clientIp = clientIp;
-            this.clientPort = clientPort;
-            this.serverIp = serverIp;
-            this.serverPort = serverPort;
-        }
-
-
-        // =========================================================================================================
-        // We simply reuse equals and hashCode methods of String.class to be able to use this immutable class as a key
-        // in a Map.
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof Conversation && this.toString().equals(obj.toString());
-        }
-
-        @Override
-        public int hashCode() {
-            return toString().hashCode();
-        }
-        // =========================================================================================================
-
-        @Override
-        public String toString() {
-            return String.format("%s:%d %s:%d", clientIp, clientPort, serverIp, serverPort);
-        }
-    }
-
 }
