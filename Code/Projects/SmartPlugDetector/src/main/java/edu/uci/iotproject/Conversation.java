@@ -5,6 +5,7 @@ import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -76,6 +77,16 @@ public class Conversation {
         }
         // ================================================================================
         mPackets.add(packet);
+    }
+
+    /**
+     * Get a list of packets pertaining to this {@code Conversation}.
+     * The returned list is a read-only list.
+     * @return the list of packets pertaining to this {@code Conversation}.
+     */
+    public List<PcapPacket> getPackets() {
+        // Return read-only view to prevent external code from manipulating internal state (preserve invariant).
+        return Collections.unmodifiableList(mPackets);
     }
 
     // =========================================================================================================
