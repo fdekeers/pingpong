@@ -172,45 +172,4 @@ public class FlowPatternFinder {
         }
     }
 
-//    private static class PatternComparisonTask implements Runnable {
-//
-//        private final Conversation mConversation;
-//        private final FlowPattern mFlowPattern;
-//
-//        private PatternComparisonTask(Conversation conversation, FlowPattern pattern) {
-//            this.mConversation = conversation;
-//            this.mFlowPattern = pattern;
-//        }
-//
-//        @Override
-//        public void run() {
-//            if(isCompleteMatch()) {
-//                PcapPacket firstPacketInFlow = mConversation.getPackets().get(0);
-//                System.out.println(
-//                        String.format("[ find ] Detected a complete match of pattern '%s' at %s!",
-//                                mFlowPattern.getPatternId(), firstPacketInFlow.getTimestamp().toString()));
-//            }
-//        }
-//
-//        /**
-//         * Compares the order of packet lengths present in {@link #mConversation} with those found in
-//         * {@link #mFlowPattern}.
-//         * @return {@code true} if the packet lengths matches pairwise for all indices, {@code false} otherwise.
-//         */
-//        private boolean isCompleteMatch() {
-//            List<PcapPacket> convPackets = mConversation.getPackets();
-//            if (convPackets.size() != mFlowPattern.getLength()) {
-//                return false;
-//            }
-//            for (int i = 0; i < convPackets.size(); i++) {
-//                TcpPacket tcpPacket = convPackets.get(i).get(TcpPacket.class);
-//                if (tcpPacket.getPayload().length() != mFlowPattern.getPacketOrder().get(i)) {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }
-//
-//    }
-
 }
