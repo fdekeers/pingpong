@@ -4,10 +4,7 @@ import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Models a (TCP) conversation/connection/session/flow (packet's belonging to the same session between a client and a
@@ -16,14 +13,45 @@ import java.util.Objects;
  * considered when determining equality of two {@code Conversation} instances in order to allow for a
  * {@code Conversation} to function as a key in data structures such as {@link java.util.Map} and {@link java.util.Set}.
  * See {@link #equals(Object)} for the definition of equality.
+ *
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class Conversation {
 
+    /* Begin instance properties */
+    /**
+     * The IP of the host that is considered the client (i.e. the host that initiates the conversation)
+     * in this conversation.
+     */
     private final String mClientIp;
+
+    /**
+     * The port number used by the host that is considered the client in this conversation.
+     */
     private final int mClientPort;
+
+    /**
+     * The IP of the host that is considered the server (i.e. is the responder) in this conversation.
+     */
     private final String mServerIp;
+
+    /**
+     * The port number used by the server in this conversation.
+     */
     private final int mServerPort;
+
+    /**
+     * The list of packets pertaining to this conversation.
+     */
     private final List<PcapPacket> mPackets;
+
+    /**
+     * Contains the sequence numbers seen so far for this {@code Conversation}.
+     * Used for filtering out retransmissions.
+     */
+    private final Set<Integer> mSeqNumbers;
+    /* End instance properties */
 
     /**
      * Constructs a new {@code Conversation}.
@@ -39,13 +67,19 @@ public class Conversation {
         this.mServerIp = serverIp;
         this.mServerPort = serverPort;
         this.mPackets = new ArrayList<>();
+        this.mSeqNumbers = new HashSet<>();
     }
 
     /**
      * Add a packet to the list of packets associated with this conversation.
      * @param packet The packet that is to be added to (associated with) this conversation.
+     * @param ignoreRetransmissions Boolean value indicating if retransmissions should be ignored.
+     *                              If set to {@code true}, {@code packet} will <em>not</em> be added to the
+     *                              internal list of packets pertaining to this {@code Conversation}
+     *                              <em>iff</em> the sequence number of {@code packet} was already
+     *                              seen in a previous packet.
      */
-    public void addPacket(PcapPacket packet) {
+    public void addPacket(PcapPacket packet, boolean ignoreRetransmissions) {
         // Apply precondition to preserve class invariant: all packets in mPackets must match the 4 tuple that
         // defines the conversation.
         // ==== Precondition: verify that packet does indeed pertain to conversation. ====
@@ -76,6 +110,14 @@ public class Conversation {
                             Conversation.class.getSimpleName()));
         }
         // ================================================================================
+        int seqNo = tcpPacket.getHeader().getSequenceNumber();
+        if (ignoreRetransmissions && mSeqNumbers.contains(seqNo)) {
+            // Packet is a retransmission. Ignore it.
+            return;
+        }
+        // Update set of sequence numbers seen so far with sequence number of new packet.
+        mSeqNumbers.add(seqNo);
+        // Finally add packet to list of packets pertaining to this conversation.
         mPackets.add(packet);
     }
 
