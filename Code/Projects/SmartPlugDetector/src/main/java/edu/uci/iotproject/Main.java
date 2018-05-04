@@ -27,15 +27,22 @@ public class Main {
     public static void main(String[] args) throws PcapNativeException, NotOpenException, EOFException, TimeoutException, UnknownHostException {
         //final String fileName = "/users/varmarken/Desktop/wlan1.local.dns.pcap";
         final String fileName = "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.remote.dns.pcap";
+        final String trainingFileName = "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/TP_LINK_LOCAL_OFF.pcap";
 
         // ====== Debug code ======
         PcapHandle handle;
+        PcapHandle trainingPcap;
         try {
             handle = Pcaps.openOffline(fileName, PcapHandle.TimestampPrecision.NANO);
+            trainingPcap = Pcaps.openOffline(trainingFileName, PcapHandle.TimestampPrecision.NANO);
         } catch (PcapNativeException pne) {
             handle = Pcaps.openOffline(fileName);
+            trainingPcap = Pcaps.openOffline(trainingFileName);
         }
-        FlowPatternFinder fpf = new FlowPatternFinder(handle, FlowPattern.TP_LINK_LOCAL_ON);
+        FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_OFF", "events.tplinkra.com", trainingPcap);
+        
+        //FlowPatternFinder fpf = new FlowPatternFinder(handle, FlowPattern.TP_LINK_LOCAL_ON);
+        FlowPatternFinder fpf = new FlowPatternFinder(handle, fp);
         fpf.start();
 
         // ========================

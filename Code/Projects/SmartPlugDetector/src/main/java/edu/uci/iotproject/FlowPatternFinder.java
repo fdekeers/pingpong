@@ -36,7 +36,7 @@ public class FlowPatternFinder {
     private PcapHandle pcap;
     private FlowPattern pattern;
     private AtomicBoolean isEoF;
-    
+   
     
     /* Constructor */
     public FlowPatternFinder(PcapHandle _pcap, FlowPattern _pattern) {
@@ -217,5 +217,4 @@ public class FlowPatternFinder {
             return String.format("%s:%d %s:%d", clientIp, clientPort, serverIp, serverPort);
         }
     }
-
 }
