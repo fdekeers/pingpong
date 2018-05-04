@@ -17,7 +17,7 @@ public class PatternComparisonTask<R extends AbstractPatternComparisonResult<?>>
 
     private final Conversation mConversation;
     private final FlowPattern mFlowPattern;
-    private final BiFunction<Conversation, FlowPattern, R> mComparitor;
+    private final BiFunction<Conversation, FlowPattern, R> mComparator;
 
     /**
      * Create a new {@code PatternComparisonTask}.
@@ -29,12 +29,12 @@ public class PatternComparisonTask<R extends AbstractPatternComparisonResult<?>>
     public PatternComparisonTask(Conversation conversation, FlowPattern pattern, BiFunction<Conversation, FlowPattern, R> comparisonFunction) {
         this.mConversation = conversation;
         this.mFlowPattern = pattern;
-        this.mComparitor = comparisonFunction;
+        this.mComparator = comparisonFunction;
     }
 
     @Override
     public R call() throws Exception {
-        return mComparitor.apply(mConversation, mFlowPattern);
+        return mComparator.apply(mConversation, mFlowPattern);
     }
 
 }

@@ -4,6 +4,7 @@ import org.pcap4j.core.*;
 
 import java.io.EOFException;
 import java.net.UnknownHostException;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -21,7 +22,8 @@ public class Main {
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, EOFException, TimeoutException, UnknownHostException {
         final String fileName = args.length > 0 ? args[0] : "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.remote.dns.pcap";
-        final String trainingFileName = "./pcap/TP_LINK_LOCAL_OFF.pcap";
+        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON.pcap";
+        //final String trainingFileName = "./pcap/TP_LINK_REMOTE_ON.pcap";
 
         // ====== Debug code ======
         PcapHandle handle;
@@ -33,9 +35,17 @@ public class Main {
             handle = Pcaps.openOffline(fileName);
             trainingPcap = Pcaps.openOffline(trainingFileName);
         }
-        FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_OFF", "events.tplinkra.com", trainingPcap);
-        
-        //FlowPatternFinder fpf = new FlowPatternFinder(handle, FlowPattern.TP_LINK_LOCAL_ON);
+
+        // TODO: The followings are the way to extract multiple hostnames and their associated packet lengths lists
+        //List<String> list = new ArrayList<>();
+        //list.add("events.tplinkra.com");
+        //FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_ON", list, trainingPcap);
+        //List<String> list2 = new ArrayList<>();
+        //list2.add("devs.tplinkcloud.com");
+        //list2.add("events.tplinkra.com");
+        //FlowPattern fp3 = new FlowPattern("TP_LINK_REMOTE_ON", list2, trainingPcap);
+
+        FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_ON", "events.tplinkra.com", trainingPcap);        
         FlowPatternFinder fpf = new FlowPatternFinder(handle, fp);
         fpf.start();
 

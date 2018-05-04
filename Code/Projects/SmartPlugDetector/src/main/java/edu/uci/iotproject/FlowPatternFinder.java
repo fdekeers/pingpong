@@ -90,6 +90,10 @@ public class FlowPatternFinder {
     private void findFlowPattern() {
         try {
             PcapPacket packet;
+//            TODO: The new comparison method is pending
+//            TODO: For now, just compare using one hostname and one list per FlowPattern
+//            List<String> hostnameList = mPattern.getHostnameList();
+//            int hostIndex = 0;
             int patternLength = mPattern.getLength();
             while ((packet = mPcap.getNextPacketEx()) != null) {
                 // Let DnsMap handle DNS packets.
@@ -104,6 +108,10 @@ public class FlowPatternFinder {
                 if (ipPacket == null || tcpPacket == null) {
                     continue;
                 }
+                if (tcpPacket.getPayload() == null) {
+                    // We skip non-payload control packets as these are less predictable
+                    continue;
+                }
                 String srcAddress = ipPacket.getHeader().getSrcAddr().getHostAddress();
                 String dstAddress = ipPacket.getHeader().getDstAddr().getHostAddress();
                 int srcPort = tcpPacket.getHeader().getSrcPort().valueAsInt();
@@ -111,12 +119,11 @@ public class FlowPatternFinder {
                 // Is this packet related to the pattern; i.e. is it going to (or coming from) the cloud server?
                 boolean fromServer = mDnsMap.isRelatedToCloudServer(srcAddress, mPattern.getHostname());
                 boolean fromClient = mDnsMap.isRelatedToCloudServer(dstAddress, mPattern.getHostname());
+//                String currentHostname = hostnameList.get(hostIndex);
+//                boolean fromServer = mDnsMap.isRelatedToCloudServer(srcAddress, currentHostname);
+//                boolean fromClient = mDnsMap.isRelatedToCloudServer(dstAddress, currentHostname);
                 if (!fromServer && !fromClient) {
                     // Packet not related to pattern, skip it.
-                    continue;
-                }
-                if (tcpPacket.getPayload() == null) {
-                    // We skip non-payload control packets as these are less predictable
                     continue;
                 }
                 // Conversations (connections/sessions) are identified by the four-tuple
@@ -138,6 +145,7 @@ public class FlowPatternFinder {
                 // Refresh reference to point to entry in map (in case packet was added to existing entry).
                 conversation = mConversations.get(conversation);
                 if (conversation.getPackets().size() == mPattern.getLength()) {
+//                if (conversation.getPackets().size() == mPattern.getLength(currentHostname)) {
                     // Conversation reached a size that matches the expected size.
                     // Remove the Conversation from the map and start the analysis.
                     // Any future packets identified by the same four tuple will be tied to a new Conversation instance.
@@ -147,6 +155,8 @@ public class FlowPatternFinder {
                     PatternComparisonTask<CompleteMatchPatternComparisonResult> comparisonTask =
                             new PatternComparisonTask<>(conversation, mPattern, ComparisonFunctions.COMPLETE_MATCH);
                     mPendingComparisons.add(EXECUTOR_SERVICE.submit(comparisonTask));
+                    // Increment hostIndex to find the next
+                    
                 }
             }
         } catch (EOFException eofe) {
