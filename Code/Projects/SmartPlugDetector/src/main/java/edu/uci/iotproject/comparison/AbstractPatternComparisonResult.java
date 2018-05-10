@@ -42,7 +42,7 @@ public abstract class AbstractPatternComparisonResult<T> {
 
     /**
      * Get a textual description of the comparison result suitable for output on std.out.
-     * @returna a textual description of the comparison result suitable for output on std.out.
+     * @return a textual description of the comparison result suitable for output on std.out.
      */
     abstract public String getTextualDescription();
 
