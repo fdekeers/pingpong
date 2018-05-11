@@ -30,4 +30,20 @@ public final class PcapPacketUtils {
         return ipSrc.equals(ip) && srcPort == port;
     }
 
+    /**
+     * Helper method to determine if the given combination of IP and port matches the destination of the given packet.
+     * @param packet The packet to check.
+     * @param ip The IP to look for in the ip.dst field of {@code packet}.
+     * @param port The port to look for in the tcp.dstport field of {@code packet}.
+     * @return {@code true} if the given ip+port match the corresponding fields in {@code packet}.
+     */
+    public static boolean isDestination(PcapPacket packet, String ip, int port) {
+        IpV4Packet ipPacket = Objects.requireNonNull(packet.get(IpV4Packet.class));
+        // For now we only support TCP flows.
+        TcpPacket tcpPacket = Objects.requireNonNull(packet.get(TcpPacket.class));
+        String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
+        int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
+        return ipDst.equals(ip) && dstPort == port;
+    }
+
 }

@@ -1,5 +1,6 @@
 package edu.uci.iotproject;
 
+import edu.uci.iotproject.util.PcapPacketUtils;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
@@ -102,6 +103,16 @@ public class Conversation {
     }
 
     /**
+     * Get a list of packets pertaining to this {@code Conversation}.
+     * The returned list is a read-only list.
+     * @return the list of packets pertaining to this {@code Conversation}.
+     */
+    public List<PcapPacket> getPackets() {
+        // Return read-only view to prevent external code from manipulating internal state (preserve invariant).
+        return Collections.unmodifiableList(mPackets);
+    }
+
+    /**
      * Adds a TCP FIN packet to the list of TCP FIN packets associated with this conversation.
      * @param finPacket The TCP FIN packet that is to be added to (associated with) this conversation.
      */
@@ -123,13 +134,15 @@ public class Conversation {
     }
 
     /**
-     * Get a list of packets pertaining to this {@code Conversation}.
-     * The returned list is a read-only list.
-     * @return the list of packets pertaining to this {@code Conversation}.
+     * Get if this {@code Conversation} is considered to have been gracefully shut down.
+     * A {@code Conversation} has been gracefully shut down if it contains a FIN+ACK pair for both directions
+     * (client to server, and server to client).
+     * @return {@code true} if the connection has been gracefully shut down, false otherwise.
      */
-    public List<PcapPacket> getPackets() {
-        // Return read-only view to prevent external code from manipulating internal state (preserve invariant).
-        return Collections.unmodifiableList(mPackets);
+    public boolean isGracefullyShutdown() {
+        //  The conversation has been gracefully shut down if we have recorded a FIN from both the client and the server which have both been ack'ed.
+        return mFinPackets.stream().anyMatch(finAckPair -> finAckPair.isAcknowledged() && PcapPacketUtils.isSource(finAckPair.getFinPacket(), mClientIp, mClientPort)) &&
+                mFinPackets.stream().anyMatch(finAckPair -> finAckPair.isAcknowledged() && PcapPacketUtils.isSource(finAckPair.getFinPacket(), mServerIp, mServerPort));
     }
 
     // =========================================================================================================
