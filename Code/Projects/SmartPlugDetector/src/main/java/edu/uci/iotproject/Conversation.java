@@ -130,7 +130,15 @@ public class Conversation {
         // Precondition: verify that the packet pertains to this conversation.
         onAddPrecondition(ackPacket);
         // Mark unack'ed FIN(s) that this ACK matches as ACK'ed (there might be more than one in case of retransmissions..?)
-        mFinPackets.replaceAll(finAckPair -> (!finAckPair.isAcknowledged() && finAckPair.isCorrespondingAckPacket(ackPacket)) ? new FinAckPair(finAckPair.getFinPacket(), ackPacket) : finAckPair);
+        mFinPackets.replaceAll(finAckPair -> !finAckPair.isAcknowledged() && finAckPair.isCorrespondingAckPacket(ackPacket) ? new FinAckPair(finAckPair.getFinPacket(), ackPacket) : finAckPair);
+    }
+
+    /**
+     * Retrieves an unmodifiable view of the list of {@link FinAckPair}s associated with this {@code Conversation}.
+     * @return an unmodifiable view of the list of {@link FinAckPair}s associated with this {@code Conversation}.
+     */
+    public List<FinAckPair> getFinAckPairs() {
+        return Collections.unmodifiableList(mFinPackets);
     }
 
     /**
