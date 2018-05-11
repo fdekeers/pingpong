@@ -51,6 +51,11 @@ public class Conversation {
      * Used for filtering out retransmissions.
      */
     private final Set<Integer> mSeqNumbers;
+
+    /**
+     * List of pairs FINs and their corresponding ACKs associated with this conversation.
+     */
+    private List<FinAckPair> mFinPackets;
     /* End instance properties */
 
     /**
@@ -68,6 +73,7 @@ public class Conversation {
         this.mServerPort = serverPort;
         this.mPackets = new ArrayList<>();
         this.mSeqNumbers = new HashSet<>();
+        this.mFinPackets = new ArrayList<>();
     }
 
     /**
@@ -80,36 +86,10 @@ public class Conversation {
      *                              seen in a previous packet.
      */
     public void addPacket(PcapPacket packet, boolean ignoreRetransmissions) {
-        // Apply precondition to preserve class invariant: all packets in mPackets must match the 4 tuple that
-        // defines the conversation.
-        // ==== Precondition: verify that packet does indeed pertain to conversation. ====
-        IpV4Packet ipPacket = Objects.requireNonNull(packet.get(IpV4Packet.class));
+        // Precondition: verify that packet does indeed pertain to conversation.
+        onAddPrecondition(packet);
         // For now we only support TCP flows.
         TcpPacket tcpPacket = Objects.requireNonNull(packet.get(TcpPacket.class));
-        String ipSrc = ipPacket.getHeader().getSrcAddr().getHostAddress();
-        String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
-        int srcPort = tcpPacket.getHeader().getSrcPort().valueAsInt();
-        int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
-        String clientIp, serverIp;
-        int clientPort, serverPort;
-        if (ipSrc.equals(mClientIp)) {
-            clientIp = ipSrc;
-            clientPort = srcPort;
-            serverIp = ipDst;
-            serverPort = dstPort;
-        } else {
-            clientIp = ipDst;
-            clientPort = dstPort;
-            serverIp = ipSrc;
-            serverPort = srcPort;
-        }
-        if (!(clientIp.equals(mClientIp) && clientPort == mClientPort &&
-                serverIp.equals(mServerIp) && serverPort == mServerPort)) {
-            throw new IllegalArgumentException(
-                    String.format("Attempt to add packet that does not pertain to %s",
-                            Conversation.class.getSimpleName()));
-        }
-        // ================================================================================
         int seqNo = tcpPacket.getHeader().getSequenceNumber();
         if (ignoreRetransmissions && mSeqNumbers.contains(seqNo)) {
             // Packet is a retransmission. Ignore it.
@@ -119,6 +99,27 @@ public class Conversation {
         mSeqNumbers.add(seqNo);
         // Finally add packet to list of packets pertaining to this conversation.
         mPackets.add(packet);
+    }
+
+    /**
+     * Adds a TCP FIN packet to the list of TCP FIN packets associated with this conversation.
+     * @param finPacket The TCP FIN packet that is to be added to (associated with) this conversation.
+     */
+    public void addFinPacket(PcapPacket finPacket) {
+        // Precondition: verify that packet does indeed pertain to conversation.
+        onAddPrecondition(finPacket);
+        mFinPackets.add(new FinAckPair(finPacket));
+    }
+
+    /**
+     * Attempt to ACK any FIN packets held by this conversation.
+     * @param ackPacket The ACK for a FIN previously added to this conversation.
+     */
+    public void attemptAcknowledgementOfFin(PcapPacket ackPacket) {
+        // Precondition: verify that the packet pertains to this conversation.
+        onAddPrecondition(ackPacket);
+        // Mark unack'ed FIN(s) that this ACK matches as ACK'ed (there might be more than one in case of retransmissions..?)
+        mFinPackets.replaceAll(finAckPair -> (!finAckPair.isAcknowledged() && finAckPair.isCorrespondingAckPacket(ackPacket)) ? new FinAckPair(finAckPair.getFinPacket(), ackPacket) : finAckPair);
     }
 
     /**
@@ -157,4 +158,41 @@ public class Conversation {
     public String toString() {
         return String.format("%s:%d %s:%d", mClientIp, mClientPort, mServerIp, mServerPort);
     }
+
+    /**
+     * Invoke to verify that the precondition holds when a caller attempts to add a packet to this {@code Conversation}.
+     * An {@link IllegalArgumentException} is thrown if the precondition is violated.
+     * @param packet the packet to be added to this {@code Conversation}
+     */
+    private void onAddPrecondition(PcapPacket packet) {
+        // Apply precondition to preserve class invariant: all packets in mPackets must match the 4 tuple that
+        // defines the conversation.
+        IpV4Packet ipPacket = Objects.requireNonNull(packet.get(IpV4Packet.class));
+        // For now we only support TCP flows.
+        TcpPacket tcpPacket = Objects.requireNonNull(packet.get(TcpPacket.class));
+        String ipSrc = ipPacket.getHeader().getSrcAddr().getHostAddress();
+        String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
+        int srcPort = tcpPacket.getHeader().getSrcPort().valueAsInt();
+        int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
+        String clientIp, serverIp;
+        int clientPort, serverPort;
+        if (ipSrc.equals(mClientIp)) {
+            clientIp = ipSrc;
+            clientPort = srcPort;
+            serverIp = ipDst;
+            serverPort = dstPort;
+        } else {
+            clientIp = ipDst;
+            clientPort = dstPort;
+            serverIp = ipSrc;
+            serverPort = srcPort;
+        }
+        if (!(clientIp.equals(mClientIp) && clientPort == mClientPort &&
+                serverIp.equals(mServerIp) && serverPort == mServerPort)) {
+            throw new IllegalArgumentException(
+                    String.format("Attempt to add packet that does not pertain to %s",
+                            Conversation.class.getSimpleName()));
+        }
+    }
+
 }
