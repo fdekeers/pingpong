@@ -132,17 +132,3 @@ public class FinAckPair {
     }
 
 }
-
-//    /**
-//     * Sets the corresponding ACK packet in this {@code FinAckPair}.
-//     * The method internally verifies if the given {@code packet} does indeed correspond to the FIN packet in this pair.
-//     * @param packet The packet that is an ACK of the FIN in this pair.
-//     * @return {@code true} if the packet was successfully set, {@code false} otherwise (the packet did not correspond to the FIN packet in this pair).
-//     */
-//    public synchronized boolean setCorrespondingAckPacket(PcapPacket packet) {
-//        if (isCorrespondingAckPacket(packet)) {
-//            mCorrespondingAckPacket = packet;
-//            return true;
-//        }
-//        return false;
-//    }
