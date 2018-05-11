@@ -168,7 +168,7 @@ public class FlowPatternFinder {
                     mConversations.remove(conversation);
                     // Create comparison task and send to executor service.
                     PatternComparisonTask<CompleteMatchPatternComparisonResult> comparisonTask =
-                            new PatternComparisonTask<>(conversation, mPattern, ComparisonFunctions.COMPLETE_MATCH);
+                            new PatternComparisonTask<>(conversation, mPattern, ComparisonFunctions.SUB_SEQUENCE_COMPLETE_MATCH);
                     mPendingComparisons.add(EXECUTOR_SERVICE.submit(comparisonTask));
                     // Increment hostIndex to find the next
                     

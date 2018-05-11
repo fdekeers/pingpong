@@ -38,4 +38,40 @@ public class ComparisonFunctions {
         return new CompleteMatchPatternComparisonResult(conversation, flowPattern, true);
     };
 
+    /**
+     * Comparison function that searches a {@link Conversation} looking for the presence of a complete match of a {@link FlowPattern}.
+     * Unlike {@link #COMPLETE_MATCH}, which searches for a 1:1 match between the {@code Conversation} and the {@code FlowPattern},
+     * this function targets cases where the {@code Conversation} is longer than the {@code FlowPattern}.
+     * In other words, this function searches for a complete match of a sub sequence of packets in the {@code Conversation}.
+     * Note: this is a slow, brute force search.
+     */
+    public static final BiFunction<Conversation, FlowPattern, CompleteMatchPatternComparisonResult> SUB_SEQUENCE_COMPLETE_MATCH = new BiFunction<Conversation, FlowPattern, CompleteMatchPatternComparisonResult>() {
+        // TODO needs review; I was tired when I wrote this :).
+        private boolean find(Conversation conversation, FlowPattern flowPattern, int nextIndex, int matchedIndices) {
+            if (matchedIndices == flowPattern.getLength()) {
+                // Found a full sub sequence.
+                return true;
+            }
+            List<PcapPacket> convPackets = conversation.getPackets();
+            if (nextIndex >= convPackets.size()) {
+                // Reached end of list without finding a match.
+                return false;
+            }
+            if (convPackets.get(nextIndex).get(TcpPacket.class).getPayload().length() == flowPattern.getPacketOrder().get(matchedIndices)) {
+                // So far, so good. Still need to check if the remainder of the sub sequence is present.
+                return find(conversation, flowPattern, ++nextIndex, ++matchedIndices);
+            } else {
+                // Miss; trace back and retry the search starting at the index immediately after the index from the
+                // recursive calls potentially started matching some of the sub sequence.
+                return find(conversation, flowPattern, nextIndex-matchedIndices+1, 0);
+            }
+        }
+
+        @Override
+        public CompleteMatchPatternComparisonResult apply(Conversation conversation, FlowPattern flowPattern) {
+            return new CompleteMatchPatternComparisonResult(conversation, flowPattern, find(conversation, flowPattern, 0, 0));
+        }
+
+    };
+
 }

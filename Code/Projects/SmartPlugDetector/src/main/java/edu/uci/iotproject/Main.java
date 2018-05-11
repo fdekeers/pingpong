@@ -22,7 +22,7 @@ public class Main {
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, EOFException, TimeoutException, UnknownHostException {
         final String fileName = args.length > 0 ? args[0] : "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.remote.dns.pcap";
-        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON.pcap";
+        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON_SUBSET.pcap";
         //final String trainingFileName = "./pcap/TP_LINK_REMOTE_ON.pcap";
 
         // ====== Debug code ======
