@@ -27,7 +27,7 @@ import java.util.concurrent.*;
  * {@link FlowPattern} (in that one end/party of said conversations matches the hostname(s) specified by the given
  * {@code FlowPattern}).
  * These potential matches are then examined on background worker thread(s) to determine if they are indeed a (complete)
- * matches of the provided {@code FlowPattern}.
+ * match of the provided {@code FlowPattern}.
  * </p>
  *
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
