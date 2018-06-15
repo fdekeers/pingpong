@@ -59,6 +59,8 @@ public class FlowPatternFinder {
     private final DnsMap mDnsMap;
     private final PcapHandle mPcap;
     private final FlowPattern mPattern;
+    private final ConversationPair mConvPair;
+    private final String FILE = "./datapoints.csv";
 
     private final List<Future<CompleteMatchPatternComparisonResult>> mPendingComparisons = new ArrayList<>();
     /* End instance properties */
@@ -75,6 +77,7 @@ public class FlowPatternFinder {
                 String.format("Argument of type '%s' cannot be null", PcapHandle.class.getSimpleName()));
         this.mPattern = Objects.requireNonNull(pattern,
                 String.format("Argument of type '%s' cannot be null", FlowPattern.class.getSimpleName()));
+        this.mConvPair = new ConversationPair(FILE, ConversationPair.Direction.DEVICE_TO_SERVER);
     }
 
     /**
@@ -140,7 +143,10 @@ public class FlowPatternFinder {
                 }
                 // Note: does not make sense to call attemptAcknowledgementOfFin here as the new packet has no FINs
                 // in its list, so if this packet is an ACK, it would not be added anyway.
-
+                // Record the conversation pairs
+                if (tcpPacket.getPayload() != null) {
+                    mConvPair.writeConversationPair(packet, fromClient, fromServer);
+                }
                 // Need to retain a final reference to get access to the packet in the lambda below.
                 final PcapPacket finalPacket = packet;
                 // Add the new conversation to the map if an equal entry is not already present.
@@ -171,10 +177,12 @@ public class FlowPatternFinder {
                             new PatternComparisonTask<>(conversation, mPattern, ComparisonFunctions.SUB_SEQUENCE_COMPLETE_MATCH);
                     mPendingComparisons.add(EXECUTOR_SERVICE.submit(comparisonTask));
                     // Increment hostIndex to find the next
-                    
+
                 }
             }
         } catch (EOFException eofe) {
+            mConvPair.close();
+            System.out.println("[ findFlowPattern ] ConversationPair writer closed!");
             // TODO should check for leftover conversations in map here and fire tasks for those.
             // TODO [cont'd] such tasks may be present if connections did not terminate gracefully or if there are longlived connections.
             System.out.println("[ findFlowPattern ] Finished processing entire PCAP stream!");
