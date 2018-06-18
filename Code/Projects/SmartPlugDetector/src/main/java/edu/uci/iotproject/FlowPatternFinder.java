@@ -11,8 +11,11 @@ import org.pcap4j.packet.DnsPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
-import java.io.EOFException;
+import java.io.*;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -56,11 +59,19 @@ public class FlowPatternFinder {
      */
     private final Map<Conversation, Conversation> mConversations;
 
+    /**
+     * Holds a list of trigger times.
+     */
+    private final List<Long> mTriggerTimes;
+    private static int triggerListCounter;
+
     private final DnsMap mDnsMap;
     private final PcapHandle mPcap;
     private final FlowPattern mPattern;
     private final ConversationPair mConvPair;
-    private final String FILE = "./datapoints.csv";
+    private final String FILE = "./devices/tplink_switch/datapoints.csv";
+    //private final String REF_FILE = "./devices/tplink_switch/tplink-june-14-2018.timestamps";
+    private final String REF_FILE = "./devices/tplink_switch/tplink-feb-13-2018.timestamps";
 
     private final List<Future<CompleteMatchPatternComparisonResult>> mPendingComparisons = new ArrayList<>();
     /* End instance properties */
@@ -72,6 +83,8 @@ public class FlowPatternFinder {
      */
     public FlowPatternFinder(PcapHandle pcap, FlowPattern pattern) {
         this.mConversations = new HashMap<>();
+        this.mTriggerTimes = readTriggerTimes(REF_FILE);
+        triggerListCounter = 0;
         this.mDnsMap = new DnsMap();
         this.mPcap = Objects.requireNonNull(pcap,
                 String.format("Argument of type '%s' cannot be null", PcapHandle.class.getSimpleName()));
@@ -80,11 +93,32 @@ public class FlowPatternFinder {
         this.mConvPair = new ConversationPair(FILE, ConversationPair.Direction.DEVICE_TO_SERVER);
     }
 
+
+    private List<Long> readTriggerTimes(String refFileName) {
+
+        List<Long> listTriggerTimes = new ArrayList<>();
+        try {
+            File file = new File(refFileName);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String s;
+            while ((s = br.readLine()) != null) {
+                listTriggerTimes.add(timeToMillis(s, false));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("List has: " + listTriggerTimes.size());
+
+        return listTriggerTimes;
+    }
+
     /**
      * Starts the pattern search.
      */
     public void start() {
-        findFlowPattern();
+
+        //findFlowPattern();
+        findSignatureBasedOnTimestamp();
     }
 
     /**
@@ -143,10 +177,6 @@ public class FlowPatternFinder {
                 }
                 // Note: does not make sense to call attemptAcknowledgementOfFin here as the new packet has no FINs
                 // in its list, so if this packet is an ACK, it would not be added anyway.
-                // Record the conversation pairs
-                if (tcpPacket.getPayload() != null) {
-                    mConvPair.writeConversationPair(packet, fromClient, fromServer);
-                }
                 // Need to retain a final reference to get access to the packet in the lambda below.
                 final PcapPacket finalPacket = packet;
                 // Add the new conversation to the map if an equal entry is not already present.
@@ -181,8 +211,6 @@ public class FlowPatternFinder {
                 }
             }
         } catch (EOFException eofe) {
-            mConvPair.close();
-            System.out.println("[ findFlowPattern ] ConversationPair writer closed!");
             // TODO should check for leftover conversations in map here and fire tasks for those.
             // TODO [cont'd] such tasks may be present if connections did not terminate gracefully or if there are longlived connections.
             System.out.println("[ findFlowPattern ] Finished processing entire PCAP stream!");
@@ -205,6 +233,115 @@ public class FlowPatternFinder {
                  TimeoutException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Find patterns based on the FlowPattern object (run by a thread)
+     */
+    private void findSignatureBasedOnTimestamp() {
+        try {
+            PcapPacket packet;
+//            TODO: The new comparison method is pending
+//            TODO: For now, just compare using one hostname and one list per FlowPattern
+            while ((packet = mPcap.getNextPacketEx()) != null) {
+                // Let DnsMap handle DNS packets.
+                if (packet.get(DnsPacket.class) != null) {
+                    // Check if this is a valid DNS packet
+                    mDnsMap.validateAndAddNewEntry(packet);
+                    continue;
+                }
+                // For now, we only work support pattern search in TCP over IPv4.
+                final IpV4Packet ipPacket = packet.get(IpV4Packet.class);
+                final TcpPacket tcpPacket = packet.get(TcpPacket.class);
+                if (ipPacket == null || tcpPacket == null) {
+                    continue;
+                }
+
+                String srcAddress = ipPacket.getHeader().getSrcAddr().getHostAddress();
+                String dstAddress = ipPacket.getHeader().getDstAddr().getHostAddress();
+                int srcPort = tcpPacket.getHeader().getSrcPort().valueAsInt();
+                int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
+                // Is this packet related to the pattern; i.e. is it going to (or coming from) the cloud server?
+                boolean fromServer = mDnsMap.isRelatedToCloudServer(srcAddress, mPattern.getHostname());
+                boolean fromClient = mDnsMap.isRelatedToCloudServer(dstAddress, mPattern.getHostname());
+                if (!fromServer && !fromClient) {
+                    // Packet not related to pattern, skip it.
+                    continue;
+                }
+                // Record the conversation pairs
+                if (tcpPacket.getPayload() != null && checkTimeStamp(packet)) {
+                    mConvPair.writeConversationPair(packet, fromClient, fromServer);
+                }
+            }
+        } catch (EOFException eofe) {
+            triggerListCounter = 0;
+            mConvPair.close();
+            System.out.println("[ findFlowPattern ] ConversationPair writer closed!");
+            System.out.println("[ findFlowPattern ] Frequencies of data points:");
+            mConvPair.printListFrequency();
+        } catch (UnknownHostException |
+                PcapNativeException  |
+                NotOpenException     |
+                TimeoutException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private boolean checkTimeStamp(PcapPacket packet) {
+
+        // Extract time from the packet's timestamp
+        String timeStamp = packet.getTimestamp().toString();
+        String timeString = timeStamp.substring(timeStamp.indexOf("T") + 1, timeStamp.indexOf("."));
+        long time = timeToMillis(timeString, true);
+
+        // We accept packets that are at most 3 seconds away from the trigger time
+        if ((mTriggerTimes.get(triggerListCounter) <= time) &&
+                (time <= mTriggerTimes.get(triggerListCounter) + 3000)) {
+            //System.out.println("Gets here 1: " + timeString + " index: " + triggerListCounter);
+            return true;
+        } else {
+            // Handle the case that the timestamp is > 3000, but < next timestamp
+            // in the list. We ignore these packets.
+            if (time < mTriggerTimes.get(triggerListCounter)) {
+                // Timestamp is smaller than trigger, ignore!
+                //System.out.println("Gets here 2: " + timeString + " index: " + triggerListCounter);
+                return false;
+            } else { // Timestamp is greater than trigger, increment!
+                triggerListCounter = triggerListCounter + 1;
+                //System.out.println("Gets here 3: " + timeString + " index: " + triggerListCounter);
+                //return false;
+                return checkTimeStamp(packet);
+            }
+        }
+
+        //System.out.println("Timestamp: " + timeToMillis(time, true));
+        //String time2 = "21:38:08";
+        //System.out.println("Timestamp: " + timeToMillis(time2, true));
+    }
+
+    /**
+     * A private function that returns time in milliseconds.
+     * @param time The time in the form of String.
+     * @param is24Hr If true, then this is in 24-hour format.
+     */
+    private long timeToMillis(String time, boolean is24Hr) {
+
+        String format = null;
+        if (is24Hr) {
+            format = "hh:mm:ss";
+        } else { // 12 Hr format
+            format = "hh:mm:ss aa";
+        }
+        DateFormat sdf = new SimpleDateFormat(format);
+        Date date = null;
+        try {
+            date = sdf.parse(time);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if (date == null)
+            return 0;
+        return date.getTime();
     }
 
 }

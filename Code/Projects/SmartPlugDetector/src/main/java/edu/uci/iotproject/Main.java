@@ -39,6 +39,7 @@ public class Main {
         // -------------------------------------------------------------------------------------------------------------
 
         final String fileName = args.length > 0 ? args[0] : "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+        //final String fileName = args.length > 0 ? args[0] : "/scratch/June-2018/TPLink/wlan1/tplink.wlan1.local.pcap";
         final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON_SUBSET.pcap";
 //        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON.pcap";
 //

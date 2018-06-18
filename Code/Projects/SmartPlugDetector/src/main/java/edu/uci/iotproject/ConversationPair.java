@@ -6,6 +6,8 @@ import org.pcap4j.core.PcapPacket;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Models a (TCP) conversation/connection/session/flow (packet's belonging to the same session between a client and a
@@ -37,6 +39,12 @@ public class ConversationPair {
     private boolean firstPacket;
 
     /**
+     * Count the frequencies of points
+     */
+    private Map<String, Integer> pointFreq;
+    private String dataPoint;
+
+    /**
      * Four possible directions of conversations.
      * E.g., DEVICE_TO_SERVER means the conversation is started from
      * a device-server packet and then a server-device as a response.
@@ -60,12 +68,14 @@ public class ConversationPair {
     public ConversationPair(String fileName, Direction direction) {
         try {
             this.pw = new PrintWriter(fileName, "UTF-8");
-            this.direction = direction;
-            this.firstPacket = true;
         } catch(UnsupportedEncodingException |
                 FileNotFoundException e) {
             e.printStackTrace();
         }
+        this.direction = direction;
+        this.firstPacket = true;
+        this.pointFreq = new HashMap<>();
+        this.dataPoint = null;
     }
 
     /**
@@ -81,21 +91,52 @@ public class ConversationPair {
             if (fromClient && firstPacket) { // first packet
                 pw.print(packet.getTimestamp() + ", " + packet.getPayload().length() + ", ");
                 System.out.print(packet.getTimestamp() + ", " + packet.getPayload().length() + ", ");
+                dataPoint = Integer.toString(packet.getPayload().length()) + ", ";
                 firstPacket = false;
             } else if (fromServer && !firstPacket) { // second packet
                 pw.println(packet.getPayload().length());
                 System.out.println(packet.getPayload().length());
+                dataPoint = dataPoint + Integer.toString(packet.getPayload().length());
+                countFrequency(dataPoint);
                 firstPacket = true;
             }
         // Write server data point first and then device
         } else if (direction == Direction.SERVER_TO_DEVICE || direction == Direction.SERVER_TO_PHONE) {
             if (fromServer && firstPacket) { // first packet
                 pw.print(packet.getTimestamp() + ", " + packet.getPayload().length() + ", ");
+                dataPoint = Integer.toString(packet.getPayload().length()) + ", ";
                 firstPacket = false;
             } else if (fromClient && !firstPacket) { // second packet
                 pw.println(packet.getPayload().length());
+                dataPoint = dataPoint + Integer.toString(packet.getPayload().length());
+                countFrequency(dataPoint);
                 firstPacket = true;
             }
+        }
+    }
+
+    /**
+     * Counts the frequencies of data points.
+     * @param dataPoint One data point for a conversation pair, e.g., 556, 1232.
+     */
+    private void countFrequency(String dataPoint) {
+
+        Integer freq = null;
+        if (pointFreq.containsKey(dataPoint)) {
+            freq = pointFreq.get(dataPoint);
+        } else {
+            freq = new Integer(0);
+        }
+        freq = freq + 1;
+        pointFreq.put(dataPoint, freq);
+    }
+
+    /**
+     * Prints the frequencies of data points from the Map.
+     */
+    public void printListFrequency() {
+        for(Map.Entry<String, Integer> entry : pointFreq.entrySet()) {
+            System.out.println(entry.getKey() + " - " + entry.getValue());
         }
     }
 
