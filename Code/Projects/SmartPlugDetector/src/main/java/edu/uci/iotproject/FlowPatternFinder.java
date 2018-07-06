@@ -70,8 +70,12 @@ public class FlowPatternFinder {
     private final FlowPattern mPattern;
     private final ConversationPair mConvPair;
     private final String FILE = "./devices/tplink_switch/datapoints.csv";
-    //private final String REF_FILE = "./devices/tplink_switch/tplink-june-14-2018.timestamps";
-    private final String REF_FILE = "./devices/tplink_switch/tplink-feb-13-2018.timestamps";
+    //private final String REF_FILE = "./devices/dlink_switch/dlink-june-26-2018.timestamps";
+    private final String REF_FILE = "./devices/tplink_switch/tplink-june-14-2018.timestamps";
+    //private final String REF_FILE = "./devices/tplink_switch/tplink-feb-13-2018.timestamps";
+    // Router time is in CET and we use PST for the trigger times
+    // Difference is 7 hours x 3600 x 1000ms = 25,200,000ms
+    private final long TIME_OFFSET = 25200000;
 
     private final List<Future<CompleteMatchPatternComparisonResult>> mPendingComparisons = new ArrayList<>();
     /* End instance properties */
@@ -261,6 +265,7 @@ public class FlowPatternFinder {
                 String dstAddress = ipPacket.getHeader().getDstAddr().getHostAddress();
                 int srcPort = tcpPacket.getHeader().getSrcPort().valueAsInt();
                 int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
+                //System.out.println("Timestamp packet: " + packet.getTimestamp());
                 // Is this packet related to the pattern; i.e. is it going to (or coming from) the cloud server?
                 boolean fromServer = mDnsMap.isRelatedToCloudServer(srcAddress, mPattern.getHostname());
                 boolean fromClient = mDnsMap.isRelatedToCloudServer(dstAddress, mPattern.getHostname());
@@ -270,6 +275,7 @@ public class FlowPatternFinder {
                 }
                 // Record the conversation pairs
                 if (tcpPacket.getPayload() != null && checkTimeStamp(packet)) {
+                //if (tcpPacket.getPayload() != null) {
                     mConvPair.writeConversationPair(packet, fromClient, fromServer);
                 }
             }
@@ -292,7 +298,11 @@ public class FlowPatternFinder {
         // Extract time from the packet's timestamp
         String timeStamp = packet.getTimestamp().toString();
         String timeString = timeStamp.substring(timeStamp.indexOf("T") + 1, timeStamp.indexOf("."));
-        long time = timeToMillis(timeString, true);
+        // Timestamps are in CET (ahead of PST) so it should be deducted by TIME_OFFSET
+        long time = timeToMillis(timeString, true) - TIME_OFFSET;
+        //long time = timeToMillis(timeString, true);
+
+        //System.out.println("Gets here: " + time + " trigger time: " + mTriggerTimes.get(triggerListCounter));
 
         // We accept packets that are at most 3 seconds away from the trigger time
         if ((mTriggerTimes.get(triggerListCounter) <= time) &&
