@@ -43,15 +43,24 @@ public class Conversation {
     private final int mServerPort;
 
     /**
-     * The list of packets pertaining to this conversation.
+     * The list of packets (with payload) pertaining to this conversation.
      */
     private final List<PcapPacket> mPackets;
 
     /**
-     * Contains the sequence numbers seen so far for this {@code Conversation}.
+     * Contains the sequence numbers used thus far by the host that is considered the <em>client</em> in this
+     * {@code Conversation}.
      * Used for filtering out retransmissions.
      */
-    private final Set<Integer> mSeqNumbers;
+    private final Set<Integer> mSeqNumbersClient;
+
+    /**
+     * Contains the sequence numbers used thus far by the host that is considered the <em>server</em> in this
+     * {@code Conversation}.
+     * Used for filtering out retransmissions.
+     */
+    private final Set<Integer> mSeqNumbersSrv;
+
 
     /**
      * List of pairs FINs and their corresponding ACKs associated with this conversation.
@@ -73,7 +82,10 @@ public class Conversation {
         this.mServerIp = serverIp;
         this.mServerPort = serverPort;
         this.mPackets = new ArrayList<>();
-        this.mSeqNumbers = new HashSet<>();
+
+        this.mSeqNumbersClient = new HashSet<>();
+        this.mSeqNumbersSrv = new HashSet<>();
+
         this.mFinPackets = new ArrayList<>();
     }
 
@@ -89,15 +101,12 @@ public class Conversation {
     public void addPacket(PcapPacket packet, boolean ignoreRetransmissions) {
         // Precondition: verify that packet does indeed pertain to conversation.
         onAddPrecondition(packet);
-        // For now we only support TCP flows.
-        TcpPacket tcpPacket = Objects.requireNonNull(packet.get(TcpPacket.class));
-        int seqNo = tcpPacket.getHeader().getSequenceNumber();
-        if (ignoreRetransmissions && mSeqNumbers.contains(seqNo)) {
+        if (ignoreRetransmissions && isRetransmission(packet)) {
             // Packet is a retransmission. Ignore it.
             return;
         }
-        // Update set of sequence numbers seen so far with sequence number of new packet.
-        mSeqNumbers.add(seqNo);
+        // Select direction-dependent set of sequence numbers seen so far and update it with sequence number of new packet.
+        addSeqNumber(packet);
         // Finally add packet to list of packets pertaining to this conversation.
         mPackets.add(packet);
     }
@@ -214,6 +223,94 @@ public class Conversation {
                     String.format("Attempt to add packet that does not pertain to %s",
                             Conversation.class.getSimpleName()));
         }
+    }
+
+    /**
+     * <p>
+     *      Determines if the TCP packet contained in {@code packet} is a retransmission of a previously seen (logged)
+     *      packet.
+     * </p>
+     *
+     * <b>
+     *     TODO:
+     *     the current implementation, which uses a set of previously seen sequence numbers, will consider a segment
+     *     with a reused sequence number---occurring as a result of sequence number wrap around for a very long-lived
+     *     connection---as a retransmission (and may therefore end up discarding it even though it is in fact NOT a
+     *     retransmission). Ideas?
+     * </b>
+     *
+     * @param packet The packet.
+     * @return {@code true} if {@code packet} was determined to be a retransmission, {@code false} otherwise.
+     */
+    private boolean isRetransmission(PcapPacket packet) {
+        // Extract sequence number.
+        int seqNo = packet.get(TcpPacket.class).getHeader().getSequenceNumber();
+        switch (getDirection(packet)) {
+            case CLIENT_TO_SERVER:
+                return mSeqNumbersClient.contains(seqNo);
+            case SERVER_TO_CLIENT:
+                return mSeqNumbersSrv.contains(seqNo);
+            default:
+                throw new RuntimeException(String.format("Unexpected value of enum '%s'",
+                        Direction.class.getSimpleName()));
+        }
+    }
+
+    /**
+     * Extracts the TCP sequence number from {@code packet} and adds it to the proper set of sequence numbers by
+     * analyzing the direction of the packet.
+     * @param packet A TCP packet (wrapped in a {@code PcapPacket}) that was added to this conversation and whose
+     *               sequence number is to be recorded as seen.
+     */
+    private void addSeqNumber(PcapPacket packet) {
+        // Note: below check is redundant if client code is correct as the call to check the precondition should already
+        // have been made by the addXPacket method that invokes this method. As such, the call below may be removed in
+        // favor of speed, but the improvement will be minor, hence the added safety may be worth it.
+        onAddPrecondition(packet);
+        // Extract sequence number.
+        int seqNo = packet.get(TcpPacket.class).getHeader().getSequenceNumber();
+        // Determine direction of packet and add packet's sequence number to corresponding set of sequence numbers.
+        switch (getDirection(packet)) {
+            case CLIENT_TO_SERVER:
+                // Client to server packet.
+                mSeqNumbersClient.add(seqNo);
+                break;
+            case SERVER_TO_CLIENT:
+                // Server to client packet.
+                mSeqNumbersSrv.add(seqNo);
+                break;
+            default:
+                throw new RuntimeException(String.format("Unexpected value of enum '%s'",
+                        Direction.class.getSimpleName()));
+        }
+    }
+
+    /**
+     * Determine the direction of {@code packet}.
+     * @param packet The packet whose direction is to be determined.
+     * @return A {@link Direction} indicating the direction of the packet.
+     */
+    private Direction getDirection(PcapPacket packet) {
+        IpV4Packet ipPacket = packet.get(IpV4Packet.class);
+        String ipSrc = ipPacket.getHeader().getSrcAddr().getHostAddress();
+        String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
+        // Determine direction of packet.
+        if (ipSrc.equals(mClientIp) && ipDst.equals(mServerIp)) {
+            // Client to server packet.
+            return Direction.CLIENT_TO_SERVER;
+        } else if (ipSrc.equals(mServerIp) && ipDst.equals(mClientIp)) {
+            // Server to client packet.
+            return Direction.SERVER_TO_CLIENT;
+        } else {
+            throw new IllegalArgumentException("getDirection: packet not related to " + getClass().getSimpleName());
+        }
+    }
+
+    /**
+     * Utility enum for expressing the direction of a packet pertaining to this {@code Conversation}.
+     */
+    private enum Direction {
+        CLIENT_TO_SERVER, SERVER_TO_CLIENT
     }
 
 }
