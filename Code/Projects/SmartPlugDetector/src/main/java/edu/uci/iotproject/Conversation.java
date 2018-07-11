@@ -61,6 +61,10 @@ public class Conversation {
      */
     private final Set<Integer> mSeqNumbersSrv;
 
+    /**
+     * List of SYN packets pertaining to this conversation.
+     */
+    private List<PcapPacket> mSynPackets;
 
     /**
      * List of pairs FINs and their corresponding ACKs associated with this conversation.
@@ -82,10 +86,9 @@ public class Conversation {
         this.mServerIp = serverIp;
         this.mServerPort = serverPort;
         this.mPackets = new ArrayList<>();
-
         this.mSeqNumbersClient = new HashSet<>();
         this.mSeqNumbersSrv = new HashSet<>();
-
+        this.mSynPackets = new ArrayList<>();
         this.mFinPackets = new ArrayList<>();
     }
 
@@ -119,6 +122,88 @@ public class Conversation {
     public List<PcapPacket> getPackets() {
         // Return read-only view to prevent external code from manipulating internal state (preserve invariant).
         return Collections.unmodifiableList(mPackets);
+    }
+
+    /**
+     * Records a TCP SYN packet as pertaining to this conversation (adds it to the the internal list).
+     * Attempts to add duplicate SYN packets will be ignored, and the caller is made aware of the attempt to add a
+     * duplicate by the return value being {@code false}.
+     *
+     * @param synPacket A {@link PcapPacket} wrapping a TCP SYN packet.
+     * @return {@code true} if the packet was successfully added to this {@code Conversation}, {@code false} otherwise.
+     */
+    public boolean addSynPacket(PcapPacket synPacket) {
+        onAddPrecondition(synPacket);
+        final IpV4Packet synPacketIpSection = synPacket.get(IpV4Packet.class);
+        final TcpPacket synPacketTcpSection = synPacket.get(TcpPacket.class);
+        if (synPacketTcpSection == null || !synPacketTcpSection.getHeader().getSyn()) {
+            throw new IllegalArgumentException("Not a SYN packet.");
+        }
+        // We are only interested in recording one copy of the two SYN packets (one SYN packet in each direction), i.e.,
+        // we want to discard retransmitted SYN packets.
+        if (mSynPackets.size() >= 2) {
+            return false;
+        }
+        // Check the set of recorded SYN packets to see if we have already recorded a SYN packet going in the same
+        // direction as the packet given in the argument.
+        boolean matchingPrevSyn = mSynPackets.stream().anyMatch(p -> {
+            IpV4Packet pIp = p.get(IpV4Packet.class);
+            TcpPacket pTcp = p.get(TcpPacket.class);
+            boolean srcAddrMatch = synPacketIpSection.getHeader().getSrcAddr().getHostAddress().
+                    equals(pIp.getHeader().getSrcAddr().getHostAddress());
+            boolean dstAddrMatch = synPacketIpSection.getHeader().getDstAddr().getHostAddress().
+                    equals(pIp.getHeader().getDstAddr().getHostAddress());
+            boolean srcPortMatch = synPacketTcpSection.getHeader().getSrcPort().valueAsInt() ==
+                    pTcp.getHeader().getSrcPort().valueAsInt();
+            boolean dstPortMatch = synPacketTcpSection.getHeader().getDstPort().valueAsInt() ==
+                    pTcp.getHeader().getDstPort().valueAsInt();
+            return srcAddrMatch && dstAddrMatch && srcPortMatch && dstPortMatch;
+        });
+        if (matchingPrevSyn) {
+            return false;
+        }
+        // Update direction-dependent set of sequence numbers and record/log packet.
+        addSeqNumber(synPacket);
+        return mSynPackets.add(synPacket);
+
+        /*
+        mSynPackets.stream().anyMatch(p -> {
+            IpV4Packet pIp = p.get(IpV4Packet.class);
+            TcpPacket pTcp = p.get(TcpPacket.class);
+            boolean srcAddrMatch = synPacketIpSection.getHeader().getSrcAddr().getHostAddress().
+                    equals(pIp.getHeader().getSrcAddr().getHostAddress());
+            boolean dstAddrMatch = synPacketIpSection.getHeader().getDstAddr().getHostAddress().
+                    equals(pIp.getHeader().getDstAddr().getHostAddress());
+            boolean srcPortMatch = synPacketTcpSection.getHeader().getSrcPort().valueAsInt() ==
+                    pTcp.getHeader().getSrcPort().valueAsInt();
+            boolean dstPortMatch = synPacketTcpSection.getHeader().getDstPort().value() ==
+                    pTcp.getHeader().getDstPort().value();
+
+            boolean fourTupleMatch = srcAddrMatch && dstAddrMatch && srcPortMatch && dstPortMatch;
+
+            boolean seqNoMatch = synPacketTcpSection.getHeader().getSequenceNumber() ==
+                    pTcp.getHeader().getSequenceNumber();
+
+            if (fourTupleMatch && !seqNoMatch) {
+                // If the four tuple that identifies the conversation matches, but the sequence number is different,
+                // it means that this SYN packet is, in fact, an attempt to establish a **new** connection, and hence
+                // the given packet is NOT part of this conversation, even though the ip:port combinations are (by
+                // chance) selected such that they match this conversation.
+                throw new IllegalArgumentException("Attempt to add SYN packet that belongs to a different conversation " +
+                        "(which is identified by the same four tuple as this conversation)");
+            }
+            return fourTupleMatch && seqNoMatch;
+        });
+        */
+    }
+
+    /**
+     * Get a list of SYN packets pertaining to this {@code Conversation}.
+     * The returned list is a read-only list.
+     * @return the list of SYN packets pertaining to this {@code Conversation}.
+     */
+    public List<PcapPacket> getSynPackets() {
+        return Collections.unmodifiableList(mSynPackets);
     }
 
     /**

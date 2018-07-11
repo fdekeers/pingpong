@@ -116,7 +116,7 @@ public class FinAckPair {
      * <pre>
      *     public FinAckPair(PcapPacket finPacket, PcapPacket correspondingAckPacket) {
      *         mFinPacket = finPacket;
-     *         // Below line is considered back practice as the object has not been fully initialized at this stage.
+     *         // Below line is considered bad practice as the object has not been fully initialized at this stage.
      *         if (!this.isCorrespondingAckPacket(correspondingAckPacket)) {
      *             // ... throw exception
      *         }
