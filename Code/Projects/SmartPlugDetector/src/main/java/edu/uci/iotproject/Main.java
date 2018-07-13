@@ -37,38 +37,46 @@ public class Main {
 //        MacLayerFlowPatternFinder finder = new MacLayerFlowPatternFinder(handle, pattern);
 //        finder.findFlowPattern();
         // -------------------------------------------------------------------------------------------------------------
+//
+//        //final String fileName = args.length > 0 ? args[0] : "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+//        final String fileName = args.length > 0 ? args[0] : "/scratch/June-2018/TPLink/wlan1/tplink.wlan1.local.pcap";
+//        //final String fileName = args.length > 0 ? args[0] : "/scratch/June-2018/DLink/wlan1/dlink.wlan1.local.pcap";
+//        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON_SUBSET.pcap";
+////        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON.pcap";
+////
+////        // ====== Debug code ======
+//        PcapHandle handle;
+//        PcapHandle trainingPcap;
+//        try {
+//            handle = Pcaps.openOffline(fileName, PcapHandle.TimestampPrecision.NANO);
+//            trainingPcap = Pcaps.openOffline(trainingFileName, PcapHandle.TimestampPrecision.NANO);
+//        } catch (PcapNativeException pne) {
+//            handle = Pcaps.openOffline(fileName);
+//            trainingPcap = Pcaps.openOffline(trainingFileName);
+//        }
+////
+////        // TODO: The followings are the way to extract multiple hostnames and their associated packet lengths lists
+////        //List<String> list = new ArrayList<>();
+////        //list.add("events.tplinkra.com");
+////        //FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_ON", list, trainingPcap);
+////        //List<String> list2 = new ArrayList<>();
+////        //list2.add("devs.tplinkcloud.com");
+////        //list2.add("events.tplinkra.com");
+////        //FlowPattern fp3 = new FlowPattern("TP_LINK_REMOTE_ON", list2, trainingPcap);
+////
+//        FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_ON", "events.tplinkra.com", trainingPcap);
+//        //FlowPattern fp = new FlowPattern("DLINK_LOCAL_ON", "rfe-us-west-1.dch.dlink.com", trainingPcap);
+//        FlowPatternFinder fpf = new FlowPatternFinder(handle, fp);
+//        fpf.start();
+////
+////        // ========================
 
-        //final String fileName = args.length > 0 ? args[0] : "/home/rtrimana/pcap_processing/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
-        final String fileName = args.length > 0 ? args[0] : "/scratch/June-2018/TPLink/wlan1/tplink.wlan1.local.pcap";
-        //final String fileName = args.length > 0 ? args[0] : "/scratch/June-2018/DLink/wlan1/dlink.wlan1.local.pcap";
-        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON_SUBSET.pcap";
-//        final String trainingFileName = "./pcap/TP_LINK_LOCAL_ON.pcap";
-//
-//        // ====== Debug code ======
-        PcapHandle handle;
-        PcapHandle trainingPcap;
-        try {
-            handle = Pcaps.openOffline(fileName, PcapHandle.TimestampPrecision.NANO);
-            trainingPcap = Pcaps.openOffline(trainingFileName, PcapHandle.TimestampPrecision.NANO);
-        } catch (PcapNativeException pne) {
-            handle = Pcaps.openOffline(fileName);
-            trainingPcap = Pcaps.openOffline(trainingFileName);
-        }
-//
-//        // TODO: The followings are the way to extract multiple hostnames and their associated packet lengths lists
-//        //List<String> list = new ArrayList<>();
-//        //list.add("events.tplinkra.com");
-//        //FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_ON", list, trainingPcap);
-//        //List<String> list2 = new ArrayList<>();
-//        //list2.add("devs.tplinkcloud.com");
-//        //list2.add("events.tplinkra.com");
-//        //FlowPattern fp3 = new FlowPattern("TP_LINK_REMOTE_ON", list2, trainingPcap);
-//
-        FlowPattern fp = new FlowPattern("TP_LINK_LOCAL_ON", "events.tplinkra.com", trainingPcap);
-        //FlowPattern fp = new FlowPattern("DLINK_LOCAL_ON", "rfe-us-west-1.dch.dlink.com", trainingPcap);
-        FlowPatternFinder fpf = new FlowPatternFinder(handle, fp);
-        fpf.start();
-//
-//        // ========================
+
+        PcapReader pcapReader = new PcapReader(args[0]);
+        PcapProcessingPipeline pipeline = new PcapProcessingPipeline(pcapReader);
+        TcpReassembler tcpReassembler = new TcpReassembler();
+        pipeline.addPcapPacketConsumer(tcpReassembler);
+        pipeline.executePipeline();
+        System.out.println("Pipeline terminated");
     }
 }

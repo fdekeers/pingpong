@@ -73,6 +73,29 @@ public class Conversation {
     /* End instance properties */
 
     /**
+     * Factory method for creating a {@code Conversation} from a {@link PcapPacket}.
+     * @param pcapPacket The {@code PcapPacket} that wraps a TCP segment for which a {@code Conversation} is to be initiated.
+     * @param clientIsSrc If {@code true}, the source address and source port found in the IP datagram and TCP segment
+     *                    wrapped in the {@code PcapPacket} are regarded as pertaining to the client, and the destination
+     *                    address and destination port are regarded as pertaining to the server---and vice versa if set
+     *                    to {@code false}.
+     * @return A {@code Conversation} initiated with ip:port for client and server according to the direction of the packet.
+     */
+    public static Conversation fromPcapPacket(PcapPacket pcapPacket, boolean clientIsSrc) {
+        IpV4Packet ipPacket = pcapPacket.get(IpV4Packet.class);
+        TcpPacket tcpPacket = pcapPacket.get(TcpPacket.class);
+        String clientIp = clientIsSrc ? ipPacket.getHeader().getSrcAddr().getHostAddress() :
+                ipPacket.getHeader().getDstAddr().getHostAddress();
+        String srvIp = clientIsSrc ? ipPacket.getHeader().getDstAddr().getHostAddress() :
+                ipPacket.getHeader().getSrcAddr().getHostAddress();
+        int clientPort = clientIsSrc ? tcpPacket.getHeader().getSrcPort().valueAsInt() :
+                tcpPacket.getHeader().getDstPort().valueAsInt();
+        int srvPort = clientIsSrc ? tcpPacket.getHeader().getDstPort().valueAsInt() :
+                tcpPacket.getHeader().getSrcPort().valueAsInt();
+        return new Conversation(clientIp, clientPort, srvIp, srvPort);
+    }
+
+    /**
      * Constructs a new {@code Conversation}.
      * @param clientIp The IP of the host that is considered the client (i.e. the host that initiates the conversation)
      *                 in the conversation.
@@ -213,6 +236,8 @@ public class Conversation {
     public void addFinPacket(PcapPacket finPacket) {
         // Precondition: verify that packet does indeed pertain to conversation.
         onAddPrecondition(finPacket);
+        // TODO: should call addSeqNumber here?
+        addSeqNumber(finPacket);
         mFinPackets.add(new FinAckPair(finPacket));
     }
 
@@ -327,7 +352,7 @@ public class Conversation {
      * @param packet The packet.
      * @return {@code true} if {@code packet} was determined to be a retransmission, {@code false} otherwise.
      */
-    private boolean isRetransmission(PcapPacket packet) {
+    public boolean isRetransmission(PcapPacket packet) {
         // Extract sequence number.
         int seqNo = packet.get(TcpPacket.class).getHeader().getSequenceNumber();
         switch (getDirection(packet)) {
