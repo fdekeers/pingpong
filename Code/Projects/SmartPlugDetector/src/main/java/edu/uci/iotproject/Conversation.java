@@ -135,6 +135,15 @@ public class Conversation {
         addSeqNumber(packet);
         // Finally add packet to list of packets pertaining to this conversation.
         mPackets.add(packet);
+        // Preserve order of packets in list: sort according to timestamp.
+        if (mPackets.size() > 1 &&
+                mPackets.get(mPackets.size()-1).getTimestamp().isBefore(mPackets.get(mPackets.size()-2).getTimestamp())) {
+            Collections.sort(mPackets, (o1, o2) -> {
+                if (o1.getTimestamp().isBefore(o2.getTimestamp())) { return -1; }
+                else if (o2.getTimestamp().isBefore(o1.getTimestamp())) { return 1; }
+                else { return 0; }
+            });
+        }
     }
 
     /**
