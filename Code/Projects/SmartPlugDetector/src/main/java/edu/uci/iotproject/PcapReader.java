@@ -20,14 +20,23 @@ public class PcapReader {
     /**
      * Create a new {@code PcapReader} that reads the file specified by the absolute path {@code fileName}.
      * @param fileName The absolute path to the pcap file to be read.
-     * @throws PcapNativeException If the pcap file cannot be opened.
+     * @param berkeleyPacketFilter A Berkeley Packet Filter to be applied when reading the PCAP file to filter out
+     *                             unwanted packets immediately. May be {@code null} if no filter is to be applied.
+     * @throws PcapNativeException If an error occurs in the pcap native library.
+     * @throws NotOpenException If the pcap file cannot be opened.
      */
-    public PcapReader(String fileName) throws PcapNativeException {
+    public PcapReader(String fileName, String berkeleyPacketFilter) throws PcapNativeException, NotOpenException {
         PcapHandle handle;
         try {
             handle = Pcaps.openOffline(fileName, PcapHandle.TimestampPrecision.NANO);
         } catch (PcapNativeException pne) {
             handle = Pcaps.openOffline(fileName);
+        }
+        if(!handle.isOpen()) {
+            throw new NotOpenException("could not open pcap file " + fileName);
+        }
+        if (berkeleyPacketFilter != null) {
+            handle.setFilter(berkeleyPacketFilter, BpfProgram.BpfCompileMode.OPTIMIZE);
         }
         mHandle = handle;
     }
