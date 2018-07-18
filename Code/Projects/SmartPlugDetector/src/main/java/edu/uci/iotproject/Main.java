@@ -1,12 +1,14 @@
 package edu.uci.iotproject;
 
-import edu.uci.iotproject.maclayer.MacLayerFlowPattern;
-import edu.uci.iotproject.maclayer.MacLayerFlowPatternFinder;
+import edu.uci.iotproject.analysis.PcapPacketPair;
+import edu.uci.iotproject.analysis.PcapProcessingPipeline;
+import edu.uci.iotproject.analysis.TcpConversationUtils;
 import org.pcap4j.core.*;
 
 import java.io.EOFException;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -71,12 +73,48 @@ public class Main {
 ////
 ////        // ========================
 
-
+        /*
         PcapReader pcapReader = new PcapReader(args[0]);
         PcapProcessingPipeline pipeline = new PcapProcessingPipeline(pcapReader);
         TcpReassembler tcpReassembler = new TcpReassembler();
         pipeline.addPcapPacketConsumer(tcpReassembler);
         pipeline.executePipeline();
         System.out.println("Pipeline terminated");
+
+        List<List<PcapPacketPair>> pairs = new ArrayList<>();
+        for (Conversation c : tcpReassembler.getTcpConversations()) {
+            pairs.add(TcpConversationUtils.extractPacketPairs(c));
+        }
+        */
+
+        // -------- 07-17-2018 --------
+        // Only consider packets to/from the TP-Link plug.
+        PcapReader pcapReader = new PcapReader(args[0], "ip host 192.168.1.159");
+        TcpReassembler tcpReassembler = new TcpReassembler();
+        PcapPacket packet;
+        while((packet = pcapReader.readNextPacket()) != null) {
+            tcpReassembler.consumePacket(packet);
+        }
+        // Now we have a set of reassembled TCP conversations.
+        List<Conversation> conversations = tcpReassembler.getTcpConversations();
+        for(Conversation c : conversations) {
+            List<PcapPacketPair> pairs = TcpConversationUtils.extractPacketPairs(c);
+            for (PcapPacketPair pair : pairs) {
+                // TODO ...
+                // 1. discard packets that are not within X seconds after trigger time
+                // 2. conversations may be (are) with different servers - so need to plot in different plots, one per hostname?
+            }
+        }
+
+        // ----------------------------
+
+
+
+
+
     }
+
 }
+
+
+// TP-Link MAC 50:c7:bf:33:1f:09 and usually IP 192.168.1.159 (remember to verify per file)
