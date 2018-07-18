@@ -4,12 +4,10 @@ import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * TODO add class documentation.
+ * Reassembles TCP conversations (streams).
  *
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
@@ -46,6 +44,18 @@ public class TcpReassembler implements PcapPacketConsumer {
         }
         // ... TODO?
         processPacket(pcapPacket);
+    }
+
+    /**
+     * Get the reassembled TCP connections. Note that if this is called while packets are still being processed (by
+     * calls to {@link #consumePacket(PcapPacket)}), the behavior is undefined and the returned list may be inconsistent.
+     * @return The reassembled TCP connections.
+     */
+    public List<Conversation> getTcpConversations() {
+        ArrayList<Conversation> combined = new ArrayList<>();
+        combined.addAll(mTerminatedConversations.values());
+        combined.addAll(mOpenConversations.values());
+        return combined;
     }
 
     private void processPacket(PcapPacket pcapPacket) {
