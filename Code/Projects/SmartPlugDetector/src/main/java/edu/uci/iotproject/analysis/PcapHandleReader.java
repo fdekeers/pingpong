@@ -17,6 +17,16 @@ public class PcapHandleReader {
     private final PcapHandle mHandle;
     private final PacketListener[] mPacketListeners;
 
+    /**
+     * Create a {@code PcapHandleReader}.
+     * @param handle An <em>open</em> {@link PcapHandle} that packets will be read from.
+     * @param packetFilter A {@link PcapPacketFilter} that dictates which of the packets read from {@code handle} should
+     *                     be delivered to {@code packetListeners}. Note that while a value of {@code null} is not
+     *                     permitted here, the caller can instead simply provide an implementation that always returns
+     *                     {@code true} if they want to include all packets read from {@code handle}.
+     * @param packetListeners One or more {@link PacketListener}s to which those packets read from {@code handle} that
+     *                        pass through {@code packetFilter} are delivered.
+     */
     public PcapHandleReader(PcapHandle handle, PcapPacketFilter packetFilter, PacketListener... packetListeners) {
         mHandle = handle;
         mPacketFilter = packetFilter;
