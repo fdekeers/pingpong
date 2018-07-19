@@ -52,42 +52,6 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
         mTriggerIndex = 0;
     }
 
-//    public TriggerTrafficExtractor(String deviceIp, PcapHandle handle, List<Instant> triggerTimes) throws PcapNativeException, NotOpenException {
-//        mDeviceIp = deviceIp;
-//        mHandle = handle;
-//        mHandle.setFilter("ip host " + deviceIp, BpfProgram.BpfCompileMode.OPTIMIZE);
-//        // Sort in ascending order.
-//        Collections.sort(triggerTimes, (i1, i2) -> {
-//            if (i1.isBefore(i2)) return -1;
-//            else if (i2.isBefore(i1)) return 1;
-//            else return 0;
-//        });
-//        mTriggerTimes = Collections.unmodifiableList(triggerTimes);
-//    }
-
-
-
-    //    private void process() {
-//        try {
-//            PcapPacket prevPacket = null;
-//            PcapPacket packet;
-//            while ((packet = mHandle.getNextPacketEx()) != null) {
-//                if (prevPacket != null && packet.getTimestamp().isBefore(prevPacket.getTimestamp())) {
-//                    // Fail early if assumption doesn't hold.
-//                    throw new RuntimeException("Packets not in ascending temporal order");
-//                }
-//                if (shouldIncludePacket(packet)) {
-//                    // TODO output packet
-//                }
-//                prevPacket = packet;
-//            }
-//        } catch (PcapNativeException | TimeoutException | NotOpenException e) {
-//            e.printStackTrace();
-//        } catch (EOFException e) {
-//            System.out.println("Reached end of pcap file");
-//        }
-//    }
-
     @Override
     public boolean shouldIncludePacket(PcapPacket packet) {
         // TODO hmm, is this correct?
@@ -108,62 +72,6 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
                 return shouldIncludePacket(packet);
             }
         }
-
-
-
-
-
-
-        /*
-        if (mTriggerIndex >= mTriggerTimes.size()) {
-            // Don't include packet if we've exhausted the list of trigger timestamps.
-            return false;
-        }
-        Instant trigger = mTriggerTimes.get(mTriggerIndex);
-        if (trigger.isBefore(packet.getTimestamp()) &&
-                packet.getTimestamp().isBefore(trigger.plusMillis(INCLUSION_WINDOW_MILLIS))) {
-            // Packet lies within INCLUSION_WINDOW_MILLIS after currently considered trigger, include it.
-            return true;
-        }
-        if (mTriggerIndex >= mTriggerTimes.size()-1) {
-            // No additional triggers left to be considered.
-            return false;
-        }
-        trigger = mTriggerTimes.get(mTriggerIndex + 1);
-        if (packet.getTimestamp().isBefore(trigger)) {
-            return false;
-        } else {
-            mTriggerIndex++;
-            return includePacket(packet);
-        }
-        */
-
-
-//        else if (trigger.isBefore(packet.getTimestamp()) &&
-//                !packet.getTimestamp().isBefore(trigger.plusMillis(INCLUSION_WINDOW_MILLIS)) {
-//
-//        }
     }
 
-
-    private Instant findTriggerTime(PcapPacket packet) {
-        mTriggerTimes.stream().filter(i ->
-                i.isBefore(packet.getTimestamp()) && packet.getTimestamp().isBefore(i.plusMillis(3000)));
-
-        while (mTriggerIndex < mTriggerTimes.size() &&
-                !(mTriggerTimes.get(mTriggerIndex).isBefore(packet.getTimestamp()) &&
-                        packet.getTimestamp().isBefore(mTriggerTimes.get(mTriggerIndex).plusMillis(3_000)))
-                ) {
-            mTriggerIndex++;
-        }
-        return mTriggerIndex < mTriggerTimes.size() ? mTriggerTimes.get(mTriggerIndex) : null;
-        /*
-        // Trigger time must logically be BEFORE packet timestamp, so advance
-        while (mTriggerIndex < mTriggerTimes.size() &&
-                mTriggerTimes.get(mTriggerIndex).isAfter(packet.getTimestamp())) {
-            mTriggerIndex++;
-        }
-        return mTriggerIndex < mTriggerTimes.size() ? mTriggerTimes.get(mTriggerIndex) : null;
-        */
-    }
 }
