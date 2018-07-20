@@ -1,5 +1,6 @@
-package edu.uci.iotproject.analysis;
+package edu.uci.iotproject.io;
 
+import edu.uci.iotproject.analysis.PcapPacketFilter;
 import org.pcap4j.core.*;
 
 import java.io.EOFException;
@@ -9,7 +10,8 @@ import java.util.concurrent.TimeoutException;
  * Reads packets from a {@link PcapHandle} (online or offline) and delivers those packets that pass the test exercised
  * by the provided {@link PcapPacketFilter} onto the provided {@link PacketListener}s.
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class PcapHandleReader {
 
