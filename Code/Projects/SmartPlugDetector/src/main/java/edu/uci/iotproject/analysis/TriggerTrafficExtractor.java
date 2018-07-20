@@ -54,6 +54,11 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
 
     @Override
     public boolean shouldIncludePacket(PcapPacket packet) {
+        if (mTriggerIndex >= mTriggerTimes.size()) {
+            // Don't include packet if we've exhausted the list of trigger times.
+            return false;
+        }
+
         // TODO hmm, is this correct?
         Instant trigger = mTriggerTimes.get(mTriggerIndex);
         if (trigger.isBefore(packet.getTimestamp()) &&

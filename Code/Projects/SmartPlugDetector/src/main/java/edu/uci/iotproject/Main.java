@@ -3,10 +3,14 @@ package edu.uci.iotproject;
 import edu.uci.iotproject.analysis.PcapPacketPair;
 import edu.uci.iotproject.analysis.PcapProcessingPipeline;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
+import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
+import edu.uci.iotproject.io.TriggerTimesFileReader;
 import org.pcap4j.core.*;
+import org.pcap4j.packet.namednumber.DataLinkType;
 
 import java.io.EOFException;
 import java.net.UnknownHostException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -87,6 +91,7 @@ public class Main {
         }
         */
 
+        /*
         // -------- 07-17-2018 --------
         // Only consider packets to/from the TP-Link plug.
         PcapReader pcapReader = new PcapReader(args[0], "ip host 192.168.1.159");
@@ -107,9 +112,26 @@ public class Main {
         }
 
         // ----------------------------
+        */
 
-
-
+        // -------- 07-19-2018 --------
+        TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
+        List<Instant> triggerTimes = ttfr.readTriggerTimes("/Users/varmarken/Downloads/tplink-feb-13-2018.timestamps", false);
+//        triggerTimes.stream().forEach(i -> System.out.println(i.atZone(TriggerTimesFileReader.ZONE_ID_LOS_ANGELES).toString()));
+        String pcapFile = "/Users/varmarken/Development/Repositories/UCI/NetworkingGroup/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+        String tpLinkPlugIp = "192.168.1.159";
+        TriggerTrafficExtractor tte = new TriggerTrafficExtractor(pcapFile, triggerTimes, tpLinkPlugIp);
+        final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen("/Users/varmarken/temp/traces/output/tplink-filtered.pcap");
+        tte.performExtraction(pkt -> {
+            try {
+                outputter.dump(pkt);
+            } catch (NotOpenException e) {
+                e.printStackTrace();
+            }
+        });
+        outputter.flush();
+        outputter.close();
+        // ----------------------------
 
 
     }

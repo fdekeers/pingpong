@@ -46,9 +46,12 @@ public class PcapHandleReader {
             PcapPacket packet;
             while ((packet = mHandle.getNextPacketEx()) != null) {
                 if (prevPacket != null && packet.getTimestamp().isBefore(prevPacket.getTimestamp())) {
+                    System.out.println("Out-of-order (in terms of timestamp) packet detected");
+                    /*
                     // Fail early if assumption doesn't hold.
                     mHandle.close();
                     throw new AssertionError("Packets not in ascending temporal order");
+                    */
                 }
                 if (mPacketFilter.shouldIncludePacket(packet)) {
                     // Packet accepted for inclusion; deliver it to observing client code.
