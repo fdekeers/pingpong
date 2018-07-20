@@ -1,7 +1,6 @@
 package edu.uci.iotproject;
 
 import edu.uci.iotproject.analysis.PcapPacketPair;
-import edu.uci.iotproject.analysis.PcapProcessingPipeline;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.io.TriggerTimesFileReader;

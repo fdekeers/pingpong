@@ -1,7 +1,7 @@
 package edu.uci.iotproject;
 
+import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapPacket;
-import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
 import java.util.*;
@@ -12,7 +12,7 @@ import java.util.*;
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class TcpReassembler implements PcapPacketConsumer {
+public class TcpReassembler implements PacketListener {
 
     /**
      * Holds <em>open</em> {@link Conversation}s, i.e., {@code Conversation}s that have <em>not</em> been detected as
@@ -37,7 +37,7 @@ public class TcpReassembler implements PcapPacketConsumer {
     private final Map<Conversation, Conversation> mTerminatedConversations = new HashMap<>();
 
     @Override
-    public void consumePacket(PcapPacket pcapPacket) {
+    public void gotPacket(PcapPacket pcapPacket) {
         TcpPacket tcpPacket = pcapPacket.get(TcpPacket.class);
         if (tcpPacket == null) {
             return;
@@ -48,7 +48,7 @@ public class TcpReassembler implements PcapPacketConsumer {
 
     /**
      * Get the reassembled TCP connections. Note that if this is called while packets are still being processed (by
-     * calls to {@link #consumePacket(PcapPacket)}), the behavior is undefined and the returned list may be inconsistent.
+     * calls to {@link #gotPacket(PcapPacket)}), the behavior is undefined and the returned list may be inconsistent.
      * @return The reassembled TCP connections.
      */
     public List<Conversation> getTcpConversations() {
