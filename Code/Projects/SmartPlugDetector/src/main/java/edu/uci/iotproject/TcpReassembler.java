@@ -33,6 +33,7 @@ public class TcpReassembler implements PacketListener {
 
     /**
      * Holds <em>terminated</em> {@link Conversation}s.
+     * TODO: Should turn this into a list to avoid unintentional overwrite of a Conversation in case ephemeral port number is reused at a later stage...?
      */
     private final Map<Conversation, Conversation> mTerminatedConversations = new HashMap<>();
 

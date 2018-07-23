@@ -11,6 +11,7 @@ import java.io.EOFException;
 import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -121,18 +122,41 @@ public class Main {
         String tpLinkPlugIp = "192.168.1.159";
         TriggerTrafficExtractor tte = new TriggerTrafficExtractor(pcapFile, triggerTimes, tpLinkPlugIp);
         final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen("/Users/varmarken/temp/traces/output/tplink-filtered.pcap");
+        TcpReassembler tcpReassembler = new TcpReassembler();
         tte.performExtraction(pkt -> {
             try {
                 outputter.dump(pkt);
             } catch (NotOpenException e) {
                 e.printStackTrace();
             }
-        });
+        }, tcpReassembler);
         outputter.flush();
         outputter.close();
+
+        int packets = 0;
+        for (Conversation c : tcpReassembler.getTcpConversations()) {
+            packets += c.getPackets().size();
+            packets += c.getSynPackets().size();
+            // only count the FIN packets, not the ACKs; every FinAckPair holds a FIN packet
+            packets += c.getFinAckPairs().size();
+        }
+        // Produces 271 packets for the Feb 13 experiment
+        // Applying filter: "(tcp and not tcp.len == 0 and not tcp.analysis.retransmission and not tcp.analysis.fast_retransmission)  or (tcp.flags.syn == 1) or (tcp.flags.fin == 1)"
+        // to the file gives 295 packets, but there are 24 TCP-Out-Of-Order SYN/SYNACKs which are filtered as retransmissions in Conversation, so the numbers seem to match.
+        System.out.println("number of packets: " + packets);
+
+        List<List<PcapPacketPair>> pairs = new ArrayList<>();
+        for (Conversation c : tcpReassembler.getTcpConversations()) {
+            pairs.add(TcpConversationUtils.extractPacketPairs(c));
+        }
+        // Sort pairs according to timestamp of first packet of conversation for (debugging) convenience.
+        Collections.sort(pairs, (l1, l2) -> {
+            if (l1.get(0).getFirst().getTimestamp().isBefore(l2.get(0).getFirst().getTimestamp())) return -1;
+            else if (l2.get(0).getFirst().getTimestamp().isBefore(l1.get(0).getFirst().getTimestamp())) return 1;
+            else return 0;
+        });
+        System.out.println("list of pairs produced");
         // ----------------------------
-
-
     }
 
 }
