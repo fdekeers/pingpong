@@ -5,6 +5,7 @@ import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.io.TriggerTimesFileReader;
 import org.pcap4j.core.*;
+import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.namednumber.DataLinkType;
 
 import java.io.EOFException;
@@ -12,6 +13,7 @@ import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -122,6 +124,7 @@ public class Main {
         String tpLinkPlugIp = "192.168.1.159";
         TriggerTrafficExtractor tte = new TriggerTrafficExtractor(pcapFile, triggerTimes, tpLinkPlugIp);
         final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen("/Users/varmarken/temp/traces/output/tplink-filtered.pcap");
+        DnsMap dnsMap = new DnsMap();
         TcpReassembler tcpReassembler = new TcpReassembler();
         tte.performExtraction(pkt -> {
             try {
@@ -129,7 +132,7 @@ public class Main {
             } catch (NotOpenException e) {
                 e.printStackTrace();
             }
-        }, tcpReassembler);
+        }, dnsMap, tcpReassembler);
         outputter.flush();
         outputter.close();
 
@@ -156,6 +159,29 @@ public class Main {
             else return 0;
         });
         System.out.println("list of pairs produced");
+        List<PcapPacketPair> eventstplinkraPairs = new ArrayList<>();
+        List<List<PcapPacketPair>> otherPairs = new ArrayList<>();
+        String hostname = "events.tplinkra.com";
+        for (List<PcapPacketPair> lppp : pairs) {
+            IpV4Packet ipPacket = lppp.get(0).getFirst().get(IpV4Packet.class);
+            // If packets are associated with the hostname
+            if (dnsMap.isRelatedToCloudServer(ipPacket.getHeader().getSrcAddr().getHostAddress(), hostname) ||
+                    dnsMap.isRelatedToCloudServer(ipPacket.getHeader().getDstAddr().getHostAddress(), hostname)) {
+                eventstplinkraPairs.addAll(lppp);
+            } else {
+                // Pairs associated with different server
+                otherPairs.add(lppp);
+            }
+        }
+        HashMap<String, Integer> pairCount = new HashMap<>();
+        for (PcapPacketPair ppp : eventstplinkraPairs) {
+            if (pairCount.containsKey(ppp.toString())) {
+                pairCount.put(ppp.toString(), pairCount.get(ppp.toString()) + 1);
+            } else {
+                pairCount.put(ppp.toString(), 1);
+            }
+        }
+        System.out.println("pairCount map built");
         // ----------------------------
     }
 

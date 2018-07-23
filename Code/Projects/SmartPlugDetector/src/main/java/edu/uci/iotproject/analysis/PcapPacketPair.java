@@ -22,4 +22,8 @@ public class PcapPacketPair {
 
     public PcapPacket getSecond() { return mSecond; }
 
+    @Override
+    public String toString() {
+        return getFirst().length() + ", "  + (getSecond() == null ? "null" : getSecond().length());
+    }
 }
