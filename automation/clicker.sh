@@ -5,20 +5,26 @@
 
 # Loop variables
 BEGIN=1
-END=5
+END=100
 INC=1
 
 # Range of random number (in seconds)
-RAN_STA=2
-RAN_END=6
+RAN_STA=100
+RAN_END=200
 
 for ((i=$BEGIN; i<=$END; i+=$INC));
 do
 	# TP-Link switch
 	#./adb shell input tap 1002 913
-	date +%r
+	# D-Link switch
+	./adb shell input tap 987 346
+	#date +%r
+	date +"%m/%d/%Y %r"
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
-	RAND=$[`jot -r 1 $RAN_STA $RAN_END`]
+	#RAND=$[`jot -r 1 $RAN_STA $RAN_END`]
 	#echo "Delay: $RAND seconds"
-	sleep $[$RAND]s
+	#sleep $[$RAND]s
+	
+	# pick a prime number > 120 seconds
+	sleep 131s
 done
