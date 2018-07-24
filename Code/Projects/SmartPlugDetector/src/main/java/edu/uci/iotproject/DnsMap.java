@@ -1,16 +1,17 @@
 package edu.uci.iotproject;
 
+import org.pcap4j.core.PacketListener;
+import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.DnsPacket;
 import org.pcap4j.packet.DnsResourceRecord;
 import org.pcap4j.packet.namednumber.DnsResourceRecordType;
 
-import java.io.EOFException;
+
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.TimeoutException;
+
 
 /**
  * This is a class that does DNS mapping.
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeoutException;
  * @author Rahmadi Trimananda (rtrimana@uci.edu)
  * @version 0.1
  */
-public class DnsMap {
+public class DnsMap implements PacketListener {
 
     /* Class properties */
     private Map<String, Set<String>> ipToHostnameMap;
@@ -31,11 +32,18 @@ public class DnsMap {
     
     /* Constructor */
     public DnsMap() {
-
-        ipToHostnameMap = new HashMap<String, Set<String>>();
+        ipToHostnameMap = new HashMap<>();
     }
 
-    
+    @Override
+    public void gotPacket(PcapPacket packet) {
+        try {
+            validateAndAddNewEntry(packet);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Gets a packet and determine if this is a DNS packet
      *
@@ -43,27 +51,22 @@ public class DnsMap {
      * @return          DnsPacket object or null
      */
     private DnsPacket getDnsPacket(Packet packet) {
-
         DnsPacket dnsPacket = packet.get(DnsPacket.class);
         return dnsPacket;
     }
-
 
     /**
      * Checks DNS packet and build the map data structure that
      * maps IP addresses to DNS hostnames
      *
-     * @param   packet  Packet object
+     * @param   packet  PcapPacket object
      */
-    public void validateAndAddNewEntry(Packet packet) throws UnknownHostException {
-
+    public void validateAndAddNewEntry(PcapPacket packet) throws UnknownHostException {
         // Make sure that this is a DNS packet
         DnsPacket dnsPacket = getDnsPacket(packet);
         if (dnsPacket != null) {
-
             // We only care about DNS answers
             if (dnsPacket.getHeader().getAnswers().size() != 0) {
-
                 String hostname = dnsPacket.getHeader().getQuestions().get(0).getQName().getName();
                 for(DnsResourceRecord answer : dnsPacket.getHeader().getAnswers()) {
                     // We only care about type A records
@@ -78,7 +81,7 @@ public class DnsMap {
                     byte[] ipBytes = answer.getRData().getRawData();
                     // Convert to string representation.
                     String ip = Inet4Address.getByAddress(ipBytes).getHostAddress();
-                    Set<String> hostnameSet = new HashSet<String>();
+                    Set<String> hostnameSet = new HashSet<>();
                     hostnameSet.add(hostname);
                     // Update or insert depending on presence of key:
                     // Concat the existing set and the new set if ip already present as key,
@@ -98,7 +101,6 @@ public class DnsMap {
      * @param   hostname    Hostname to check
      */
     public boolean isRelatedToCloudServer(String address, String hostname) {
-        
         return ipToHostnameMap.getOrDefault(address, EMPTY_SET).contains(hostname);
     }
 }
