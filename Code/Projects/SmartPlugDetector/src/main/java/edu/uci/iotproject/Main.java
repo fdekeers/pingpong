@@ -11,10 +11,7 @@ import org.pcap4j.packet.namednumber.DataLinkType;
 import java.io.EOFException;
 import java.net.UnknownHostException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -222,7 +219,9 @@ public class Main {
         }
         System.out.println("packet length frequency map created");
 
-
+        Map<String, List<Conversation>> hostnameConversationMap =
+                TcpConversationUtils.groupConversationsByHostname(tcpReassembler.getTcpConversations(), dnsMap);
+        System.out.println("hostnameConversationMap created");
         // ----------------------------
     }
 
