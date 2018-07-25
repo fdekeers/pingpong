@@ -11,10 +11,7 @@ import org.pcap4j.packet.namednumber.DataLinkType;
 import java.io.EOFException;
 import java.net.UnknownHostException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -118,12 +115,14 @@ public class Main {
 
         // -------- 07-19-2018 --------
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
-        List<Instant> triggerTimes = ttfr.readTriggerTimes("/Users/varmarken/Downloads/tplink-feb-13-2018.timestamps", false);
-//        triggerTimes.stream().forEach(i -> System.out.println(i.atZone(TriggerTimesFileReader.ZONE_ID_LOS_ANGELES).toString()));
-        String pcapFile = "/Users/varmarken/Development/Repositories/UCI/NetworkingGroup/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+//        List<Instant> triggerTimes = ttfr.readTriggerTimes("/Users/varmarken/Downloads/tplink-feb-13-2018.timestamps", false);
+        List<Instant> triggerTimes = ttfr.readTriggerTimes("/Users/varmarken/temp/UCI IoT Project/June2018 experiments/tplink/tplink-june-14-2018-timestamps.txt", false);
+//        String pcapFile = "/Users/varmarken/Development/Repositories/UCI/NetworkingGroup/smart_home_traffic/Code/Projects/SmartPlugDetector/pcap/wlan1.local.dns.pcap";
+        String pcapFile = "/Users/varmarken/temp/UCI IoT Project/June2018 experiments/tplink/tplink.wlan1.local.pcap";
         String tpLinkPlugIp = "192.168.1.159";
         TriggerTrafficExtractor tte = new TriggerTrafficExtractor(pcapFile, triggerTimes, tpLinkPlugIp);
-        final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen("/Users/varmarken/temp/traces/output/tplink-filtered.pcap");
+//        final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen("/Users/varmarken/temp/traces/output/tplink-filtered.pcap");
+        final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen("/Users/varmarken/temp/UCI IoT Project/June2018 experiments/tplink/tplink-filtered.pcap");
         DnsMap dnsMap = new DnsMap();
         TcpReassembler tcpReassembler = new TcpReassembler();
         tte.performExtraction(pkt -> {
@@ -136,6 +135,7 @@ public class Main {
         outputter.flush();
         outputter.close();
 
+        /*
         int packets = 0;
         for (Conversation c : tcpReassembler.getTcpConversations()) {
             packets += c.getPackets().size();
@@ -147,22 +147,30 @@ public class Main {
         // Applying filter: "(tcp and not tcp.len == 0 and not tcp.analysis.retransmission and not tcp.analysis.fast_retransmission)  or (tcp.flags.syn == 1) or (tcp.flags.fin == 1)"
         // to the file gives 295 packets, but there are 24 TCP-Out-Of-Order SYN/SYNACKs which are filtered as retransmissions in Conversation, so the numbers seem to match.
         System.out.println("number of packets: " + packets);
+        */
 
         List<List<PcapPacketPair>> pairs = new ArrayList<>();
         for (Conversation c : tcpReassembler.getTcpConversations()) {
             pairs.add(TcpConversationUtils.extractPacketPairs(c));
         }
+        /*
         // Sort pairs according to timestamp of first packet of conversation for (debugging) convenience.
         Collections.sort(pairs, (l1, l2) -> {
             if (l1.get(0).getFirst().getTimestamp().isBefore(l2.get(0).getFirst().getTimestamp())) return -1;
             else if (l2.get(0).getFirst().getTimestamp().isBefore(l1.get(0).getFirst().getTimestamp())) return 1;
             else return 0;
         });
+        */
         System.out.println("list of pairs produced");
         List<PcapPacketPair> eventstplinkraPairs = new ArrayList<>();
         List<List<PcapPacketPair>> otherPairs = new ArrayList<>();
         String hostname = "events.tplinkra.com";
+        int emptyLists = 0;
         for (List<PcapPacketPair> lppp : pairs) {
+            if (lppp.size() < 1) {
+                emptyLists++;
+                continue;
+            }
             IpV4Packet ipPacket = lppp.get(0).getFirst().get(IpV4Packet.class);
             // If packets are associated with the hostname
             if (dnsMap.isRelatedToCloudServer(ipPacket.getHeader().getSrcAddr().getHostAddress(), hostname) ||
@@ -173,6 +181,7 @@ public class Main {
                 otherPairs.add(lppp);
             }
         }
+        System.out.println("number of empty list of packet pairs: " + emptyLists);
         HashMap<String, Integer> pairCount = new HashMap<>();
         for (PcapPacketPair ppp : eventstplinkraPairs) {
             if (pairCount.containsKey(ppp.toString())) {
@@ -182,6 +191,37 @@ public class Main {
             }
         }
         System.out.println("pairCount map built");
+
+        // Build map containing frequencies of packet lengths exchanged with events.tplinkra.com as well as a map with
+        // the frequencies of specific sequences of packet lengths for the same hostname
+        HashMap<Integer, Integer> eventstplinkraPacketLengthFreqMap = new HashMap<>();
+        HashMap<String, Integer> eventstplinkraPacketSequenceFreqMap = new HashMap<>();
+        for (Conversation c : tcpReassembler.getTcpConversations()) {
+            if (c.getPackets().size() == 0) {
+                continue;
+            }
+            PcapPacket firstPacket = c.getPackets().get(0);
+            IpV4Packet firstPacketIp = firstPacket.get(IpV4Packet.class);
+            if (!dnsMap.isRelatedToCloudServer(firstPacketIp.getHeader().getSrcAddr().getHostAddress(), hostname) &&
+                    !dnsMap.isRelatedToCloudServer(firstPacketIp.getHeader().getDstAddr().getHostAddress(), hostname)) {
+                continue;
+            }
+            // Update the packet length freq map
+            for (PcapPacket pp : c.getPackets()) {
+                eventstplinkraPacketLengthFreqMap.merge(pp.length(), 1, (i1, i2) -> i1 + i2);
+            }
+            // Update the packet sequence freq map
+            StringBuilder sb = new StringBuilder();
+            for (PcapPacket pp : c.getPackets()) {
+                sb.append(pp.length() + " ");
+            }
+            eventstplinkraPacketSequenceFreqMap.merge(sb.toString(), 1, (i1, i2) -> i1+i2);
+        }
+        System.out.println("packet length frequency map created");
+
+        Map<String, List<Conversation>> hostnameConversationMap =
+                TcpConversationUtils.groupConversationsByHostname(tcpReassembler.getTcpConversations(), dnsMap);
+        System.out.println("hostnameConversationMap created");
         // ----------------------------
     }
 

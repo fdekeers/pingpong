@@ -103,4 +103,9 @@ public class DnsMap implements PacketListener {
     public boolean isRelatedToCloudServer(String address, String hostname) {
         return ipToHostnameMap.getOrDefault(address, EMPTY_SET).contains(hostname);
     }
+
+    public Set<String> getHostnamesForIp(String ip) {
+        Set<String> hostnames = ipToHostnameMap.get(ip);
+        return hostnames != null ? Collections.unmodifiableSet(hostnames) : null;
+    }
 }

@@ -43,12 +43,13 @@ public class PcapHandleReader {
      * @throws TimeoutException if packets are being read from a live capture and the timeout expired.
      */
     public void readFromHandle() throws PcapNativeException, NotOpenException, TimeoutException {
+        int outOfOrderPackets = 0;
         try {
             PcapPacket prevPacket = null;
             PcapPacket packet;
             while ((packet = mHandle.getNextPacketEx()) != null) {
                 if (prevPacket != null && packet.getTimestamp().isBefore(prevPacket.getTimestamp())) {
-                    System.out.println("Out-of-order (in terms of timestamp) packet detected");
+                    outOfOrderPackets++;
                     /*
                     // Fail early if assumption doesn't hold.
                     mHandle.close();
@@ -66,6 +67,11 @@ public class PcapHandleReader {
         } catch (EOFException eof) {
             // Reached end of file. All good.
             System.out.println(String.format("%s: finished reading pcap file", getClass().getSimpleName()));
+        }
+        if (outOfOrderPackets > 0) {
+            System.err.println(
+                    String.format("[[[ %s: %d packets appeared out of order (with regards to their timestamps) ]]]",
+                            getClass().getSimpleName(), outOfOrderPackets));
         }
         mHandle.close();
     }
