@@ -33,9 +33,8 @@ public class TcpReassembler implements PacketListener {
 
     /**
      * Holds <em>terminated</em> {@link Conversation}s.
-     * TODO: Should turn this into a list to avoid unintentional overwrite of a Conversation in case ephemeral port number is reused at a later stage...?
      */
-    private final Map<Conversation, Conversation> mTerminatedConversations = new HashMap<>();
+    private final List<Conversation> mTerminatedConversations = new ArrayList<>();
 
     @Override
     public void gotPacket(PcapPacket pcapPacket) {
@@ -54,7 +53,7 @@ public class TcpReassembler implements PacketListener {
      */
     public List<Conversation> getTcpConversations() {
         ArrayList<Conversation> combined = new ArrayList<>();
-        combined.addAll(mTerminatedConversations.values());
+        combined.addAll(mTerminatedConversations);
         combined.addAll(mOpenConversations.values());
         return combined;
     }
@@ -116,7 +115,7 @@ public class TcpReassembler implements PacketListener {
                 // to establish a new conversation with the same four tuple as ongoingConv.
                 // Mark existing connection as terminated.
                 // TODO: is this 100% theoretically correct, e.g., if many connection attempts are made back to back? And RST packets?
-                mTerminatedConversations.put(ongoingConv, ongoingConv);
+                mTerminatedConversations.add(ongoingConv);
                 mOpenConversations.remove(ongoingConv);
             }
         }
@@ -157,7 +156,7 @@ public class TcpReassembler implements PacketListener {
     private void processRstPacket(PcapPacket rstPacket) {
         Conversation conv = getOngoingConversationOrCreateNew(rstPacket);
         // Move conversation to set of terminated conversations.
-        mTerminatedConversations.put(conv, conv);
+        mTerminatedConversations.add(conv);
         mOpenConversations.remove(conv, conv);
     }
 
@@ -176,7 +175,7 @@ public class TcpReassembler implements PacketListener {
             conv.attemptAcknowledgementOfFin(ackPacket);
             if (conv.isGracefullyShutdown()) {
                 // Move conversation to set of terminated conversations.
-                mTerminatedConversations.put(conv, conv);
+                mTerminatedConversations.add(conv);
                 mOpenConversations.remove(conv);
             }
         }
