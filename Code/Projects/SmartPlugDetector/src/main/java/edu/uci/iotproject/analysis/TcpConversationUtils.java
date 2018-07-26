@@ -10,12 +10,26 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.*;
 
 /**
- * TODO add class documentation.
+ * Utility functions for analyzing and structuring (sets of) {@link Conversation}s.
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class TcpConversationUtils {
 
+
+    /**
+     * <p>
+     *      Given a {@link Conversation}, extract its set of "packet pairs", i.e., pairs of request-reply packets.
+     * </p>
+     *
+     * <b>Note:</b> in the current implementation, if one endpoint sends multiple packets back-to-back with no
+     * interleaved reply packets from the other endpoint, such packets are converted to one-item pairs (i.e., instances
+     * of {@lin PcapPacketPair} where {@link PcapPacketPair#getSecond()} is {@code null}).
+     *
+     * @param conv The {@code Conversation} for which packet pairs are to be extracted.
+     * @return The packet pairs extracted from {@code conv}.
+     */
     public static List<PcapPacketPair> extractPacketPairs(Conversation conv) {
         List<PcapPacket> packets = conv.getPackets();
         List<PcapPacketPair> pairs = new ArrayList<>();
@@ -49,6 +63,13 @@ public class TcpConversationUtils {
     }
 
 
+    /**
+     * Given a list of TCP conversations and associated DNS mappings, groups the conversations by hostname.
+     * @param tcpConversations The list of TCP conversations.
+     * @param ipHostnameMappings The associated DNS mappings.
+     * @return A map where each key is a hostname and its associated value is a list of conversations where one of the
+     *         two communicating hosts is that hostname (i.e. its IP maps to the hostname).
+     */
     public static Map<String, List<Conversation>> groupConversationsByHostname(List<Conversation> tcpConversations, DnsMap ipHostnameMappings) {
         HashMap<String, List<Conversation>> result = new HashMap<>();
         for (Conversation c : tcpConversations) {
