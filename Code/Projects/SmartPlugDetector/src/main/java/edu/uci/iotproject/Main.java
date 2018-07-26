@@ -1,5 +1,6 @@
 package edu.uci.iotproject;
 
+import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.io.TriggerTimesFileReader;
 import org.pcap4j.core.*;
@@ -49,6 +50,24 @@ public class Main {
         }, dnsMap, tcpReassembler);
         outputter.flush();
         outputter.close();
+
+        // Extract all conversations present in the filtered trace.
+        List<Conversation> allConversations = tcpReassembler.getTcpConversations();
+        // Group conversations by hostname.
+        Map<String, List<Conversation>> convsByHostname = TcpConversationUtils.groupConversationsByHostname(allConversations, dnsMap);
+        System.out.println("Grouped conversations by hostname.");
+        // For each hostname, count the frequencies of packet lengths exchanged with that hostname.
+        final Map<String, Map<Integer, Integer>> pktLenFreqsByHostname = new HashMap<>();
+        convsByHostname.forEach((host, convs) -> pktLenFreqsByHostname.put(host, TcpConversationUtils.countPacketLengthFrequencies(convs)));
+        System.out.println("Counted frequencies of packet lengths exchanged with each hostname.");
+        // For each hostname, count the frequencies of packet sequences (i.e., count how many conversations exchange a
+        // sequence of packets of some specific lengths).
+        final Map<String, Map<String, Integer>> pktSeqFreqsByHostname = new HashMap<>();
+        convsByHostname.forEach((host, convs) -> pktSeqFreqsByHostname.put(host, TcpConversationUtils.countPacketSequenceFrequencies(convs)));
+        System.out.println("Counted frequencies of packet sequences exchanged with each hostname.");
+
+
+
         // -------------------------------------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------
     }
