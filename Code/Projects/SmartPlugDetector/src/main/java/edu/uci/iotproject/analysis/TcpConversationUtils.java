@@ -62,15 +62,14 @@ public class TcpConversationUtils {
         // TODO: what if there is long time between response and reply packet? Should we add a threshold and exclude those cases?
     }
 
-
     /**
-     * Given a list of TCP conversations and associated DNS mappings, groups the conversations by hostname.
-     * @param tcpConversations The list of TCP conversations.
+     * Given a collection of TCP conversations and associated DNS mappings, groups the conversations by hostname.
+     * @param tcpConversations The collection of TCP conversations.
      * @param ipHostnameMappings The associated DNS mappings.
      * @return A map where each key is a hostname and its associated value is a list of conversations where one of the
      *         two communicating hosts is that hostname (i.e. its IP maps to the hostname).
      */
-    public static Map<String, List<Conversation>> groupConversationsByHostname(List<Conversation> tcpConversations, DnsMap ipHostnameMappings) {
+    public static Map<String, List<Conversation>> groupConversationsByHostname(Collection<Conversation> tcpConversations, DnsMap ipHostnameMappings) {
         HashMap<String, List<Conversation>> result = new HashMap<>();
         for (Conversation c : tcpConversations) {
             if (c.getPackets().size() == 0) {
@@ -117,5 +116,61 @@ public class TcpConversationUtils {
         return result;
     }
 
+    public static Map<String, Integer> countPacketSequenceFrequencies(Collection<Conversation> conversations) {
+        Map<String, Integer> result = new HashMap<>();
+        for (Conversation conv : conversations) {
+            if (conv.getPackets().size() == 0) {
+                // Skip conversations with no payload packets.
+                continue;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (PcapPacket pp : conv.getPackets()) {
+                sb.append(pp.length() + " ");
+            }
+            result.merge(sb.toString(), 1, (i1, i2) -> i1+i2);
+        }
+        return result;
+    }
+
+    /**
+     * Given a {@link Conversation}, counts the frequencies of each unique packet length seen as part of the
+     * {@code Conversation}.
+     * @param c The {@code Conversation} for which unique packet length frequencies are to be determined.
+     * @return A mapping from packet length to its frequency.
+     */
+    public static Map<Integer, Integer> countPacketLengthFrequencies(Conversation c) {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (PcapPacket packet : c.getPackets()) {
+            result.merge(packet.length(), 1, (i1, i2) -> i1 + i2);
+        }
+        return result;
+    }
+
+    /**
+     * Like {@link #countPacketLengthFrequencies(Conversation)}, but counts packet length frequencies for a collection
+     * of {@code Conversation}s, i.e., the frequency of a packet length becomes the total number of packets with that
+     * length across <em>all</em> {@code Conversation}s in {@code conversations}.
+     * @param conversations The collection of {@code Conversation}s for which packet length frequencies are to be
+     *                      counted.
+     * @return A mapping from packet length to its frequency.
+     */
+    public static Map<Integer, Integer> countPacketLengthFrequencies(Collection<Conversation> conversations) {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (Conversation c : conversations) {
+            Map<Integer, Integer> intermediateResult = countPacketLengthFrequencies(c);
+            for (Map.Entry<Integer, Integer> entry : intermediateResult.entrySet()) {
+                result.merge(entry.getKey(), entry.getValue(), (i1, i2) -> i1 + i2);
+            }
+        }
+        return result;
+    }
+
+    public static Map<String, Integer> countPacketPairFrequencies(Collection<PcapPacketPair> pairs) {
+        Map<String, Integer> result = new HashMap<>();
+        for (PcapPacketPair ppp : pairs) {
+            result.merge(ppp.toString(), 1, (i1, i2) -> i1 + i2);
+        }
+        return result;
+    }
 
 }
