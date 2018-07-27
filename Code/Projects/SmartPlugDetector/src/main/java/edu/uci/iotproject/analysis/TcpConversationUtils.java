@@ -173,4 +173,17 @@ public class TcpConversationUtils {
         return result;
     }
 
+    public static Map<String, Map<String, Integer>> countPacketPairFrequenciesByHostname(Collection<Conversation> tcpConversations, DnsMap ipHostnameMappings) {
+        Map<String, List<Conversation>> convsByHostname = groupConversationsByHostname(tcpConversations, ipHostnameMappings);
+        HashMap<String, Map<String, Integer>> result = new HashMap<>();
+        for (Map.Entry<String, List<Conversation>> entry : convsByHostname.entrySet()) {
+            // Merge all packet pairs exchanged during the course of all conversations with hostname into one list
+            List<PcapPacketPair> allPairsExchangedWithHostname = new ArrayList<>();
+            entry.getValue().forEach(conversation -> allPairsExchangedWithHostname.addAll(extractPacketPairs(conversation)));
+            // Then count the frequencies of packet pairs exchanged with the hostname, irrespective of individual
+            // conversations
+            result.put(entry.getKey(), countPacketPairFrequencies(allPairsExchangedWithHostname));
+        }
+        return result;
+    }
 }
