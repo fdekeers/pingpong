@@ -22,7 +22,7 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
     private int mTriggerIndex = 0;
 
 
-    private static final int INCLUSION_WINDOW_MILLIS = 3_000;
+    private static final int INCLUSION_WINDOW_MILLIS = 20_000;
 
     public TriggerTrafficExtractor(String pcapFilePath, List<Instant> triggerTimes, String deviceIp) throws PcapNativeException, NotOpenException {
         mPcapFilePath = pcapFilePath;
@@ -55,6 +55,15 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
 
     @Override
     public boolean shouldIncludePacket(PcapPacket packet) {
+        // New version. Simpler, but slower: the later a packet arrives, the more elements of mTriggerTimes will need to
+        // be traversed.
+        return mTriggerTimes.stream().anyMatch(
+                trigger -> trigger.isBefore(packet.getTimestamp()) &&
+                        packet.getTimestamp().isBefore(trigger.plusMillis(INCLUSION_WINDOW_MILLIS))
+        );
+
+        /*
+        // Old version. Faster, but more complex - is it correct?
         if (mTriggerIndex >= mTriggerTimes.size()) {
             // Don't include packet if we've exhausted the list of trigger times.
             return false;
@@ -78,6 +87,7 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
                 return shouldIncludePacket(packet);
             }
         }
+        */
     }
 
 }
