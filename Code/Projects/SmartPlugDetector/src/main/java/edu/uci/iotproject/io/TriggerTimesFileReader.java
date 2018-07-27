@@ -32,9 +32,8 @@ public class TriggerTimesFileReader {
      */
     public List<Instant> readTriggerTimes(String fileName, boolean _24hFormat) {
         List<Instant> listTriggerTimes = new ArrayList<>();
-        try {
-            File file = new File(fileName);
-            BufferedReader br = new BufferedReader(new FileReader(file));
+        File file = new File(fileName);
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String s;
             while ((s = br.readLine()) != null) {
                 listTriggerTimes.add(parseTriggerTimestamp(s, _24hFormat));
