@@ -10,12 +10,26 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.*;
 
 /**
- * TODO add class documentation.
+ * Utility functions for analyzing and structuring (sets of) {@link Conversation}s.
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class TcpConversationUtils {
 
+
+    /**
+     * <p>
+     *      Given a {@link Conversation}, extract its set of "packet pairs", i.e., pairs of request-reply packets.
+     * </p>
+     *
+     * <b>Note:</b> in the current implementation, if one endpoint sends multiple packets back-to-back with no
+     * interleaved reply packets from the other endpoint, such packets are converted to one-item pairs (i.e., instances
+     * of {@lin PcapPacketPair} where {@link PcapPacketPair#getSecond()} is {@code null}).
+     *
+     * @param conv The {@code Conversation} for which packet pairs are to be extracted.
+     * @return The packet pairs extracted from {@code conv}.
+     */
     public static List<PcapPacketPair> extractPacketPairs(Conversation conv) {
         List<PcapPacket> packets = conv.getPackets();
         List<PcapPacketPair> pairs = new ArrayList<>();
@@ -48,8 +62,14 @@ public class TcpConversationUtils {
         // TODO: what if there is long time between response and reply packet? Should we add a threshold and exclude those cases?
     }
 
-
-    public static Map<String, List<Conversation>> groupConversationsByHostname(List<Conversation> tcpConversations, DnsMap ipHostnameMappings) {
+    /**
+     * Given a collection of TCP conversations and associated DNS mappings, groups the conversations by hostname.
+     * @param tcpConversations The collection of TCP conversations.
+     * @param ipHostnameMappings The associated DNS mappings.
+     * @return A map where each key is a hostname and its associated value is a list of conversations where one of the
+     *         two communicating hosts is that hostname (i.e. its IP maps to the hostname).
+     */
+    public static Map<String, List<Conversation>> groupConversationsByHostname(Collection<Conversation> tcpConversations, DnsMap ipHostnameMappings) {
         HashMap<String, List<Conversation>> result = new HashMap<>();
         for (Conversation c : tcpConversations) {
             if (c.getPackets().size() == 0) {
@@ -96,5 +116,74 @@ public class TcpConversationUtils {
         return result;
     }
 
+    public static Map<String, Integer> countPacketSequenceFrequencies(Collection<Conversation> conversations) {
+        Map<String, Integer> result = new HashMap<>();
+        for (Conversation conv : conversations) {
+            if (conv.getPackets().size() == 0) {
+                // Skip conversations with no payload packets.
+                continue;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (PcapPacket pp : conv.getPackets()) {
+                sb.append(pp.length() + " ");
+            }
+            result.merge(sb.toString(), 1, (i1, i2) -> i1+i2);
+        }
+        return result;
+    }
 
+    /**
+     * Given a {@link Conversation}, counts the frequencies of each unique packet length seen as part of the
+     * {@code Conversation}.
+     * @param c The {@code Conversation} for which unique packet length frequencies are to be determined.
+     * @return A mapping from packet length to its frequency.
+     */
+    public static Map<Integer, Integer> countPacketLengthFrequencies(Conversation c) {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (PcapPacket packet : c.getPackets()) {
+            result.merge(packet.length(), 1, (i1, i2) -> i1 + i2);
+        }
+        return result;
+    }
+
+    /**
+     * Like {@link #countPacketLengthFrequencies(Conversation)}, but counts packet length frequencies for a collection
+     * of {@code Conversation}s, i.e., the frequency of a packet length becomes the total number of packets with that
+     * length across <em>all</em> {@code Conversation}s in {@code conversations}.
+     * @param conversations The collection of {@code Conversation}s for which packet length frequencies are to be
+     *                      counted.
+     * @return A mapping from packet length to its frequency.
+     */
+    public static Map<Integer, Integer> countPacketLengthFrequencies(Collection<Conversation> conversations) {
+        Map<Integer, Integer> result = new HashMap<>();
+        for (Conversation c : conversations) {
+            Map<Integer, Integer> intermediateResult = countPacketLengthFrequencies(c);
+            for (Map.Entry<Integer, Integer> entry : intermediateResult.entrySet()) {
+                result.merge(entry.getKey(), entry.getValue(), (i1, i2) -> i1 + i2);
+            }
+        }
+        return result;
+    }
+
+    public static Map<String, Integer> countPacketPairFrequencies(Collection<PcapPacketPair> pairs) {
+        Map<String, Integer> result = new HashMap<>();
+        for (PcapPacketPair ppp : pairs) {
+            result.merge(ppp.toString(), 1, (i1, i2) -> i1 + i2);
+        }
+        return result;
+    }
+
+    public static Map<String, Map<String, Integer>> countPacketPairFrequenciesByHostname(Collection<Conversation> tcpConversations, DnsMap ipHostnameMappings) {
+        Map<String, List<Conversation>> convsByHostname = groupConversationsByHostname(tcpConversations, ipHostnameMappings);
+        HashMap<String, Map<String, Integer>> result = new HashMap<>();
+        for (Map.Entry<String, List<Conversation>> entry : convsByHostname.entrySet()) {
+            // Merge all packet pairs exchanged during the course of all conversations with hostname into one list
+            List<PcapPacketPair> allPairsExchangedWithHostname = new ArrayList<>();
+            entry.getValue().forEach(conversation -> allPairsExchangedWithHostname.addAll(extractPacketPairs(conversation)));
+            // Then count the frequencies of packet pairs exchanged with the hostname, irrespective of individual
+            // conversations
+            result.put(entry.getKey(), countPacketPairFrequencies(allPairsExchangedWithHostname));
+        }
+        return result;
+    }
 }

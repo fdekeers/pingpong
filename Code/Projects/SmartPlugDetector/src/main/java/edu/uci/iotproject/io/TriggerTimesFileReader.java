@@ -32,9 +32,8 @@ public class TriggerTimesFileReader {
      */
     public List<Instant> readTriggerTimes(String fileName, boolean _24hFormat) {
         List<Instant> listTriggerTimes = new ArrayList<>();
-        try {
-            File file = new File(fileName);
-            BufferedReader br = new BufferedReader(new FileReader(file));
+        File file = new File(fileName);
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String s;
             while ((s = br.readLine()) != null) {
                 listTriggerTimes.add(parseTriggerTimestamp(s, _24hFormat));
@@ -48,7 +47,7 @@ public class TriggerTimesFileReader {
 
     /**
      * Parses a timestamp string to an {@link Instant} (UTC). Assumes timestamps are LA time.
-     * Format is expected to be either "uuuu-MM-dd HH:mm:ss" or "uuuu-MM-dd h:mm:ss a".
+     * Format is expected to be either "MM/dd/uuuu HH:mm:ss" or "MM/dd/uuuu h:mm:ss a".
      *
      * @param timestampStr The string containing a date-time timestamp for LA's timezone.
      * @param _24hFormat {@code true} if the time in {@code timestampStr} is given in 24 hour format, {@code false} if
@@ -59,7 +58,7 @@ public class TriggerTimesFileReader {
      */
     public Instant parseTriggerTimestamp(String timestampStr, boolean _24hFormat) {
         // Note: only one 'h' when not prefixed with leading 0 for 1-9; and only one 'a' for AM/PM marker in Java 8 time
-        String format = _24hFormat ? "uuuu-MM-dd HH:mm:ss" : "uuuu-MM-dd h:mm:ss a";
+        String format = _24hFormat ? "MM/dd/uuuu HH:mm:ss" : "MM/dd/uuuu h:mm:ss a";
         LocalDateTime localDateTime = LocalDateTime.parse(timestampStr, DateTimeFormatter.ofPattern(format, Locale.US));
         ZonedDateTime laZonedDateTime = localDateTime.atZone(ZONE_ID_LOS_ANGELES);
         return laZonedDateTime.toInstant();

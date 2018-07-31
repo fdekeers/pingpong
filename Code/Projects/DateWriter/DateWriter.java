@@ -11,13 +11,14 @@ public class DateWriter {
 
 	public static void main(String[] args) throws IOException {
 		if (args.length < 3) {
-			System.out.println("Usage: java /path/to/file/with/timestamps /path/to/new/timestamp/file/with/dates initial_date_in_uuuu-MM-dd_format");
+			System.out.println("Usage: java " + DateWriter.class.getSimpleName() + " /path/to/file/with/timestamps /path/to/new/timestamp/file/with/dates initial_date_in_MM/dd/uuuu_format");
 			System.exit(1);
 		}
 		String pathOriginal = args[0];
 		String pathModified = args[1];
 		String initialDateStr = args[2];
-		LocalDate date = LocalDate.parse(initialDateStr, DateTimeFormatter.ofPattern("uuuu-MM-dd"));
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/uuuu");
+		LocalDate date = LocalDate.parse(initialDateStr, dateFormatter);
 		File originalFile = new File(pathOriginal);
 		// Create output file
 		File modifiedFile = new File(pathModified);
@@ -31,7 +32,7 @@ public class DateWriter {
 				// Advance date
 				date = date.plusDays(1);
 			}
-			writer.println(String.format("%s %s", date.toString(), line));
+			writer.println(String.format("%s %s", date.format(dateFormatter), line));
 			prevLine = line;
 		}
 		writer.flush();
