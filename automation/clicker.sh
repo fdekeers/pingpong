@@ -17,10 +17,16 @@ do
 	#./adb shell getevent -l - use this command to get the position
 	# TP-Link switch
 	#./adb shell input tap 1002 913
+	# TP-Link bulb on/off
+	./adb shell input tap 981 358
 	# D-Link switch
 	#./adb shell input tap 987 346
 	# SmartThings
-	./adb shell input tap 921 1188
+	#./adb shell input tap 921 1188
+	# WeMo
+	#./adb shell input tap 981 532
+	# WeMo Insight
+	#./adb shell input tap 981 326
 	#date +%r
 	date +"%m/%d/%Y %r"
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
