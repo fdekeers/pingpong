@@ -22,7 +22,7 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
     private int mTriggerIndex = 0;
 
 
-    private static final int INCLUSION_WINDOW_MILLIS = 20_000;
+    public static final int INCLUSION_WINDOW_MILLIS = 20_000;
 
     public TriggerTrafficExtractor(String pcapFilePath, List<Instant> triggerTimes, String deviceIp) throws PcapNativeException, NotOpenException {
         mPcapFilePath = pcapFilePath;
