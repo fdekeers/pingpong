@@ -1,7 +1,11 @@
 package edu.uci.iotproject;
 
+import static edu.uci.iotproject.analysis.UserAction.Type;
+
 import edu.uci.iotproject.analysis.TcpConversationUtils;
+import edu.uci.iotproject.analysis.TrafficLabeler;
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
+import edu.uci.iotproject.analysis.UserAction;
 import edu.uci.iotproject.io.TriggerTimesFileReader;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.namednumber.DataLinkType;
@@ -31,31 +35,43 @@ public class Main {
         // Paths to input and output files (consider supplying these as arguments instead) and IP of the device for
         // which traffic is to be extracted:
         // D-Link July 26 experiment
-        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/dlink/dlink.wlan1.local.pcap";
-        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/dlink/dlink-processed.pcap";
-        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/dlink/dlink-july-26-2018.timestamps";
-        final String deviceIp = "192.168.1.246";
+//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/dlink/dlink.wlan1.local.pcap";
+//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/dlink/dlink-processed.pcap";
+//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/dlink/dlink-july-26-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
         // TP-Link July 25 experiment
-//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
-//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
-//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
-//        final String deviceIp = "192.168.1.159";
+        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
+        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
+        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
+        final String deviceIp = "192.168.1.159";
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
+        // Tag each trigger with "ON" or "OFF", assuming that the first trigger is an "ON" and that they alternate.
+        List<UserAction> userActions = new ArrayList<>();
+        for (int i = 0; i < triggerTimes.size(); i++) {
+            userActions.add(new UserAction(i % 2 == 0 ? Type.TOGGLE_ON : Type.TOGGLE_OFF, triggerTimes.get(i)));
+        }
         TriggerTrafficExtractor tte = new TriggerTrafficExtractor(inputPcapFile, triggerTimes, deviceIp);
         final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen(outputPcapFile);
         DnsMap dnsMap = new DnsMap();
         TcpReassembler tcpReassembler = new TcpReassembler();
+        TrafficLabeler trafficLabeler = new TrafficLabeler(userActions);
         tte.performExtraction(pkt -> {
             try {
                 outputter.dump(pkt);
             } catch (NotOpenException e) {
                 e.printStackTrace();
             }
-        }, dnsMap, tcpReassembler);
+        }, dnsMap, tcpReassembler, trafficLabeler);
         outputter.flush();
         outputter.close();
+
+        if (tte.getPacketsIncludedCount() != trafficLabeler.getTotalPacketCount()) {
+            // Sanity/debug check
+            throw new AssertionError(String.format("mismatch between packet count in %s and %s",
+                    TriggerTrafficExtractor.class.getSimpleName(), TrafficLabeler.class.getSimpleName()));
+        }
 
         // Extract all conversations present in the filtered trace.
         List<Conversation> allConversations = tcpReassembler.getTcpConversations();
@@ -83,3 +99,4 @@ public class Main {
 
 
 // TP-Link MAC 50:c7:bf:33:1f:09 and usually IP 192.168.1.159 (remember to verify per file)
+// frame.len >= 556 && frame.len <= 558 && ip.addr == 192.168.1.159

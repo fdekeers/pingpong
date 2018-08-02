@@ -21,6 +21,10 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
 
     private int mTriggerIndex = 0;
 
+    /**
+     * The total number of packets marked for inclusion during one run of {@link #performExtraction(PacketListener...)}.
+     */
+    private long mIncludedPackets = 0;
 
     public static final int INCLUSION_WINDOW_MILLIS = 20_000;
 
@@ -39,6 +43,9 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
 
 
     public void performExtraction(PacketListener... extractedPacketsConsumers) throws PcapNativeException, NotOpenException, TimeoutException {
+        // Reset trigger index and packet counter in case client code chooses to rerun the extraction.
+        mTriggerIndex = 0;
+        mIncludedPackets = 0;
         PcapHandle handle;
         try {
             handle = Pcaps.openOffline(mPcapFilePath, PcapHandle.TimestampPrecision.NANO);
@@ -49,18 +56,32 @@ public class TriggerTrafficExtractor implements PcapPacketFilter {
         handle.setFilter("ip host " + mDeviceIp, BpfProgram.BpfCompileMode.OPTIMIZE);
         PcapHandleReader pcapReader = new PcapHandleReader(handle, this, extractedPacketsConsumers);
         pcapReader.readFromHandle();
-        // Reset trigger index (in case client code chooses to rerun the extraction)
-        mTriggerIndex = 0;
+
+    }
+
+    /**
+     * Return the number of extracted packets (i.e., packets selected for inclusion) as a result of the most recent call
+     * to {@link #performExtraction(PacketListener...)}.
+     *
+     * @return the number of extracted packets (i.e., packets selected for inclusion) as a result of the most recent
+     *         call to {@link #performExtraction(PacketListener...)}.
+     */
+    public long getPacketsIncludedCount() {
+        return mIncludedPackets;
     }
 
     @Override
     public boolean shouldIncludePacket(PcapPacket packet) {
         // New version. Simpler, but slower: the later a packet arrives, the more elements of mTriggerTimes will need to
         // be traversed.
-        return mTriggerTimes.stream().anyMatch(
+        boolean include = mTriggerTimes.stream().anyMatch(
                 trigger -> trigger.isBefore(packet.getTimestamp()) &&
                         packet.getTimestamp().isBefore(trigger.plusMillis(INCLUSION_WINDOW_MILLIS))
         );
+        if (include) {
+            mIncludedPackets++;
+        }
+        return include;
 
         /*
         // Old version. Faster, but more complex - is it correct?

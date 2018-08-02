@@ -17,6 +17,10 @@ public class TrafficLabeler implements PacketListener {
 
     private final Map<UserAction, List<PcapPacket>> mActionToTrafficMap;
     private final List<UserAction> mActionsSorted;
+    /**
+     * The total number of packets labeled, i.e, the sum of the sizes of the values in {@link #mActionToTrafficMap}.
+     */
+    private long mPackets = 0;
 
     public TrafficLabeler(List<UserAction> userActions) {
         // Init map with empty lists (no packets have been mapped to UserActions at the onset).
@@ -55,8 +59,17 @@ public class TrafficLabeler implements PacketListener {
         if (index >= 0) {
             // Associate the packet to the its corresponding user action (located during the binary search above).
             mActionToTrafficMap.get(mActionsSorted.get(index)).add(packet);
+            mPackets++;
         }
         // Ignore packet if it is not found to be in temporal proximity of a user action.
+    }
+
+    /**
+     * Get the total number of packets labeled by this {@code TrafficLabeler}.
+     * @return the total number of packets labeled by this {@code TrafficLabeler}.
+     */
+    public long getTotalPacketCount() {
+        return mPackets;
     }
 
 }
