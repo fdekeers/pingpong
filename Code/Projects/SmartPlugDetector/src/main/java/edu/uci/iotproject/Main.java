@@ -42,16 +42,16 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // TP-Link July 25 experiment
-//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
-//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
-//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
-//        final String deviceIp = "192.168.1.159";
+        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
+        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
+        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
+        final String deviceIp = "192.168.1.159";
 
         // Wemo July 30 experiment
-        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo.wlan1.local.pcap";
-        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo-processed.pcap";
-        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo-july-30-2018.timestamps";
-        final String deviceIp = "192.168.1.145";
+//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo.wlan1.local.pcap";
+//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo-processed.pcap";
+//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo-july-30-2018.timestamps";
+//        final String deviceIp = "192.168.1.145";
 
         // TP-Link BULB August 1 experiment
 //        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb.wlan1.local.pcap";
@@ -105,6 +105,10 @@ public class Main {
         final Map<String, Map<String, Integer>> pktPairFreqsByHostname =
                 TcpConversationUtils.countPacketPairFrequenciesByHostname(allConversations, dnsMap);
         System.out.println("Counted frequencies of packet pairs per hostname");
+        // For each user action, reassemble the set of TCP connections occurring shortly after
+        final Map<UserAction, List<Conversation>> userActionToConversations = trafficLabeler.getLabeledReassembledTcpTraffic();
+        System.out.println("Reassembled TCP conversations occurring shortly after each user event");
+
         // -------------------------------------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------
     }

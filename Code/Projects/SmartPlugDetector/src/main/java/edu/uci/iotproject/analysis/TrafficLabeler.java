@@ -1,10 +1,13 @@
 package edu.uci.iotproject.analysis;
 
+import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.TcpReassembler;
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapPacket;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * A {@link PacketListener} that marks network traffic as (potentially) related to a user's actions by comparing the
@@ -66,10 +69,59 @@ public class TrafficLabeler implements PacketListener {
 
     /**
      * Get the total number of packets labeled by this {@code TrafficLabeler}.
+     *
      * @return the total number of packets labeled by this {@code TrafficLabeler}.
      */
     public long getTotalPacketCount() {
         return mPackets;
+    }
+
+    /**
+     * Get the labeled traffic.
+     *
+     * @return A {@link Map} in which a {@link UserAction} points to a {@link List} of {@link PcapPacket}s believed to
+     *         be related (occurring as a result of) that {@code UserAction}.
+     */
+    public Map<UserAction, List<PcapPacket>> getLabeledTraffic() {
+        return Collections.unmodifiableMap(mActionToTrafficMap);
+    }
+
+    /**
+     * Like {@link #getLabeledTraffic()}, but allows the caller to supply a mapping function that is applied to
+     * the traffic associated with each {@link UserAction} (the traffic label) before returning the labeled traffic.
+     * This may for example be useful for a caller who wishes to perform some postprocessing of labeled traffic, e.g.,
+     * in order to perform additional filtering or to transform the representation of labeled traffic.
+     * <p>
+     *     An example usecase is provided in {@link #getLabeledReassembledTcpTraffic()} which uses this function to
+     *     build a {@link Map} in which a {@link UserAction} points to the reassembled TCP connections believed to have
+     *     occurred as a result of that {@code UserAction}.
+     * </p>
+     *
+     * @param mappingFunction A mapping function that converts a {@link List} of {@link PcapPacket} into some other type
+     *                        {@code T}.
+     * @param <T> The return type of {@code mappingFunction}.
+     * @return A {@link Map} in which a {@link UserAction} points to the result of applying {@code mappingFunction} to
+     *         the set of packets believed to be related (occurring as a result of) that {@code UserAction}.
+     */
+    public <T> Map<UserAction, T> getLabeledTraffic(Function<List<PcapPacket>, T> mappingFunction) {
+        Map<UserAction, T> result = new HashMap<>();
+        mActionToTrafficMap.forEach((ua, packets) -> result.put(ua, mappingFunction.apply(packets)));
+        return result;
+    }
+
+
+    /**
+     * Get the labeled traffic reassembled as TCP connections (<b>note:</b> <em>discards</em> all non-TCP traffic).
+     *
+     * @return A {@link Map} in which a {@link UserAction} points to a {@link List} of {@link Conversation}s believed to
+     *         be related (occurring as a result of) that {@code UserAction}.
+     */
+    public Map<UserAction, List<Conversation>> getLabeledReassembledTcpTraffic() {
+        return getLabeledTraffic(packets -> {
+            TcpReassembler tcpReassembler = new TcpReassembler();
+            packets.forEach(p -> tcpReassembler.gotPacket(p));
+            return tcpReassembler.getTcpConversations();
+        });
     }
 
 }
