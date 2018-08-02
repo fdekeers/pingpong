@@ -40,10 +40,15 @@ public class Main {
 //        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/dlink/dlink-july-26-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
         // TP-Link July 25 experiment
-        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
-        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
-        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
-        final String deviceIp = "192.168.1.159";
+//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
+//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
+//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
+//        final String deviceIp = "192.168.1.159";
+        // TP-Link BULB August 1 experiment
+        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb.wlan1.local.pcap";
+        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb-processed.pcap";
+        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb-aug-1-2018.timestamps";
+        final String deviceIp = "192.168.1.140";
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
