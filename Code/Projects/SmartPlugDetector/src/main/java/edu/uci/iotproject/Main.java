@@ -38,16 +38,16 @@ public class Main {
         //String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
 
         // D-Link July 26 experiment
-        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
-        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // TP-Link July 25 experiment
-//        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
-//        final String deviceIp = "192.168.1.159";
+        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.pcap";
+        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
+        final String deviceIp = "192.168.1.159";
 
         // SmartThings Plug July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/stplug/stplug.wlan1.local.pcap";
