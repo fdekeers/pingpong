@@ -1,6 +1,7 @@
 package edu.uci.iotproject.analysis;
 
 import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.DnsMap;
 import edu.uci.iotproject.TcpReassembler;
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapPacket;
@@ -121,6 +122,24 @@ public class TrafficLabeler implements PacketListener {
             TcpReassembler tcpReassembler = new TcpReassembler();
             packets.forEach(p -> tcpReassembler.gotPacket(p));
             return tcpReassembler.getTcpConversations();
+        });
+    }
+
+    /**
+     * Like {@link #getLabeledReassembledTcpTraffic()}, but uses the provided {@code ipHostnameMappings} to group
+     * {@link Conversation}s by hostname.
+     *
+     * @param ipHostnameMappings A {@link DnsMap} with IP to hostname mappings used for reverse DNS lookup.
+     * @return A {@link Map} in which a {@link UserAction} points to the set of {@link Conversation}s believed to be
+     *         related (occurring as a result of) that {@code UserAction}. More precisely, each {@code UserAction} in
+     *         the returned {@code Map} points to <em>another</em> {@code Map} in which a hostname points to the set of
+     *         {@code Conversation}s involving that hostname.
+     */
+    public Map<UserAction, Map<String, List<Conversation>>> getLabeledReassembledTcpTraffic(DnsMap ipHostnameMappings) {
+        return getLabeledTraffic(packets -> {
+            TcpReassembler tcpReassembler = new TcpReassembler();
+            packets.forEach(p -> tcpReassembler.gotPacket(p));
+            return TcpConversationUtils.groupConversationsByHostname(tcpReassembler.getTcpConversations(), ipHostnameMappings);
         });
     }
 

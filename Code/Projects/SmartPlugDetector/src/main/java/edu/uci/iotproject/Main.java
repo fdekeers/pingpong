@@ -42,10 +42,16 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // TP-Link July 25 experiment
-        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
-        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
-        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
-        final String deviceIp = "192.168.1.159";
+//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
+//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-processed.pcap";
+//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink-july-25-2018.timestamps";
+//        final String deviceIp = "192.168.1.159";
+
+        // SmartThings Plug July 25 experiment
+//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/stplug/stplug.wlan1.local.pcap";
+//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/stplug/stplug-processed.pcap";
+//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/stplug/smartthings-july-25-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // Wemo July 30 experiment
 //        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo.wlan1.local.pcap";
@@ -53,11 +59,17 @@ public class Main {
 //        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemo/wemo-july-30-2018.timestamps";
 //        final String deviceIp = "192.168.1.145";
 
+        // Wemo Insight July 31 experiment
+//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemoinsight/wemoinsight.wlan1.local.pcap";
+//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemoinsight/wemoinsight-processed.pcap";
+//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/wemoinsight/wemo-insight-july-31-2018.timestamps";
+//        final String deviceIp = "192.168.1.135";
+
         // TP-Link BULB August 1 experiment
-//        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb.wlan1.local.pcap";
-//        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb-processed.pcap";
-//        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb-aug-1-2018.timestamps";
-//        final String deviceIp = "192.168.1.140";
+        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
+        final String outputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
+        final String triggerTimesFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
+        final String deviceIp = "192.168.1.140";
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
@@ -107,7 +119,38 @@ public class Main {
         System.out.println("Counted frequencies of packet pairs per hostname");
         // For each user action, reassemble the set of TCP connections occurring shortly after
         final Map<UserAction, List<Conversation>> userActionToConversations = trafficLabeler.getLabeledReassembledTcpTraffic();
+        final Map<UserAction, Map<String, List<Conversation>>> userActionsToConvsByHostname = trafficLabeler.getLabeledReassembledTcpTraffic(dnsMap);
         System.out.println("Reassembled TCP conversations occurring shortly after each user event");
+
+
+
+
+        // ons
+        Map<String, Map<String, Integer>> ons = new HashMap<>();
+        Map<String, Map<String, Integer>> offs = new HashMap<>();
+
+        userActionsToConvsByHostname.forEach((ua, hostnameToConvs) -> {
+            Map<String, Map<String, Integer>> outer = ua.getType() == Type.TOGGLE_ON ? ons : offs;
+            hostnameToConvs.forEach((host, convs) -> {
+                Map<String, Integer> sequenceCounts = TcpConversationUtils.countPacketSequenceFrequencies(convs);
+                outer.merge(host, sequenceCounts, (existingMap, newMap) -> {
+                    newMap.forEach((sequence, count) -> existingMap.merge(sequence, count, (i1, i2) -> i1+i2));
+                    return existingMap;
+                });
+            });
+        });
+
+
+//                    for (Map.Entry<String, Integer> newMapEntry : newMap.entrySet()) {
+//                        if (existingMap.get(newMapEntry.getKey()) != null) {
+//                            existingMap.put(newMapEntry.getKey(), existingMap.get(newMapEntry.getKey()) + newMapEntry.getValue());
+//                        } else {
+//                            existingMap.put(newMapEntry.getKey(), newMapEntry.getValue());
+//                        }
+//                    }
+//                    return existingMap;
+
+        System.out.println("");
 
         // -------------------------------------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------

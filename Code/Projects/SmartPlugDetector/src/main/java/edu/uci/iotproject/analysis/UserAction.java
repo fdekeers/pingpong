@@ -69,4 +69,9 @@ public class UserAction {
         hashCode = prime * hashCode + mTimestamp.hashCode();
         return hashCode;
     }
+
+    @Override
+    public String toString() {
+       return String.format("[ %s @ %s ]", mType.name(), mTimestamp.toString());
+    }
 }
