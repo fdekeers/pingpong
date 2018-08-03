@@ -133,6 +133,48 @@ public class TcpConversationUtils {
     }
 
     /**
+     * Given a {@link Collection} of {@link Conversation}s, builds a {@link Map} from {@link String} to {@link List}
+     * of {@link Conversation}s such that each key is the <em>concatenation of the packet lengths of all payload packets
+     * (i.e., the set of packets returned by {@link Conversation#getPackets()}) separated by a delimiter</em> of any
+     * {@link Conversation} pointed to by that key. In other words, what the {@link Conversation}s {@code cs} pointed to
+     * by the key {@code s} have in common is that they all contain exactly the same number of payload packets <em>and
+     * </em> these payload packets are identical across all {@code Conversation}s in {@code convs} in terms of packet
+     * length and packet order. For example, if the key is "152 440 550", this means that every individual
+     * {@code Conversation} in the list of {@code Conversation}s pointed to by that key contain exactly three payload
+     * packet of lengths 152, 440, and 550, and these three packets are ordered the in the order prescribed by the key.
+     *
+     * @param conversations The collection of {@code Conversation}s to group by packet sequence.
+     * @return a {@link Map} from {@link String} to {@link List} of {@link Conversation}s such that each key is the
+     *         <em>concatenation of the packet lengths of all payload packets (i.e., the set of packets returned by
+     *         {@link Conversation#getPackets()}) separated by a delimiter</em> of any {@link Conversation} pointed to
+     *         by that key.
+     */
+    public static Map<String, List<Conversation>> groupConversationsByPacketSequence(Collection<Conversation> conversations) {
+        Map<String, List<Conversation>> result = new HashMap<>();
+        for (Conversation conv : conversations) {
+            if (conv.getPackets().size() == 0) {
+                // Skip conversations with no payload packets.
+                continue;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (PcapPacket pp : conv.getPackets()) {
+                if (sb.length() != 0) {
+                    // only add a space if there's preceding content
+                    sb.append(" ");
+                }
+                sb.append(pp.length());
+            }
+            List<Conversation> oneItemList = new ArrayList<>();
+            oneItemList.add(conv);
+            result.merge(sb.toString(), oneItemList, (oldList, newList) -> {
+                oldList.addAll(newList);
+                return oldList;
+            });
+        }
+        return result;
+    }
+
+    /**
      * Given a {@link Conversation}, counts the frequencies of each unique packet length seen as part of the
      * {@code Conversation}.
      * @param c The {@code Conversation} for which unique packet length frequencies are to be determined.

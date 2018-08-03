@@ -126,31 +126,24 @@ public class Main {
 
 
 
-
-        // ons
-        Map<String, Map<String, Integer>> ons = new HashMap<>();
-        Map<String, Map<String, Integer>> offs = new HashMap<>();
-
+        // Contains all ON events: hostname -> sequence identifier -> list of conversations with that sequence
+        Map<String, Map<String, List<Conversation>>> ons = new HashMap<>();
+        // Contains all OFF events: hostname -> sequence identifier -> list of conversations with that sequence
+        Map<String, Map<String, List<Conversation>>> offs = new HashMap<>();
         userActionsToConvsByHostname.forEach((ua, hostnameToConvs) -> {
-            Map<String, Map<String, Integer>> outer = ua.getType() == Type.TOGGLE_ON ? ons : offs;
+            Map<String, Map<String, List<Conversation>>> outer = ua.getType() == Type.TOGGLE_ON ? ons : offs;
             hostnameToConvs.forEach((host, convs) -> {
-                Map<String, Integer> sequenceCounts = TcpConversationUtils.countPacketSequenceFrequencies(convs);
-                outer.merge(host, sequenceCounts, (existingMap, newMap) -> {
-                    newMap.forEach((sequence, count) -> existingMap.merge(sequence, count, (i1, i2) -> i1+i2));
-                    return existingMap;
+                Map<String, List<Conversation>> seqsToConvs = TcpConversationUtils.
+                        groupConversationsByPacketSequence(convs);
+                outer.merge(host, seqsToConvs, (oldMap, newMap) -> {
+                    newMap.forEach((sequence, cs) -> oldMap.merge(sequence, cs, (list1, list2) -> {
+                        list1.addAll(list2);
+                        return list1;
+                    }));
+                    return oldMap;
                 });
             });
         });
-
-
-//                    for (Map.Entry<String, Integer> newMapEntry : newMap.entrySet()) {
-//                        if (existingMap.get(newMapEntry.getKey()) != null) {
-//                            existingMap.put(newMapEntry.getKey(), existingMap.get(newMapEntry.getKey()) + newMapEntry.getValue());
-//                        } else {
-//                            existingMap.put(newMapEntry.getKey(), newMapEntry.getValue());
-//                        }
-//                    }
-//                    return existingMap;
 
         System.out.println("");
 
