@@ -41,13 +41,13 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+//        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
 
         // TP-Link July 25 experiment
-        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.pcap";
-        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
-        final String deviceIp = "192.168.1.159";
+//        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
+//        final String deviceIp = "192.168.1.159";
 
         // SmartThings Plug July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/stplug/stplug.wlan1.local.pcap";
@@ -72,6 +72,12 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
 //        final String deviceIp = "192.168.1.140";
+
+        // Kwikset Doorlock August 6 experiment
+        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
