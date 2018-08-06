@@ -14,11 +14,13 @@ RAN_END=200
 
 for ((i=$BEGIN; i<=$END; i+=$INC));
 do
+	
+	date +"%m/%d/%Y %r"
 	#./adb shell getevent -l - use this command to get the position
 	# TP-Link switch
 	#./adb shell input tap 1002 913
 	# TP-Link bulb on/off
-	./adb shell input tap 981 358
+	./adb shell input tap 994 560
 	# D-Link switch
 	#./adb shell input tap 987 346
 	# SmartThings
@@ -27,8 +29,16 @@ do
 	#./adb shell input tap 981 532
 	# WeMo Insight
 	#./adb shell input tap 981 326
+	# Kwikset doorlock
+	#if (( $i % 2 ))
+	#then
+		# locking
+	#	./adb shell input tap 153 1211
+	#else
+		# unlocking
+	#	./adb shell input tap 520 1211
+	#fi
 	#date +%r
-	date +"%m/%d/%Y %r"
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
 	#RAND=$[`jot -r 1 $RAN_STA $RAN_END`]
 	#echo "Delay: $RAND seconds"
