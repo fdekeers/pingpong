@@ -20,7 +20,7 @@ do
 	# TP-Link switch
 	#./adb shell input tap 1002 913
 	# TP-Link bulb on/off
-	./adb shell input tap 994 560
+	#./adb shell input tap 994 560
 	# D-Link switch
 	#./adb shell input tap 987 346
 	# SmartThings
@@ -38,6 +38,8 @@ do
 		# unlocking
 	#	./adb shell input tap 520 1211
 	#fi
+	# Hue bulb
+	./adb shell input tap 923 383
 	#date +%r
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
 	#RAND=$[`jot -r 1 $RAN_STA $RAN_END`]
