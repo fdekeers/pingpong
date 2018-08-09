@@ -79,11 +79,17 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
-        // Hue BULB August 1 experiment
-        final String inputPcapFile = path + "/2018-08/hue-bulb/hue-bulb.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/hue-bulb/hue-bulb-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/hue-bulb/hue-bulb-aug-7-2018.timestamps";
-        final String deviceIp = "192.168.1.246";
+        // Hue BULB August 7 experiment
+//        final String inputPcapFile = path + "/2018-08/hue-bulb/hue-bulb.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/hue-bulb/hue-bulb-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/hue-bulb/hue-bulb-aug-7-2018.timestamps";
+//        final String deviceIp = "192.168.1.246";
+
+        // Lifx BULB August 8 experiment
+        final String inputPcapFile = path + "/2018-08/lifx-bulb/lifx-bulb.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/lifx-bulb/lifx-bulb-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/lifx-bulb/lifx-bulb-aug-8-2018.timestamps";
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .231 == Lifx
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);

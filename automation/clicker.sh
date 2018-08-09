@@ -39,7 +39,20 @@ do
 	#	./adb shell input tap 520 1211
 	#fi
 	# Hue bulb
-	./adb shell input tap 923 383
+	#./adb shell input tap 923 383
+	# Lifx bulb
+	#./adb shell input tap 506 580
+	# Amcrest camera
+	if (( $i % 2 ))
+	then
+		# live view
+		./adb shell input tap 92 139
+		./adb shell input tap 92 139
+	else
+		# stop live view (go to playback)
+		./adb shell input tap 92 139
+		./adb shell input tap 92 250
+	fi
 	#date +%r
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
 	#RAND=$[`jot -r 1 $RAN_STA $RAN_END`]
