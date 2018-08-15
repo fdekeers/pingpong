@@ -43,15 +43,46 @@ do
 	# Lifx bulb
 	#./adb shell input tap 506 580
 	# Amcrest camera
-	if (( $i % 2 ))
-	then
+	#if (( $i % 2 ))
+	#then
 		# live view
-		./adb shell input tap 92 139
-		./adb shell input tap 92 139
-	else
+	#	./adb shell input tap 92 139
+	#	./adb shell input tap 92 139
+	#else
 		# stop live view (go to playback)
-		./adb shell input tap 92 139
-		./adb shell input tap 92 250
+	#	./adb shell input tap 92 139
+	#	./adb shell input tap 92 250
+	#fi
+	# Arlo camera
+	#if (( $i % 2 ))
+	#then
+		# live view
+	#	./adb shell input tap 532 740
+	#else
+		# stop live view
+	#	./adb shell input tap 101 1012
+	#fi
+	# Blossom
+	#if (( $i % 2 ))
+	#then
+		# start watering
+	#	./adb shell input tap 538 1597
+	#else
+		# stop watering
+	#	./adb shell input tap 496 1533
+	#fi
+	# Dlink siren
+	#./adb shell input tap 994 802
+	# Nest thermostat
+	if (( $i % 2))
+	then
+		# start fan
+		./adb shell input tap 524 1668
+		./adb shell input tap 936 1709
+	else
+		# stop fan
+		./adb shell input tap 524 1668
+		./adb shell input tap 679 1702
 	fi
 	#date +%r
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
