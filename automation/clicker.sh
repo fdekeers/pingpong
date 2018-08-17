@@ -74,16 +74,31 @@ do
 	# Dlink siren
 	#./adb shell input tap 994 802
 	# Nest thermostat
-	if (( $i % 2))
-	then
+	#if (( $i % 2 ))
+	#then
 		# start fan
-		./adb shell input tap 524 1668
-		./adb shell input tap 936 1709
-	else
+	#	./adb shell input tap 524 1668
+	#	./adb shell input tap 936 1709
+	#else
 		# stop fan
-		./adb shell input tap 524 1668
-		./adb shell input tap 679 1702
-	fi
+	#	./adb shell input tap 524 1668
+	#	./adb shell input tap 679 1702
+	#fi
+	# Alexa
+        if (( $i % 2 ))
+        then
+		# Using Google Translate and 
+		# 	having her speak to Alexa
+                # Question 1
+                ./adb shell input tap 907 145
+                ./adb shell input tap 543 692
+				./adb shell input tap 148 775
+        else
+                # Question 2
+                ./adb shell input tap 907 145
+                ./adb shell input tap 463 1668
+				./adb shell input tap 148 775
+        fi
 	#date +%r
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
 	#RAND=$[`jot -r 1 $RAN_STA $RAN_END`]
