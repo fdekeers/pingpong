@@ -64,12 +64,17 @@ public class Conversation {
     /**
      * List of SYN packets pertaining to this conversation.
      */
-    private List<PcapPacket> mSynPackets;
+    private final List<PcapPacket> mSynPackets;
 
     /**
      * List of pairs FINs and their corresponding ACKs associated with this conversation.
      */
-    private List<FinAckPair> mFinPackets;
+    private final List<FinAckPair> mFinPackets;
+
+    /**
+     * List of RST packets associated with this conversation.
+     */
+    private final List<PcapPacket> mRstPackets;
     /* End instance properties */
 
     /**
@@ -113,6 +118,7 @@ public class Conversation {
         this.mSeqNumbersSrv = new HashSet<>();
         this.mSynPackets = new ArrayList<>();
         this.mFinPackets = new ArrayList<>();
+        this.mRstPackets = new ArrayList<>();
     }
 
     /**
@@ -279,6 +285,37 @@ public class Conversation {
         //  The conversation has been gracefully shut down if we have recorded a FIN from both the client and the server which have both been ack'ed.
         return mFinPackets.stream().anyMatch(finAckPair -> finAckPair.isAcknowledged() && PcapPacketUtils.isSource(finAckPair.getFinPacket(), mClientIp, mClientPort)) &&
                 mFinPackets.stream().anyMatch(finAckPair -> finAckPair.isAcknowledged() && PcapPacketUtils.isSource(finAckPair.getFinPacket(), mServerIp, mServerPort));
+    }
+
+    /**
+     * Add a TCP segment for which the RST flag is set to this {@code Conversation}.
+     * @param packet A {@link PcapPacket} wrapping a TCP segment pertaining to this {@code Conversation} for which the
+     *               RST flag is set.
+     */
+    public void addRstPacket(PcapPacket packet) {
+        /*
+         * TODO:
+         * When now also keeping track of RST packets, should we also...?
+         * 1) Prevent later packets from being added once a RST segment has been added?
+         * 2) Extend 'isGracefullyShutdown()' to also consider RST segments, or add another method, 'isShutdown()' that
+         *    both considers FIN/ACK (graceful) as well as RST (abrupt/"ungraceful") shutdown?
+         * 3) Should it be impossible to associate more than one RST segment with each Conversation?
+         */
+        onAddPrecondition(packet);
+        TcpPacket tcpPacket = packet.get(TcpPacket.class);
+        if (tcpPacket == null || !tcpPacket.getHeader().getRst()) {
+            throw new IllegalArgumentException("not a RST packet");
+        }
+        mRstPackets.add(packet);
+    }
+
+    /**
+     * Get the TCP segments pertaining to this {@code Conversation} for which it was detected that the RST flag is set.
+     * @return the TCP segments pertaining to this {@code Conversation} for which it was detected that the RST flag is
+     *         set.
+     */
+    public List<PcapPacket> getRstPackets() {
+        return Collections.unmodifiableList(mRstPackets);
     }
 
     // =========================================================================================================
