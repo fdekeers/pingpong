@@ -370,7 +370,7 @@ public class Conversation {
             case SERVER_TO_CLIENT:
                 return mSeqNumbersSrv.contains(seqNo);
             default:
-                throw new RuntimeException(String.format("Unexpected value of enum '%s'",
+                throw new AssertionError(String.format("Unexpected value of enum '%s'",
                         Direction.class.getSimpleName()));
         }
     }
@@ -399,7 +399,7 @@ public class Conversation {
                 mSeqNumbersSrv.add(seqNo);
                 break;
             default:
-                throw new RuntimeException(String.format("Unexpected value of enum '%s'",
+                throw new AssertionError(String.format("Unexpected value of enum '%s'",
                         Direction.class.getSimpleName()));
         }
     }
