@@ -2,6 +2,7 @@ package edu.uci.iotproject.analysis;
 
 import edu.uci.iotproject.Conversation;
 import edu.uci.iotproject.DnsMap;
+import edu.uci.iotproject.FinAckPair;
 import edu.uci.iotproject.util.PcapPacketUtils;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
@@ -16,7 +17,6 @@ import java.util.*;
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class TcpConversationUtils {
-
 
     /**
      * <p>
@@ -157,12 +157,38 @@ public class TcpConversationUtils {
                 continue;
             }
             StringBuilder sb = new StringBuilder();
-            for (PcapPacket pp : conv.getPackets()) {
-                if (sb.length() != 0) {
-                    // only add a space if there's preceding content
-                    sb.append(" ");
+            // Add SYN and SYNACK at front of sequence to indicate if we saw the handshake or if recording started in
+            // the middle of the conversation.
+            for (PcapPacket syn : conv.getSynPackets()) {
+                TcpPacket.TcpHeader tcpHeader = syn.get(TcpPacket.class).getHeader();
+                if (tcpHeader.getSyn() && tcpHeader.getAck()) {
+                    // Only append a space if there's preceding content.
+                    appendSpaceIfNotEmpty(sb);
+                    sb.append("SYNACK");
+                } else if (tcpHeader.getSyn()) {
+                    if (sb.length() != 0) {
+                        // If present in the trace, the client's SYN should be at the front of the list, so it should be
+                        // appended as the first item.
+                        throw new AssertionError("StringBuilder had content when appending SYN");
+                    }
+                    sb.append("SYN");
                 }
-                sb.append(pp.length());
+            }
+            // Then append the length of all application data packets.
+            for (PcapPacket pp : conv.getPackets()) {
+                // Only append a space if there's preceding content.
+                appendSpaceIfNotEmpty(sb);
+                sb.append("(" + conv.getDirection(pp).toCompactString() + "_" + pp.length() + ")");
+            }
+            // Then append the logged FINs to indicate if conversation was terminated gracefully.
+            for (FinAckPair fap : conv.getFinAckPairs()) {
+                appendSpaceIfNotEmpty(sb);
+                sb.append(fap.isAcknowledged() ? "FINACK" : "FIN");
+            }
+            // Then append the logged RSTs to indicate if conversation was terminated abruptly.
+            for (PcapPacket pp : conv.getRstPackets()) {
+                appendSpaceIfNotEmpty(sb);
+                sb.append("RST");
             }
             List<Conversation> oneItemList = new ArrayList<>();
             oneItemList.add(conv);
@@ -227,5 +253,15 @@ public class TcpConversationUtils {
             result.put(entry.getKey(), countPacketPairFrequencies(allPairsExchangedWithHostname));
         }
         return result;
+    }
+
+    /**
+     * Appends a space to {@code sb} <em>iff</em> {@code sb} already contains some content.
+     * @param sb A {@link StringBuilder} that should have a space appended <em>iff</em> it is not empty.
+     */
+    private static void appendSpaceIfNotEmpty(StringBuilder sb) {
+        if (sb.length() != 0) {
+            sb.append(" ");
+        }
     }
 }
