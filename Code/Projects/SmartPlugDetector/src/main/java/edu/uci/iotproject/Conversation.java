@@ -442,11 +442,13 @@ public class Conversation {
     }
 
     /**
-     * Determine the direction of {@code packet}.
+     * Determine the direction of {@code packet}. An {@link IllegalArgumentException} is thrown if {@code packet} does
+     * not pertain to this conversation.
+     *
      * @param packet The packet whose direction is to be determined.
      * @return A {@link Direction} indicating the direction of the packet.
      */
-    private Direction getDirection(PcapPacket packet) {
+    public Direction getDirection(PcapPacket packet) {
         IpV4Packet ipPacket = packet.get(IpV4Packet.class);
         String ipSrc = ipPacket.getHeader().getSrcAddr().getHostAddress();
         String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
@@ -465,8 +467,28 @@ public class Conversation {
     /**
      * Utility enum for expressing the direction of a packet pertaining to this {@code Conversation}.
      */
-    private enum Direction {
-        CLIENT_TO_SERVER, SERVER_TO_CLIENT
+    public enum Direction {
+
+        CLIENT_TO_SERVER {
+            @Override
+            public String toCompactString() {
+                return "C->S";
+            }
+        },
+        SERVER_TO_CLIENT {
+            @Override
+            public String toCompactString() {
+                return "S->C";
+            }
+        };
+
+
+        /**
+         * Get a compact string representation of this {@code Direction}.
+         * @return a compact string representation of this {@code Direction}.
+         */
+        abstract public String toCompactString();
+
     }
 
 }
