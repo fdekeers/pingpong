@@ -98,10 +98,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .235 == camera
 
         // 11) Arlo Camera August 10 experiment
-//        final String inputPcapFile = path + "/2018-08/arlo-camera/arlo-camera.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-08/arlo-camera/arlo-camera-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-08/arlo-camera/arlo-camera-aug-10-2018.timestamps";
-//        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
+        final String inputPcapFile = path + "/2018-08/arlo-camera/arlo-camera.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/arlo-camera/arlo-camera-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/arlo-camera/arlo-camera-aug-10-2018.timestamps";
+        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
 
         // 12) Blossom sprinkler August 13 experiment
 //        final String inputPcapFile = path + "/2018-08/blossom/blossom.wlan1.local.pcap";
@@ -127,10 +127,10 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-16-2018.timestamps";
 //        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
         // August 17
-        final String inputPcapFile = path + "/2018-08/alexa/alexa2.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/alexa/alexa2-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-17-2018.timestamps";
-        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
+//        final String inputPcapFile = path + "/2018-08/alexa/alexa2.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/alexa/alexa2-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-17-2018.timestamps";
+//        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
