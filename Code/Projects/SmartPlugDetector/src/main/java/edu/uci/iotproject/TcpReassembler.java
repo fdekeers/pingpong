@@ -2,6 +2,7 @@ package edu.uci.iotproject;
 
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapPacket;
+import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
 import java.util.*;
@@ -148,13 +149,15 @@ public class TcpReassembler implements PacketListener {
         if (!conv.isRetransmission(srvSynPacket) && !conv.addSynPacket(srvSynPacket)) {
             // For safety/debugging: if NOT a retransmission and add fails,
             // something has gone terribly wrong/invariant is broken.
-            throw new IllegalStateException("Attempt to add SYN ACK packet that was NOT a retransmission failed." +
+            throw new AssertionError("Attempt to add SYN ACK packet that was NOT a retransmission failed." +
                     Conversation.class.getSimpleName() + " invariant broken.");
         }
     }
 
     private void processRstPacket(PcapPacket rstPacket) {
         Conversation conv = getOngoingConversationOrCreateNew(rstPacket);
+        // Add RST packet to conversation.
+        conv.addRstPacket(rstPacket);
         // Move conversation to set of terminated conversations.
         mTerminatedConversations.add(conv);
         mOpenConversations.remove(conv, conv);
@@ -219,7 +222,11 @@ public class TcpReassembler implements PacketListener {
                 conv = Conversation.fromPcapPacket(pcapPacket, false);
             } else {
                 // TODO: can we do anything else but arbitrarily select who is designated as the server in this case?
-                conv = Conversation.fromPcapPacket(pcapPacket, false);
+                // We can check if the IP prefix matches a local IP when handling traffic observed inside the local
+                // network, but that obviously won't be a useful strategy for an observer at the WAN port.
+                String srcIp = pcapPacket.get(IpV4Packet.class).getHeader().getSrcAddr().getHostAddress();
+                boolean clientIsSrc = srcIp.startsWith("10.0.1.") || srcIp.startsWith("192.168.1.");
+                conv = Conversation.fromPcapPacket(pcapPacket, clientIsSrc);
             }
             mOpenConversations.put(conv, conv);
         }

@@ -49,6 +49,14 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
 //        final String deviceIp = "192.168.1.159";
 
+        // 2b) TP-Link July 25 experiment TRUNCATED:
+        // Only contains "true local" events, i.e., before the behavior changes to remote-like behavior.
+        // Last included event is at July 25 10:38:11; file filtered to only include packets with arrival time <= 10:38:27.
+//        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.truncated.pcap";
+//        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.truncated.pcap";
+//        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.truncated.timestamps";
+//        final String deviceIp = "192.168.1.159";
+
         // 3) SmartThings Plug July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/stplug/stplug.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-07/stplug/stplug-processed.pcap";

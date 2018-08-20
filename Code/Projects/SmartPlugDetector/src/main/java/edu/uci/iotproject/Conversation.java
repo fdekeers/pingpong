@@ -64,12 +64,17 @@ public class Conversation {
     /**
      * List of SYN packets pertaining to this conversation.
      */
-    private List<PcapPacket> mSynPackets;
+    private final List<PcapPacket> mSynPackets;
 
     /**
      * List of pairs FINs and their corresponding ACKs associated with this conversation.
      */
-    private List<FinAckPair> mFinPackets;
+    private final List<FinAckPair> mFinPackets;
+
+    /**
+     * List of RST packets associated with this conversation.
+     */
+    private final List<PcapPacket> mRstPackets;
     /* End instance properties */
 
     /**
@@ -113,6 +118,7 @@ public class Conversation {
         this.mSeqNumbersSrv = new HashSet<>();
         this.mSynPackets = new ArrayList<>();
         this.mFinPackets = new ArrayList<>();
+        this.mRstPackets = new ArrayList<>();
     }
 
     /**
@@ -281,6 +287,37 @@ public class Conversation {
                 mFinPackets.stream().anyMatch(finAckPair -> finAckPair.isAcknowledged() && PcapPacketUtils.isSource(finAckPair.getFinPacket(), mServerIp, mServerPort));
     }
 
+    /**
+     * Add a TCP segment for which the RST flag is set to this {@code Conversation}.
+     * @param packet A {@link PcapPacket} wrapping a TCP segment pertaining to this {@code Conversation} for which the
+     *               RST flag is set.
+     */
+    public void addRstPacket(PcapPacket packet) {
+        /*
+         * TODO:
+         * When now also keeping track of RST packets, should we also...?
+         * 1) Prevent later packets from being added once a RST segment has been added?
+         * 2) Extend 'isGracefullyShutdown()' to also consider RST segments, or add another method, 'isShutdown()' that
+         *    both considers FIN/ACK (graceful) as well as RST (abrupt/"ungraceful") shutdown?
+         * 3) Should it be impossible to associate more than one RST segment with each Conversation?
+         */
+        onAddPrecondition(packet);
+        TcpPacket tcpPacket = packet.get(TcpPacket.class);
+        if (tcpPacket == null || !tcpPacket.getHeader().getRst()) {
+            throw new IllegalArgumentException("not a RST packet");
+        }
+        mRstPackets.add(packet);
+    }
+
+    /**
+     * Get the TCP segments pertaining to this {@code Conversation} for which it was detected that the RST flag is set.
+     * @return the TCP segments pertaining to this {@code Conversation} for which it was detected that the RST flag is
+     *         set.
+     */
+    public List<PcapPacket> getRstPackets() {
+        return Collections.unmodifiableList(mRstPackets);
+    }
+
     // =========================================================================================================
     // We simply reuse equals and hashCode methods of String.class to be able to use this class as a key
     // in a Map.
@@ -370,7 +407,7 @@ public class Conversation {
             case SERVER_TO_CLIENT:
                 return mSeqNumbersSrv.contains(seqNo);
             default:
-                throw new RuntimeException(String.format("Unexpected value of enum '%s'",
+                throw new AssertionError(String.format("Unexpected value of enum '%s'",
                         Direction.class.getSimpleName()));
         }
     }
@@ -399,17 +436,19 @@ public class Conversation {
                 mSeqNumbersSrv.add(seqNo);
                 break;
             default:
-                throw new RuntimeException(String.format("Unexpected value of enum '%s'",
+                throw new AssertionError(String.format("Unexpected value of enum '%s'",
                         Direction.class.getSimpleName()));
         }
     }
 
     /**
-     * Determine the direction of {@code packet}.
+     * Determine the direction of {@code packet}. An {@link IllegalArgumentException} is thrown if {@code packet} does
+     * not pertain to this conversation.
+     *
      * @param packet The packet whose direction is to be determined.
      * @return A {@link Direction} indicating the direction of the packet.
      */
-    private Direction getDirection(PcapPacket packet) {
+    public Direction getDirection(PcapPacket packet) {
         IpV4Packet ipPacket = packet.get(IpV4Packet.class);
         String ipSrc = ipPacket.getHeader().getSrcAddr().getHostAddress();
         String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
@@ -428,8 +467,28 @@ public class Conversation {
     /**
      * Utility enum for expressing the direction of a packet pertaining to this {@code Conversation}.
      */
-    private enum Direction {
-        CLIENT_TO_SERVER, SERVER_TO_CLIENT
+    public enum Direction {
+
+        CLIENT_TO_SERVER {
+            @Override
+            public String toCompactString() {
+                return "C->S";
+            }
+        },
+        SERVER_TO_CLIENT {
+            @Override
+            public String toCompactString() {
+                return "S->C";
+            }
+        };
+
+
+        /**
+         * Get a compact string representation of this {@code Direction}.
+         * @return a compact string representation of this {@code Direction}.
+         */
+        abstract public String toCompactString();
+
     }
 
 }
