@@ -256,6 +256,21 @@ public class TcpConversationUtils {
     }
 
     /**
+     * Given a {@link Conversation}, extract its packet length sequence.
+     * @param c The {@link Conversation} from which a packet length sequence is to be extracted.
+     * @return An {@code Integer[]} that holds the packet lengths of all payload-carrying packets in {@code c}. The
+     *         packet lengths in the returned array are ordered by packet timestamp.
+     */
+    public static Integer[] getPacketLengthSequence(Conversation c) {
+        List<PcapPacket> packets = c.getPackets();
+        Integer[] packetLengthSequence = new Integer[packets.size()];
+        for (int i = 0; i < packetLengthSequence.length; i++) {
+            packetLengthSequence[i] = packets.get(i).getOriginalLength();
+        }
+        return packetLengthSequence;
+    }
+
+    /**
      * Appends a space to {@code sb} <em>iff</em> {@code sb} already contains some content.
      * @param sb A {@link StringBuilder} that should have a space appended <em>iff</em> it is not empty.
      */
