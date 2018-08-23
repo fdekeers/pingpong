@@ -27,21 +27,21 @@ range_n_clusters = [2, 3, 4, 5, 6]
 
 for n_clusters in range_n_clusters:
     # Create a subplot with 1 row and 2 columns
-#    fig, (ax1, ax2) = plt.subplots(1, 2)
-#    fig.set_size_inches(18, 7)
+    fig, (ax1, ax2) = plt.subplots(1, 2)
+    fig.set_size_inches(18, 7)
 
     # The 1st subplot is the silhouette plot
     # The silhouette coefficient can range from -1, 1 but in this example all
     # lie within [-0.1, 1]
-#    ax1.set_xlim([-0.1, 1])
+    ax1.set_xlim([-0.1, 1])
     # The (n_clusters+1)*10 is for inserting blank space between silhouette
     # plots of individual clusters, to demarcate them clearly.
-#    ax1.set_ylim([0, len(X) + (n_clusters + 1) * 10])
+    ax1.set_ylim([0, len(X) + (n_clusters + 1) * 10])
 
     # Initialize the clusterer with n_clusters value and a random generator
     # seed of 10 for reproducibility.
-#    clusterer = KMeans(n_clusters=n_clusters, random_state=20)
-#    cluster_labels = clusterer.fit_predict(X)
+    clusterer = KMeans(n_clusters=n_clusters, random_state=10)
+    cluster_labels = clusterer.fit_predict(X)
 
     # The silhouette_score gives the average value for all the samples.
     # This gives a perspective into the density and separation of the formed
@@ -53,7 +53,7 @@ for n_clusters in range_n_clusters:
     # Compute the silhouette scores for each sample
     sample_silhouette_values = silhouette_samples(X, cluster_labels)
 
-'''    y_lower = 10
+    y_lower = 10
     for i in range(n_clusters):
         # Aggregate the silhouette scores for samples belonging to
         # cluster i, and sort them
