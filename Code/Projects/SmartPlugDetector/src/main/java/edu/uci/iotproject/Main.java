@@ -38,10 +38,10 @@ public class Main {
         //String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
 
         // 1) D-Link July 26 experiment
-//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-//        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
+        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
+        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -106,10 +106,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .235 == camera
 
         // 11) Arlo Camera August 10 experiment
-        final String inputPcapFile = path + "/2018-08/arlo-camera/arlo-camera.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/arlo-camera/arlo-camera-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/arlo-camera/arlo-camera-aug-10-2018.timestamps";
-        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
+//        final String inputPcapFile = path + "/2018-08/arlo-camera/arlo-camera.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/arlo-camera/arlo-camera-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/arlo-camera/arlo-camera-aug-10-2018.timestamps";
+//        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
 
         // 12) Blossom sprinkler August 13 experiment
 //        final String inputPcapFile = path + "/2018-08/blossom/blossom.wlan1.local.pcap";
@@ -121,7 +121,7 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
-//        final String deviceIp = "192.168.1.183"; // .246 == phone; .183 == siren
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .183 == siren
 
         // 14) Nest thermostat August 15 experiment
 //        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";
