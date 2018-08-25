@@ -3,6 +3,7 @@ package edu.uci.iotproject;
 import edu.uci.iotproject.util.PcapPacketUtils;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
+import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
 
 import java.util.*;
@@ -46,6 +47,12 @@ public class Conversation {
      * The list of packets (with payload) pertaining to this conversation.
      */
     private final List<PcapPacket> mPackets;
+
+    /**
+     * If {@link #isTls()} is {@code true}, this list contains the subset of {@link #mPackets} which are TLS Application
+     * Data packets.
+     */
+    private final List<PcapPacket> mTlsApplicationDataPackets;
 
     /**
      * Contains the sequence numbers used thus far by the host that is considered the <em>client</em> in this
@@ -114,6 +121,7 @@ public class Conversation {
         this.mServerIp = serverIp;
         this.mServerPort = serverPort;
         this.mPackets = new ArrayList<>();
+        this.mTlsApplicationDataPackets = new ArrayList<>();
         this.mSeqNumbersClient = new HashSet<>();
         this.mSeqNumbersSrv = new HashSet<>();
         this.mSynPackets = new ArrayList<>();
@@ -149,6 +157,21 @@ public class Conversation {
                 else if (o2.getTimestamp().isBefore(o1.getTimestamp())) { return 1; }
                 else { return 0; }
             });
+        }
+        // If TLS, inspect packet to see if it's a TLS Application Data packet, and if so add it to the list of TLS
+        // Application Data packets.
+        if (isTls()) {
+            TcpPacket tcpPacket = packet.get(TcpPacket.class);
+            Packet tcpPayload = tcpPacket.getPayload();
+            if (tcpPayload == null) {
+                return;
+            }
+            byte[] rawPayload = tcpPayload.getRawData();
+            // The SSL record header is at the front of the payload and is 5 bytes long.
+            // The SSL record header type field (the first byte) is set to 23 if it is an Application Data packet.
+            if (rawPayload != null && rawPayload.length >= 5 && rawPayload[0] == 23) {
+                mTlsApplicationDataPackets.add(packet);
+            }
         }
     }
 
@@ -410,6 +433,45 @@ public class Conversation {
                 throw new AssertionError(String.format("Unexpected value of enum '%s'",
                         Direction.class.getSimpleName()));
         }
+    }
+
+    /**
+     * <p>
+     *     Is this {@code Conversation} a TLS session?
+     * </p>
+     *
+     * <em>Note: the current implementation simply examines the port number(s) for 443; it does <b>not</b> verify if the
+     * application data is indeed encrypted.</em>
+     *
+     * @return {@code true} if this {@code Conversation} is interpreted as a TLS session, {@code false} otherwise.
+     */
+    public boolean isTls() {
+        /*
+         * TODO:
+         * - may want to change this to be "return mServerPort == 443 || mClientPort == 443;" in order to also detect
+         *   TLS in those cases where it is not possible to correctly label who is the client and who is the server,
+         *   i.e., when the trace does not contain the SYN/SYNACK exchange.
+         * - current implementation relies on the server using the conventional TLS port number; may instead want to
+         *   inspect the first 4 bytes of each potential TLS packet to see if they match the SSL record header.
+         */
+        return mServerPort == 443;
+    }
+
+    /**
+     * If this {@code Conversation} is backing a TLS session (i.e., if the value of {@link #isTls()} is {@code true}),
+     * get the packets labeled as TLS Application Data packets. This is a subset of the full set of payload-carrying
+     * packets (as returned by {@link #getPackets()}). An exception is thrown if this method is invoked on a
+     * {@code Conversation} for which {@link #isTls()} returns {@code false}.
+     *
+     * @return A list containing exactly those packets that could be identified as TLS Application Data packets (through
+     *         inspecting of the SSL record header). The list may be empty, if no TLS application data packets have been
+     *         recorded for this {@code Conversation}.
+     */
+    public List<PcapPacket> getTlsApplicationDataPackets() {
+        if (!isTls()) {
+            throw new NoSuchElementException("cannot get TLS Application Data packets for non-TLS TCP conversation");
+        }
+        return Collections.unmodifiableList(mTlsApplicationDataPackets);
     }
 
     /**
