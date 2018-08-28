@@ -14,6 +14,8 @@ import org.pcap4j.core.*;
 import org.pcap4j.packet.namednumber.DataLinkType;
 
 import java.io.EOFException;
+import java.io.File;
+import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.*;
@@ -39,13 +41,15 @@ public class Main {
         // which traffic is to be extracted:
         String path = "/scratch/July-2018"; // Rahmadi
 //        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
-        boolean verbose = true;
+        boolean verbose = false;
+        final String onPairsPath = "/scratch/July-2018/on.txt";
+        final String offPairsPath = "/scratch/July-2018/off.txt";
 
         // 1) D-Link July 26 experiment
-//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
+        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -68,10 +72,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // 4) Wemo July 30 experiment
-        final String inputPcapFile = path + "/2018-07/wemo/wemo.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-07/wemo/wemo-processed.pcap";
-        final String triggerTimesFile = path + "/2018-07/wemo/wemo-july-30-2018.timestamps";
-        final String deviceIp = "192.168.1.145";
+//        final String inputPcapFile = path + "/2018-07/wemo/wemo.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-07/wemo/wemo-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-07/wemo/wemo-july-30-2018.timestamps";
+//        final String deviceIp = "192.168.1.145";
 
         // 5) Wemo Insight July 31 experiment
 //        final String inputPcapFile = path + "/2018-07/wemoinsight/wemoinsight.wlan1.local.pcap";
@@ -234,43 +238,129 @@ public class Main {
             });
         }
 
+        // Print out all the pairs into a file for ON events
+        File fileOnEvents = new File(onPairsPath);
+        PrintWriter pwOn = null;
+        try {
+            pwOn = new PrintWriter(fileOnEvents);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        for(Map.Entry<String, Map<String, List<Conversation>>> entry : ons.entrySet()) {
+            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
+            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
+                List<Conversation> listConv = entryConv.getValue();
+                // Just get the first Conversation because all Conversations in this group
+                // should have the same pairs of Application Data.
+                for(Conversation conv : listConv) {
+                    // Process only if it is a TLS packet
+                    if (conv.isTls()) {
+                        List<PcapPacket> tlsAppDataList = conv.getTlsApplicationDataPackets();
+                        // Loop and print out packets
+                        int count = 0;
+                        for (PcapPacket pcap : tlsAppDataList) {
+                            boolean isPair = false;
+                            if (count % 2 == 0) {
+                                pwOn.print(pcap.length() + ", ");
+                                //System.out.print(pcap.length() + ", ");
+                            } else {// count%2 == 1
+                                isPair = true;
+                                pwOn.println(pcap.length());
+                                //System.out.println(pcap.length());
+                            }
+                            count++;
+                            // If we can't create a pair then just pad it with 0
+                            if (count == tlsAppDataList.size() && !isPair) {
+                                pwOn.println("0");
+                                //System.out.println("0");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        pwOn.close();
+
+        // Print out all the pairs into a file for ON events
+        File fileOffEvents = new File(offPairsPath);
+        PrintWriter pwOff = null;
+        try {
+            pwOff = new PrintWriter(fileOffEvents);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        for(Map.Entry<String, Map<String, List<Conversation>>> entry : offs.entrySet()) {
+            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
+            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
+                List<Conversation> listConv = entryConv.getValue();
+                // Just get the first Conversation because all Conversations in this group
+                // should have the same pairs of Application Data.
+                for(Conversation conv : listConv) {
+                    // Process only if it is a TLS packet
+                    if (conv.isTls()) {
+                        List<PcapPacket> tlsAppDataList = conv.getTlsApplicationDataPackets();
+                        // Loop and print out packets
+                        int count = 0;
+                        for (PcapPacket pcap : tlsAppDataList) {
+                            boolean isPair = false;
+                            if (count % 2 == 0) {
+                                pwOff.print(pcap.length() + ", ");
+                                //System.out.print(pcap.length() + ", ");
+                            } else {// count%2 == 1
+                                isPair = true;
+                                pwOff.println(pcap.length());
+                                //System.out.println(pcap.length());
+                            }
+                            count++;
+                            // If we can't create a pair then just pad it with 0
+                            if (count == tlsAppDataList.size() && !isPair) {
+                                pwOff.println("0");
+                                //System.out.println("0");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        pwOff.close();
+
         // ================================================================================================
         // <<< Some work-in-progress/explorative code that extracts a "representative" sequence >>>
         //
         // Currently need to know relevant hostname in advance :(
         String hostname = "events.tplinkra.com";
         // Conversations with 'hostname' for ON events.
-        List<Conversation> onsForHostname = new ArrayList<>();
-        // Conversations with 'hostname' for OFF events.
-        List<Conversation> offsForHostname = new ArrayList<>();
-        // "Unwrap" sequence groupings in ons/offs maps.
-        ons.get(hostname).forEach((k,v) -> onsForHostname.addAll(v));
-        offs.get(hostname).forEach((k,v) -> offsForHostname.addAll(v));
-        // Extract representative sequence for ON and OFF by providing the list of conversations with
-        // 'hostname' observed for each event type (the training data).
-        SequenceExtraction seqExtraction = new SequenceExtraction();
-        ExtractedSequence extractedSequenceForOn = seqExtraction.extract(onsForHostname);
-        ExtractedSequence extractedSequenceForOff = seqExtraction.extract(offsForHostname);
-        // Let's check how many ONs align with OFFs and vice versa (that is, how many times an event is incorrectly
-        // labeled).
-        int onsLabeledAsOff = 0;
-        Integer[] representativeOnSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOn.getRepresentativeSequence());
-        Integer[] representativeOffSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOff.getRepresentativeSequence());
-        SequenceAlignment<Integer> seqAlg = seqExtraction.getAlignmentAlgorithm();
-        for (Conversation c : onsForHostname) {
-            Integer[] onSeq = TcpConversationUtils.getPacketLengthSequence(c);
-            if (seqAlg.calculateAlignment(representativeOffSeq, onSeq) <= extractedSequenceForOff.getMaxAlignmentCost()) {
-                onsLabeledAsOff++;
-            }
-        }
-        int offsLabeledAsOn = 0;
-        for (Conversation c : offsForHostname) {
-            Integer[] offSeq = TcpConversationUtils.getPacketLengthSequence(c);
-            if (seqAlg.calculateAlignment(representativeOnSeq, offSeq) <= extractedSequenceForOn.getMaxAlignmentCost()) {
-                offsLabeledAsOn++;
-            }
-        }
-        System.out.println("");
+//        List<Conversation> onsForHostname = new ArrayList<>();
+//        // Conversations with 'hostname' for OFF events.
+//        List<Conversation> offsForHostname = new ArrayList<>();
+//        // "Unwrap" sequence groupings in ons/offs maps.
+//        ons.get(hostname).forEach((k,v) -> onsForHostname.addAll(v));
+//        offs.get(hostname).forEach((k,v) -> offsForHostname.addAll(v));
+//        // Extract representative sequence for ON and OFF by providing the list of conversations with
+//        // 'hostname' observed for each event type (the training data).
+//        SequenceExtraction seqExtraction = new SequenceExtraction();
+//        ExtractedSequence extractedSequenceForOn = seqExtraction.extract(onsForHostname);
+//        ExtractedSequence extractedSequenceForOff = seqExtraction.extract(offsForHostname);
+//        // Let's check how many ONs align with OFFs and vice versa (that is, how many times an event is incorrectly
+//        // labeled).
+//        int onsLabeledAsOff = 0;
+//        Integer[] representativeOnSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOn.getRepresentativeSequence());
+//        Integer[] representativeOffSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOff.getRepresentativeSequence());
+//        SequenceAlignment<Integer> seqAlg = seqExtraction.getAlignmentAlgorithm();
+//        for (Conversation c : onsForHostname) {
+//            Integer[] onSeq = TcpConversationUtils.getPacketLengthSequence(c);
+//            if (seqAlg.calculateAlignment(representativeOffSeq, onSeq) <= extractedSequenceForOff.getMaxAlignmentCost()) {
+//                onsLabeledAsOff++;
+//            }
+//        }
+//        int offsLabeledAsOn = 0;
+//        for (Conversation c : offsForHostname) {
+//            Integer[] offSeq = TcpConversationUtils.getPacketLengthSequence(c);
+//            if (seqAlg.calculateAlignment(representativeOnSeq, offSeq) <= extractedSequenceForOn.getMaxAlignmentCost()) {
+//                offsLabeledAsOn++;
+//            }
+//        }
+//        System.out.println("");
         // ================================================================================================
 
 
