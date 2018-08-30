@@ -12,7 +12,7 @@ fig.set_size_inches(7, 7)
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
 path = "/scratch/July-2018/Pairs/"
-filename = "dlink-off.txt"
+filename = "alexa-off.txt"
 
 # Read and create an array of pairs
 with open(path + filename, "r") as pairs:
@@ -27,7 +27,7 @@ with open(path + filename, "r") as pairs:
 #print(pairsArr)
 X = np.array(pairsArr);
 
-clusters = 9
+clusters = 25
 
 # Plot the data points based on the clusters
 clusterer = KMeans(n_clusters=clusters, random_state=10)
@@ -43,6 +43,7 @@ centers = clusterer.cluster_centers_
 for i, c in enumerate(centers):
 	mark = '[' + str(int(c[0])) + ', ' + str(int(c[1])) + ']' + ', ' + str(clusterer.labels_.tolist().count(i))
 	ax2.scatter(c[0], c[1], marker='$%s$' % mark, alpha=1, s=3000, edgecolor='k')
+	print('[' + str(int(c[0])) + ', ' + str(int(c[1])) + ']' + ', ' + str(clusterer.labels_.tolist().count(i)))
 
 ax2.set_title("The visualization of the clustered data.")
 ax2.set_xlabel("Feature space for the 1st feature")

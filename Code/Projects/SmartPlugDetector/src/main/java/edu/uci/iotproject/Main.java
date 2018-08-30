@@ -46,10 +46,10 @@ public class Main {
         final String offPairsPath = "/scratch/July-2018/off.txt";
 
         // 1) D-Link July 26 experiment
-        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
-        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -87,7 +87,7 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
-//        final String deviceIp = "192.168.1.140";
+//        final String deviceIp = "192.168.1.246";
 
         // 7) Kwikset Doorlock August 6 experiment
 //        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
@@ -105,7 +105,7 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-08/lifx-bulb/lifx-bulb.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/lifx-bulb/lifx-bulb-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/lifx-bulb/lifx-bulb-aug-8-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .231 == Lifx
+//        final String deviceIp = "192.168.1.231"; // .246 == phone; .231 == Lifx
 
         // 10) Amcrest Camera August 9 experiment
 //        final String inputPcapFile = path + "/2018-08/amcrest-camera/amcrest-camera.wlan1.local.pcap";
@@ -123,7 +123,7 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-08/blossom/blossom.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/blossom/blossom-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/blossom/blossom-aug-13-2018.timestamps";
-//        final String deviceIp = "192.168.1.229"; // .246 == phone; .229 == sprinkler
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
 
         // 13) DLink siren August 14 experiment
 //        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
@@ -138,10 +138,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .127 == Nest thermostat
 
         // 15) Alexa August 16 experiment
-//        final String inputPcapFile = path + "/2018-08/alexa/alexa.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-08/alexa/alexa-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-16-2018.timestamps";
-//        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
+        final String inputPcapFile = path + "/2018-08/alexa/alexa.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/alexa/alexa-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-16-2018.timestamps";
+        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
         // August 17
 //        final String inputPcapFile = path + "/2018-08/alexa/alexa2.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/alexa/alexa2-processed.pcap";

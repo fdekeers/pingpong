@@ -82,6 +82,11 @@ public class Conversation {
      * List of RST packets associated with this conversation.
      */
     private final List<PcapPacket> mRstPackets;
+
+    /**
+     * Boolean to mark the packet as Application Data based on the previous packet that reaches MTU
+     */
+    private boolean mApplicationData;
     /* End instance properties */
 
     /**
@@ -127,6 +132,7 @@ public class Conversation {
         this.mSynPackets = new ArrayList<>();
         this.mFinPackets = new ArrayList<>();
         this.mRstPackets = new ArrayList<>();
+        this.mApplicationData = false;
     }
 
     /**
@@ -169,8 +175,28 @@ public class Conversation {
             byte[] rawPayload = tcpPayload.getRawData();
             // The SSL record header is at the front of the payload and is 5 bytes long.
             // The SSL record header type field (the first byte) is set to 23 if it is an Application Data packet.
-            if (rawPayload != null && rawPayload.length >= 5 && rawPayload[0] == 23) {
-                mTlsApplicationDataPackets.add(packet);
+            if (rawPayload != null && rawPayload.length >= 5) {
+                if (rawPayload[0] == 23) {
+                    mTlsApplicationDataPackets.add(packet);
+                    // Consider the following packet a data packet if this packet's size == MTU size 1448
+                    if (rawPayload.length >= 1448)
+                        mApplicationData = true;
+                } else if (rawPayload[0] == 20) {
+                    // Do nothing for now - CHANGE_CIPHER_SPEC
+                } else if (rawPayload[0] == 21) {
+                    // Do nothing for now - ALERT
+                } else if (rawPayload[0] == 22) {
+                    // Do nothing for now - HANDSHAKE
+                } else {
+                    // If it is TLS with payload, but rawPayload[0] != 23
+                    if (mApplicationData == true) {
+                        // It is a continuation of the previous packet if the previous packet reaches MTU size 1448 and
+                        // it is not either type 20, 21, or 22
+                        mTlsApplicationDataPackets.add(packet);
+                        if (rawPayload.length < 1448)
+                            mApplicationData = false;
+                    }
+                }
             }
         }
     }
