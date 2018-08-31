@@ -12,7 +12,7 @@ fig.set_size_inches(7, 7)
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
 path = "/scratch/July-2018/Pairs/"
-filename = "alexa-off.txt"
+filename = "dlink-off.txt"
 
 # Read and create an array of pairs
 with open(path + filename, "r") as pairs:
@@ -27,14 +27,14 @@ with open(path + filename, "r") as pairs:
 #print(pairsArr)
 X = np.array(pairsArr);
 
-clusters = 25
+clusters = 6
 
 # Plot the data points based on the clusters
 clusterer = KMeans(n_clusters=clusters, random_state=10)
 cluster_labels = clusterer.fit_predict(X)
 # 2nd Plot showing the actual clusters formed
 colors = cm.nipy_spectral(cluster_labels.astype(float) / clusters)
-ax2.scatter(X[:, 0], X[:, 1], marker='o', s=100, lw=0, alpha=0.3,
+ax2.scatter(X[:, 0], X[:, 1], marker='o', s=50, lw=0, alpha=0.3,
             c=colors, edgecolor='k')
 
 # Labeling the clusters
