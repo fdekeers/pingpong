@@ -84,10 +84,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.135";
 
         // 6) TP-Link Bulb August 1 experiment
-//        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
-//        final String deviceIp = "192.168.1.246";
+        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
+        final String deviceIp = "192.168.1.246";
 
         // 7) Kwikset Doorlock August 6 experiment
 //        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
@@ -138,10 +138,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .127 == Nest thermostat
 
         // 15) Alexa August 16 experiment
-        final String inputPcapFile = path + "/2018-08/alexa/alexa.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/alexa/alexa-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-16-2018.timestamps";
-        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
+//        final String inputPcapFile = path + "/2018-08/alexa/alexa.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/alexa/alexa-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-16-2018.timestamps";
+//        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
         // August 17
 //        final String inputPcapFile = path + "/2018-08/alexa/alexa2.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/alexa/alexa2-processed.pcap";
