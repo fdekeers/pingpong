@@ -13,7 +13,7 @@ fig.set_size_inches(7, 7)
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
 path = "/scratch/July-2018/Pairs/"
-device = "dlink-off"
+device = "dlink-siren-on"
 filename = device + ".txt"
 
 # Number of triggers
@@ -62,7 +62,7 @@ for k, col in zip(unique_labels, colors):
 
     xy = X[class_member_mask & core_samples_mask]
     plt.plot(xy[:, 0], xy[:, 1], 'o',
-             markeredgecolor='k', markersize=14)
+             markeredgecolor='k', markersize=10)
 
     xy = X[class_member_mask & ~core_samples_mask]
     plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col),
