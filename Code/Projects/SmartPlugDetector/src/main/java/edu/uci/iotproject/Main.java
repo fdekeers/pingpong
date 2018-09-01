@@ -238,6 +238,7 @@ public class Main {
             });
         }
 
+
         // Print out all the pairs into a file for ON events
         File fileOnEvents = new File(onPairsPath);
         PrintWriter pwOn = null;
@@ -324,43 +325,54 @@ public class Main {
         }
         pwOff.close();
 
+
         // ================================================================================================
         // <<< Some work-in-progress/explorative code that extracts a "representative" sequence >>>
         //
         // Currently need to know relevant hostname in advance :(
-        String hostname = "events.tplinkra.com";
+//        String hostname = "events.tplinkra.com";
+        String hostname = "rfe-us-west-1.dch.dlink.com";
         // Conversations with 'hostname' for ON events.
-//        List<Conversation> onsForHostname = new ArrayList<>();
-//        // Conversations with 'hostname' for OFF events.
-//        List<Conversation> offsForHostname = new ArrayList<>();
-//        // "Unwrap" sequence groupings in ons/offs maps.
-//        ons.get(hostname).forEach((k,v) -> onsForHostname.addAll(v));
-//        offs.get(hostname).forEach((k,v) -> offsForHostname.addAll(v));
-//        // Extract representative sequence for ON and OFF by providing the list of conversations with
-//        // 'hostname' observed for each event type (the training data).
-//        SequenceExtraction seqExtraction = new SequenceExtraction();
+        List<Conversation> onsForHostname = new ArrayList<>();
+        // Conversations with 'hostname' for OFF events.
+        List<Conversation> offsForHostname = new ArrayList<>();
+        // "Unwrap" sequence groupings in ons/offs maps.
+        ons.get(hostname).forEach((k,v) -> onsForHostname.addAll(v));
+        offs.get(hostname).forEach((k,v) -> offsForHostname.addAll(v));
+
+
+        Map<String, List<Conversation>> onsForHostnameGroupedByTlsAppDataSequence = TcpConversationUtils.groupConversationsByTlsApplicationDataPacketSequence(onsForHostname);
+
+
+        // Extract representative sequence for ON and OFF by providing the list of conversations with
+        // 'hostname' observed for each event type (the training data).
+        SequenceExtraction seqExtraction = new SequenceExtraction();
 //        ExtractedSequence extractedSequenceForOn = seqExtraction.extract(onsForHostname);
 //        ExtractedSequence extractedSequenceForOff = seqExtraction.extract(offsForHostname);
-//        // Let's check how many ONs align with OFFs and vice versa (that is, how many times an event is incorrectly
-//        // labeled).
-//        int onsLabeledAsOff = 0;
-//        Integer[] representativeOnSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOn.getRepresentativeSequence());
-//        Integer[] representativeOffSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOff.getRepresentativeSequence());
-//        SequenceAlignment<Integer> seqAlg = seqExtraction.getAlignmentAlgorithm();
-//        for (Conversation c : onsForHostname) {
-//            Integer[] onSeq = TcpConversationUtils.getPacketLengthSequence(c);
-//            if (seqAlg.calculateAlignment(representativeOffSeq, onSeq) <= extractedSequenceForOff.getMaxAlignmentCost()) {
-//                onsLabeledAsOff++;
-//            }
-//        }
-//        int offsLabeledAsOn = 0;
-//        for (Conversation c : offsForHostname) {
-//            Integer[] offSeq = TcpConversationUtils.getPacketLengthSequence(c);
-//            if (seqAlg.calculateAlignment(representativeOnSeq, offSeq) <= extractedSequenceForOn.getMaxAlignmentCost()) {
-//                offsLabeledAsOn++;
-//            }
-//        }
-//        System.out.println("");
+
+        ExtractedSequence extractedSequenceForOn = seqExtraction.extractByTlsAppData(onsForHostname);
+        ExtractedSequence extractedSequenceForOff = seqExtraction.extractByTlsAppData(offsForHostname);
+
+        // Let's check how many ONs align with OFFs and vice versa (that is, how many times an event is incorrectly
+        // labeled).
+        int onsLabeledAsOff = 0;
+        Integer[] representativeOnSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOn.getRepresentativeSequence());
+        Integer[] representativeOffSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOff.getRepresentativeSequence());
+        SequenceAlignment<Integer> seqAlg = seqExtraction.getAlignmentAlgorithm();
+        for (Conversation c : onsForHostname) {
+            Integer[] onSeq = TcpConversationUtils.getPacketLengthSequence(c);
+            if (seqAlg.calculateAlignment(representativeOffSeq, onSeq) <= extractedSequenceForOff.getMaxAlignmentCost()) {
+                onsLabeledAsOff++;
+            }
+        }
+        int offsLabeledAsOn = 0;
+        for (Conversation c : offsForHostname) {
+            Integer[] offSeq = TcpConversationUtils.getPacketLengthSequence(c);
+            if (seqAlg.calculateAlignment(representativeOnSeq, offSeq) <= extractedSequenceForOn.getMaxAlignmentCost()) {
+                offsLabeledAsOn++;
+            }
+        }
+        System.out.println("");
         // ================================================================================================
 
 

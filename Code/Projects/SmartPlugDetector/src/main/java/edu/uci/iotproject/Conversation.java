@@ -479,8 +479,10 @@ public class Conversation {
          *   i.e., when the trace does not contain the SYN/SYNACK exchange.
          * - current implementation relies on the server using the conventional TLS port number; may instead want to
          *   inspect the first 4 bytes of each potential TLS packet to see if they match the SSL record header.
+         *
+         * 08/31/18: Added unconvetional TLS ports used by WeMo plugs and LiFX bulb.
          */
-        return mServerPort == 443;
+        return mServerPort == 443 || mServerPort == 8443 || mServerPort == 41143;
     }
 
     /**

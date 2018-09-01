@@ -9,6 +9,7 @@ import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Utility functions for analyzing and structuring (sets of) {@link Conversation}s.
@@ -242,6 +243,13 @@ public class TcpConversationUtils {
         return result;
     }
 
+    public static Map<String, List<Conversation>> groupConversationsByTlsApplicationDataPacketSequence(Collection<Conversation> conversations) {
+        return conversations.stream().collect(Collectors.groupingBy(
+                c -> c.getTlsApplicationDataPackets().stream().map(p -> Integer.toString(p.getOriginalLength())).
+                        reduce("", (s1, s2) -> s1.length() == 0 ? s2 : s1 + " " + s2))
+        );
+    }
+
     /**
      * Given a {@link Conversation}, counts the frequencies of each unique packet length seen as part of the
      * {@code Conversation}.
@@ -304,13 +312,34 @@ public class TcpConversationUtils {
      *         packet lengths in the returned array are ordered by packet timestamp.
      */
     public static Integer[] getPacketLengthSequence(Conversation c) {
-        List<PcapPacket> packets = c.getPackets();
-        Integer[] packetLengthSequence = new Integer[packets.size()];
-        for (int i = 0; i < packetLengthSequence.length; i++) {
-            packetLengthSequence[i] = packets.get(i).getOriginalLength();
-        }
-        return packetLengthSequence;
+        return getPacketLengthSequence(c.getPackets());
     }
+
+
+    /**
+     * Given a {@link Conversation}, extract its packet length sequence, but only include packet lengths of those
+     * packets that carry TLS Application Data.
+     * @param c The {@link Conversation} from which a TLS Application Data packet length sequence is to be extracted.
+     * @return An {@code Integer[]} that holds the packet lengths of all packets in {@code c} that carry TLS Application
+     *         Data. The packet lengths in the returned array are ordered by packet timestamp.
+     */
+    public static Integer[] getPacketLengthSequenceTlsAppDataOnly(Conversation c) {
+        if (!c.isTls()) {
+            throw new IllegalArgumentException("Provided " + c.getClass().getSimpleName() + " was not a TLS session");
+        }
+        return getPacketLengthSequence(c.getTlsApplicationDataPackets());
+    }
+
+    /**
+     * Given a list of packets, extract the packet lengths and wrap them in an array such that the packet lengths in the
+     * resulting array appear in the same order as their corresponding packets in the input list.
+     * @param packets The list of packets for which the packet lengths are to be extracted.
+     * @return An array containing the packet lengths in the same order as their corresponding packets in the input list.
+     */
+    private static Integer[] getPacketLengthSequence(List<PcapPacket> packets) {
+        return packets.stream().map(pkt -> pkt.getOriginalLength()).toArray(Integer[]::new);
+    }
+
 
     /**
      * Appends a space to {@code sb} <em>iff</em> {@code sb} already contains some content.
