@@ -81,7 +81,7 @@ public class SequenceExtraction {
         // as it can potentially result in sequences that are equal in terms of payload packets to be considered
         // different due to differences in how they are terminated.
         Map<String, List<Conversation>> groupedBySequence =
-                TcpConversationUtils.groupConversationsByPacketSequence(convsForActionForHostname);
+                TcpConversationUtils.groupConversationsByPacketSequence(convsForActionForHostname, false);
 
         // Then get a hold of one of the conversations that gave rise to the most frequent sequence.
         Conversation mostFrequentConv = null;

@@ -2,7 +2,6 @@ package edu.uci.iotproject.analysis;
 
 import edu.uci.iotproject.Conversation;
 import edu.uci.iotproject.DnsMap;
-import edu.uci.iotproject.FinAckPair;
 import edu.uci.iotproject.util.PcapPacketUtils;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
@@ -10,6 +9,9 @@ import org.pcap4j.packet.TcpPacket;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static edu.uci.iotproject.util.PcapPacketUtils.*;
 
 /**
  * Utility functions for analyzing and structuring (sets of) {@link Conversation}s.
@@ -139,108 +141,22 @@ public class TcpConversationUtils {
      * (i.e., the set of packets returned by {@link Conversation#getPackets()}) separated by a delimiter</em> of any
      * {@link Conversation} pointed to by that key. In other words, what the {@link Conversation}s {@code cs} pointed to
      * by the key {@code s} have in common is that they all contain exactly the same number of payload packets <em>and
-     * </em> these payload packets are identical across all {@code Conversation}s in {@code convs} in terms of packet
-     * length and packet order. For example, if the key is "152 440 550", this means that every individual
-     * {@code Conversation} in the list of {@code Conversation}s pointed to by that key contain exactly three payload
-     * packet of lengths 152, 440, and 550, and these three packets are ordered in the order prescribed by the key.
-     * This verbose version prints out the SYNACK, SYN, FINACK, FIN, RST, etc. packets.
-     *
-     * @param conversations The collection of {@code Conversation}s to group by packet sequence.
-     * @return a {@link Map} from {@link String} to {@link List} of {@link Conversation}s such that each key is the
-     *         <em>concatenation of the packet lengths of all payload packets (i.e., the set of packets returned by
-     *         {@link Conversation#getPackets()}) separated by a delimiter</em> of any {@link Conversation} pointed to
-     *         by that key.
-     */
-    public static Map<String, List<Conversation>> groupConversationsByPacketSequenceVerbose(Collection<Conversation> conversations) {
-        Map<String, List<Conversation>> result = new HashMap<>();
-        for (Conversation conv : conversations) {
-            if (conv.getPackets().size() == 0) {
-                // Skip conversations with no payload packets.
-                continue;
-            }
-            StringBuilder sb = new StringBuilder();
-            // Add SYN and SYNACK at front of sequence to indicate if we saw the handshake or if recording started in
-            // the middle of the conversation.
-            for (PcapPacket syn : conv.getSynPackets()) {
-                TcpPacket.TcpHeader tcpHeader = syn.get(TcpPacket.class).getHeader();
-                if (tcpHeader.getSyn() && tcpHeader.getAck()) {
-                    // Only append a space if there's preceding content.
-                    appendSpaceIfNotEmpty(sb);
-                    sb.append("SYNACK");
-                } else if (tcpHeader.getSyn()) {
-                    if (sb.length() != 0) {
-                        // If present in the trace, the client's SYN should be at the front of the list, so it should be
-                        // appended as the first item.
-                        throw new AssertionError("StringBuilder had content when appending SYN");
-                    }
-                    sb.append("SYN");
-                }
-            }
-            // Then append the length of all application data packets.
-            for (PcapPacket pp : conv.getPackets()) {
-                // Only append a space if there's preceding content.
-                appendSpaceIfNotEmpty(sb);
-                sb.append("(" + conv.getDirection(pp).toCompactString() + "_" + pp.length() + ")");
-            }
-            // Then append the logged FINs to indicate if conversation was terminated gracefully.
-            for (FinAckPair fap : conv.getFinAckPairs()) {
-                appendSpaceIfNotEmpty(sb);
-                sb.append(fap.isAcknowledged() ? "FINACK" : "FIN");
-            }
-            // Then append the logged RSTs to indicate if conversation was terminated abruptly.
-            for (PcapPacket pp : conv.getRstPackets()) {
-                appendSpaceIfNotEmpty(sb);
-                sb.append("RST");
-            }
-            List<Conversation> oneItemList = new ArrayList<>();
-            oneItemList.add(conv);
-            result.merge(sb.toString(), oneItemList, (oldList, newList) -> {
-                oldList.addAll(newList);
-                return oldList;
-            });
-        }
-        return result;
-    }
-
-    /**
-     * Given a {@link Collection} of {@link Conversation}s, builds a {@link Map} from {@link String} to {@link List}
-     * of {@link Conversation}s such that each key is the <em>concatenation of the packet lengths of all payload packets
-     * (i.e., the set of packets returned by {@link Conversation#getPackets()}) separated by a delimiter</em> of any
-     * {@link Conversation} pointed to by that key. In other words, what the {@link Conversation}s {@code cs} pointed to
-     * by the key {@code s} have in common is that they all contain exactly the same number of payload packets <em>and
-     * </em> these payload packets are identical across all {@code Conversation}s in {@code convs} in terms of packet
+     * </em> these payload packets are identical across all {@code Conversation}s in {@code cs} in terms of packet
      * length and packet order. For example, if the key is "152 440 550", this means that every individual
      * {@code Conversation} in the list of {@code Conversation}s pointed to by that key contain exactly three payload
      * packet of lengths 152, 440, and 550, and these three packets are ordered in the order prescribed by the key.
      *
      * @param conversations The collection of {@code Conversation}s to group by packet sequence.
+     * @param verbose If set to {@code true}, the grouping (and therefore the key) will also include SYN/SYNACK,
+     *                FIN/FINACK, RST packets, and each payload-carrying packet will have an indication of the direction
+     *                of the packet prepended.
      * @return a {@link Map} from {@link String} to {@link List} of {@link Conversation}s such that each key is the
      *         <em>concatenation of the packet lengths of all payload packets (i.e., the set of packets returned by
      *         {@link Conversation#getPackets()}) separated by a delimiter</em> of any {@link Conversation} pointed to
      *         by that key.
      */
-    public static Map<String, List<Conversation>> groupConversationsByPacketSequence(Collection<Conversation> conversations) {
-        Map<String, List<Conversation>> result = new HashMap<>();
-        for (Conversation conv : conversations) {
-            if (conv.getPackets().size() == 0) {
-                // Skip conversations with no payload packets.
-                continue;
-            }
-            StringBuilder sb = new StringBuilder();
-            // Then append the length of all application data packets.
-            for (PcapPacket pp : conv.getPackets()) {
-                // Only append a space if there's preceding content.
-                appendSpaceIfNotEmpty(sb);
-                sb.append(pp.length());
-            }
-            List<Conversation> oneItemList = new ArrayList<>();
-            oneItemList.add(conv);
-            result.merge(sb.toString(), oneItemList, (oldList, newList) -> {
-                oldList.addAll(newList);
-                return oldList;
-            });
-        }
-        return result;
+    public static Map<String, List<Conversation>> groupConversationsByPacketSequence(Collection<Conversation> conversations, boolean verbose) {
+        return conversations.stream().collect(Collectors.groupingBy(c -> toSequenceString(c, verbose)));
     }
 
     public static Map<String, List<Conversation>> groupConversationsByTlsApplicationDataPacketSequence(Collection<Conversation> conversations) {
@@ -340,6 +256,33 @@ public class TcpConversationUtils {
         return packets.stream().map(pkt -> pkt.getOriginalLength()).toArray(Integer[]::new);
     }
 
+    /**
+     * Builds a string representation of the sequence of packets exchanged as part of {@code c}.
+     * @param c The {@link Conversation} for which a string representation of the packet sequence is to be constructed.
+     * @param verbose {@code true} if set to true, the returned sequence string will also include SYN/SYNACK,
+     *                FIN/FINACK, RST packets, as well as an indication of the direction of payload-carrying packets.
+     * @return a string representation of the sequence of packets exchanged as part of {@code c}.
+     */
+    private static String toSequenceString(Conversation c, boolean verbose) {
+        // Payload-parrying packets are always included, but only prepend direction if verbose output is chosen.
+        Stream<String> s = c.getPackets().stream().map(p -> verbose ? c.getDirection(p).toCompactString() + p.getOriginalLength() : Integer.toString(p.getOriginalLength()));
+        if (verbose) {
+            // In the verbose case, we also print SYN, FIN and RST packets.
+            // Convert the SYN packets to a string representation and prepend them in front of the payload packets.
+            s = Stream.concat(c.getSynPackets().stream().map(p -> isSyn(p) && isAck(p) ? "SYNACK" : "SYN"), s);
+            // Convert the FIN packets to a string representation and append them after the payload packets.
+            s = Stream.concat(s, c.getFinAckPairs().stream().map(f -> f.isAcknowledged() ? "FINACK" : "FIN"));
+            // Convert the RST packets to a string representation and append at the end.
+            s = Stream.concat(s, c.getRstPackets().stream().map(r -> "RST"));
+        }
+        /*
+         * Note: the collector internally uses a StringBuilder, which is more efficient than simply doing string
+         * concatenation as in the following example:
+         * s.reduce("", (s1, s2) -> s1.length() == 0 ? s2 : s1 + " " + s2);
+         * (above code is O(N^2) where N is the number of characters)
+         */
+        return s.collect(Collectors.joining(" "));
+    }
 
     /**
      * Appends a space to {@code sb} <em>iff</em> {@code sb} already contains some content.
