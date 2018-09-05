@@ -7,7 +7,7 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.Objects;
 
 /**
- * Utility methods for inspecting {@link PcapPacket} properties. Currently not used.
+ * Utility methods for inspecting {@link PcapPacket} properties.
  *
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
@@ -44,6 +44,28 @@ public final class PcapPacketUtils {
         String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
         int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
         return ipDst.equals(ip) && dstPort == port;
+    }
+
+    /**
+     * Checks if {@code packet} wraps a TCP packet that has the SYN flag set.
+     * @param packet A {@link PcapPacket} that is suspected to contain a {@link TcpPacket} for which the SYN flag is set.
+     * @return {@code true} <em>iff</em> {@code packet} contains a {@code TcpPacket} for which the SYN flag is set,
+     *         {@code false} otherwise.
+     */
+    public static boolean isSyn(PcapPacket packet) {
+        TcpPacket tcp = packet.get(TcpPacket.class);
+        return tcp != null && tcp.getHeader().getSyn();
+    }
+
+    /**
+     * Checks if {@code packet} wraps a TCP packet that has the ACK flag set.
+     * @param packet A {@link PcapPacket} that is suspected to contain a {@link TcpPacket} for which the ACK flag is set.
+     * @return {@code true} <em>iff</em> {@code packet} contains a {@code TcpPacket} for which the ACK flag is set,
+     *         {@code false} otherwise.
+     */
+    public static boolean isAck(PcapPacket packet) {
+        TcpPacket tcp = packet.get(TcpPacket.class);
+        return tcp != null && tcp.getHeader().getAck();
     }
 
 }

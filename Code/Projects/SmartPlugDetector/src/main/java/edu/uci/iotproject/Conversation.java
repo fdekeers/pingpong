@@ -562,16 +562,15 @@ public class Conversation {
         CLIENT_TO_SERVER {
             @Override
             public String toCompactString() {
-                return "C->S";
+                return "*";
             }
         },
         SERVER_TO_CLIENT {
             @Override
             public String toCompactString() {
-                return "S->C";
+                return "";
             }
         };
-
 
         /**
          * Get a compact string representation of this {@code Direction}.
