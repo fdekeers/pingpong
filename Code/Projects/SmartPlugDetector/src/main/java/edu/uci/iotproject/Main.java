@@ -52,10 +52,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
-//        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
-//        final String deviceIp = "192.168.1.159";
+        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.pcap";
+        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
+        final String deviceIp = "192.168.1.159";
 
         // 2b) TP-Link July 25 experiment TRUNCATED:
         // Only contains "true local" events, i.e., before the behavior changes to remote-like behavior.
@@ -84,10 +84,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.135";
 
         // 6) TP-Link Bulb August 1 experiment
-        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
-        final String deviceIp = "192.168.1.246";
+//        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
+//        final String deviceIp = "192.168.1.246";
 
         // 7) Kwikset Doorlock August 6 experiment
 //        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
@@ -259,21 +259,55 @@ public class Main {
                         List<PcapPacket> tlsAppDataList = conv.getTlsApplicationDataPackets();
                         // Loop and print out packets
                         int count = 0;
+                        // The direction of the first packet
+                        Conversation.Direction firstDir = null;
+                        // The length of the first packet
+                        int firstLen = 0;
                         for (PcapPacket pcap : tlsAppDataList) {
                             boolean isPair = false;
                             if (count % 2 == 0) {
-                                pwOn.print(pcap.length() + ", ");
-                                //System.out.print(pcap.length() + ", ");
+                                firstDir = conv.getDirection(pcap);
+                                firstLen = pcap.length();
                             } else {// count%2 == 1
-                                isPair = true;
-                                pwOn.println(pcap.length());
-                                //System.out.println(pcap.length());
+                                if(conv.getDirection(pcap) != firstDir) {
+                                    isPair = true;
+                                    pwOn.println(firstLen + ", " + pcap.length());
+                                    //System.out.println(firstDir + ", " + conv.getDirection(pcap));
+                                    //System.out.println(firstLen + ", " + pcap.length());
+                                }
                             }
                             count++;
                             // If we can't create a pair then just pad it with 0
                             if (count == tlsAppDataList.size() && !isPair) {
-                                pwOn.println("0");
-                                //System.out.println("0");
+                                pwOn.println(firstLen + ", 0");
+                            }
+                        }
+                    } else { // Non-TLS conversations
+                        List<PcapPacket> packetList = conv.getPackets();
+                        // Loop and print out packets
+                        int count = 0;
+                        // The direction of the first packet
+                        Conversation.Direction firstDir = null;
+                        // The length of the first packet
+                        int firstLen = 0;
+                        for (PcapPacket pcap : packetList) {
+                            System.out.println(pcap.length() + ", " + conv.getDirection(pcap));
+                            boolean isPair = false;
+                            if (count % 2 == 0) {
+                                firstDir = conv.getDirection(pcap);
+                                firstLen = pcap.length();
+                            } else {// count%2 == 1
+                                if(conv.getDirection(pcap) != firstDir) {
+                                    isPair = true;
+                                    pwOn.println(firstLen + ", " + pcap.length());
+                                    //System.out.println(firstDir + ", " + conv.getDirection(pcap));
+                                    //System.out.println(firstLen + ", " + pcap.length());
+                                }
+                            }
+                            count++;
+                            // If we can't create a pair then just pad it with 0
+                            if (count == packetList.size() && !isPair) {
+                                pwOn.println(firstLen + ", 0");
                             }
                         }
                     }
@@ -302,21 +336,56 @@ public class Main {
                         List<PcapPacket> tlsAppDataList = conv.getTlsApplicationDataPackets();
                         // Loop and print out packets
                         int count = 0;
+                        // The direction of the first packet
+                        Conversation.Direction firstDir = null;
+                        // The length of the first packet
+                        int firstLen = 0;
                         for (PcapPacket pcap : tlsAppDataList) {
                             boolean isPair = false;
                             if (count % 2 == 0) {
-                                pwOff.print(pcap.length() + ", ");
-                                //System.out.print(pcap.length() + ", ");
+                                firstDir = conv.getDirection(pcap);
+                                firstLen = pcap.length();
                             } else {// count%2 == 1
-                                isPair = true;
-                                pwOff.println(pcap.length());
-                                //System.out.println(pcap.length());
+                                if(conv.getDirection(pcap) != firstDir) {
+                                    isPair = true;
+                                    pwOff.println(firstLen + ", " + pcap.length());
+                                    System.out.println(firstDir + ", " + conv.getDirection(pcap));
+                                    System.out.println(firstLen + ", " + pcap.length());
+                                }
                             }
                             count++;
                             // If we can't create a pair then just pad it with 0
                             if (count == tlsAppDataList.size() && !isPair) {
-                                pwOff.println("0");
-                                //System.out.println("0");
+                                pwOff.println(firstLen + ", 0");
+                            }
+
+                        }
+                    } else { // Non-TLS conversations
+                        List<PcapPacket> packetList = conv.getPackets();
+                        // Loop and print out packets
+                        int count = 0;
+                        // The direction of the first packet
+                        Conversation.Direction firstDir = null;
+                        // The length of the first packet
+                        int firstLen = 0;
+                        for (PcapPacket pcap : packetList) {
+                            System.out.println(pcap.length() + ", " + conv.getDirection(pcap));
+                            boolean isPair = false;
+                            if (count % 2 == 0) {
+                                firstDir = conv.getDirection(pcap);
+                                firstLen = pcap.length();
+                            } else {// count%2 == 1
+                                if(conv.getDirection(pcap) != firstDir) {
+                                    isPair = true;
+                                    pwOff.println(firstLen + ", " + pcap.length());
+                                    System.out.println(firstDir + ", " + conv.getDirection(pcap));
+                                    System.out.println(firstLen + ", " + pcap.length());
+                                }
+                            }
+                            count++;
+                            // If we can't create a pair then just pad it with 0
+                            if (count == packetList.size() && !isPair) {
+                                pwOff.println(firstLen + ", 0");
                             }
                         }
                     }
@@ -331,48 +400,48 @@ public class Main {
         //
         // Currently need to know relevant hostname in advance :(
 //        String hostname = "events.tplinkra.com";
-        String hostname = "rfe-us-west-1.dch.dlink.com";
-        // Conversations with 'hostname' for ON events.
-        List<Conversation> onsForHostname = new ArrayList<>();
-        // Conversations with 'hostname' for OFF events.
-        List<Conversation> offsForHostname = new ArrayList<>();
-        // "Unwrap" sequence groupings in ons/offs maps.
-        ons.get(hostname).forEach((k,v) -> onsForHostname.addAll(v));
-        offs.get(hostname).forEach((k,v) -> offsForHostname.addAll(v));
-
-
-        Map<String, List<Conversation>> onsForHostnameGroupedByTlsAppDataSequence = TcpConversationUtils.groupConversationsByTlsApplicationDataPacketSequence(onsForHostname);
-
-
-        // Extract representative sequence for ON and OFF by providing the list of conversations with
-        // 'hostname' observed for each event type (the training data).
-        SequenceExtraction seqExtraction = new SequenceExtraction();
-//        ExtractedSequence extractedSequenceForOn = seqExtraction.extract(onsForHostname);
-//        ExtractedSequence extractedSequenceForOff = seqExtraction.extract(offsForHostname);
-
-        ExtractedSequence extractedSequenceForOn = seqExtraction.extractByTlsAppData(onsForHostname);
-        ExtractedSequence extractedSequenceForOff = seqExtraction.extractByTlsAppData(offsForHostname);
-
-        // Let's check how many ONs align with OFFs and vice versa (that is, how many times an event is incorrectly
-        // labeled).
-        int onsLabeledAsOff = 0;
-        Integer[] representativeOnSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOn.getRepresentativeSequence());
-        Integer[] representativeOffSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOff.getRepresentativeSequence());
-        SequenceAlignment<Integer> seqAlg = seqExtraction.getAlignmentAlgorithm();
-        for (Conversation c : onsForHostname) {
-            Integer[] onSeq = TcpConversationUtils.getPacketLengthSequence(c);
-            if (seqAlg.calculateAlignment(representativeOffSeq, onSeq) <= extractedSequenceForOff.getMaxAlignmentCost()) {
-                onsLabeledAsOff++;
-            }
-        }
-        int offsLabeledAsOn = 0;
-        for (Conversation c : offsForHostname) {
-            Integer[] offSeq = TcpConversationUtils.getPacketLengthSequence(c);
-            if (seqAlg.calculateAlignment(representativeOnSeq, offSeq) <= extractedSequenceForOn.getMaxAlignmentCost()) {
-                offsLabeledAsOn++;
-            }
-        }
-        System.out.println("");
+//        String hostname = "rfe-us-west-1.dch.dlink.com";
+//        // Conversations with 'hostname' for ON events.
+//        List<Conversation> onsForHostname = new ArrayList<>();
+//        // Conversations with 'hostname' for OFF events.
+//        List<Conversation> offsForHostname = new ArrayList<>();
+//        // "Unwrap" sequence groupings in ons/offs maps.
+//        ons.get(hostname).forEach((k,v) -> onsForHostname.addAll(v));
+//        offs.get(hostname).forEach((k,v) -> offsForHostname.addAll(v));
+//
+//
+//        Map<String, List<Conversation>> onsForHostnameGroupedByTlsAppDataSequence = TcpConversationUtils.groupConversationsByTlsApplicationDataPacketSequence(onsForHostname);
+//
+//
+//        // Extract representative sequence for ON and OFF by providing the list of conversations with
+//        // 'hostname' observed for each event type (the training data).
+//        SequenceExtraction seqExtraction = new SequenceExtraction();
+////        ExtractedSequence extractedSequenceForOn = seqExtraction.extract(onsForHostname);
+////        ExtractedSequence extractedSequenceForOff = seqExtraction.extract(offsForHostname);
+//
+//        ExtractedSequence extractedSequenceForOn = seqExtraction.extractByTlsAppData(onsForHostname);
+//        ExtractedSequence extractedSequenceForOff = seqExtraction.extractByTlsAppData(offsForHostname);
+//
+//        // Let's check how many ONs align with OFFs and vice versa (that is, how many times an event is incorrectly
+//        // labeled).
+//        int onsLabeledAsOff = 0;
+//        Integer[] representativeOnSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOn.getRepresentativeSequence());
+//        Integer[] representativeOffSeq = TcpConversationUtils.getPacketLengthSequence(extractedSequenceForOff.getRepresentativeSequence());
+//        SequenceAlignment<Integer> seqAlg = seqExtraction.getAlignmentAlgorithm();
+//        for (Conversation c : onsForHostname) {
+//            Integer[] onSeq = TcpConversationUtils.getPacketLengthSequence(c);
+//            if (seqAlg.calculateAlignment(representativeOffSeq, onSeq) <= extractedSequenceForOff.getMaxAlignmentCost()) {
+//                onsLabeledAsOff++;
+//            }
+//        }
+//        int offsLabeledAsOn = 0;
+//        for (Conversation c : offsForHostname) {
+//            Integer[] offSeq = TcpConversationUtils.getPacketLengthSequence(c);
+//            if (seqAlg.calculateAlignment(representativeOnSeq, offSeq) <= extractedSequenceForOn.getMaxAlignmentCost()) {
+//                offsLabeledAsOn++;
+//            }
+//        }
+//        System.out.println("");
         // ================================================================================================
 
 
