@@ -12,8 +12,8 @@ fig.set_size_inches(7, 7)
 # Read from file
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
-path = "/scratch/July-2018/Pairs/"
-device = "dlink-siren-on"
+path = "/scratch/July-2018/Pairs2/"
+device = "kwikset-off"
 filename = device + ".txt"
 
 # Number of triggers
@@ -73,9 +73,13 @@ for pair in pairsArr:
 	#if labels[count] != -1:
 	# If this is not a noise (i.e.,real data)
 	#	plt.text(pair[0], pair[1], "Freq: " + str(labels.tolist().count(labels[count])), fontsize=10)
-	
-	plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
-		"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
+
+	if labels[count] == -1:
+		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]), fontsize=10)
+	else:
+	# Only print the frequency when this is a real cluster
+		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
+			"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
 	count = count + 1
 
 	

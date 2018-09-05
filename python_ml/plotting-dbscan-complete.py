@@ -12,9 +12,9 @@ fig.set_size_inches(7, 7)
 # Read from file
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
-path = "/scratch/July-2018/Pairs/"
-device1 = "tplink-bulb-on"
-device2 = "tplink-bulb-off"
+path = "/scratch/July-2018/Pairs2/"
+device1 = "kwikset-on"
+device2 = "kwikset-off"
 filename1 = device1 + ".txt"
 filename2 = device2 + ".txt"
 
@@ -55,8 +55,8 @@ colors = [plt.cm.Spectral(each)
 	      for each in np.linspace(0, 1, len(unique_labels))]
 for k, col in zip(unique_labels, colors):
 	if k == -1:
-	    # Black used for noise.
-	    col = [0, 0, 0, 1]
+	    # Red used for noise.
+	    col = [1, 0, 0, 1]
 
 	class_member_mask = (labels == k)
 
@@ -71,8 +71,12 @@ for k, col in zip(unique_labels, colors):
 
 count = 0
 for pair in pairsArr:
-	plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
-		"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
+	if labels[count] == -1:
+		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]), fontsize=10)
+	else:
+	# Only print the frequency when this is a real cluster
+		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
+			"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
 	count = count + 1
 
 #====================================================================================================
@@ -113,8 +117,8 @@ colors = [plt.cm.Spectral(each)
 	      for each in np.linspace(0, 1, len(unique_labels))]
 for k, col in zip(unique_labels, colors):
 	if k == -1:
-	    # Black used for noise.
-	    col = [0, 0, 0, 1]
+	    # Green used for noise.
+	    col = [0, 1, 0, 1]
 
 	class_member_mask = (labels == k)
 
@@ -129,13 +133,17 @@ for k, col in zip(unique_labels, colors):
 
 count = 0
 for pair in pairsArr:
-	plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
-		"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
+	if labels[count] == -1:
+		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]), fontsize=10)
+	else:
+	# Only print the frequency when this is a real cluster
+		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
+			"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
 	count = count + 1
 
 
 	
-plt.title(device1 + ' & ' + device2 + ' - Estimated number of clusters: %d' % n_clusters_)
+plt.title(device1 + ' & ' + device2)
 plt.show()
 
 
