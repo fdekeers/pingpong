@@ -13,8 +13,8 @@ fig.set_size_inches(7, 7)
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
 path = "/scratch/July-2018/Pairs2/"
-device1 = "kwikset-on"
-device2 = "kwikset-off"
+device1 = "alexa2-on"
+device2 = "alexa2-off"
 filename1 = device1 + ".txt"
 filename2 = device2 + ".txt"
 
@@ -38,7 +38,7 @@ X = np.array(pairsArr);
 # Compute DBSCAN
 # eps = distances
 # min_samples = minimum number of members of a cluster
-db = DBSCAN(eps=30, min_samples=trig - 5).fit(X)
+db = DBSCAN(eps=10, min_samples=trig - 5).fit(X)
 core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
 core_samples_mask[db.core_sample_indices_] = True
 labels = db.labels_
@@ -76,7 +76,7 @@ for pair in pairsArr:
 	else:
 	# Only print the frequency when this is a real cluster
 		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
-			"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
+			"\nFreq:" + str(labels.tolist().count(labels[count])), fontsize=10)
 	count = count + 1
 
 #====================================================================================================
@@ -138,7 +138,7 @@ for pair in pairsArr:
 	else:
 	# Only print the frequency when this is a real cluster
 		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
-			"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
+			"\nFreq:" + str(labels.tolist().count(labels[count])), fontsize=10)
 	count = count + 1
 
 
