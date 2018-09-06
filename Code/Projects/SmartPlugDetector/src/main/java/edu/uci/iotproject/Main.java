@@ -49,7 +49,7 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+//        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -87,7 +87,7 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
-//        final String deviceIp = "192.168.1.246";
+//        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == TP-Link bulb
 
         // 7) Kwikset Doorlock August 6 experiment
 //        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
@@ -143,10 +143,10 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-16-2018.timestamps";
 //        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
         // August 17
-        final String inputPcapFile = path + "/2018-08/alexa/alexa2.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/alexa/alexa2-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-17-2018.timestamps";
-        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
+//        final String inputPcapFile = path + "/2018-08/alexa/alexa2.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/alexa/alexa2-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-17-2018.timestamps";
+//        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
