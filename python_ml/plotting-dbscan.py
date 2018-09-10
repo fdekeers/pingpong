@@ -13,8 +13,10 @@ fig.set_size_inches(7, 7)
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
 path = "/scratch/July-2018/Pairs2/"
-device = "alexa2-off"
+device = "dlink-siren-device-off"
 filename = device + ".txt"
+plt.ylim(0, 2000)
+plt.xlim(0, 2000)
 
 # Number of triggers
 trig = 50
@@ -35,7 +37,9 @@ X = np.array(pairsArr);
 # Compute DBSCAN
 # eps = distances
 # min_samples = minimum number of members of a cluster
-db = DBSCAN(eps=20, min_samples=trig - 5).fit(X)
+#db = DBSCAN(eps=20, min_samples=trig - 5).fit(X)
+# TODO: This is just for seeing more clusters
+db = DBSCAN(eps=20, min_samples=trig - 45).fit(X)
 core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
 core_samples_mask[db.core_sample_indices_] = True
 labels = db.labels_
@@ -43,13 +47,13 @@ labels = db.labels_
 # Number of clusters in labels, ignoring noise if present.
 n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 
-print('Estimated number of clusters: %d' % n_clusters_)
+#print('Estimated number of clusters: %d' % n_clusters_)
 
 import matplotlib.pyplot as plt
 
 # Black removed and is used for noise instead.
 unique_labels = set(labels)
-print("Labels: " + str(labels))
+#print("Labels: " + str(labels))
 
 colors = [plt.cm.Spectral(each)
           for each in np.linspace(0, 1, len(unique_labels))]
@@ -79,11 +83,11 @@ for pair in pairsArr:
 	else:
 	# Only print the frequency when this is a real cluster
 		plt.text(pair[0], pair[1], str(pair[0]) + ", " + str(pair[1]) + 
-			"\nFreq: " + str(labels.tolist().count(labels[count])), fontsize=10)
+			" - Freq: " + str(labels.tolist().count(labels[count])), fontsize=10)
 	count = count + 1
 
 	
-plt.title(device + ' - Estimated number of clusters: %d' % n_clusters_)
+plt.title(device + ' - Clusters: %d' % n_clusters_)
 plt.show()
 
 
