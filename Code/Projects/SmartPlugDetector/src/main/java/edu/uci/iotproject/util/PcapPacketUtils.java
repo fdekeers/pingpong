@@ -15,6 +15,17 @@ import java.util.Objects;
 public final class PcapPacketUtils {
 
     /**
+     * Gets the source IP (in decimal format) of an IPv4 packet.
+     * @param packet The packet for which the IPv4 source address is to be extracted.
+     * @return The decimal representation of the source IP of {@code packet} <em>iff</em> {@code packet} wraps an
+     *         {@link IpV4Packet}, otherwise {@code null}.
+     */
+    public static String getSourceIp(PcapPacket packet) {
+        IpV4Packet ipPacket = packet.get(IpV4Packet.class);
+        return ipPacket == null ? null : ipPacket.getHeader().getSrcAddr().getHostAddress();
+    }
+
+    /**
      * Helper method to determine if the given combination of IP and port matches the source of the given packet.
      * @param packet The packet to check.
      * @param ip The IP to look for in the ip.src field of {@code packet}.

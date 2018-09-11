@@ -3,9 +3,10 @@ package edu.uci.iotproject.analysis;
 import org.pcap4j.core.PcapPacket;
 
 /**
- * TODO add class documentation.
+ * A simple wrapper for holding a pair of packets (e.g., a request and associated reply packet).
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class PcapPacketPair {
 
@@ -24,6 +25,7 @@ public class PcapPacketPair {
 
     @Override
     public String toString() {
-        return getFirst().length() + ", "  + (getSecond() == null ? "null" : getSecond().length());
+        return getFirst().getOriginalLength() + ", "  + (getSecond() == null ? "null" : getSecond().getOriginalLength());
     }
+
 }

@@ -24,17 +24,43 @@ public class TcpConversationUtils {
     /**
      * <p>
      *      Given a {@link Conversation}, extract its set of "packet pairs", i.e., pairs of request-reply packets.
+     *      <em>The extracted pairs are formed from the full set of payload-carrying TCP packets.</em>
      * </p>
      *
      * <b>Note:</b> in the current implementation, if one endpoint sends multiple packets back-to-back with no
      * interleaved reply packets from the other endpoint, such packets are converted to one-item pairs (i.e., instances
-     * of {@lin PcapPacketPair} where {@link PcapPacketPair#getSecond()} is {@code null}).
+     * of {@link PcapPacketPair} where {@link PcapPacketPair#getSecond()} is {@code null}).
      *
      * @param conv The {@code Conversation} for which packet pairs are to be extracted.
      * @return The packet pairs extracted from {@code conv}.
      */
     public static List<PcapPacketPair> extractPacketPairs(Conversation conv) {
-        List<PcapPacket> packets = conv.getPackets();
+        return extractPacketPairs(conv.getPackets());
+    }
+
+
+    /**
+     * <p>
+     *      Given a {@link Conversation}, extract its set of "packet pairs", i.e., pairs of request-reply packets.
+     *      <em>The extracted pairs are formed from the full set of TLS Application Data packets.</em>
+     * </p>
+     *
+     * <b>Note:</b> in the current implementation, if one endpoint sends multiple packets back-to-back with no
+     * interleaved reply packets from the other endpoint, such packets are converted to one-item pairs (i.e., instances
+     * of {@link PcapPacketPair} where {@link PcapPacketPair#getSecond()} is {@code null}).
+     *
+     * @param conv The {@code Conversation} for which packet pairs are to be extracted.
+     * @return The packet pairs extracted from {@code conv}.
+     */
+    public static List<PcapPacketPair> extractTlsAppDataPacketPairs(Conversation conv) {
+        if (!conv.isTls()) {
+            throw new IllegalArgumentException(String.format("Provided %s argument is not a TLS session"));
+        }
+        return extractPacketPairs(conv.getTlsApplicationDataPackets());
+    }
+
+    // Helper method for implementing the public API of similarly named methods.
+    private static List<PcapPacketPair> extractPacketPairs(List<PcapPacket> packets) {
         List<PcapPacketPair> pairs = new ArrayList<>();
         int i = 0;
         while (i < packets.size()) {
