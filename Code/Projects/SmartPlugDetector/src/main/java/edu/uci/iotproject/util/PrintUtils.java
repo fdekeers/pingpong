@@ -44,7 +44,7 @@ public class PrintUtils {
      *         as their respective sources.
      */
     public static String toCsv(PcapPacketPair packetPair, DnsMap ipHostnameMappings) {
-        // First optain source IPs
+        // First obtain source IPs
         String firstSrc = PcapPacketUtils.getSourceIp(packetPair.getFirst());
         String secondSrc = PcapPacketUtils.getSourceIp(packetPair.getSecond());
 
