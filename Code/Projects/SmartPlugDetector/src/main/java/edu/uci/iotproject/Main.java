@@ -126,10 +126,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
 
         // 13) DLink siren August 14 experiment
-//        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .183 == siren
+        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
+        final String deviceIp = "192.168.1.183"; // .246 == phone; .183 == siren
 
         // 14) Nest thermostat August 15 experiment
 //        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";

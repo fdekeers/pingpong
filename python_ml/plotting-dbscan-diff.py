@@ -65,6 +65,7 @@ unique_labels = set(labels)
 colors = [plt.cm.Spectral(each)
 	      for each in np.linspace(0, 1, len(unique_labels))]
 for k, col in zip(unique_labels, colors):
+	cluster_col = [1, 0, 0, 1]
 	if k == -1:
 	    # Black used for noise.
 	    col = [0, 0, 0, 1]
@@ -73,7 +74,7 @@ for k, col in zip(unique_labels, colors):
 
 	# print("Unique label: " + str(k) + " with freq: " + str(labels.tolist().count(k)))
 	xy = X[class_member_mask & core_samples_mask]
-	plt.plot(xy[:, 0], xy[:, 1], 'o',
+	plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(cluster_col),
 	         markeredgecolor='k', markersize=10)
 
 	xy = X[class_member_mask & ~core_samples_mask]

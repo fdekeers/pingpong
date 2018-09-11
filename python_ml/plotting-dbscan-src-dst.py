@@ -13,7 +13,7 @@ fig.set_size_inches(7, 7)
 # TODO: Just change the following path and filename 
 # 	when needed to read from a different file
 path = "/scratch/July-2018/Pairs2/"
-device = "dlink-siren-device-off"
+device = "dlink-siren-off2"
 filename = device + ".txt"
 plt.ylim(0, 2000)
 plt.xlim(0, 2000)
@@ -26,8 +26,8 @@ with open(path + filename, "r") as pairs:
 	pairsArr = []
 	for line in pairs:
 		# We will see a pair and we need to split it into xpoint and ypoint
-		xpoint, ypoint = line.split(", ")
-		pair = [int(xpoint), int(ypoint)]
+		xpoint, ypoint, src, dst = line.split(", ")
+		pair = [int(xpoint), int(ypoint), int(src), int(dst)]
 		pairsArr.append(pair)
 
 # Formed array of pairs		
@@ -39,7 +39,7 @@ X = np.array(pairsArr);
 # min_samples = minimum number of members of a cluster
 #db = DBSCAN(eps=20, min_samples=trig - 5).fit(X)
 # TODO: This is just for seeing more clusters
-db = DBSCAN(eps=20, min_samples=trig - 45).fit(X)
+db = DBSCAN(eps=20, min_samples=trig - 49).fit(X)
 core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
 core_samples_mask[db.core_sample_indices_] = True
 labels = db.labels_
@@ -53,7 +53,7 @@ import matplotlib.pyplot as plt
 
 # Black removed and is used for noise instead.
 unique_labels = set(labels)
-#print("Labels: " + str(labels))
+print("Labels: " + str(labels))
 
 colors = [plt.cm.Spectral(each)
           for each in np.linspace(0, 1, len(unique_labels))]
