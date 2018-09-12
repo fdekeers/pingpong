@@ -69,10 +69,16 @@ public class PrintUtils {
         // Fall back to IP if we couldn't second pair is present, but we couldn't map to (a) hostname(s).
         secondSrc = hostnames.isPresent() ? hostnames : secondSrc;
 
-        return String.format("%d, %d, %s, %s", packetPair.getFirst().getOriginalLength(),
+        // Check if the first source is C (client) or S (server)
+        String firstSrcCorS = packetPair.isFirstClient() ? "C" : "S";
+        String secondSrcCorS = packetPair.isSecondClient() ? "C" : "S";
+
+        return String.format("%d, %d, %s, %s, %s, %s", packetPair.getFirst().getOriginalLength(),
                 packetPair.getSecond().map(pp -> pp.getOriginalLength()).orElse(0),
                 firstSrc,
-                secondSrc.orElse("null"));
+                secondSrc.orElse("null"),
+                firstSrcCorS,
+                secondSrcCorS);
     }
 
 }

@@ -14,5 +14,18 @@
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-jdk14:1.8.0-beta2" level="project" />
     <orderEntry type="library" name="Gradle: net.java.dev.jna:jna:4.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.8.0-beta2" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file:///usr/share/java" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file:///usr/share/java" />
+        </SOURCES>
+        <jarDirectory url="file:///usr/share/java" recursive="false" />
+        <jarDirectory url="file:///usr/share/java" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

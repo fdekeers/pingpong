@@ -2,14 +2,12 @@ package edu.uci.iotproject;
 
 import static edu.uci.iotproject.analysis.UserAction.Type;
 
-import edu.uci.iotproject.analysis.TcpConversationUtils;
-import edu.uci.iotproject.analysis.TrafficLabeler;
-import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
-import edu.uci.iotproject.analysis.UserAction;
+import edu.uci.iotproject.analysis.*;
 import edu.uci.iotproject.comparison.seqalignment.ExtractedSequence;
 import edu.uci.iotproject.comparison.seqalignment.SequenceAlignment;
 import edu.uci.iotproject.comparison.seqalignment.SequenceExtraction;
 import edu.uci.iotproject.io.TriggerTimesFileReader;
+import edu.uci.iotproject.util.PrintUtils;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.namednumber.DataLinkType;
 
@@ -129,7 +127,7 @@ public class Main {
         final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
         final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
         final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
-        final String deviceIp = "192.168.1.183"; // .246 == phone; .183 == siren
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .183 == siren
 
         // 14) Nest thermostat August 15 experiment
 //        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";
@@ -221,6 +219,7 @@ public class Main {
         });
 
 
+        System.out.println("==== ON ====");
         // Print out all the pairs into a file for ON events
         File fileOnEvents = new File(onPairsPath);
         PrintWriter pwOn = null;
@@ -238,58 +237,16 @@ public class Main {
                 for(Conversation conv : listConv) {
                     // Process only if it is a TLS packet
                     if (conv.isTls()) {
-                        List<PcapPacket> tlsAppDataList = conv.getTlsApplicationDataPackets();
-                        // Loop and print out packets
-                        int count = 0;
-                        // The direction of the first packet
-                        Conversation.Direction firstDir = null;
-                        // The length of the first packet
-                        int firstLen = 0;
-                        for (PcapPacket pcap : tlsAppDataList) {
-                            boolean isPair = false;
-                            if (count % 2 == 0) {
-                                firstDir = conv.getDirection(pcap);
-                                firstLen = pcap.length();
-                            } else {// count%2 == 1
-                                if(conv.getDirection(pcap) != firstDir) {
-                                    isPair = true;
-                                    pwOn.println(firstLen + ", " + pcap.length());
-                                    //System.out.println(firstDir + ", " + conv.getDirection(pcap));
-                                    //System.out.println(firstLen + ", " + pcap.length());
-                                }
-                            }
-                            count++;
-                            // If we can't create a pair then just pad it with 0
-                            if (count == tlsAppDataList.size() && !isPair) {
-                                pwOn.println(firstLen + ", 0");
-                            }
+                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
+                        for(PcapPacketPair pair: tlsAppDataList) {
+                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
                         }
                     } else { // Non-TLS conversations
-                        List<PcapPacket> packetList = conv.getPackets();
-                        // Loop and print out packets
-                        int count = 0;
-                        // The direction of the first packet
-                        Conversation.Direction firstDir = null;
-                        // The length of the first packet
-                        int firstLen = 0;
-                        for (PcapPacket pcap : packetList) {
-                            boolean isPair = false;
-                            if (count % 2 == 0) {
-                                firstDir = conv.getDirection(pcap);
-                                firstLen = pcap.length();
-                            } else {// count%2 == 1
-                                if(conv.getDirection(pcap) != firstDir) {
-                                    isPair = true;
-                                    pwOn.println(firstLen + ", " + pcap.length());
-                                    System.out.println(firstDir + ", " + conv.getDirection(pcap));
-                                    System.out.println(firstLen + ", " + pcap.length());
-                                }
-                            }
-                            count++;
-                            // If we can't create a pair then just pad it with 0
-                            if (count == packetList.size() && !isPair) {
-                                pwOn.println(firstLen + ", 0");
-                            }
+                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
+                        for(PcapPacketPair pair: packetList) {
+                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
                         }
                     }
                 }
@@ -297,6 +254,7 @@ public class Main {
         }
         pwOn.close();
 
+        System.out.println("==== OFF ====");
         // Print out all the pairs into a file for ON events
         File fileOffEvents = new File(offPairsPath);
         PrintWriter pwOff = null;
@@ -314,59 +272,16 @@ public class Main {
                 for(Conversation conv : listConv) {
                     // Process only if it is a TLS packet
                     if (conv.isTls()) {
-                        List<PcapPacket> tlsAppDataList = conv.getTlsApplicationDataPackets();
-                        // Loop and print out packets
-                        int count = 0;
-                        // The direction of the first packet
-                        Conversation.Direction firstDir = null;
-                        // The length of the first packet
-                        int firstLen = 0;
-                        for (PcapPacket pcap : tlsAppDataList) {
-                            boolean isPair = false;
-                            if (count % 2 == 0) {
-                                firstDir = conv.getDirection(pcap);
-                                firstLen = pcap.length();
-                            } else {// count%2 == 1
-                                if(conv.getDirection(pcap) != firstDir) {
-                                    isPair = true;
-                                    pwOff.println(firstLen + ", " + pcap.length());
-                                    System.out.println(firstDir + ", " + conv.getDirection(pcap));
-                                    System.out.println(firstLen + ", " + pcap.length());
-                                }
-                            }
-                            count++;
-                            // If we can't create a pair then just pad it with 0
-                            if (count == tlsAppDataList.size() && !isPair) {
-                                pwOff.println(firstLen + ", 0");
-                            }
-
+                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
+                        for(PcapPacketPair pair: tlsAppDataList) {
+                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
                         }
                     } else { // Non-TLS conversations
-                        List<PcapPacket> packetList = conv.getPackets();
-                        // Loop and print out packets
-                        int count = 0;
-                        // The direction of the first packet
-                        Conversation.Direction firstDir = null;
-                        // The length of the first packet
-                        int firstLen = 0;
-                        for (PcapPacket pcap : packetList) {
-                            boolean isPair = false;
-                            if (count % 2 == 0) {
-                                firstDir = conv.getDirection(pcap);
-                                firstLen = pcap.length();
-                            } else {// count%2 == 1
-                                if(conv.getDirection(pcap) != firstDir) {
-                                    isPair = true;
-                                    pwOff.println(firstLen + ", " + pcap.length());
-                                    System.out.println(firstDir + ", " + conv.getDirection(pcap));
-                                    System.out.println(firstLen + ", " + pcap.length());
-                                }
-                            }
-                            count++;
-                            // If we can't create a pair then just pad it with 0
-                            if (count == packetList.size() && !isPair) {
-                                pwOff.println(firstLen + ", 0");
-                            }
+                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
+                        for (PcapPacketPair pair : packetList) {
+                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
                         }
                     }
                 }
