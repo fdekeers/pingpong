@@ -2,6 +2,7 @@ package edu.uci.iotproject.util;
 
 import edu.uci.iotproject.DnsMap;
 import edu.uci.iotproject.analysis.PcapPacketPair;
+import org.apache.commons.math3.stat.clustering.Cluster;
 
 import java.util.Optional;
 import java.util.Set;
@@ -81,4 +82,16 @@ public class PrintUtils {
                 secondSrcCorS);
     }
 
+    /**
+     * Generate a string that summarizes/describes {@code cluster}.
+     * @param cluster The {@link Cluster} to summarize/describe.
+     * @return A string that summarizes/describes {@code cluster}.
+     */
+    public static String toSummaryString(Cluster<PcapPacketPair> cluster) {
+        StringBuilder sb = new StringBuilder();
+        for (PcapPacketPair ppp : cluster.getPoints()) {
+            sb.append(toCsv(ppp, ppp.getDnsMap()) + System.lineSeparator());
+        }
+        return sb.toString();
+    }
 }
