@@ -1,7 +1,6 @@
 package edu.uci.iotproject.analysis;
 
 import edu.uci.iotproject.util.PcapPacketUtils;
-import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.pcap4j.core.PcapPacket;
 
 import java.net.InetAddress;
@@ -9,12 +8,16 @@ import java.net.UnknownHostException;
 import java.util.Optional;
 
 /**
- * A simple wrapper for holding a pair of packets (e.g., a request and associated reply packet).
+ * <p>
+ *     A simple wrapper for holding a pair of packets (e.g., a request and associated reply packet).
+ * </p>
+ *
+ * <b>Note:</b> we use the deprecated version
  *
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class PcapPacketPair implements Clusterable {
+public class PcapPacketPair {
 
     private final PcapPacket mFirst;
 
@@ -64,8 +67,4 @@ public class PcapPacketPair implements Clusterable {
                 getSecond().map(pkt -> Integer.toString(pkt.getOriginalLength())).orElse("null"));
     }
 
-    @Override
-    public double[] getPoint() {
-        return new double[0];
-    }
 }
