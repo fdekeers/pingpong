@@ -22,6 +22,15 @@ import static edu.uci.iotproject.util.PcapPacketUtils.getSourceIp;
 public class PcapPacketPairWrapper implements Clusterable<PcapPacketPair> {
 
     /**
+     * If {@code true}, {@link #distanceFrom(PcapPacketPair)} will only consider if the sources of the two packets in
+     * the {@link PcapPacketPair}s being compared match in terms of whether the IP is a local or a remote IP. It will
+     * <em>not</em> check if the IPs/hostnames are actually the same. Set to {@code false} to make the comparison more
+     * strict, i.e., to enforce the requirement that the respective IPs (or hostnames) in the packets of the two
+     * {@link PcapPacketPair}s must be identical.
+     */
+    private static final boolean SIMPLIFIED_SOURCE_COMPARISON = true;
+
+    /**
      * The wrapped {@link PcapPacketPair}.
      */
     private final PcapPacketPair mPktPair;
@@ -39,21 +48,32 @@ public class PcapPacketPairWrapper implements Clusterable<PcapPacketPair> {
 
     @Override
     public double distanceFrom(PcapPacketPair that) {
-        // Extract src ips of both packets of each pair.
-        String thisSrc1 = getSourceIp(mPktPair.getFirst());
-        String thisSrc2 = mPktPair.getSecond().map(pp -> getSourceIp(pp)).orElse("");
-        String thatSrc1 = getSourceIp(that.getFirst());
-        String thatSrc2 = that.getSecond().map(pp -> getSourceIp(pp)).orElse("");
+        if (SIMPLIFIED_SOURCE_COMPARISON) {
+            // Direction of packets in terms of client-to-server or server-to-client must match, but we don't care about
+            // IPs and hostnames
+            if (mPktPair.isFirstClient() != that.isFirstClient() ||
+                    mPktPair.isSecondClient() != that.isSecondClient()) {
+                // Distance is maximal if mismatch in direction of packets
+                return Double.MAX_VALUE;
+            }
+        } else {
+            // Strict mode enabled: IPs/hostnames must match!
+            // Extract src ips of both packets of each pair.
+            String thisSrc1 = getSourceIp(mPktPair.getFirst());
+            String thisSrc2 = mPktPair.getSecond().map(pp -> getSourceIp(pp)).orElse("");
+            String thatSrc1 = getSourceIp(that.getFirst());
+            String thatSrc2 = that.getSecond().map(pp -> getSourceIp(pp)).orElse("");
 
-        // Replace IPs with hostnames if possible.
-        thisSrc1 = mapToHostname(thisSrc1);
-        thisSrc2 = mapToHostname(thisSrc2);
-        thatSrc1 = mapToHostname(thatSrc1);
-        thatSrc2 = mapToHostname(thatSrc2);
+            // Replace IPs with hostnames if possible.
+            thisSrc1 = mapToHostname(thisSrc1);
+            thisSrc2 = mapToHostname(thisSrc2);
+            thatSrc1 = mapToHostname(thatSrc1);
+            thatSrc2 = mapToHostname(thatSrc2);
 
-        if(!thisSrc1.equals(thatSrc1) || !thisSrc2.equals(thatSrc2)) {
-            // Distance is maximal if sources differ.
-            return Double.MAX_VALUE;
+            if(!thisSrc1.equals(thatSrc1) || !thisSrc2.equals(thatSrc2)) {
+                // Distance is maximal if sources differ.
+                return Double.MAX_VALUE;
+            }
         }
 
         // If the sources match, the distance is the Euclidean distance between each pair of packet lengths.
