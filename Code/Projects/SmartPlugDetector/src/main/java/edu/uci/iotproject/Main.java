@@ -88,10 +88,17 @@ public class Main {
 //        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == TP-Link bulb
 
         // 7) Kwikset Doorlock August 6 experiment
-        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+        // September 12, 2018 - includes both wlan1 and eth1 interfaces
+        //final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.eth1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-sept-12-2018.timestamps";
+//        final String deviceIp = "192.168.1.142"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+
 
         // 8) Hue Bulb August 7 experiment
 //        final String inputPcapFile = path + "/2018-08/hue-bulb/hue-bulb.wlan1.local.pcap";
@@ -145,6 +152,12 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/alexa/alexa2-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/alexa/alexa-aug-17-2018.timestamps";
 //        final String deviceIp = "192.168.1.225"; // .246 == phone; .225 == Alexa
+
+        // September 17
+        final String inputPcapFile = path + "/2018-08/noise/noise.eth1.pcap";
+        final String outputPcapFile = path + "/2018-08/noise/noise-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/noise/noise-sept-17-2018.timestamps";
+        final String deviceIp = "192.168.1.142"; //  .142 == SmartThings Hub; .199 == dlink plug; .183 == siren
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
