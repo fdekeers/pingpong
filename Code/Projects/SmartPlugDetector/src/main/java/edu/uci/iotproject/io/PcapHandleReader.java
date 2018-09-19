@@ -18,6 +18,7 @@ public class PcapHandleReader {
     private final PcapPacketFilter mPacketFilter;
     private final PcapHandle mHandle;
     private final PacketListener[] mPacketListeners;
+    private volatile boolean mTerminated = false;
 
     /**
      * Create a {@code PcapHandleReader}.
@@ -40,14 +41,28 @@ public class PcapHandleReader {
      * Start reading (and filtering) packets from the provided {@link PcapHandle}.
      * @throws PcapNativeException if an error occurs in the pcap native library.
      * @throws NotOpenException if the provided {@code PcapHandle} is not open.
-     * @throws TimeoutException if packets are being read from a live capture and the timeout expired.
      */
-    public void readFromHandle() throws PcapNativeException, NotOpenException, TimeoutException {
+    public void readFromHandle() throws PcapNativeException, NotOpenException {
         int outOfOrderPackets = 0;
         try {
             PcapPacket prevPacket = null;
-            PcapPacket packet;
-            while ((packet = mHandle.getNextPacketEx()) != null) {
+            PcapPacket packet = null;
+
+            while (!mTerminated) {
+                try {
+                    packet = mHandle.getNextPacketEx();
+                } catch (TimeoutException te) {
+                    System.err.println("timeout occurred while reading from network interface");
+                    // No need to check termination flag here. Can defer it to the loop condition as it is the next
+                    // instruction anyway.
+                    continue;
+                }
+
+                if (packet == null) {
+                    System.err.println("null-packet read from handle");
+                    continue;
+                }
+
                 if (prevPacket != null && packet.getTimestamp().isBefore(prevPacket.getTimestamp())) {
                     outOfOrderPackets++;
                     /*
@@ -74,6 +89,28 @@ public class PcapHandleReader {
                             getClass().getSimpleName(), outOfOrderPackets));
         }
         mHandle.close();
+    }
+
+    /**
+     * Stop reading from the wrapped {@link PcapHandle}. Note that this call only <em>initiates</em> the shutdown by
+     * setting a termination flag. Shutdown will be deferred until the time at which this flag can be checked by
+     * {@link #readFromHandle()}. For example, if {@link #readFromHandle()} is currently in the middle of a blocking
+     * call to {@link PcapHandle#getNextPacketEx()}, shutdown will not occur until the next packet is returned from the
+     * wrapped {@link PcapHandle} or its read timeout expires. Use {@link #hasTerminated()} to check if the shutdown
+     * has completed.
+     */
+    public void stopReading() {
+        mTerminated = true;
+    }
+
+    /**
+     * Checks if this {@link PcapHandleReader} has gracefully terminated, i.e., that the wrapped {@link PcapHandle} has
+     * been closed.
+     *
+     * @return {@code true} if this {@link PcapHandleReader} has terminated, {@code false} otherwise.
+     */
+    public boolean hasTerminated() {
+        return mTerminated && !mHandle.isOpen();
     }
 
 }
