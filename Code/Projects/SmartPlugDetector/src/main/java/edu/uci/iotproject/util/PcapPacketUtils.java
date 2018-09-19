@@ -1,9 +1,13 @@
 package edu.uci.iotproject.util;
 
+import edu.uci.iotproject.analysis.PcapPacketPair;
+import org.apache.commons.math3.stat.clustering.Cluster;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -77,6 +81,26 @@ public final class PcapPacketUtils {
     public static boolean isAck(PcapPacket packet) {
         TcpPacket tcp = packet.get(TcpPacket.class);
         return tcp != null && tcp.getHeader().getAck();
+    }
+
+    /**
+     * Transform a {@code Cluster} of {@code PcapPacketPair} objects into a {@code List} of {@code List} of
+     * {@code PcapPacket} objects.
+     * @param cluster A {@link Cluster} of {@link PcapPacketPair} objects that needs to be transformed.
+     * @return A {@link List} of {@link List} of {@link PcapPacket} objects as the result of the transformation.
+     */
+    public static List<List<PcapPacket>> clusterToListOfPcapPackets(Cluster<PcapPacketPair> cluster) {
+        List<List<PcapPacket>> ppListOfList = new ArrayList<>();
+        for (PcapPacketPair ppp: cluster.getPoints()) {
+            // Create a list of PcapPacket objects (list of two members)
+            List<PcapPacket> ppList = new ArrayList<>();
+            ppList.add(ppp.getFirst());
+            ppList.add(ppp.getSecond().get());
+            // Create a list of list of PcapPacket objects
+            ppListOfList.add(ppList);
+        }
+
+        return ppListOfList;
     }
 
 }

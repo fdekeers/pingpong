@@ -62,6 +62,11 @@ public class TcpConversationUtils {
     // Helper method for implementing the public API of similarly named methods.
     private static List<PcapPacketPair> extractPacketPairs(List<PcapPacket> packets) {
         List<PcapPacketPair> pairs = new ArrayList<>();
+        for(PcapPacket pp : packets) {
+            System.out.print(pp.length() + " ");
+        }
+        System.out.println();
+
         int i = 0;
         while (i < packets.size()) {
             PcapPacket p1 = packets.get(i);
@@ -79,6 +84,7 @@ public class TcpConversationUtils {
                     pairs.add(new PcapPacketPair(p1, p2));
                     // Advance two packets as we have already processed the packet at index i+1 in order to create the pair.
                     i += 2;
+                    //i++;
                 }
             } else {
                 // Last packet of conversation => one item pair

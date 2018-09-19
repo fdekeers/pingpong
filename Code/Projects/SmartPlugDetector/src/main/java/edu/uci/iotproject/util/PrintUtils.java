@@ -4,9 +4,16 @@ import edu.uci.iotproject.DnsMap;
 import edu.uci.iotproject.analysis.PcapPacketPair;
 import org.apache.commons.math3.stat.clustering.Cluster;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.pcap4j.core.PcapPacket;
 
 /**
  * Utility methods for generating (output) strings.
@@ -16,8 +23,73 @@ import java.util.stream.Collectors;
  */
 public class PrintUtils {
 
+    /**
+     * This is the path for writing the list of list of packet pairs {@code List<List<PcapPacket>>} into a file.
+     * The packet pairs are the pairs in one cluster, so the list represents a cluster that has been derived through
+     * the DBSCAN algorithm.
+     *
+     * E.g., this file could contain a list like the following:
+     *
+     * [[1109, 613],[1111, 613],[1115, 613],...]
+     *
+     * This list has lists of PcapPacket pairs as its members. We do not maintain the pairs in the form of
+     * {@code Cluster<PcapPacketPair>} objects because there might be a situation where we could combine multiple
+     * PcapPacketPair objects into a longer signature, i.e., a string of PcapPacket objects and not just a pair.
+     */
+    private static final String SERIALIZABLE_FILE_PATH = "./signature.sig";
+
     private PrintUtils() { /* private constructor to prevent instantiation */ }
 
+    /**
+     * Write the list of list of packet pairs {@code List<List<PcapPacket>>} into a file.
+     *
+     * After the DBSCAN algorithm derives the clusters from pairs, we save the signature in the form of list of
+     * packet pairs. We harvest the pairs and transform them back into a list of PcapPacket objects.
+     * We do not maintain the pairs in the form of {@code Cluster<PcapPacketPair>} objects because there might be
+     * a situation where we could combine multiple PcapPacketPair objects into a longer signature, i.e., a string of
+     * PcapPacket objects and not just a pair.
+     *
+     * @param fileName The path of the file in {@link String}. We could leave this one {@code null} if we wanted the
+     *                 default file name {@code SERIALIZABLE_FILE_PATH}.
+     * @param clusterPackets The {@link Cluster} objects in the form of list of {@code PcapPacket} objects.
+     */
+    public static void serializeClustersIntoFile(String fileName, List<List<PcapPacket>> clusterPackets) {
+        if (fileName == null)
+            fileName = SERIALIZABLE_FILE_PATH;
+        try (ObjectOutputStream oos =
+                new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(clusterPackets);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Read the list of list of packet pairs {@code List<List<PcapPacket>>} from a file.
+     *
+     * After the DBSCAN algorithm derives the clusters from pairs, we save the signature in the form of list of
+     * packet pairs. We harvest the pairs and transform them back into a list of PcapPacket objects.
+     * We do not maintain the pairs in the form of {@code Cluster<PcapPacketPair>} objects because there might be
+     * a situation where we could combine multiple PcapPacketPair objects into a longer signature, i.e., a string of
+     * PcapPacket objects and not just a pair.
+     *
+     * @param fileName The path of the file in {@link String}. We could leave this one {@code null} if we wanted the
+     *                 default file name {@code SERIALIZABLE_FILE_PATH}.
+     * @return The list of list of {@link Cluster} objects ({@code List<List<PcapPacket>>}) that is read from file.
+     */
+    public static List<List<PcapPacket>> serializeClustersFromFile(String fileName) {
+        if (fileName == null)
+            fileName = SERIALIZABLE_FILE_PATH;
+        List<List<PcapPacket>> ppListOfList = null;
+        try (ObjectInputStream ois =
+                     new ObjectInputStream(new FileInputStream(fileName))) {
+            ppListOfList = (List<List<PcapPacket>>) ois.readObject();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return ppListOfList;
+    }
 
     /**
      * Converts a {@code PcapPacketPair} into a CSV string containing the packet lengths of the two packets in the pair.
