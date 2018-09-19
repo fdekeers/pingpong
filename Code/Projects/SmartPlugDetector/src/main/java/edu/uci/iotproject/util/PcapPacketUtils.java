@@ -95,11 +95,13 @@ public final class PcapPacketUtils {
             // Create a list of PcapPacket objects (list of two members)
             List<PcapPacket> ppList = new ArrayList<>();
             ppList.add(ppp.getFirst());
-            ppList.add(ppp.getSecond().get());
+            if(ppp.getSecond().isPresent())
+                ppList.add(ppp.getSecond().get());
+            else
+                ppList.add(null);
             // Create a list of list of PcapPacket objects
             ppListOfList.add(ppList);
         }
-
         return ppListOfList;
     }
 
