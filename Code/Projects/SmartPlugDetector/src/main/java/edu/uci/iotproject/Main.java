@@ -49,10 +49,10 @@ public class Main {
         final String offPairsPath = "/scratch/July-2018/off.txt";
 
         // 1) D-Link July 26 experiment
-//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
+        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
+        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -93,10 +93,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == TP-Link bulb
 
         // 7) Kwikset Doorlock August 6 experiment
-        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // September 12, 2018 - includes both wlan1 and eth1 interfaces
         //final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
@@ -256,6 +256,8 @@ public class Main {
                 map(e -> e.getValue()).
                 flatMap(List::stream).
                 collect(Collectors.toList());
+        //Collections.sort(onConversations, (c1, c2) -> c1.getPackets().)
+
         List<PcapPacketPair> onPairs = onConversations.stream().
                 map(c -> c.isTls() ? TcpConversationUtils.extractTlsAppDataPacketPairs(c) :
                         TcpConversationUtils.extractPacketPairs(c)).
@@ -274,39 +276,55 @@ public class Main {
         // Perform clustering on conversation logged as part of all OFF events.
         DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 45);
         List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
+        // Sort the conversations as reference
+        List<Conversation> sortedAllConversation = TcpConversationUtils.sortConversationList(allConversations);
         // Output clusters
         System.out.println("========================================");
         System.out.println("       Clustering results for ON        ");
         System.out.println("       Number of clusters: " + onClusters.size());
         int count = 0;
-        List<List<PcapPacket>> ppListOfListReadOn = null;
+        List<List<List<PcapPacket>>> ppListOfListReadOn = new ArrayList<>();
+        List<List<List<PcapPacket>>> ppListOfListListOn = new ArrayList<>();
         for (Cluster<PcapPacketPair> c : onClusters) {
             System.out.println(String.format("<<< Cluster #%02d (%03d points) >>>", ++count, c.getPoints().size()));
             System.out.print(PrintUtils.toSummaryString(c));
             if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
                 // Print to file
                 List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
-                PrintUtils.serializeClustersIntoFile("./onSignature" + count + ".sig", ppListOfList);
-                ppListOfListReadOn =
-                        PrintUtils.serializeClustersFromFile("./onSignature" + count + ".sig");
+                ppListOfListListOn.add(ppListOfList);
             }
         }
+        // TODO: Merging test
+        ppListOfListListOn = PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
+        count = 0;
+        for (List<List<PcapPacket>> ll : ppListOfListListOn) {
+            PrintUtils.serializeClustersIntoFile("./onSignature" + ++count + ".sig", ll);
+            ppListOfListReadOn.add(PrintUtils.serializeClustersFromFile("./onSignature" + count + ".sig"));
+        }
+
         System.out.println("========================================");
         System.out.println("       Clustering results for OFF       ");
         System.out.println("       Number of clusters: " + offClusters.size());
         count = 0;
-        List<List<PcapPacket>> ppListOfListReadOff = null;
+        List<List<List<PcapPacket>>> ppListOfListReadOff = new ArrayList<>();
+        List<List<List<PcapPacket>>> ppListOfListListOff = new ArrayList<>();
         for (Cluster<PcapPacketPair> c : offClusters) {
             System.out.println(String.format("<<< Cluster #%03d (%06d points) >>>", ++count, c.getPoints().size()));
             System.out.print(PrintUtils.toSummaryString(c));
             if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
                 // Print to file
                 List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
-                PrintUtils.serializeClustersIntoFile("./offSignature" + count + ".sig", ppListOfList);
-                ppListOfListReadOff =
-                        PrintUtils.serializeClustersFromFile("./offSignature" + count + ".sig");
+                ppListOfListListOff.add(ppListOfList);
             }
         }
+        // TODO: Merging test
+        ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
+        count = 0;
+        for (List<List<PcapPacket>> ll : ppListOfListListOff) {
+            PrintUtils.serializeClustersIntoFile("./offSignature" + ++count + ".sig", ll);
+            ppListOfListReadOff.add(PrintUtils.serializeClustersFromFile("./offSignature" + count + ".sig"));
+        }
+
         System.out.println("========================================");
         // ============================================================================================================
 

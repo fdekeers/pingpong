@@ -22,6 +22,15 @@ import static edu.uci.iotproject.util.PcapPacketUtils.*;
 public class TcpConversationUtils {
 
     /**
+     * Identifies the adjacency type of the signature for merging.
+     */
+    public enum SignaturePosition {
+        NOT_ADJACENT,
+        LEFT_ADJACENT,
+        RIGHT_ADJACENT
+    }
+
+    /**
      * <p>
      *      Given a {@link Conversation}, extract its set of "packet pairs", i.e., pairs of request-reply packets.
      *      <em>The extracted pairs are formed from the full set of payload-carrying TCP packets.</em>
@@ -324,5 +333,118 @@ public class TcpConversationUtils {
         if (sb.length() != 0) {
             sb.append(" ");
         }
+    }
+
+    /**
+     * Given a list of {@link Conversation} objects, sort them by timestamps.
+     * @param conversations The list of {@link Conversation} objects to be sorted.
+     * @return A sorted list of {@code Conversation} based on timestamps of the first
+     *          packet in the {@code Conversation}.
+     */
+    public static List<Conversation> sortConversationList(List<Conversation> conversations) {
+        // Get rid of Conversation objects with no packets
+        conversations.removeIf(x -> x.getPackets().size() == 0);
+        // Sort the list based on the first packet's timestamp!
+        Collections.sort(conversations, (c1, c2) ->
+                c1.getPackets().get(0).getTimestamp().compareTo(c2.getPackets().get(0).getTimestamp()));
+        return conversations;
+    }
+
+    /**
+     * Given a {@code List} of {@link Conversation} objects, find one that has the given {@code List}
+     * of {@code PcapPacket}.
+     * @param conversations The {@code List} of {@link Conversation} objects as reference.
+     * @param ppList The {@code List} of {@code PcapPacket} objects to search in the {@code List} of {@link Conversation}.
+     * @return A {@code Conversation} that contains the given {@code List} of {@code PcapPacket}.
+     */
+    public static Conversation returnConversation(List<PcapPacket> ppList, List<Conversation> conversations) {
+        // TODO: This part of comparison takes into account that the list of conversations is not sorted
+        // TODO: We could optimize this to have a better performance by requiring a sorted-by-timestamp list
+        // TODO:    as a parameter
+        // Find a Conversation that ppList is part of
+        for (Conversation c : conversations) {
+            // Figure out if c is the Conversation that ppList is in
+            if (isPartOfConversation(ppList, c)) {
+                return c;
+            }
+        }
+        // Return null if not found
+        return null;
+    }
+
+    /**
+     * Given a {@link Conversation} objects, check if {@code List} of {@code PcapPacket} is part of it and return the
+     * adjacency label based on {@code SignaturePosition}.
+     * @param conversation The {@link Conversation} object as reference.
+     * @param ppListFirst The first {@code List} of {@code PcapPacket} objects in the {@link Conversation}.
+     * @param ppListSecond The second {@code List} of {@code PcapPacket} objects in the {@link Conversation} whose
+     *                     position will be observed in the {@link Conversation} with respect to ppListFirst.
+     * @return A {@code SignaturePosition} that represents the position of the signature against another signature
+     *          in a {@link Conversation}.
+     */
+    public static SignaturePosition isPartOfConversationAndAdjacent(List<PcapPacket> ppListFirst,
+                                                                    List<PcapPacket> ppListSecond,
+                                                                    Conversation conversation) {
+        for (PcapPacket pp : conversation.getPackets()) {
+            // Take the first element in ppList and compare it
+            // The following elements in ppList are guaranteed to be in the same Conversation
+            // TODO: This part of comparison takes into account that the list of conversations is not sorted
+            // TODO: We could optimize this to have a better performance by requiring a sorted-by-timestamp list
+            // TODO:    as a parameter
+            if (isPartOfConversation(ppListSecond, conversation)) {
+                // Compare the first element of ppListSecond with the last element of ppListFirst to know
+                // whether ppListSecond is RIGHT_ADJACENT relative to ppListFirst
+                PcapPacket lastElOfFirstList = ppListFirst.get(ppListFirst.size() - 1);
+                PcapPacket firstElOfSecondList = ppListSecond.get(0);
+                // If the positions of the two are in order, then they are adjacent
+                int indexOfLastElOfFirstList = returnIndexInConversation(lastElOfFirstList, conversation);
+                int indexOfFirstElOfSecondList = returnIndexInConversation(firstElOfSecondList, conversation);
+                if(indexOfLastElOfFirstList + 1 == indexOfFirstElOfSecondList) {
+                    return SignaturePosition.RIGHT_ADJACENT;
+                }
+                // NOT RIGHT_ADJACENT, so check for LEFT_ADJACENT
+                // Compare the first element of ppListRight with the last element of ppListSecond to know
+                // whether ppListSecond is LEFT_ADJACENT relative to ppListFirst
+                PcapPacket firstElOfFirstList = ppListFirst.get(0);
+                PcapPacket lastElOfSecondList = ppListSecond.get(ppListSecond.size() - 1);
+                // If the positions of the two are in order, then they are adjacent
+                int indexOfFirstElOfFirstList = returnIndexInConversation(firstElOfFirstList, conversation);
+                int indexOfLastElOfSecondList = returnIndexInConversation(lastElOfSecondList, conversation);
+                if(indexOfLastElOfSecondList + 1 == indexOfFirstElOfFirstList) {
+                    return SignaturePosition.LEFT_ADJACENT;
+                }
+            }
+        }
+        // Return NOT_ADJACENT if not found
+        return SignaturePosition.NOT_ADJACENT;
+    }
+
+    /**
+     * Given a {@link Conversation} objects, check if {@code List} of {@code PcapPacket} is part of it.
+     * @param conversation The {@link Conversation} object as reference.
+     * @param ppList The {@code List} of {@code PcapPacket} objects to search in the {@link Conversation}.
+     * @return A {@code Boolean} value that represents the presence of the {@code List} of {@code PcapPacket} in
+     *         the {@link Conversation}.
+     */
+    private static boolean isPartOfConversation(List<PcapPacket> ppList, Conversation conversation) {
+        // Find the first element of ppList in conversation
+        if (conversation.getPackets().contains(ppList.get(0)))
+            return true;
+        // Return false if not found
+        return false;
+    }
+
+    /**
+     * Given a {@link Conversation} objects, check the index of a {@code PcapPacket} in it.
+     * @param conversation The {@link Conversation} object as reference.
+     * @param pp The {@code PcapPacket} object to search in the {@link Conversation}.
+     * @return An {@code Integer} value that gives the index of the {@code PcapPacket} in the {@link Conversation}.
+     */
+    private static int returnIndexInConversation(PcapPacket pp, Conversation conversation) {
+        // Find pp in conversation
+        if (conversation.getPackets().contains(pp))
+            return conversation.getPackets().indexOf(pp);
+        // Return -1 if not found
+        return -1;
     }
 }

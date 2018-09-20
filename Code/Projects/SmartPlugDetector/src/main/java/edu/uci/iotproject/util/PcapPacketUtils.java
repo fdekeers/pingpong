@@ -1,14 +1,14 @@
 package edu.uci.iotproject.util;
 
+import edu.uci.iotproject.Conversation;
 import edu.uci.iotproject.analysis.PcapPacketPair;
+import edu.uci.iotproject.analysis.TcpConversationUtils;
 import org.apache.commons.math3.stat.clustering.Cluster;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Utility methods for inspecting {@link PcapPacket} properties.
@@ -17,6 +17,13 @@ import java.util.Objects;
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public final class PcapPacketUtils {
+
+    /**
+     * This is the threshold value for a signature's number of members
+     * If after a merging the number of members of a signature falls below this threshold, then we can boldly
+     * get rid of that signature.
+     */
+    private static final int SIGNATURE_MERGE_THRESHOLD = 5;
 
     /**
      * Gets the source IP (in decimal format) of an IPv4 packet.
@@ -102,7 +109,79 @@ public final class PcapPacketUtils {
             // Create a list of list of PcapPacket objects
             ppListOfList.add(ppList);
         }
+        // Sort the list of lists based on the first packet's timestamp!
+        Collections.sort(ppListOfList, (p1, p2) -> p1.get(0).getTimestamp().compareTo(p2.get(0).getTimestamp()));
         return ppListOfList;
     }
 
+    /**
+     * Merge signatures in {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects.
+     * We cross-check these with {@code List} of {@code Conversation} objects to see
+     * if two {@code List} of {@code PcapPacket} objects actually belong to the same {@code Conversation}.
+     *
+     * @param signatures A {@link List} of {@link List} of {@link List} of
+     *          {@link PcapPacket} objects that needs to be checked and merged.
+     * @param conversations A {@link List} of {@link Conversation} objects as reference for merging.
+     * @return A {@link List} of {@link List} of {@link List} of
+     *          {@link PcapPacket} objects as the result of the merging.
+     */
+    public static List<List<List<PcapPacket>>>
+            mergeSignatures(List<List<List<PcapPacket>>> signatures, List<Conversation> conversations) {
+        // Make a copy first
+        List<List<List<PcapPacket>>> copySignatures = new ArrayList<>(signatures);
+        // Traverse and look into the pairs of signatures
+        for (int first = 0; first < signatures.size(); first++) {
+            List<List<PcapPacket>> firstList = signatures.get(first);
+            for (int second = first+1; second < signatures.size(); second++) {
+                int maxSignatureEl = 0; // Number of maximum signature elements
+                List<List<PcapPacket>> secondList = signatures.get(second);
+                int initialSecondListMembers = secondList.size();
+                // Iterate over the signatures in the first list
+                for (List<PcapPacket> signature : firstList) {
+                    signature.removeIf(el -> el == null); // Clean up null elements
+                    // Return the Conversation that the signature is part of
+                    Conversation conv = TcpConversationUtils.returnConversation(signature, conversations);
+                    // Find the element of the second list that is a match for that Conversation
+                    for (List<PcapPacket> ppList : secondList) {
+                        ppList.removeIf(el -> el == null); // Clean up null elements
+                        // Check if they are part of a Conversation and are adjacent to the first signature
+                        // If yes then merge into the first list
+                        TcpConversationUtils.SignaturePosition position =
+                                TcpConversationUtils.isPartOfConversationAndAdjacent(signature, ppList, conv);
+                        if (position == TcpConversationUtils.SignaturePosition.LEFT_ADJACENT) {
+                            // Merge to the left side of the first signature
+                            ppList.addAll(signature);
+                            signature = ppList;
+                            maxSignatureEl = signature.size() > maxSignatureEl ? signature.size() : maxSignatureEl;
+                            secondList.remove(ppList); // Remove as we merge
+                            //System.out.println("LEFT_ADJACENT!");
+                            break;
+                        } else if (position == TcpConversationUtils.SignaturePosition.RIGHT_ADJACENT) {
+                            // Merge to the right side of the first signature
+                            signature.addAll(ppList);
+                            maxSignatureEl = signature.size() > maxSignatureEl ? signature.size() : maxSignatureEl;
+                            secondList.remove(ppList); // Remove as we merge
+                            //System.out.println("RIGHT_ADJACENT!");
+                            break;
+                        } // TcpConversationUtils.SignaturePosition.NOT_ADJACENT
+                        //System.out.println("NOT_ADJACENT!");
+                    }
+                }
+                // Call it a successful merging if there are only less than 5 elements from the second list that
+                // cannot be merged
+                if (secondList.size() < SIGNATURE_MERGE_THRESHOLD) {
+                    // Prune the unsuccessfully merged signatures (i.e., these will have size() < maxSignatureEl)
+                    final int maxNumOfEl = maxSignatureEl;
+                    firstList.removeIf(el -> el.size() < maxNumOfEl);
+                    // Remove the merged set of signatures when successful
+                    signatures.remove(secondList);
+                } else if (secondList.size() < initialSecondListMembers) {
+                    // If only some of the signatures from the second list are merged, this means UNSUCCESSFUL merging
+                    // Return the original copy of the signatures object
+                    return copySignatures;
+                }
+            }
+        }
+        return signatures;
+    }
 }
