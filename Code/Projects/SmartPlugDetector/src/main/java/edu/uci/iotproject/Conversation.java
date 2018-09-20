@@ -1,5 +1,6 @@
 package edu.uci.iotproject;
 
+import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.util.PcapPacketUtils;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
@@ -481,8 +482,10 @@ public class Conversation {
          *   inspect the first 4 bytes of each potential TLS packet to see if they match the SSL record header.
          *
          * 08/31/18: Added unconvetional TLS ports used by WeMo plugs and LiFX bulb.
+         * 09/20/18: Moved hardcoded ports to other class to allow other classes to query the set of TLS ports.
          */
-        return mServerPort == 443 || mServerPort == 8443 || mServerPort == 41143;
+//        return mServerPort == 443 || mServerPort == 8443 || mServerPort == 41143;
+        return TcpConversationUtils.isTlsPort(mServerPort);
     }
 
     /**

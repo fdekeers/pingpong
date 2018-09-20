@@ -26,6 +26,15 @@ public final class PcapPacketUtils {
     private static final int SIGNATURE_MERGE_THRESHOLD = 5;
 
     /**
+     * Determines if a given {@link PcapPacket} wraps a {@link TcpPacket}.
+     * @param packet The {@link PcapPacket} to inspect.
+     * @return {@code true} if {@code packet} wraps a {@link TcpPacket}, {@code false} otherwise.
+     */
+    public static boolean isTcp(PcapPacket packet) {
+        return packet.get(TcpPacket.class) != null;
+    }
+
+    /**
      * Gets the source IP (in decimal format) of an IPv4 packet.
      * @param packet The packet for which the IPv4 source address is to be extracted.
      * @return The decimal representation of the source IP of {@code packet} <em>iff</em> {@code packet} wraps an
@@ -34,6 +43,34 @@ public final class PcapPacketUtils {
     public static String getSourceIp(PcapPacket packet) {
         IpV4Packet ipPacket = packet.get(IpV4Packet.class);
         return ipPacket == null ? null : ipPacket.getHeader().getSrcAddr().getHostAddress();
+    }
+
+    /**
+     * Gets the source port of a TCP packet.
+     * @param packet The packet for which the source port is to be extracted.
+     * @return The source port of the {@link TcpPacket} encapsulated by {@code packet}.
+     * @throws IllegalArgumentException if {@code packet} does not encapsulate a {@link TcpPacket}.
+     */
+    public static int getSourcePort(PcapPacket packet) {
+        TcpPacket tcpPacket = packet.get(TcpPacket.class);
+        if (tcpPacket == null) {
+            throw new IllegalArgumentException("not a TCP packet");
+        }
+        return tcpPacket.getHeader().getSrcPort().valueAsInt();
+    }
+
+    /**
+     * Gets the destination port of a TCP packet.
+     * @param packet The packet for which the destination port is to be extracted.
+     * @return The destination port of the {@link TcpPacket} encapsulated by {@code packet}.
+     * @throws IllegalArgumentException if {@code packet} does not encapsulate a {@link TcpPacket}.
+     */
+    public static int getDestinationPort(PcapPacket packet) {
+        TcpPacket tcpPacket = packet.get(TcpPacket.class);
+        if (tcpPacket == null) {
+            throw new IllegalArgumentException("not a TCP packet");
+        }
+        return tcpPacket.getHeader().getDstPort().valueAsInt();
     }
 
     /**

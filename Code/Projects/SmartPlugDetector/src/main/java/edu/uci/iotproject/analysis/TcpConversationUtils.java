@@ -326,6 +326,22 @@ public class TcpConversationUtils {
     }
 
     /**
+     * Set of port numbers that we consider TLS traffic.
+     * Note: purposefully initialized as a {@link HashSet} to get O(1) {@code contains()} call.
+     */
+    private static final Set<Integer> TLS_PORTS = Stream.of(443, 8443, 41143).
+            collect(Collectors.toCollection(HashSet::new));
+
+    /**
+     * Check if a given port number is considered a TLS port.
+     * @param port The port number to check.
+     * @return {@code true} if the port number is considered a TLS port, {@code false} otherwise.
+     */
+    public static boolean isTlsPort(int port) {
+        return TLS_PORTS.contains(port);
+    }
+
+    /**
      * Appends a space to {@code sb} <em>iff</em> {@code sb} already contains some content.
      * @param sb A {@link StringBuilder} that should have a space appended <em>iff</em> it is not empty.
      */
