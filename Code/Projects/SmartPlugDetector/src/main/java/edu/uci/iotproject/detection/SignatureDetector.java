@@ -39,13 +39,16 @@ public class SignatureDetector implements PacketListener {
 
     }
 
-//    private void performDetection() {
-//        // Let's start out simple by building a version that only works for signatures that do not span across multiple
-//        // TCP conversations...
-//        for (Conversation c : mTcpReassembler.getTcpConversations()) {
-//            boolean matchFound = isSequenceInConversation(c);
-//        }
-//    }
+    private void performDetection() {
+        // Let's start out simple by building a version that only works for signatures that do not span across multiple
+        // TCP conversations...
+        for (Conversation c : mTcpReassembler.getTcpConversations()) {
+            for (List<PcapPacket> sequence : mSignature) {
+                boolean matchFound = isSequenceInConversation(sequence, c);
+
+            }
+        }
+    }
 
     /**
      * Examine if a {@link Conversation} contains a given sequence of packets. Note: the current implementation actually
