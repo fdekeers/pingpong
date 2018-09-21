@@ -39,11 +39,22 @@ public final class PcapPacketUtils {
      * Gets the source IP (in decimal format) of an IPv4 packet.
      * @param packet The packet for which the IPv4 source address is to be extracted.
      * @return The decimal representation of the source IP of {@code packet} <em>iff</em> {@code packet} wraps an
-     *         {@link IpV4Packet}, otherwise {@code null}.
+     *         {@link IpV4Packet}.
+     * @throws NullPointerException if {@code packet} does not encapsulate an {@link IpV4Packet}.
      */
     public static String getSourceIp(PcapPacket packet) {
-        IpV4Packet ipPacket = packet.get(IpV4Packet.class);
-        return ipPacket == null ? null : ipPacket.getHeader().getSrcAddr().getHostAddress();
+        return getIpV4PacketOrThrow(packet).getHeader().getSrcAddr().getHostAddress();
+    }
+
+    /**
+     * Gets the destination IP (in decimal format) of an IPv4 packet.
+     * @param packet The packet for which the IPv4 source address is to be extracted.
+     * @return The decimal representation of the destination IP of {@code packet} <em>iff</em> {@code packet} wraps an
+     *         {@link IpV4Packet}.
+     * @throws NullPointerException if {@code packet} does not encapsulate an {@link IpV4Packet}.
+     */
+    public static String getDestinationIp(PcapPacket packet) {
+        return getIpV4PacketOrThrow(packet).getHeader().getDstAddr().getHostAddress();
     }
 
     /**
@@ -104,6 +115,30 @@ public final class PcapPacketUtils {
         String ipDst = ipPacket.getHeader().getDstAddr().getHostAddress();
         int dstPort = tcpPacket.getHeader().getDstPort().valueAsInt();
         return ipDst.equals(ip) && dstPort == port;
+    }
+
+    /**
+     * Checks if the source IP address of the {@link IpV4Packet} contained in {@code packet} is a local address, i.e.,
+     * if it pertains to subnet 10.0.0.0/8, 172.16.0.0/16, or 192.168.0.0/16.
+     * @param packet The packet for which the source IP address is to be examined.
+     * @return {@code true} if {@code packet} wraps a {@link IpV4Packet} for which the source IP address is a local IP
+     *         address, {@code false} otherwise.
+     * @throws NullPointerException if {@code packet} does not encapsulate an {@link IpV4Packet}.
+     */
+    public static boolean isSrcIpLocal(PcapPacket packet) {
+        return getIpV4PacketOrThrow(packet).getHeader().getSrcAddr().isSiteLocalAddress();
+    }
+
+    /**
+     * Checks if the destination IP address of the {@link IpV4Packet} contained in {@code packet} is a local address,
+     * i.e., if it pertains to subnet 10.0.0.0/8, 172.16.0.0/16, or 192.168.0.0/16.
+     * @param packet The packet for which the destination IP address is to be examined.
+     * @return {@code true} if {@code packet} wraps a {@link IpV4Packet} for which the destination IP address is a local
+     *         IP address, {@code false} otherwise.
+     * @throws NullPointerException if {@code packet} does not encapsulate an {@link IpV4Packet}.
+     */
+    public static boolean isDstIpLocal(PcapPacket packet) {
+        return getIpV4PacketOrThrow(packet).getHeader().getDstAddr().isSiteLocalAddress();
     }
 
     /**
@@ -247,11 +282,11 @@ public final class PcapPacketUtils {
             int count1 = 0;
             int count2 = 0;
             // Need to make sure that both are not out of bound!
-            while(count1 + 1 < p1.size() && count2 + 1 < p2.size()) {
+            while (count1 + 1 < p1.size() && count2 + 1 < p2.size()) {
                 long timestamp1 = p1.get(count1).get(0).getTimestamp().toEpochMilli();
                 long timestamp2 = p2.get(count2).get(0).getTimestamp().toEpochMilli();
                 // The two timestamps have to be within a 15-second window!
-                if(Math.abs(timestamp1 - timestamp2) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
+                if (Math.abs(timestamp1 - timestamp2) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
                     // If these two are within INCLUSION_WINDOW_MILLIS window then compare!
                     compare = p1.get(count1).get(0).getTimestamp().compareTo(p2.get(count2).get(0).getTimestamp());
                     if (comparePrev != 0) { // First time since it is 0
@@ -268,7 +303,7 @@ public final class PcapPacketUtils {
                 } else {
                     // If not within INCLUSION_WINDOW_MILLIS window then find the correct pair
                     // by incrementing one of them.
-                    if(timestamp1 < timestamp2)
+                    if (timestamp1 < timestamp2)
                         count1++;
                     else
                         count2++;
@@ -277,5 +312,16 @@ public final class PcapPacketUtils {
             return compare;
         });
         return signatures;
+    }
+
+    /**
+     * Gets the {@link IpV4Packet} contained in {@code packet}, or throws a {@link NullPointerException} if
+     * {@code packet} does not contain an {@link IpV4Packet}.
+     * @param packet A {@link PcapPacket} that is expected to contain a {@link IpV4Packet}.
+     * @return The {@link IpV4Packet} contained in {@code packet}.
+     * @throws NullPointerException if {@code packet} does not encapsulate an {@link IpV4Packet}.
+     */
+    private static IpV4Packet getIpV4PacketOrThrow(PcapPacket packet) {
+        return Objects.requireNonNull(packet.get(IpV4Packet.class), "not an IPv4 packet");
     }
 }
