@@ -134,15 +134,15 @@ public class PrintUtils {
         Optional<Set<String>> secondHostnames = secondSrc.map(src -> ipHostnameMappings.getHostnamesForIp(src));
         final String delimiter = " ";
         if (firstHostnames != null) {
-            // If one IP maps to multiple hostnames, we concatenate the hostnames (separated by a delimiter)
+            // If one IP maps to multiple hostnames, we concatenate the hostnames (separated by a delimiter).
             firstSrc = firstHostnames.stream().collect(Collectors.joining(delimiter));
         }
-        // If one IP maps to multiple hostnames, we concatenate the hostnames (separated by a delimiter)
+        // If one IP maps to multiple hostnames, we concatenate the hostnames (separated by a delimiter).
         Optional<String> hostnames = secondHostnames.map(hostnameSet -> hostnameSet.stream().collect(Collectors.joining(delimiter)));
         // Fall back to IP if we couldn't second pair is present, but we couldn't map to (a) hostname(s).
         secondSrc = hostnames.isPresent() ? hostnames : secondSrc;
 
-        // Check if the first source is C (client) or S (server)
+        // Check if the first source is C (client) or S (server).
         String firstSrcCorS = packetPair.isFirstClient() ? "C" : "S";
         String secondSrcCorS = packetPair.isSecondClient() ? "C" : "S";
 

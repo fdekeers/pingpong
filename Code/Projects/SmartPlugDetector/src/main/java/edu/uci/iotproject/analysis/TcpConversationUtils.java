@@ -358,7 +358,7 @@ public class TcpConversationUtils {
      *          packet in the {@code Conversation}.
      */
     public static List<Conversation> sortConversationList(List<Conversation> conversations) {
-        // Get rid of Conversation objects with no packets
+        // Get rid of Conversation objects with no packets.
         conversations.removeIf(x -> x.getPackets().size() == 0);
         // Sort the list based on the first packet's timestamp!
         Collections.sort(conversations, (c1, c2) ->
@@ -408,28 +408,28 @@ public class TcpConversationUtils {
         // TODO:    as a parameter
         if (isPartOfConversation(ppListSecond, conversation)) {
             // Compare the first element of ppListSecond with the last element of ppListFirst to know
-            // whether ppListSecond is RIGHT_ADJACENT relative to ppListFirst
+            // whether ppListSecond is RIGHT_ADJACENT relative to ppListFirst.
             PcapPacket lastElOfFirstList = ppListFirst.get(ppListFirst.size() - 1);
             PcapPacket firstElOfSecondList = ppListSecond.get(0);
-            // If the positions of the two are in order, then they are adjacent
+            // If the positions of the two are in order, then they are adjacent.
             int indexOfLastElOfFirstList = returnIndexInConversation(lastElOfFirstList, conversation);
             int indexOfFirstElOfSecondList = returnIndexInConversation(firstElOfSecondList, conversation);
             if(indexOfLastElOfFirstList + 1 == indexOfFirstElOfSecondList) {
                 return SignaturePosition.RIGHT_ADJACENT;
             }
-            // NOT RIGHT_ADJACENT, so check for LEFT_ADJACENT
+            // NOT RIGHT_ADJACENT, so check for LEFT_ADJACENT.
             // Compare the first element of ppListRight with the last element of ppListSecond to know
-            // whether ppListSecond is LEFT_ADJACENT relative to ppListFirst
+            // whether ppListSecond is LEFT_ADJACENT relative to ppListFirst.
             PcapPacket firstElOfFirstList = ppListFirst.get(0);
             PcapPacket lastElOfSecondList = ppListSecond.get(ppListSecond.size() - 1);
-            // If the positions of the two are in order, then they are adjacent
+            // If the positions of the two are in order, then they are adjacent.
             int indexOfFirstElOfFirstList = returnIndexInConversation(firstElOfFirstList, conversation);
             int indexOfLastElOfSecondList = returnIndexInConversation(lastElOfSecondList, conversation);
             if(indexOfLastElOfSecondList + 1 == indexOfFirstElOfFirstList) {
                 return SignaturePosition.LEFT_ADJACENT;
             }
         }
-        // Return NOT_ADJACENT if not found
+        // Return NOT_ADJACENT if not found.
         return SignaturePosition.NOT_ADJACENT;
     }
 
@@ -441,10 +441,10 @@ public class TcpConversationUtils {
      *         the {@link Conversation}.
      */
     private static boolean isPartOfConversation(List<PcapPacket> ppList, Conversation conversation) {
-        // Find the first element of ppList in conversation
+        // Find the first element of ppList in conversation.
         if (conversation.getPackets().contains(ppList.get(0)))
             return true;
-        // Return false if not found
+        // Return false if not found.
         return false;
     }
 
@@ -455,10 +455,10 @@ public class TcpConversationUtils {
      * @return An {@code Integer} value that gives the index of the {@code PcapPacket} in the {@link Conversation}.
      */
     private static int returnIndexInConversation(PcapPacket pp, Conversation conversation) {
-        // Find pp in conversation
+        // Find pp in conversation.
         if (conversation.getPackets().contains(pp))
             return conversation.getPackets().indexOf(pp);
-        // Return -1 if not found
+        // Return -1 if not found.
         return -1;
     }
 }

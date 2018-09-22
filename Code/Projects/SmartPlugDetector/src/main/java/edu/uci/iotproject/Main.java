@@ -295,7 +295,8 @@ public class Main {
             }
         }
         // TODO: Merging test
-        ppListOfListListOn = PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
+        PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
+        PcapPacketUtils.sortSignatures(ppListOfListListOn);
         count = 0;
         for (List<List<PcapPacket>> ll : ppListOfListListOn) {
             PrintUtils.serializeClustersIntoFile("./onSignature" + ++count + ".sig", ll);
@@ -318,13 +319,13 @@ public class Main {
             }
         }
         // TODO: Merging test
-        ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
+        PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
+        PcapPacketUtils.sortSignatures(ppListOfListListOff);
         count = 0;
         for (List<List<PcapPacket>> ll : ppListOfListListOff) {
             PrintUtils.serializeClustersIntoFile("./offSignature" + ++count + ".sig", ll);
             ppListOfListReadOff.add(PrintUtils.serializeClustersFromFile("./offSignature" + count + ".sig"));
         }
-
         System.out.println("========================================");
         // ============================================================================================================
 
@@ -334,6 +335,8 @@ public class Main {
         File fileOnEvents = new File(onPairsPath);
         PrintWriter pwOn = null;
         try {
+
+
             pwOn = new PrintWriter(fileOnEvents);
         } catch(Exception ex) {
             ex.printStackTrace();

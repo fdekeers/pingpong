@@ -3,6 +3,7 @@ package edu.uci.iotproject.util;
 import edu.uci.iotproject.Conversation;
 import edu.uci.iotproject.analysis.PcapPacketPair;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
+import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import org.apache.commons.math3.stat.clustering.Cluster;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.IpV4Packet;
@@ -136,14 +137,14 @@ public final class PcapPacketUtils {
     public static List<List<PcapPacket>> clusterToListOfPcapPackets(Cluster<PcapPacketPair> cluster) {
         List<List<PcapPacket>> ppListOfList = new ArrayList<>();
         for (PcapPacketPair ppp: cluster.getPoints()) {
-            // Create a list of PcapPacket objects (list of two members)
+            // Create a list of PcapPacket objects (list of two members).
             List<PcapPacket> ppList = new ArrayList<>();
             ppList.add(ppp.getFirst());
             if(ppp.getSecond().isPresent())
                 ppList.add(ppp.getSecond().get());
             else
                 ppList.add(null);
-            // Create a list of list of PcapPacket objects
+            // Create a list of list of PcapPacket objects.
             ppListOfList.add(ppList);
         }
         // Sort the list of lists based on the first packet's timestamp!
@@ -155,7 +156,6 @@ public final class PcapPacketUtils {
      * Merge signatures in {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects.
      * We cross-check these with {@code List} of {@code Conversation} objects to see
      * if two {@code List} of {@code PcapPacket} objects actually belong to the same {@code Conversation}.
-     *
      * @param signatures A {@link List} of {@link List} of {@link List} of
      *          {@link PcapPacket} objects that needs to be checked and merged.
      * @param conversations A {@link List} of {@link Conversation} objects as reference for merging.
@@ -164,61 +164,118 @@ public final class PcapPacketUtils {
      */
     public static List<List<List<PcapPacket>>>
             mergeSignatures(List<List<List<PcapPacket>>> signatures, List<Conversation> conversations) {
-        // Make a copy first
+        // Make a copy first.
         List<List<List<PcapPacket>>> copySignatures = new ArrayList<>(signatures);
-        // Traverse and look into the pairs of signatures
+        // Traverse and look into the pairs of signatures.
         for (int first = 0; first < signatures.size(); first++) {
             List<List<PcapPacket>> firstList = signatures.get(first);
             for (int second = first+1; second < signatures.size(); second++) {
-                int maxSignatureEl = 0; // Number of maximum signature elements
+                int maxSignatureEl = 0; // Number of maximum signature elements.
                 List<List<PcapPacket>> secondList = signatures.get(second);
                 int initialSecondListMembers = secondList.size();
-                // Iterate over the signatures in the first list
+                // Iterate over the signatures in the first list.
                 for (List<PcapPacket> signature : firstList) {
-                    signature.removeIf(el -> el == null); // Clean up null elements
-                    // Return the Conversation that the signature is part of
+                    signature.removeIf(el -> el == null); // Clean up null elements.
+                    // Return the Conversation that the signature is part of.
                     Conversation conv = TcpConversationUtils.returnConversation(signature, conversations);
-                    // Find the element of the second list that is a match for that Conversation
+                    // Find the element of the second list that is a match for that Conversation.
                     for (List<PcapPacket> ppList : secondList) {
-                        ppList.removeIf(el -> el == null); // Clean up null elements
-                        // Check if they are part of a Conversation and are adjacent to the first signature
-                        // If yes then merge into the first list
+                        ppList.removeIf(el -> el == null); // Clean up null elements.
+                        // Check if they are part of a Conversation and are adjacent to the first signature.
+                        // If yes then merge into the first list.
                         TcpConversationUtils.SignaturePosition position =
                                 TcpConversationUtils.isPartOfConversationAndAdjacent(signature, ppList, conv);
                         if (position == TcpConversationUtils.SignaturePosition.LEFT_ADJACENT) {
-                            // Merge to the left side of the first signature
+                            // Merge to the left side of the first signature.
                             ppList.addAll(signature);
                             signature = ppList;
                             maxSignatureEl = signature.size() > maxSignatureEl ? signature.size() : maxSignatureEl;
-                            secondList.remove(ppList); // Remove as we merge
-                            //System.out.println("LEFT_ADJACENT!");
+                            secondList.remove(ppList); // Remove as we merge.
                             break;
                         } else if (position == TcpConversationUtils.SignaturePosition.RIGHT_ADJACENT) {
-                            // Merge to the right side of the first signature
+                            // Merge to the right side of the first signature.
                             signature.addAll(ppList);
                             maxSignatureEl = signature.size() > maxSignatureEl ? signature.size() : maxSignatureEl;
-                            secondList.remove(ppList); // Remove as we merge
-                            //System.out.println("RIGHT_ADJACENT!");
+                            secondList.remove(ppList); // Remove as we merge.
                             break;
-                        } // TcpConversationUtils.SignaturePosition.NOT_ADJACENT
-                        //System.out.println("NOT_ADJACENT!");
+                        } // TcpConversationUtils.SignaturePosition.NOT_ADJACENT.
                     }
                 }
                 // Call it a successful merging if there are only less than 5 elements from the second list that
-                // cannot be merged
+                // cannot be merged.
                 if (secondList.size() < SIGNATURE_MERGE_THRESHOLD) {
-                    // Prune the unsuccessfully merged signatures (i.e., these will have size() < maxSignatureEl)
+                    // Prune the unsuccessfully merged signatures (i.e., these will have size() < maxSignatureEl).
                     final int maxNumOfEl = maxSignatureEl;
                     firstList.removeIf(el -> el.size() < maxNumOfEl);
-                    // Remove the merged set of signatures when successful
+                    // Remove the merged set of signatures when successful.
                     signatures.remove(secondList);
                 } else if (secondList.size() < initialSecondListMembers) {
-                    // If only some of the signatures from the second list are merged, this means UNSUCCESSFUL merging
-                    // Return the original copy of the signatures object
+                    // If only some of the signatures from the second list are merged, this means UNSUCCESSFUL merging.
+                    // Return the original copy of the signatures object.
                     return copySignatures;
                 }
             }
         }
+        return signatures;
+    }
+
+    /**
+     * Sort the signatures in the {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects.
+     * The purpose of this is to sort the order of signatures in the signature list. For detection purposes, we need
+     * to know if one signature occurs earlier/later in time with respect to the other signatures for more confidence
+     * in detecting the occurrence of an event.
+     * @param signatures A {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects that needs sorting.
+     *                   We assume that innermost {@code List} of {@code PcapPacket} objects have been sorted ascending
+     *                   by timestamps. By the time we use this method, we should have sorted it when calling the
+     *                   {@code clusterToListOfPcapPackets} method.
+     * @return A sorted {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects.
+     */
+    public static List<List<List<PcapPacket>>> sortSignatures(List<List<List<PcapPacket>>> signatures) {
+        // TODO: This is the simplest solution!!! Might not cover all corner cases.
+        // TODO: Sort the list of lists based on the first packet's timestamps!
+        //Collections.sort(signatures, (p1, p2) -> {
+        //    return p1.get(0).get(0).getTimestamp().compareTo(p2.get(0).get(0).getTimestamp());
+        //});
+        // TODO: The following is a more complete solution that covers corner cases.
+        // Sort the list of lists based on one-to-one comparison between timestamps of signatures on both lists.
+        // This also takes into account the fact that the number of signatures in the two lists could be different.
+        // Additionally, this code forces the comparison between two signatures only if they occur in the
+        // INCLUSION_WINDOW_MILLIS window; otherwise, it tries to find the right pair of signatures in the time window.
+        Collections.sort(signatures, (p1, p2) -> {
+            int compare = 0;
+            int comparePrev = 0;
+            int count1 = 0;
+            int count2 = 0;
+            // Need to make sure that both are not out of bound!
+            while(count1 + 1 < p1.size() && count2 + 1 < p2.size()) {
+                long timestamp1 = p1.get(count1).get(0).getTimestamp().toEpochMilli();
+                long timestamp2 = p2.get(count2).get(0).getTimestamp().toEpochMilli();
+                // The two timestamps have to be within a 15-second window!
+                if(Math.abs(timestamp1 - timestamp2) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
+                    // If these two are within INCLUSION_WINDOW_MILLIS window then compare!
+                    compare = p1.get(count1).get(0).getTimestamp().compareTo(p2.get(count2).get(0).getTimestamp());
+                    if (comparePrev != 0) { // First time since it is 0
+                        if (Integer.signum(compare) != Integer.signum(comparePrev)) {
+                            // Throw an exception if the order of the two signatures is not consistent,
+                            // E.g., 111, 222, 333 in one occassion and 222, 333, 111 in the other.
+                            throw new Error("For some reason, the order of signatures are not always consistent!" +
+                                    "Returning the original data structure of signatures...");
+                        }
+                    }
+                    comparePrev = compare;
+                    count1++;
+                    count2++;
+                } else {
+                    // If not within INCLUSION_WINDOW_MILLIS window then find the correct pair
+                    // by incrementing one of them.
+                    if(timestamp1 < timestamp2)
+                        count1++;
+                    else
+                        count2++;
+                }
+            }
+            return compare;
+        });
         return signatures;
     }
 }
