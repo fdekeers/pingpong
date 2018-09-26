@@ -65,6 +65,30 @@ public class PrintUtils {
     }
 
     /**
+     * Write the signature {@code List<List<List<PcapPacket>>>} into a file.
+     *
+     * After the DBSCAN algorithm derives the clusters from pairs, we save the signature in the form of list of
+     * packet pairs. We harvest the pairs and transform them back into a list of PcapPacket objects.
+     * We do not maintain the pairs in the form of {@code Cluster<PcapPacketPair>} objects because there might be
+     * a situation where we could combine multiple PcapPacketPair objects into a longer signature, i.e., a string of
+     * PcapPacket objects and not just a pair.
+     *
+     * @param fileName The path of the file in {@link String}. We could leave this one {@code null} if we wanted the
+     *                 default file name {@code SERIALIZABLE_FILE_PATH}.
+     * @param signature The {@link Cluster} objects in the form of list of {@code PcapPacket} objects.
+     */
+    public static void serializeSignatureIntoFile(String fileName, List<List<List<PcapPacket>>> signature) {
+        if (fileName == null)
+            fileName = SERIALIZABLE_FILE_PATH;
+        try (ObjectOutputStream oos =
+                     new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(signature);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * Read the list of list of packet pairs {@code List<List<PcapPacket>>} from a file.
      *
      * After the DBSCAN algorithm derives the clusters from pairs, we save the signature in the form of list of
@@ -77,7 +101,7 @@ public class PrintUtils {
      *                 default file name {@code SERIALIZABLE_FILE_PATH}.
      * @return The list of list of {@link Cluster} objects ({@code List<List<PcapPacket>>}) that is read from file.
      */
-    public static List<List<PcapPacket>> serializeClustersFromFile(String fileName) {
+    public static List<List<PcapPacket>> deserializeClustersFromFile(String fileName) {
         if (fileName == null)
             fileName = SERIALIZABLE_FILE_PATH;
         List<List<PcapPacket>> ppListOfList = null;
@@ -89,6 +113,34 @@ public class PrintUtils {
         }
 
         return ppListOfList;
+    }
+
+    /**
+     * Read the list of list of packet pairs {@code List<List<List<PcapPacket>>>} from a file.
+     *
+     * After the DBSCAN algorithm derives the clusters from pairs, we save the signature in the form of list of
+     * packet pairs. We harvest the pairs and transform them back into a list of PcapPacket objects.
+     * We do not maintain the pairs in the form of {@code Cluster<PcapPacketPair>} objects because there might be
+     * a situation where we could combine multiple PcapPacketPair objects into a longer signature, i.e., a string of
+     * PcapPacket objects and not just a pair.
+     *
+     * @param fileName The path of the file in {@link String}. We could leave this one {@code null} if we wanted the
+     *                 default file name {@code SERIALIZABLE_FILE_PATH}.
+     * @return The list of list of list of {@link Cluster} objects ({@code List<List<List<PcapPacket>>>})
+     *         that is read from file.
+     */
+    public static List<List<List<PcapPacket>>> deserializeSignatureFromFile(String fileName) {
+        if (fileName == null)
+            fileName = SERIALIZABLE_FILE_PATH;
+        List<List<List<PcapPacket>>> ppListOfListOfList = null;
+        try (ObjectInputStream ois =
+                     new ObjectInputStream(new FileInputStream(fileName))) {
+            ppListOfListOfList = (List<List<List<PcapPacket>>>) ois.readObject();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return ppListOfListOfList;
     }
 
     /**

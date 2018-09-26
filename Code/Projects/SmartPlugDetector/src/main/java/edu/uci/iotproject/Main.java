@@ -300,7 +300,7 @@ public class Main {
         count = 0;
         for (List<List<PcapPacket>> ll : ppListOfListListOn) {
             PrintUtils.serializeClustersIntoFile("./onSignature" + ++count + ".sig", ll);
-            ppListOfListReadOn.add(PrintUtils.serializeClustersFromFile("./onSignature" + count + ".sig"));
+            ppListOfListReadOn.add(PrintUtils.deserializeClustersFromFile("./onSignature" + count + ".sig"));
         }
 
         System.out.println("========================================");
@@ -324,7 +324,7 @@ public class Main {
         count = 0;
         for (List<List<PcapPacket>> ll : ppListOfListListOff) {
             PrintUtils.serializeClustersIntoFile("./offSignature" + ++count + ".sig", ll);
-            ppListOfListReadOff.add(PrintUtils.serializeClustersFromFile("./offSignature" + count + ".sig"));
+            ppListOfListReadOff.add(PrintUtils.deserializeClustersFromFile("./offSignature" + count + ".sig"));
         }
         System.out.println("========================================");
         // ============================================================================================================
