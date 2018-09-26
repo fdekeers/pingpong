@@ -19,7 +19,7 @@ import static edu.uci.iotproject.util.PcapPacketUtils.*;
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class SignatureDetector implements PacketListener {
+public class ClusterMatcher implements PacketListener {
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
@@ -30,7 +30,7 @@ public class SignatureDetector implements PacketListener {
         final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
 
         List<List<PcapPacket>> signature = PrintUtils.serializeClustersFromFile(signatureFile);
-        SignatureDetector signatureDetector = new SignatureDetector(signature, null,
+        ClusterMatcher clusterMatcher = new ClusterMatcher(signature, null,
                 (sig, match) -> System.out.println(
                         String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
                                 match.get(0).getTimestamp().atZone(ZoneId.of("America/Los_Angeles")))
@@ -43,13 +43,13 @@ public class SignatureDetector implements PacketListener {
         } catch (PcapNativeException pne) {
             handle = Pcaps.openOffline(inputPcapFile);
         }
-        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, signatureDetector);
+        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, clusterMatcher);
         reader.readFromHandle();
-        signatureDetector.performDetection();
+        clusterMatcher.performDetection();
     }
 
     /**
-     * The signature that this {@link SignatureDetector} is trying to detect in the observed traffic.
+     * The signature that this {@link ClusterMatcher} is trying to detect in the observed traffic.
      */
     private final List<List<PcapPacket>> mSignature;
 
@@ -70,7 +70,7 @@ public class SignatureDetector implements PacketListener {
 
     private final Observer[] mObservers;
 
-    public SignatureDetector(List<List<PcapPacket>> signature, String routerWanIp, Observer... detectionObservers) {
+    public ClusterMatcher(List<List<PcapPacket>> signature, String routerWanIp, Observer... detectionObservers) {
         mSignature = Collections.unmodifiableList(Objects.requireNonNull(signature, "signature cannot be null"));
         mObservers = Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
         if (mSignature.isEmpty() || mSignature.stream().anyMatch(inner -> inner.isEmpty())) {
