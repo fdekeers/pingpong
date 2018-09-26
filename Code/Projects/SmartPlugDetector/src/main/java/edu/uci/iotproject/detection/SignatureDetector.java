@@ -7,7 +7,9 @@ import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.util.PrintUtils;
 import org.pcap4j.core.*;
 
+import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static edu.uci.iotproject.util.PcapPacketUtils.*;
 
@@ -19,23 +21,21 @@ import static edu.uci.iotproject.util.PcapPacketUtils.*;
  */
 public class SignatureDetector implements PacketListener {
 
+    // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
-        // Test client
+
 //        String path = "/scratch/July-2018"; // Rahmadi
         String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
         final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
         final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
-//        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-//        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
 
         List<List<PcapPacket>> signature = PrintUtils.serializeClustersFromFile(signatureFile);
         SignatureDetector signatureDetector = new SignatureDetector(signature, null,
                 (sig, match) -> System.out.println(
-                        String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]", match.get(0).getTimestamp().toString())
+                        String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
+                                match.get(0).getTimestamp().atZone(ZoneId.of("America/Los_Angeles")))
                 )
         );
-
 
         PcapHandle handle;
         try {
@@ -151,26 +151,55 @@ public class SignatureDetector implements PacketListener {
                 // Fetch set of packets to examine based on TLS or not.
                 List<PcapPacket> cPkts = c.isTls() ? c.getTlsApplicationDataPackets() : c.getPackets();
                 /*
+                 * Note: we embed the attempt to detect the signature sequence in a loop in order to capture those cases
+                 * where the same signature sequence appears multiple times in one Conversation.
+                 *
+                 * Note: as the cluster can be made up of identical sequences, we must keep track of whether we detected
+                 * a match and, if so, break the inner for-each loop in order to prevent raising an alarm for each
+                 * cluster-member (prevent duplicate detections of the same event). However, a negative side-effect of
+                 * this is that, in doing so, we will also skip searching for subsequent different cluster members in
+                 * the current conversation if the current cluster member is a match.
+                 *
                  * Note: since we expect all sequences that together make up the signature to exhibit the same direction
                  * pattern, we can simply pass the precomputed direction array for the signature sequence so that it
                  * won't have to be recomputed internally in each call to findSubsequenceInSequence().
                  */
-                Optional<List<PcapPacket>> match =
-                        findSubsequenceInSequence(signatureSequence, cPkts, mSignatureDirections, null);
-                match.ifPresent(ps -> Arrays.stream(mObservers).forEach(o -> o.onSignatureDetected(mSignature, ps)));
-                if (match.isPresent()) {
+                Optional<List<PcapPacket>> match;
+                boolean matchFound = false;
+                while ((match = findSubsequenceInSequence(signatureSequence, cPkts, mSignatureDirections, null)).
+                        isPresent()) {
+                    matchFound = true;
+                    List<PcapPacket> matchSeq = match.get();
+                    // Notify observers about the match.
+                    Arrays.stream(mObservers).forEach(o -> o.onSignatureDetected(mSignature, matchSeq));
                     /*
-                     * We found an element in the signature cluster that was present in conversation, so no need to scan
-                     * conversation for remaining members of signature cluster (in fact, we'd be getting duplicate
-                     * output in those cases where the cluster is made up of identical sequences if we did not stop the
-                     * search here).
-                     *
-                     * TODO:
-                     * How do we handle those cases where the conversation matches the signature more than once (for
-                     * example, the long-lived connections used for sending the trigger from the cloud)?
+                     * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
+                     * signature sequence.
                      */
+                    int matchSeqEndIdx = cPkts.indexOf(matchSeq.get(matchSeq.size()-1));
+                    // We restart the search for the signature sequence immediately after that index, so truncate cPkts.
+                    cPkts = cPkts.stream().skip(matchSeqEndIdx + 1).collect(Collectors.toList());
+                }
+                if (matchFound) {
+                    // Break inner for-each loop in order to avoid duplicate detection of same event (see comment above)
                     break;
                 }
+
+
+//                match.ifPresent(ps -> Arrays.stream(mObservers).forEach(o -> o.onSignatureDetected(mSignature, ps)));
+//                if (match.isPresent()) {
+//                    /*
+//                     * We found an element in the signature cluster that was present in conversation, so no need to scan
+//                     * conversation for remaining members of signature cluster (in fact, we'd be getting duplicate
+//                     * output in those cases where the cluster is made up of identical sequences if we did not stop the
+//                     * search here).
+//                     *
+//                     * TODO:
+//                     * How do we handle those cases where the conversation matches the signature more than once (for
+//                     * example, the long-lived connections used for sending the trigger from the cloud)?
+//                     */
+//                    break;
+//                }
             }
         }
     }
@@ -262,12 +291,12 @@ public class SignatureDetector implements PacketListener {
                                                                  List<PcapPacket> sequence,
                                                                  Conversation.Direction[] subsequenceDirections,
                                                                  Conversation.Direction[] sequenceDirections) {
-        if (isTlsSequence(subsequence) != isTlsSequence(sequence)) {
-            // We consider it a mismatch if one is a TLS application data sequence and the other is not.
-            return Optional.empty();
-        }
         if (sequence.size() < subsequence.size()) {
             // If subsequence is longer, it cannot be contained in sequence.
+            return Optional.empty();
+        }
+        if (isTlsSequence(subsequence) != isTlsSequence(sequence)) {
+            // We consider it a mismatch if one is a TLS application data sequence and the other is not.
             return Optional.empty();
         }
         // If packet directions have not been precomputed by calling code, we need to construct them.
