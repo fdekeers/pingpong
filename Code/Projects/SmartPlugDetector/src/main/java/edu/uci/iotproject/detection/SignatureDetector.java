@@ -157,57 +157,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
     public void onMatch(ClusterMatcher clusterMatcher, List<PcapPacket> match) {
         // Add the match at the corresponding index
         pendingMatches[mClusterMatcherIds.get(clusterMatcher)].add(match);
-        checkSignatureMatch3();
-
-
-        // INITIAL
-//        // No need to check for signature presence until all ClusterMatchers have found a match.
-//        if (Arrays.stream(pendingMatches).noneMatch(l -> l.isEmpty())) {
-//            // There's potentially a signature match...
-//            // TODO need to check if all matches are within X seconds of one another
-//
-//            List<List<PcapPacket>> signatureMatch = new ArrayList<>();
-//            for (int i = 0; i < pendingMatches.length; i++) {
-//                if (signatureMatch.size() != i) {
-//                    // Didn't manage to add sequence at previous index to signature match, so not a signature match.
-//                    // TODO: clear array?
-//                    return;
-//                }
-//                if (i == 0) {
-//                    // Special case with no preceding sequence as this is the first sequence of the signature.
-//                    // TODO...
-//                    signatureMatch.add(pendingMatches[i].get(0)); // TODO: pick earliest or latest match?
-//                } else {
-//                    // Fetch the sequence in the signature that precedes this sequence
-//                    List<PcapPacket> prev = signatureMatch.get(i-1);
-//                    // And get a hold of it's latest packet; note that a match should never be empty so .get() is safe.
-//                    PcapPacket prevLatestPkt = prev.stream().max(Comparator.comparing(PcapPacket::getTimestamp)).get();
-//                    /*
-//                     * Do any of the matches of the sequence at the current index of the signature lie later in time
-//                     * than the match of the sequence that precedes it? If so, we are good and can proceed, otherwise we
-//                     * do not have a signature match.
-//                     */
-//                    Optional<List<PcapPacket>> curr = pendingMatches[i].stream().filter(pkts -> pkts.stream().allMatch(
-//                            pkt -> pkt.getTimestamp().isAfter(prevLatestPkt.getTimestamp()))).findFirst();
-//                    if (curr.isPresent()) {
-//                        // So far so good, keep going.
-//                        signatureMatch.add(curr.get());
-//                    } else {
-//                        // Bummer, not a signature match.
-//                        // TODO: clear array?
-//                        return;
-//                    }
-//                }
-//            }
-//            // If we make it out of the loop, it means that we have managed to construct a match of the signature.
-//            // Notify observers of the match.
-//            // TODO: clear array? At the very least we need to remove those entries that we used for this match so they are not reused later.
-//            mObservers.forEach(obs -> obs.onSignatureDetected(mSignature, signatureMatch));
-//        }
-
+        checkSignatureMatch();
     }
 
-    private void checkSignatureMatch3() {
+    private void checkSignatureMatch() {
         // << Graph-based approach using Balint's idea. >>
         // This implementation assumes that the packets in the inner lists (the sequences) are ordered by asc timestamp.
 
@@ -307,106 +260,18 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         }
     }
 
-    private void checkSignatureMatch2() {
-        /*
-         * In this implementation, we assume that the packets in the inner lists (the sequences) are ordered by
-         * timestamp (ascending) AND that the outer list is ordered by timestamp of the most recent packet of each inner
-         * list (i.e., the last packet of the inner list).
-         */
-        if (Arrays.stream(pendingMatches).noneMatch(l -> l.isEmpty())) {
-            /*
-             * The signature match consisting of one (or a set of) sequence(s) observed on (potentially multiple)
-             * separate TCP connections. The signature match is reconstructed from the matches found by the individual
-             * ClusterMatchers that each look for a separate sequence of packets occurring on one TCP connection.
-             * Invariant used below: if all entries are non-null, we have a match; initially all entries are null.
-             */
-            List<PcapPacket>[] signatureMatch = new List[pendingMatches.length];
-            // List<List<PcapPacket>> signatureMatch = new ArrayList<>();
-            /*
-             * For the first sequence of the signature, we give preference to the later samples as that strategy makes
-             * it more likely that the full set of sequences that make up the signature fit in the time window that
-             * dictates the maximum time between the sequences of the signature.
-             */
-            for (int i = pendingMatches[0].size()-1; i >= 0; i--) {
-                signatureMatch[0] = pendingMatches[0].get(i);
-                // Having selected the most recent sequence
-                for (int j = 1; j < pendingMatches.length; j++) {
-                    List<List<PcapPacket>> entry = pendingMatches[j];
-
-                }
-
-            }
-
-
-            /*
-            // First sort by duration
-            Stream<List<PcapPacket>> sortedByDuration = pendingMatches[0].stream().sorted((l1, l2) -> {
-                Instant l1Max = l1.get(l1.size()-1).getTimestamp();
-                Instant l1Min = l1.get(0).getTimestamp();
-                Instant l2Max = l2.get(l2.size()-1).getTimestamp();
-                Instant l2Min = l2.get(0).getTimestamp();
-                Duration l1Duration = Duration.between(l1Min, l1Max);
-                Duration l2Duration = Duration.between(l2Min, l2Max);
-
-                return l1Duration.compareTo(l2Duration);
-            });
-            for (int i = 1; i < pendingMatches.length; i++) {
-                pendingMatches[i].stream()
-            }
-            */
-        }
-
-    }
-
-    /*
-    private void checkSignatureMatch() {
-        // There cannot be a signature match until each ClusterMatcher has found a match of its respective sequence.
-        if (Arrays.stream(pendingMatches).noneMatch(l -> l.isEmpty())) {
-            List<List<PcapPacket>> sigMatch = new ArrayList<>();
-            for (int i = 0; i < pendingMatches.length; i++) {
-                if (i + 1 < pendingMatches.length) {
-                    // We want to select the current element that is the latest, yet lies before the next element.
-                    // Start by fetching the matches at the next index.
-                    List<List<PcapPacket>> nextIdxMatches = pendingMatches[i+1];
-                    // Create a stream that contains the minimum packet timestamp of each inner list of nextIdMatches
-                    Stream<PcapPacket> nextMinTimestamps = nextIdxMatches.stream().
-                            map(l -> l.stream().min(Comparator.comparing(PcapPacket::getTimestamp)).get());
-                    // Create a stream that contains the maximum packet timestamps of each inner list of current index
-                    Stream<PcapPacket> currMaxTimestamps = pendingMatches[i].stream().
-                            map(ps -> ps.stream().max(Comparator.comparing(PcapPacket::getTimestamp)).get());
-                    currMaxTimestamps.filter(p1 -> nextMinTimestamps.anyMatch(p2 -> p2.getTimestamp().isAfter(p1.getTimestamp())));
-
-
-
-                    //pendingMatches[i].stream().filter(ps -> ps.stream().map(p1 -> ))
-
-
-
-
-                    pendingMatches[i].stream().filter(ps -> ps.stream().allMatch(p -> p.getTimestamp().isBefore(
-                    )))
-
-
-                    pendingMatches[i].stream().filter(ps -> ps.stream().allMatch(p -> p.getTimestamp().isBefore(
-
-                    )))
-
-                    Stream<PcapPacket> currMaxTimestamps = pendingMatches[i].stream().
-                            map(ps -> ps.stream().max(Comparator.comparing(PcapPacket::getTimestamp)));
-
-
-//                    pendingMatches[i].stream().filter(ps -> ps.stream().allMatch(p -> p.getTimestamp().isBefore(
-//                            // which match (item) in 'next' do we consider?
-//                            next.stream().
-//                    )))
-                }
-
-            }
-        }
-    }
-    */
+    /**
+     * Used for registering for notifications of signatures detected by a {@link SignatureDetector}.
+     */
     interface SignatureDetectionObserver {
-        // TODO: add argument that points to the packets matching the signature
+
+        /**
+         * Invoked when the {@link SignatureDetector} detects the presence of a signature in the traffic that it's
+         * examining.
+         * @param searchedSignature The signature that the {@link SignatureDetector} reporting the match is searching
+         *                          for.
+         * @param matchingTraffic The actual traffic trace that matches the searched signature.
+         */
         void onSignatureDetected(List<List<List<PcapPacket>>> searchedSignature,
                                  List<List<PcapPacket>> matchingTraffic);
     }
