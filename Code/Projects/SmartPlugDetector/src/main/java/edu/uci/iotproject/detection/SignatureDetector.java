@@ -1,41 +1,100 @@
 package edu.uci.iotproject.detection;
 
-import edu.uci.iotproject.Conversation;
-import edu.uci.iotproject.TcpReassembler;
-import edu.uci.iotproject.analysis.TcpConversationUtils;
+import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
+import edu.uci.iotproject.analysis.UserAction;
 import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.util.PrintUtils;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.pcap4j.core.*;
 
+import java.time.Duration;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static edu.uci.iotproject.util.PcapPacketUtils.*;
+import java.util.function.Consumer;
 
 /**
- * TODO add class documentation.
+ * Detects an event signature that spans one or multiple TCP connections.
  *
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class SignatureDetector implements PacketListener {
+public class SignatureDetector implements PacketListener, ClusterMatcher.ClusterMatchObserver {
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
-
-//        String path = "/scratch/July-2018"; // Rahmadi
+        //        String path = "/scratch/July-2018"; // Rahmadi
         String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
-        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-        final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
 
-        List<List<PcapPacket>> signature = PrintUtils.deserializeClustersFromFile(signatureFile);
-        SignatureDetector signatureDetector = new SignatureDetector(signature, null,
-                (sig, match) -> System.out.println(
-                        String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
-                                match.get(0).getTimestamp().atZone(ZoneId.of("America/Los_Angeles")))
-                )
-        );
+        // Kwikset Doorlock Sep 12 experiment
+        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
+        // Kwikset Doorlock PHONE signatures
+        final String onSignatureFile = path + "/2018-08/kwikset-doorlock/onSignature-Kwikset-Doorlock-phone.sig";
+        final String offSignatureFile = path + "/2018-08/kwikset-doorlock/offSignature-Kwikset-Doorlock-phone.sig";
+
+        /*
+        // D-Link Plug experiment
+        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+        // D-Link Plug DEVICE signatures
+        final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-device.sig";
+        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-device.sig";
+        // D-Link Plug PHONE signatures
+        final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-phone.sig";
+        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-phone.sig";
+        */
+
+        /*
+        // D-Link Siren experiment
+        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
+        // D-Link Siren DEVICE signatures
+        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-device.sig";
+        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-device.sig";
+        // D-Link Siren PHONE signatures
+        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-phone.sig";
+        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-phone.sig";
+        */
+
+        List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
+        List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
+
+        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
+        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
+
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
+                withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
+
+        // Outputs information about a detected event to std.out
+        final Consumer<UserAction> outputter = ua -> {
+            String eventDescription;
+            switch (ua.getType()) {
+                case TOGGLE_ON:
+                    eventDescription = "ON";
+                    break;
+                case TOGGLE_OFF:
+                    eventDescription = "OFF";
+                    break;
+                default:
+                    throw new AssertionError("unhandled event type");
+            }
+            String output = String.format("[ !!! %s SIGNATURE DETECTED at %s !!! ]",
+                    eventDescription, dateTimeFormatter.format(ua.getTimestamp()));
+            System.out.println(output);
+        };
+
+        // Let's create observers that construct a UserAction representing the detected event.
+        final List<UserAction> detectedEvents = new ArrayList<>();
+        onDetector.addObserver((searched, match) -> {
+            PcapPacket firstPkt = match.get(0).get(0);
+            detectedEvents.add(new UserAction(UserAction.Type.TOGGLE_ON, firstPkt.getTimestamp()));
+        });
+        offDetector.addObserver((searched, match) -> {
+            PcapPacket firstPkt = match.get(0).get(0);
+            detectedEvents.add(new UserAction(UserAction.Type.TOGGLE_OFF, firstPkt.getTimestamp()));
+        });
 
         PcapHandle handle;
         try {
@@ -43,352 +102,218 @@ public class SignatureDetector implements PacketListener {
         } catch (PcapNativeException pne) {
             handle = Pcaps.openOffline(inputPcapFile);
         }
-        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, signatureDetector);
+        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, onDetector, offDetector);
         reader.readFromHandle();
-        signatureDetector.performDetection();
+
+        // TODO: need a better way of triggering detection than this...
+        onDetector.mClusterMatchers.forEach(cm -> cm.performDetection());
+        offDetector.mClusterMatchers.forEach(cm -> cm.performDetection());
+
+        // Sort the list of detected events by timestamp to make it easier to compare it line-by-line with the trigger
+        // times file.
+        Collections.sort(detectedEvents, Comparator.comparing(UserAction::getTimestamp));
+        // Output the detected events
+        detectedEvents.forEach(outputter);
     }
 
     /**
-     * The signature that this {@link SignatureDetector} is trying to detect in the observed traffic.
+     * The signature that this {@link SignatureDetector} is searching for.
      */
-    private final List<List<PcapPacket>> mSignature;
+    private final List<List<List<PcapPacket>>> mSignature;
 
     /**
-     * The directions of packets in the sequences that make up {@link #mSignature}.
+     * The {@link ClusterMatcher}s in charge of detecting each individual sequence of packets that together make up the
+     * the signature.
      */
-    private final Conversation.Direction[] mSignatureDirections;
+    private final List<ClusterMatcher> mClusterMatchers;
 
     /**
-     * For reassembling the observed traffic into TCP connections.
+     * For each {@code i} ({@code i >= 0 && i < pendingMatches.length}), {@code pendingMatches[i]} holds the matches
+     * found by the {@link ClusterMatcher} at {@code mClusterMatchers.get(i)} that have yet to be "consumed", i.e.,
+     * have yet to be included in a signature detected by this {@link SignatureDetector} (a signature can be encompassed
+     * of multiple packet sequences occurring shortly after one another on multiple connections).
      */
-    private final TcpReassembler mTcpReassembler = new TcpReassembler();
+    private final List<List<PcapPacket>>[] pendingMatches;
 
     /**
-     * IP of the router's WAN port (if analyzed traffic is captured at the ISP's point of view).
+     * Maps a {@link ClusterMatcher} to its corresponding index in {@link #pendingMatches}.
      */
-    private final String mRouterWanIp;
+    private final Map<ClusterMatcher, Integer> mClusterMatcherIds;
 
-    private final Observer[] mObservers;
+    private final List<SignatureDetectionObserver> mObservers = new ArrayList<>();
 
-    public SignatureDetector(List<List<PcapPacket>> signature, String routerWanIp, Observer... detectionObservers) {
-        mSignature = Collections.unmodifiableList(Objects.requireNonNull(signature, "signature cannot be null"));
-        mObservers = Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
-        if (mSignature.isEmpty() || mSignature.stream().anyMatch(inner -> inner.isEmpty())) {
-            throw new IllegalArgumentException("signature is empty (or contains empty inner List)");
+    public SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp) {
+        // note: doesn't protect inner lists from changes :'(
+        mSignature = Collections.unmodifiableList(searchedSignature);
+        // Generate corresponding/appropriate ClusterMatchers based on the provided signature
+        List<ClusterMatcher> clusterMatchers = new ArrayList<>();
+        for (List<List<PcapPacket>> cluster : mSignature) {
+            clusterMatchers.add(new ClusterMatcher(cluster, routerWanIp, this));
         }
-        if (mObservers.length == 0) {
-            throw new IllegalArgumentException("no detectionObservers provided");
+        mClusterMatchers = Collections.unmodifiableList(clusterMatchers);
+
+        // < exploratory >
+        pendingMatches = new List[mClusterMatchers.size()];
+        for (int i = 0; i < pendingMatches.length; i++) {
+            pendingMatches[i] = new ArrayList<>();
         }
-        mRouterWanIp = routerWanIp;
-        // Build the signature's direction sequence.
-        // Note: assumes that the provided signature was captured within the local network (routerWanIp is set to null).
-        mSignatureDirections = getPacketDirections(mSignature.get(0), null);
-        /*
-         * Enforce restriction on cluster/signature members: all representatives must exhibit the same direction pattern
-         * and contain the same number of packets. Note that this is a somewhat heavy operation, so it may be disabled
-         * later on in favor of performance. However, it is only run once (at instantiation), so the overhead may be
-         * warranted in order to ensure correctness, especially during the development/debugging phase.
-         */
-        if (mSignature.stream().
-                anyMatch(inner -> !Arrays.equals(mSignatureDirections, getPacketDirections(inner, null)))) {
-            throw new IllegalArgumentException(
-                    "signature members must contain the same number of packets and exhibit the same packet direction " +
-                            "pattern"
-            );
+        Map<ClusterMatcher, Integer> clusterMatcherIds = new HashMap<>();
+        for (int i = 0; i < mClusterMatchers.size(); i++) {
+            clusterMatcherIds.put(mClusterMatchers.get(i), i);
         }
+        mClusterMatcherIds = Collections.unmodifiableMap(clusterMatcherIds);
+    }
+
+    public void addObserver(SignatureDetectionObserver observer) {
+        mObservers.add(observer);
+    }
+
+    public boolean removeObserver(SignatureDetectionObserver observer) {
+        return mObservers.remove(observer);
     }
 
     @Override
     public void gotPacket(PcapPacket packet) {
-        // Present packet to TCP reassembler so that it can be mapped to a connection (if it is a TCP packet).
-        mTcpReassembler.gotPacket(packet);
+        // simply delegate packet reception to all ClusterMatchers.
+        mClusterMatchers.forEach(cm -> cm.gotPacket(packet));
     }
 
+    @Override
+    public void onMatch(ClusterMatcher clusterMatcher, List<PcapPacket> match) {
+        // Add the match at the corresponding index
+        pendingMatches[mClusterMatcherIds.get(clusterMatcher)].add(match);
+        checkSignatureMatch();
+    }
 
-//    public void performDetection() {
-//        // Let's start out simple by building a version that only works for signatures that do not span across multiple
-//        // TCP conversations...
-//        for (Conversation c : mTcpReassembler.getTcpConversations()) {
-//            for (List<PcapPacket> sequence : mSignature) {
-//                boolean matchFound = isSequenceInConversation(sequence, c);
-//                if (matchFound) {
-//                    for (Observer obs : mObservers) {
-//                        obs.onSequenceDetected(sequence, c);
-//                    }
-//                    // Found signature in current conversation, so break inner loop and continue with next conversation.
-//                    // TODO: signature can be present more than once in Conversation...
-//                    break;
-//                }
-//            }
-//            /*
-//             * TODO:
-//             * if no item in cluster matches, also perform a distance-based matching to cover those cases where we did
-//             * not manage to capture every single mutation of the sequence during training.
-//             *
-//             * Need to compute average/centroid of cluster to do so...? Compute within-cluster variance, then check if
-//             * distance between input conversation and cluster average/centroid is smaller than or equal to the computed
-//             * variance?
-//             */
-//        }
-//    }
+    private void checkSignatureMatch() {
+        // << Graph-based approach using Balint's idea. >>
+        // This implementation assumes that the packets in the inner lists (the sequences) are ordered by asc timestamp.
 
-
-    public void performDetection() {
-        /*
-         * Let's start out simple by building a version that only works for signatures that do not span across multiple
-         * TCP conversations...
-         */
-        for (Conversation c : mTcpReassembler.getTcpConversations()) {
-            if (c.isTls() && c.getTlsApplicationDataPackets().isEmpty() || !c.isTls() && c.getPackets().isEmpty()) {
-                // Skip empty conversations.
-                continue;
+        // There cannot be a signature match until each ClusterMatcher has found a match of its respective sequence.
+        if (Arrays.stream(pendingMatches).noneMatch(l -> l.isEmpty())) {
+            // Construct the DAG
+            final SimpleDirectedWeightedGraph<Vertex, DefaultWeightedEdge> graph =
+                    new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+            // Add a vertex for each match found by all ClusterMatchers
+            // And maintain an array to keep track of what cluster matcher each vertex corresponds to
+            final List<Vertex>[] vertices = new List[pendingMatches.length];
+            for (int i = 0; i < pendingMatches.length; i++) {
+                vertices[i] = new ArrayList<>();
+                for (List<PcapPacket> sequence : pendingMatches[i]) {
+                    Vertex v = new Vertex(sequence);
+                    vertices[i].add(v); // retain reference for later when we are to add edges
+                    graph.addVertex(v); // add to vertex to graph
+                }
             }
-            for (List<PcapPacket> signatureSequence : mSignature) {
-                if (isTlsSequence(signatureSequence) != c.isTls()) {
-                    // We consider it a mismatch if one is a TLS application data sequence and the other is not.
-                    continue;
-                }
-                // Fetch set of packets to examine based on TLS or not.
-                List<PcapPacket> cPkts = c.isTls() ? c.getTlsApplicationDataPackets() : c.getPackets();
-                /*
-                 * Note: we embed the attempt to detect the signature sequence in a loop in order to capture those cases
-                 * where the same signature sequence appears multiple times in one Conversation.
-                 *
-                 * Note: as the cluster can be made up of identical sequences, we must keep track of whether we detected
-                 * a match and, if so, break the inner for-each loop in order to prevent raising an alarm for each
-                 * cluster-member (prevent duplicate detections of the same event). However, a negative side-effect of
-                 * this is that, in doing so, we will also skip searching for subsequent different cluster members in
-                 * the current conversation if the current cluster member is a match.
-                 *
-                 * Note: since we expect all sequences that together make up the signature to exhibit the same direction
-                 * pattern, we can simply pass the precomputed direction array for the signature sequence so that it
-                 * won't have to be recomputed internally in each call to findSubsequenceInSequence().
-                 */
-                Optional<List<PcapPacket>> match;
-                boolean matchFound = false;
-                while ((match = findSubsequenceInSequence(signatureSequence, cPkts, mSignatureDirections, null)).
-                        isPresent()) {
-                    matchFound = true;
-                    List<PcapPacket> matchSeq = match.get();
-                    // Notify observers about the match.
-                    Arrays.stream(mObservers).forEach(o -> o.onSignatureDetected(mSignature, matchSeq));
-                    /*
-                     * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
-                     * signature sequence.
-                     */
-                    int matchSeqEndIdx = cPkts.indexOf(matchSeq.get(matchSeq.size()-1));
-                    // We restart the search for the signature sequence immediately after that index, so truncate cPkts.
-                    cPkts = cPkts.stream().skip(matchSeqEndIdx + 1).collect(Collectors.toList());
-                }
-                if (matchFound) {
-                    // Break inner for-each loop in order to avoid duplicate detection of same event (see comment above)
-                    break;
-                }
-
-
-//                match.ifPresent(ps -> Arrays.stream(mObservers).forEach(o -> o.onSignatureDetected(mSignature, ps)));
-//                if (match.isPresent()) {
-//                    /*
-//                     * We found an element in the signature cluster that was present in conversation, so no need to scan
-//                     * conversation for remaining members of signature cluster (in fact, we'd be getting duplicate
-//                     * output in those cases where the cluster is made up of identical sequences if we did not stop the
-//                     * search here).
-//                     *
-//                     * TODO:
-//                     * How do we handle those cases where the conversation matches the signature more than once (for
-//                     * example, the long-lived connections used for sending the trigger from the cloud)?
-//                     */
-//                    break;
-//                }
+            // Add dummy source and sink vertices to facilitate search.
+            final Vertex source = new Vertex(null);
+            final Vertex sink = new Vertex(null);
+            graph.addVertex(source);
+            graph.addVertex(sink);
+            // The source is connected to all vertices that wrap the sequences detected by ClusterMatcher at index 0.
+            // Note: zero cost edges as this is just a dummy link to facilitate search from a common start node.
+            for (Vertex v : vertices[0]) {
+                DefaultWeightedEdge edge = graph.addEdge(source, v);
+                graph.setEdgeWeight(edge, 0.0);
             }
-        }
-    }
-
-//    /**
-//     * Examine if a {@link Conversation} contains a given sequence of packets. Note: the current implementation actually
-//     * searches for a substring as it does not allow for interleaved packets in {@code c} that are not in
-//     * {@code sequence}; for example, if {@code sequence} consists of packet lengths [2, 3, 5] and {@code c} consists of
-//     * packet lengths [2, 3, 4, 5], the result will be {@code false}. If we are to allow interleaved packets, we need
-//     * a modified version of <a href="https://stackoverflow.com/a/20545604/1214974">this</a>.
-//     * @param sequence The sequence to look for.
-//     * @param c The {@link Conversation} to search for {@code sequence} in.
-//     * @return {@code true} if {@code c} contains {@code sequence}, {@code false} otherwise.
-//     */
-//    private boolean isSequenceInConversation(List<PcapPacket> sequence, Conversation c) {
-//        // TODO add offset argument to allow looking for sequence starting later in Conversation.
-//        // The packets we match against differ depending on whether the signature is a TLS or non-TLS signature.
-//        boolean tlsSequence = isTlsSequence(sequence);
-//        if (tlsSequence && !c.isTls()) {
-//            // If we're looking for a TLS signature and this conversation does not appear to be a TLS conversation, we
-//            // are done. Note: this assumes that they do NOT start performing TLS on new ports that are not captured in
-//            // Conversation.isTls()
-//            return false;
-//        }
-//        // Based on TLS or non-TLS signature, fetch the corresponding list of packets to match against.
-//        List<PcapPacket> packets = tlsSequence ? c.getTlsApplicationDataPackets() : c.getPackets();
-//        // If sequence is longer than the conversation, it can obviously not be contained in the conversation.
-//        if (packets.size() < sequence.size()) {
-//            return false;
-//        }
-//        /*
-//         * Generate packet direction array for c. We have already generated the packet direction array for sequence as
-//         * part of the constructor (mSignatureDirections).
-//         */
-//        Conversation.Direction[] cDirections = getPacketDirections(packets, mRouterWanIp);
-//        int seqIdx = 0;
-//        int convIdx = 0;
-//        while (convIdx < packets.size()) {
-//            PcapPacket seqPkt = sequence.get(seqIdx);
-//            PcapPacket convPkt = packets.get(convIdx);
-//            // We only have a match if packet lengths and directions match.
-//            if (convPkt.getOriginalLength() == seqPkt.getOriginalLength() &&
-//                    mSignatureDirections[seqIdx] == cDirections[convIdx]) {
-//                // A match, advance both indices to consider next packet in sequence vs. next packet in conversation
-//                seqIdx++;
-//                convIdx++;
-//                if (seqIdx == sequence.size()) {
-//                    // we managed to match the full sequence in the conversation.
-//                    return true;
-//                }
-//            } else {
-//                // Mismatch.
-//                if (seqIdx > 0) {
-//                    /*
-//                     * If we managed to match parts of sequence, we restart the search for sequence in c at the index of
-//                     * c where the current mismatch occurred. I.e., we must reset seqIdx, but leave convIdx untouched.
-//                     */
-//                    seqIdx = 0;
-//                } else {
-//                    /*
-//                     * First packet of sequence didn't match packet at convIdx of conversation, so we move forward in
-//                     * conversation, i.e., we continue the search for sequence in c starting at index convIdx+1 of c.
-//                     */
-//                    convIdx++;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-
-    private boolean isTlsSequence(List<PcapPacket> sequence) {
-        // NOTE: Assumes ALL packets in sequence pertain to the same TCP connection!
-        PcapPacket firstPkt = sequence.get(0);
-        int srcPort = getSourcePort(firstPkt);
-        int dstPort = getDestinationPort(firstPkt);
-        return TcpConversationUtils.isTlsPort(srcPort) || TcpConversationUtils.isTlsPort(dstPort);
-    }
-
-//    private List<PcapPacket> findeSequenceInConversation(List<PcapPacket> sequence, Conversation conv, int offset) {
-//        if (isTlsSequence(sequence) != conv.isTls()) {
-//            // We consider it a mismatch if one is a TLS Application Data sequence and the other is not.
-//            return null;
-//        }
-//        List<PcapPacket> convPackets = conv.isTls() ? conv.getTlsApplicationDataPackets() : conv.getPackets();
+            // Similarly, all vertices that wrap the sequences detected by the last ClusterMatcher of the signature
+            // are connected to the sink node.
+            for (Vertex v : vertices[vertices.length-1]) {
+                DefaultWeightedEdge edge = graph.addEdge(v, sink);
+                graph.setEdgeWeight(edge, 0.0);
+            }
+            // Now link sequences detected by ClusterMatcher at index i to sequences detected by ClusterMatcher at index
+            // i+1 if they obey the timestamp constraint (i.e., that the latter is later in time than the former).
+            for (int i = 0; i < vertices.length; i++) {
+                int j = i + 1;
+                if (j < vertices.length) {
+                    for (Vertex iv : vertices[i]) {
+                        PcapPacket ivLast = iv.sequence.get(iv.sequence.size()-1);
+                        for (Vertex jv : vertices[j]) {
+                            PcapPacket jvFirst = jv.sequence.get(jv.sequence.size()-1);
+                            if (ivLast.getTimestamp().isBefore(jvFirst.getTimestamp())) {
+                                DefaultWeightedEdge edge = graph.addEdge(iv, jv);
+                                // The weight is the duration of the i'th sequence plus the duration between the i'th
+                                // and i+1'th sequence.
+                                Duration d = Duration.
+                                        between(iv.sequence.get(0).getTimestamp(), jvFirst.getTimestamp());
+                                // Unfortunately weights are double values, so must convert from long to double.
+                                // TODO: need nano second precision? If so, use d.toNanos().
+                                // TODO: risk of overflow when converting from long to double..?
+                                graph.setEdgeWeight(edge, Long.valueOf(d.toMillis()).doubleValue());
+                            }
+                            // Alternative version if we cannot assume that sequences are ordered by timestamp:
+//                            if (iv.sequence.stream().max(Comparator.comparing(PcapPacket::getTimestamp)).get()
+//                                    .getTimestamp().isBefore(jv.sequence.stream().min(
+//                                            Comparator.comparing(PcapPacket::getTimestamp)).get().getTimestamp())) {
 //
-//    }
-
-    private Optional<List<PcapPacket>> findSubsequenceInSequence(List<PcapPacket> subsequence,
-                                                                 List<PcapPacket> sequence,
-                                                                 Conversation.Direction[] subsequenceDirections,
-                                                                 Conversation.Direction[] sequenceDirections) {
-        if (sequence.size() < subsequence.size()) {
-            // If subsequence is longer, it cannot be contained in sequence.
-            return Optional.empty();
-        }
-        if (isTlsSequence(subsequence) != isTlsSequence(sequence)) {
-            // We consider it a mismatch if one is a TLS application data sequence and the other is not.
-            return Optional.empty();
-        }
-        // If packet directions have not been precomputed by calling code, we need to construct them.
-        if (subsequenceDirections == null) {
-            subsequenceDirections = getPacketDirections(subsequence, mRouterWanIp);
-        }
-        if (sequenceDirections == null) {
-            sequenceDirections = getPacketDirections(sequence, mRouterWanIp);
-        }
-        int subseqIdx = 0;
-        int seqIdx = 0;
-        while (seqIdx < sequence.size()) {
-            PcapPacket subseqPkt = subsequence.get(subseqIdx);
-            PcapPacket seqPkt = sequence.get(seqIdx);
-            // We only have a match if packet lengths and directions match.
-            if (subseqPkt.getOriginalLength() == seqPkt.getOriginalLength() &&
-                    subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) {
-                // A match; advance both indices to consider next packet in subsequence vs. next packet in sequence.
-                subseqIdx++;
-                seqIdx++;
-                if (subseqIdx == subsequence.size()) {
-                    // We managed to match the entire subsequence in sequence.
-                    // Return the sublist of sequence that matches subsequence.
-                    /*
-                     * TODO:
-                     * ASSUMES THE BACKING LIST (i.e., 'sequence') IS _NOT_ STRUCTURALLY MODIFIED, hence may not work
-                     * for live traces!
-                     */
-                    return Optional.of(sequence.subList(seqIdx - subsequence.size(), seqIdx));
+//                            }
+                        }
+                    }
                 }
-            } else {
-                // Mismatch.
-                if (subseqIdx > 0) {
-                    /*
-                     * If we managed to match parts of subsequence, we restart the search for subsequence in sequence at
-                     * the index of sequence where the current mismatch occurred. I.e., we must reset subseqIdx, but
-                     * leave seqIdx untouched.
-                     */
-                    subseqIdx = 0;
-                } else {
-                    /*
-                     * First packet of subsequence didn't match packet at seqIdx of sequence, so we move forward in
-                     * sequence, i.e., we continue the search for subsequence in sequence starting at index seqIdx+1 of
-                     * sequence.
-                     */
-                    seqIdx++;
+            }
+            // Graph construction complete, run shortest-path to find a (potential) signature match.
+            DijkstraShortestPath<Vertex, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
+            GraphPath<Vertex, DefaultWeightedEdge> shortestPath = dijkstra.getPath(source, sink);
+            if (shortestPath != null) {
+                // The total weight is the duration between the first packet of the first sequence and the last packet
+                // of the last sequence, so we simply have to compare the weight against the timeframe that we allow
+                // the signature to span. For now we just use the inclusion window we defined for training purposes.
+                // Note however, that we must convert back from double to long as the weight is stored as a double in
+                // JGraphT's API.
+                if (((long)shortestPath.getWeight()) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
+                    // There's a signature match!
+                    // Extract the match from the vertices
+                    List<List<PcapPacket>> signatureMatch = new ArrayList<>();
+                    for(Vertex v : shortestPath.getVertexList()) {
+                        if (v == source || v == sink) {
+                            // Skip the dummy source and sink nodes.
+                            continue;
+                        }
+                        signatureMatch.add(v.sequence);
+                        // As there is a one-to-one correspondence between vertices[] and pendingMatches[], we know that
+                        // the sequence we've "consumed" for index i of the matched signature is also at index i in
+                        // pendingMatches. We must remove it from pendingMatches so that we don't use it to construct
+                        // another signature match in a later call.
+                        pendingMatches[signatureMatch.size()-1].remove(v.sequence);
+                    }
+                    // Declare success: notify observers
+                    mObservers.forEach(obs -> obs.onSignatureDetected(mSignature,
+                            Collections.unmodifiableList(signatureMatch)));
                 }
             }
         }
-        return Optional.empty();
     }
 
     /**
-     * Given a {@code List<PcapPacket>}, generate a {@code Conversation.Direction[]} such that each entry in the
-     * resulting {@code Conversation.Direction[]} specifies the direction of the {@link PcapPacket} at the corresponding
-     * index in the input list.
-     * @param packets The list of packets for which to construct a corresponding array of packet directions.
-     * @param routerWanIp The IP of the router's WAN port. This is used for determining the direction of packets when
-     *                    the traffic is captured just outside the local network (at the ISP side of the router). Set to
-     *                    {@code null} if {@code packets} stem from traffic captured within the local network.
-     * @return A {@code Conversation.Direction[]} specifying the direction of the {@link PcapPacket} at the
-     *         corresponding index in {@code packets}.
+     * Used for registering for notifications of signatures detected by a {@link SignatureDetector}.
      */
-    private static Conversation.Direction[] getPacketDirections(List<PcapPacket> packets, String routerWanIp) {
-        Conversation.Direction[] directions = new Conversation.Direction[packets.size()];
-        for (int i = 0; i < packets.size(); i++) {
-            PcapPacket pkt = packets.get(i);
-            if (getSourceIp(pkt).equals(getDestinationIp(pkt))) {
-                // Sanity check: we shouldn't be processing loopback traffic
-                throw new AssertionError("loopback traffic detected");
-            }
-            if (isSrcIpLocal(pkt) || getSourceIp(pkt).equals(routerWanIp)) {
-                directions[i] = Conversation.Direction.CLIENT_TO_SERVER;
-            } else if (isDstIpLocal(pkt) || getDestinationIp(pkt).equals(routerWanIp)) {
-                directions[i] = Conversation.Direction.SERVER_TO_CLIENT;
-            } else {
-                throw new IllegalArgumentException("no local IP or router WAN port IP found, can't detect direction");
-            }
+    interface SignatureDetectionObserver {
+
+        /**
+         * Invoked when the {@link SignatureDetector} detects the presence of a signature in the traffic that it's
+         * examining.
+         * @param searchedSignature The signature that the {@link SignatureDetector} reporting the match is searching
+         *                          for.
+         * @param matchingTraffic The actual traffic trace that matches the searched signature.
+         */
+        void onSignatureDetected(List<List<List<PcapPacket>>> searchedSignature,
+                                 List<List<PcapPacket>> matchingTraffic);
+    }
+
+    /**
+     * Encapsulates a {@code List<PcapPacket>} so as to allow the list to be used as a vertex in a graph while avoiding
+     * the expensive {@link AbstractList#equals(Object)} calls when adding vertices to the graph.
+     * Using this wrapper makes the incurred {@code equals(Object)} calls delegate to {@link Object#equals(Object)}
+     * instead of {@link AbstractList#equals(Object)}. The net effect is a faster implementation, but the graph will not
+     * recognize two lists that contain the same items--from a value and not reference point of view--as the same
+     * vertex. However, this is fine for our purposes -- in fact restricting it to reference equality seems more
+     * appropriate.
+     */
+    private static class Vertex {
+        private final List<PcapPacket> sequence;
+        private Vertex(List<PcapPacket> wrappedSequence) {
+            sequence = wrappedSequence;
         }
-        return directions;
     }
-
-    interface Observer {
-//        /**
-//         * Callback that is invoked when a sequence associated with the signature/cluster (i.e., the sequence is a
-//         * member of the cluster that makes up the signature) is detected in a {@link Conversation}.
-//         * @param sequence The sequence that was detected in {@code conversation}.
-//         * @param conversation The {@link Conversation} that {@code sequence} was detected in.
-//         */
-//        void onSequenceDetected(List<PcapPacket> sequence, Conversation conversation);
-
-        void onSignatureDetected(List<List<PcapPacket>> signature, List<PcapPacket> match);
-    }
-
 }
