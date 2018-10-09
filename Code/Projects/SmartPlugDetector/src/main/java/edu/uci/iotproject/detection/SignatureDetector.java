@@ -29,7 +29,7 @@ public class SignatureDetector implements PacketListener {
         final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
         final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
 
-        List<List<PcapPacket>> signature = PrintUtils.serializeClustersFromFile(signatureFile);
+        List<List<PcapPacket>> signature = PrintUtils.deserializeClustersFromFile(signatureFile);
         SignatureDetector signatureDetector = new SignatureDetector(signature, null,
                 (sig, match) -> System.out.println(
                         String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
