@@ -9,6 +9,7 @@ import java.util.*;
 
 /**
  * Reassembles TCP conversations (streams).
+ * <b>Note: current version only supports TCP over IPv4.</b>
  *
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
@@ -39,8 +40,9 @@ public class TcpReassembler implements PacketListener {
 
     @Override
     public void gotPacket(PcapPacket pcapPacket) {
+        IpV4Packet ipPacket = pcapPacket.get(IpV4Packet.class);
         TcpPacket tcpPacket = pcapPacket.get(TcpPacket.class);
-        if (tcpPacket == null) {
+        if (ipPacket == null || tcpPacket == null) {
             return;
         }
         // ... TODO?
