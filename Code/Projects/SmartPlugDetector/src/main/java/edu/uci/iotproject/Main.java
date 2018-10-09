@@ -49,10 +49,10 @@ public class Main {
         final String offPairsPath = "/scratch/July-2018/off.txt";
 
         // 1) D-Link July 26 experiment
-        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
-        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
-        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
+//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
+//        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -99,11 +99,11 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // September 12, 2018 - includes both wlan1 and eth1 interfaces
-        //final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
-//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.eth1.local.pcap";
+//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
+//        //final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.eth1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-sept-12-2018.timestamps";
-//        final String deviceIp = "192.168.1.142"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // 8) Hue Bulb August 7 experiment
 //        final String inputPcapFile = path + "/2018-08/hue-bulb/hue-bulb.wlan1.local.pcap";
@@ -136,10 +136,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
 
 //        // 13) DLink siren August 14 experiment
-//        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .183 == siren
+        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
+        final String deviceIp = "192.168.1.183"; // .246 == phone; .183 == siren
 
         // 14) Nest thermostat August 15 experiment
 //        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";
@@ -163,6 +163,17 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/noise/noise-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/noise/noise-sept-17-2018.timestamps";
 //        final String deviceIp = "192.168.1.142"; //  .142 == SmartThings Hub; .199 == dlink plug; .183 == siren
+        // September 26 - D-Link noise
+//        final String inputPcapFile = path + "/2018-08/noise/noise.dlink.wlan1.pcap";
+//        final String outputPcapFile = path + "/2018-08/noise/noise-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/noise/dlink-noise-sept-26-2018.timestamps";
+//        final String deviceIp = "192.168.1.183"; //  .199 == dlink plug; .183 == siren
+        // September 27 - Kwikset noise
+//        final String inputPcapFile = path + "/2018-08/noise/noise.kwikset.eth1.pcap";
+//        final String outputPcapFile = path + "/2018-08/noise/noise-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/noise/kwikset-doorlock-noise-sept-27-2018.timestamps";
+//        final String deviceIp = "192.168.1.142"; //  .142 == SmartThings Hub;
+
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
@@ -298,10 +309,12 @@ public class Main {
         PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
         PcapPacketUtils.sortSignatures(ppListOfListListOn);
         count = 0;
-        for (List<List<PcapPacket>> ll : ppListOfListListOn) {
+        /*for (List<List<PcapPacket>> ll : ppListOfListListOn) {
             PrintUtils.serializeClustersIntoFile("./onSignature" + ++count + ".sig", ll);
             ppListOfListReadOn.add(PrintUtils.deserializeClustersFromFile("./onSignature" + count + ".sig"));
-        }
+        }*/
+        PrintUtils.serializeSignatureIntoFile("./onSignature.sig", ppListOfListListOn);
+        ppListOfListReadOn = PrintUtils.deserializeSignatureFromFile("./onSignature.sig");
 
         System.out.println("========================================");
         System.out.println("       Clustering results for OFF       ");
@@ -322,10 +335,12 @@ public class Main {
         PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
         PcapPacketUtils.sortSignatures(ppListOfListListOff);
         count = 0;
-        for (List<List<PcapPacket>> ll : ppListOfListListOff) {
+        /*for (List<List<PcapPacket>> ll : ppListOfListListOff) {
             PrintUtils.serializeClustersIntoFile("./offSignature" + ++count + ".sig", ll);
             ppListOfListReadOff.add(PrintUtils.deserializeClustersFromFile("./offSignature" + count + ".sig"));
-        }
+        }*/
+        PrintUtils.serializeSignatureIntoFile("./offSignature.sig", ppListOfListListOff);
+        ppListOfListReadOff = PrintUtils.deserializeSignatureFromFile("./offSignature.sig");
         System.out.println("========================================");
         // ============================================================================================================
 

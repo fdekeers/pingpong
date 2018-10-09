@@ -27,8 +27,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
-        //        String path = "/scratch/July-2018"; // Rahmadi
-        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
+        String path = "/scratch/July-2018"; // Rahmadi
+        //String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
 
         // D-Link Plug experiment
         final String inputPcapFile = path + "/evaluation/dlink/dlink-plug.data.wlan1.pcap";
@@ -91,8 +91,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
                 default:
                     throw new AssertionError("unhandled event type");
             }
-            String output = String.format("[ !!! %s SIGNATURE DETECTED at %s !!! ]",
-                    eventDescription, dateTimeFormatter.format(ua.getTimestamp()));
+            //String output = String.format("[ !!! %s SIGNATURE DETECTED at %s !!! ]",
+            //      eventDescription, dateTimeFormatter.format(ua.getTimestamp()));
+            String output = String.format("%s",
+                    dateTimeFormatter.format(ua.getTimestamp()));
             System.out.println(output);
         };
 
