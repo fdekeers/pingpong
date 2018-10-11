@@ -31,13 +31,16 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         //String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
 
         // D-Link Plug experiment
-        final String inputPcapFile = path + "/evaluation/dlink/dlink-plug.data.wlan1.pcap";
+        //final String inputPcapFile = path + "/evaluation/dlink/dlink-plug.data.wlan1.pcap";
+        // No activity test
+        final String inputPcapFile = path + "/evaluation/no-activity/no-activity.wlan1.pcap";
+
         // D-Link Plug DEVICE signatures
-//        final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-device.sig";
-//        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-device.sig";
+        final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-device.sig";
+        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-device.sig";
 //        // D-Link Plug PHONE signatures
-        final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-phone.sig";
-        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-phone.sig";
+//        final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-phone.sig";
+//        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-phone.sig";
 
         /*
         // Kwikset Doorlock Sep 12 experiment
