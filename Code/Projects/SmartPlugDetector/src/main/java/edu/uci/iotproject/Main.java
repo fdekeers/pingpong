@@ -53,12 +53,22 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-07/dlink/dlink-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-07/dlink/dlink-july-26-2018.timestamps";
 //        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
+          // Actual training
+        final String inputPcapFile = path + "/2018-10/dlink-plug/dlink-plug.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-10/dlink-plug/dlink-plug-processed.pcap";
+        final String triggerTimesFile = path + "/2018-10/dlink-plug/dlink-plug-oct-17-2018.timestamps";
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-07/tplink/tplink-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-07/tplink/tplink-july-25-2018.timestamps";
 //        final String deviceIp = "192.168.1.159";
+          // Actual training
+//        final String inputPcapFile = path + "/2018-10/tplink-plug/tplink-plug.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-10/tplink-plug/tplink-plug-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-10/tplink-plug/tplink-plug-oct-17-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .159 == tplink plug
 
         // 2b) TP-Link July 25 experiment TRUNCATED:
         // Only contains "true local" events, i.e., before the behavior changes to remote-like behavior.
@@ -93,9 +103,11 @@ public class Main {
 //        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == TP-Link bulb
 
         // 7) Kwikset Doorlock August 6 experiment
-//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.data.wlan1.pcap";
+////        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
+////        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-aug-6-2018.timestamps";
+//        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-8hr-data-oct-11-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // September 12, 2018 - includes both wlan1 and eth1 interfaces
@@ -136,10 +148,13 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
 
 //        // 13) DLink siren August 14 experiment
-        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
-        final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
-        final String deviceIp = "192.168.1.183"; // .246 == phone; .183 == siren
+//        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
+//        //final String inputPcapFile = path + "/evaluation/dlink-siren/dlink-siren.data.wlan1.pcap";
+//        final String outputPcapFile = path + "/2018-08/dlink-siren/dlink-siren-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-oct-12-2018.timestamps";
+//        //final String triggerTimesFile = path + "/2018-08/dlink-siren/dlink-siren-aug-14-2018.timestamps";
+//        //final String triggerTimesFile = path + "/actual/timestamps/dlink-siren-8hr-data-oct-10-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .183 == siren
 
         // 14) Nest thermostat August 15 experiment
 //        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";
