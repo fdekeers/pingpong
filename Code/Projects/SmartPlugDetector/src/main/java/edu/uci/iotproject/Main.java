@@ -57,7 +57,7 @@ public class Main {
         final String inputPcapFile = path + "/2018-10/dlink-plug/dlink-plug.wlan1.local.pcap";
         final String outputPcapFile = path + "/2018-10/dlink-plug/dlink-plug-processed.pcap";
         final String triggerTimesFile = path + "/2018-10/dlink-plug/dlink-plug-oct-17-2018.timestamps";
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -188,7 +188,6 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/noise/noise-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/noise/kwikset-doorlock-noise-sept-27-2018.timestamps";
 //        final String deviceIp = "192.168.1.142"; //  .142 == SmartThings Hub;
-
 
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
@@ -323,7 +322,8 @@ public class Main {
         // TODO: Merging test
         PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
         PcapPacketUtils.sortSignatures(ppListOfListListOn);
-        count = 0;
+        PcapPacketUtils.printSignatures(ppListOfListListOn);
+        //count = 0;
         /*for (List<List<PcapPacket>> ll : ppListOfListListOn) {
             PrintUtils.serializeClustersIntoFile("./onSignature" + ++count + ".sig", ll);
             ppListOfListReadOn.add(PrintUtils.deserializeClustersFromFile("./onSignature" + count + ".sig"));
@@ -349,7 +349,8 @@ public class Main {
         // TODO: Merging test
         PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
         PcapPacketUtils.sortSignatures(ppListOfListListOff);
-        count = 0;
+        PcapPacketUtils.printSignatures(ppListOfListListOff);
+        //count = 0;
         /*for (List<List<PcapPacket>> ll : ppListOfListListOff) {
             PrintUtils.serializeClustersIntoFile("./offSignature" + ++count + ".sig", ll);
             ppListOfListReadOff.add(PrintUtils.deserializeClustersFromFile("./offSignature" + count + ".sig"));

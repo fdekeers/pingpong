@@ -324,4 +324,34 @@ public final class PcapPacketUtils {
     private static IpV4Packet getIpV4PacketOrThrow(PcapPacket packet) {
         return Objects.requireNonNull(packet.get(IpV4Packet.class), "not an IPv4 packet");
     }
+
+    /**
+     * Print signatures in {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects.
+     *
+     * @param signatures A {@link List} of {@link List} of {@link List} of
+     *          {@link PcapPacket} objects that needs to be printed.
+     */
+    public static void printSignatures(List<List<List<PcapPacket>>> signatures) {
+
+        // Iterate over the list of all clusters/sequences
+        int sequenceCounter = 0;
+        for(List<List<PcapPacket>> listListPcapPacket : signatures) {
+            // Iterate over every member of a cluster/sequence
+            System.out.print("====== SEQUENCE " + sequenceCounter++);
+            System.out.println(" - " + listListPcapPacket.size() + " MEMBERS ======");
+            for(List<PcapPacket> listPcapPacket : listListPcapPacket) {
+                // Print out packet lengths in a sequence
+                int packetCounter = 0;
+                for(PcapPacket pcapPacket : listPcapPacket) {
+                    System.out.print(pcapPacket.length());
+                    if(packetCounter < listPcapPacket.size() - 1) {
+                        System.out.print(" ");  // Provide space if not last packet
+                    } else {
+                        System.out.println();      // Newline if last packet
+                    }
+                    packetCounter++;
+                }
+            }
+        }
+    }
 }
