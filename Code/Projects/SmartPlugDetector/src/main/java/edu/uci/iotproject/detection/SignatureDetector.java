@@ -11,6 +11,7 @@ import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.pcap4j.core.*;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -67,8 +68,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         final String onSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig";
         final String offSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig";
         // D-Link Plug PHONE signatures
-        //final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-phone.sig";
-        //final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-phone.sig";
+        //final String onSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig";
+        //final String offSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig";
 
 
         /*
@@ -146,8 +147,14 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // Sort the list of detected events by timestamp to make it easier to compare it line-by-line with the trigger
         // times file.
         Collections.sort(detectedEvents, Comparator.comparing(UserAction::getTimestamp));
+
+
         // Output the detected events
-        detectedEvents.forEach(outputter);
+        //detectedEvents.forEach(outputter);
+
+        // TODO: Temporary clean up until we clean the pipeline
+        List<UserAction> cleanedDetectedEvents = SignatureDetector.removeDuplicates(detectedEvents);
+        cleanedDetectedEvents.forEach(outputter);
     }
 
     /**
@@ -175,6 +182,31 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
     private final Map<ClusterMatcher, Integer> mClusterMatcherIds;
 
     private final List<SignatureDetectionObserver> mObservers = new ArrayList<>();
+
+    /**
+     * Remove duplicates in {@code List} of {@code UserAction} objects. We need to clean this up for user actions
+     * that appear multiple times.
+     * TODO: This static method is probably just for temporary and we could get rid of this after we clean up
+     * TODO:    the pipeline
+     *
+     * @param listUserAction A {@link List} of {@code UserAction}.
+     *
+     */
+    public static List<UserAction> removeDuplicates(List<UserAction> listUserAction) {
+
+        // Iterate and check for duplicates (check timestamps)
+        Set<Long> epochSecondSet = new HashSet<>();
+        // Create a target list for cleaned up list
+        List<UserAction> listUserActionClean = new ArrayList<>();
+        for(UserAction userAction : listUserAction) {
+            // Don't insert if any duplicate is found
+            if(!epochSecondSet.contains(userAction.getTimestamp().getEpochSecond())) {
+                listUserActionClean.add(userAction);
+                epochSecondSet.add(userAction.getTimestamp().getEpochSecond());
+            }
+        }
+        return listUserActionClean;
+    }
 
     public SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp) {
         // note: doesn't protect inner lists from changes :'(
