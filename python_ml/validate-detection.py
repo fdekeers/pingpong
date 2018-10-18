@@ -1,10 +1,14 @@
 from datetime import datetime
 
 
-path = "/scratch/July-2018/evaluation/"
-device = "dlink"
-fileExperiment = "dlink-plug-8hr-data-oct-8-2018.timestamps"
-fileDetection = "dlink-plug.detection.timestamps"
+path = "/scratch/July-2018/training/"
+device = "dlink-plug/self-test"
+#fileExperiment = "dlink-plug-8hr-data-oct-8-2018.timestamps"
+#fileDetection = "dlink-plug.detection.timestamps"
+#fileExperiment = "dlink-siren-aug-14-2018.timestamps"
+#fileDetection = "dlink-siren.2018-08-14_experiment.phone_signature_detected_events.txt"
+fileExperiment = "dlink-plug-oct-17-2018.timestamps"
+fileDetection = "detection-on-training-device-side"
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds
 
@@ -32,6 +36,9 @@ else:
 i = 0
 j = 0
 while i < maxTimestamps:
+	if(len(tsExperimentList) <= i or len(tsDetectionList) <= j):
+		break;
+	
 	tsE = tsExperimentList[i]
 	tsD = tsDetectionList[j]
 	# Detection is always a bit later than training trigger
