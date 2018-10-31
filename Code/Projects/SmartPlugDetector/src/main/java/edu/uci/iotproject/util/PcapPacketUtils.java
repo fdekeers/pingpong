@@ -24,7 +24,7 @@ public final class PcapPacketUtils {
      * If after a merging the number of members of a signature falls below this threshold, then we can boldly
      * get rid of that signature.
      */
-    private static final int SIGNATURE_MERGE_THRESHOLD = 15;
+    private static final int SIGNATURE_MERGE_THRESHOLD = 5;
 
     /**
      * Determines if a given {@link PcapPacket} wraps a {@link TcpPacket}.
@@ -199,8 +199,12 @@ public final class PcapPacketUtils {
      */
     public static List<List<List<PcapPacket>>>
             mergeSignatures(List<List<List<PcapPacket>>> signatures, List<Conversation> conversations) {
-        // Make a copy first.
-        List<List<List<PcapPacket>>> copySignatures = new ArrayList<>(signatures);
+
+        // TODO: THIS IS NOT A DEEP COPY; IT BASICALLY CREATES A REFERENCE TO THE SAME LIST OBJECT
+        // List<List<List<PcapPacket>>> copySignatures = new ArrayList<>(signatures);
+        // Make a deep copy first.
+        List<List<List<PcapPacket>>> copySignatures = new ArrayList<>();
+        listDeepCopy(copySignatures, signatures);
         // Traverse and look into the pairs of signatures.
         for (int first = 0; first < signatures.size(); first++) {
             List<List<PcapPacket>> firstList = signatures.get(first);
@@ -244,7 +248,7 @@ public final class PcapPacketUtils {
                     // TODO: DOUBLE CHECK IF WE REALLY NEED TO PRUNE FAILED BINDINGS
                     // TODO: SOMETIMES THE SEQUENCES ARE JUST INCOMPLETE
                     // TODO: AND BOTH THE COMPLETE AND INCOMPLETE SEQUENCES ARE VALID SIGNATURES!
-                    // firstList.removeIf(el -> el.size() < maxNumOfEl);
+                    firstList.removeIf(el -> el.size() < maxNumOfEl);
                     // Remove the merged set of signatures when successful.
                     signatures.remove(secondList);
                 } else if (secondList.size() < initialSecondListMembers) {
@@ -255,6 +259,28 @@ public final class PcapPacketUtils {
             }
         }
         return signatures;
+    }
+
+    /**
+     * Deep copy to create an entirely new {@link List} of {@link List} of {@link List} of {@link PcapPacket} objects.
+     * @param destList A {@link List} of {@link List} of {@link List} of
+     *          {@link PcapPacket} objects that will be the final container of the deep copy
+     * @param sourceList A {@link List} of {@link List} of {@link List} of
+     *          {@link PcapPacket} objects that will be the source of the deep copy.
+     */
+    private static void listDeepCopy(List<List<List<PcapPacket>>> destList, List<List<List<PcapPacket>>> sourceList) {
+
+        for(List<List<PcapPacket>> llPcapPacket : sourceList) {
+            List<List<PcapPacket>> tmpListOfList = new ArrayList<>();
+            for(List<PcapPacket> lPcapPacket : llPcapPacket) {
+                List<PcapPacket> tmpList = new ArrayList<>();
+                for(PcapPacket pcapPacket : lPcapPacket) {
+                    tmpList.add(pcapPacket);
+                }
+                tmpListOfList.add(tmpList);
+            }
+            destList.add(tmpListOfList);
+        }
     }
 
     /**

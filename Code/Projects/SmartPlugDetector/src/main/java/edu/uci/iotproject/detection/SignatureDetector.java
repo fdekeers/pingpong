@@ -83,11 +83,17 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         //final String offSignatureFile = path + "/training/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
         */
 
-        // TP-Link Plug experiment
-        final String inputPcapFile = path + "/training/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
+        // Arlo camera experiment
+//        final String inputPcapFile = path + "/training/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
+//        // TP-Link Plug DEVICE signatures
+//        final String onSignatureFile = path + "/training/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig";
+
+        // Amazon Alexa experiment
+        final String inputPcapFile = path + "/training/amazon-alexa/wlan1/alexa2.wlan1.local.pcap";
         // TP-Link Plug DEVICE signatures
-        final String onSignatureFile = path + "/training/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/training/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig";
+        final String onSignatureFile = path + "/training/amazon-alexa/signatures/amazon-alexa-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/training/amazon-alexa/signatures/amazon-alexa-offSignature-device-side.sig";
 
         // SmartThings Plug experiment
 //        final String inputPcapFile = path + "/training/st-plug/wlan1/st-plug.wlan1.local.pcap";
