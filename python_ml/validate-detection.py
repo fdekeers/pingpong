@@ -2,13 +2,16 @@ from datetime import datetime
 
 
 path = "/scratch/July-2018/training/"
-device = "dlink-plug/self-test"
-#fileExperiment = "dlink-plug-8hr-data-oct-8-2018.timestamps"
-#fileDetection = "dlink-plug.detection.timestamps"
-#fileExperiment = "dlink-siren-aug-14-2018.timestamps"
-#fileDetection = "dlink-siren.2018-08-14_experiment.phone_signature_detected_events.txt"
-fileExperiment = "dlink-plug-oct-17-2018.timestamps"
-fileDetection = "detection-on-training-device-side"
+# D-Link plug
+#device = "dlink-plug/self-test"
+#fileExperiment = "dlink-plug-oct-17-2018.timestamps"
+#fileDetection = "detection-on-training-device-side"
+#fileDetection = "detection-on-training-phone-side"
+# TP-Link plug
+device = "arlo-camera/self-test"
+fileExperiment = "arlo-camera-aug-10-2018.timestamps"
+fileDetection = "detection-on-training-phone-side"
+#fileDetection = "detection-on-training-phone-side"
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds
 
@@ -42,9 +45,11 @@ while i < maxTimestamps:
 	tsE = tsExperimentList[i]
 	tsD = tsDetectionList[j]
 	# Detection is always a bit later than training trigger
-	delta = tsD - tsE
+	delta1 = tsD - tsE
+	delta2 = tsE - tsD
+	#print("tsE: " + str(tsE) + " - tsD: " + str(tsD) + " - delta1: " + str(delta1.seconds) + " - delta2: " + str(delta2.seconds))
 	# The following happens when we could detect less triggers than the experiment
-	if (delta.seconds > TIME_WINDOW):
+	if (delta1.seconds > TIME_WINDOW and delta2.seconds > TIME_WINDOW):
 		print("Missing trigger at line: " + str(i) + ", t_experiment: " + str(tsE) + " and t_detection: " + str(tsD))
 		i = i + 1
 	# The following should not happen (we have more detected triggers than the experiment)

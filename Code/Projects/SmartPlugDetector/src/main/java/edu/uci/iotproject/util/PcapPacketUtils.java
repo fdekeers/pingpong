@@ -24,7 +24,7 @@ public final class PcapPacketUtils {
      * If after a merging the number of members of a signature falls below this threshold, then we can boldly
      * get rid of that signature.
      */
-    private static final int SIGNATURE_MERGE_THRESHOLD = 5;
+    private static final int SIGNATURE_MERGE_THRESHOLD = 15;
 
     /**
      * Determines if a given {@link PcapPacket} wraps a {@link TcpPacket}.
@@ -241,7 +241,10 @@ public final class PcapPacketUtils {
                 if (secondList.size() < SIGNATURE_MERGE_THRESHOLD) {
                     // Prune the unsuccessfully merged signatures (i.e., these will have size() < maxSignatureEl).
                     final int maxNumOfEl = maxSignatureEl;
-                    firstList.removeIf(el -> el.size() < maxNumOfEl);
+                    // TODO: DOUBLE CHECK IF WE REALLY NEED TO PRUNE FAILED BINDINGS
+                    // TODO: SOMETIMES THE SEQUENCES ARE JUST INCOMPLETE
+                    // TODO: AND BOTH THE COMPLETE AND INCOMPLETE SEQUENCES ARE VALID SIGNATURES!
+                    // firstList.removeIf(el -> el.size() < maxNumOfEl);
                     // Remove the merged set of signatures when successful.
                     signatures.remove(secondList);
                 } else if (secondList.size() < initialSecondListMembers) {
@@ -334,7 +337,7 @@ public final class PcapPacketUtils {
     public static void printSignatures(List<List<List<PcapPacket>>> signatures) {
 
         // Iterate over the list of all clusters/sequences
-        int sequenceCounter = 0;
+        int sequenceCounter = 1;
         for(List<List<PcapPacket>> listListPcapPacket : signatures) {
             // Iterate over every member of a cluster/sequence
             System.out.print("====== SEQUENCE " + sequenceCounter++);

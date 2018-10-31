@@ -134,6 +134,16 @@ public class ClusterMatcher implements PacketListener {
                 // Skip empty conversations.
                 continue;
             }
+            // TODO: DEBUG!!!
+            /*List<PcapPacket> listPP = c.getPackets();
+            if(listPP.size() > 1000) {
+                for (PcapPacket pp : listPP) {
+                    if (pp.length() == 639) {
+                        boolean test = c.isTls();
+                        System.out.println("Sequence has 639! " + test);
+                    }
+                }
+            }*/
             for (List<PcapPacket> signatureSequence : mCluster) {
                 if (isTlsSequence(signatureSequence) != c.isTls()) {
                     // We consider it a mismatch if one is a TLS application data sequence and the other is not.
