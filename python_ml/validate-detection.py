@@ -7,11 +7,31 @@ path = "/scratch/July-2018/training/"
 #fileExperiment = "dlink-plug-oct-17-2018.timestamps"
 #fileDetection = "detection-on-training-device-side"
 #fileDetection = "detection-on-training-phone-side"
-# TP-Link plug
-device = "arlo-camera/self-test"
-fileExperiment = "arlo-camera-aug-10-2018.timestamps"
-fileDetection = "detection-on-training-phone-side"
+# Arlo camera
+#device = "arlo-camera/self-test"
+#fileExperiment = "arlo-camera-aug-10-2018.timestamps"
 #fileDetection = "detection-on-training-phone-side"
+# Blossom sprinkler
+#device = "blossom-sprinkler/self-test"
+#fileExperiment = "blossom-sprinkler-aug-13-2018.timestamps"
+#fileDetection = "detection-on-training-device-side"
+# Nest thermostat
+#device = "nest-thermostat/self-test"
+#fileExperiment = "nest-aug-15-2018.timestamps"
+#fileDetection = "detection-on-training-phone-side"
+# Hue bulb
+#device = "hue-bulb/self-test"
+#fileExperiment = "hue-bulb-aug-7-2018.timestamps"
+#fileDetection = "detection-on-training-phone-side"
+# TPLink bulb
+#device = "tplink-bulb/self-test"
+#fileExperiment = "tplink-bulb-aug-3-2018.timestamps"
+#fileDetection = "detection-on-training-phone-side"
+# WeMo Insight Plug
+device = "wemo-insight-plug/self-test"
+fileExperiment = "wemo-insight-july-31-2018.timestamps"
+fileDetection = "detection-on-training-device-side"
+
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds
 
@@ -51,6 +71,7 @@ while i < maxTimestamps:
 	# The following happens when we could detect less triggers than the experiment
 	if (delta1.seconds > TIME_WINDOW and delta2.seconds > TIME_WINDOW):
 		print("Missing trigger at line: " + str(i) + ", t_experiment: " + str(tsE) + " and t_detection: " + str(tsD))
+		#print(str(tsD))
 		i = i + 1
 	# The following should not happen (we have more detected triggers than the experiment)
 	#elif (delta.seconds < NEG_TIME_WINDOW):

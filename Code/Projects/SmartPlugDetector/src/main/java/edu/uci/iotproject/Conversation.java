@@ -484,7 +484,7 @@ public class Conversation {
          * 08/31/18: Added unconvetional TLS ports used by WeMo plugs and LiFX bulb.
          * 09/20/18: Moved hardcoded ports to other class to allow other classes to query the set of TLS ports.
          */
-        return TcpConversationUtils.isTlsPort(mServerPort) || TcpConversationUtils.isTlsPort(mClientPort);
+        return TcpConversationUtils.isTlsPort(mServerPort);
     }
 
     /**

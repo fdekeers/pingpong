@@ -227,7 +227,8 @@ public class TcpReassembler implements PacketListener {
                 // We can check if the IP prefix matches a local IP when handling traffic observed inside the local
                 // network, but that obviously won't be a useful strategy for an observer at the WAN port.
                 String srcIp = pcapPacket.get(IpV4Packet.class).getHeader().getSrcAddr().getHostAddress();
-                boolean clientIsSrc = srcIp.startsWith("10.0.1.") || srcIp.startsWith("192.168.1.");
+                // TODO: REPLACE THE ROUTER'S IP WITH A PARAMETER!!!
+                boolean clientIsSrc = srcIp.startsWith("10.0.1.") || srcIp.startsWith("192.168.1.") || srcIp.equals("128.195.205.105");
                 conv = Conversation.fromPcapPacket(pcapPacket, clientIsSrc);
             }
             mOpenConversations.put(conv, conv);

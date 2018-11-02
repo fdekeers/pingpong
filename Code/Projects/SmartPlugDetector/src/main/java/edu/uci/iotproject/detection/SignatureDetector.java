@@ -46,10 +46,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
         // Kwikset Doorlock Sep 12 experiment
 //        final String inputPcapFile = path + "/evaluation/kwikset-doorlock/kwikset-doorlock.data.wlan1.pcap";
-//        //final String inputPcapFile = path + "/evaluation/kwikset-doorlock/kwikset-doorlock.data.eth0.pcap";
-////        // Kwikset Doorlock PHONE signatures
-//        final String onSignatureFile = path + "/2018-08/kwikset-doorlock/onSignature-Kwikset-Doorlock-phone-new.sig";
-//        final String offSignatureFile = path + "/2018-08/kwikset-doorlock/offSignature-Kwikset-Doorlock-phone-new.sig";
+        final String inputPcapFile = path + "/evaluation/kwikset-doorlock/kwikset-doorlock.data.eth0.pcap";
+//        // Kwikset Doorlock PHONE signatures
+        final String onSignatureFile = path + "/2018-08/kwikset-doorlock/onSignature-Kwikset-Doorlock-phone-new.sig";
+        final String offSignatureFile = path + "/2018-08/kwikset-doorlock/offSignature-Kwikset-Doorlock-phone-new.sig";
 
         // D-Link Plug experiment
         //final String inputPcapFile = path + "/evaluation/dlink/dlink-plug.data.wlan1.pcap";
@@ -64,6 +64,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
 
         // TODO: The following are tests for signatures against training data
+
         /*
         // D-Link Plug experiment
         final String inputPcapFile = path + "/training/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
@@ -90,10 +91,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String offSignatureFile = path + "/training/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig";
 
         // Amazon Alexa experiment
-        final String inputPcapFile = path + "/training/amazon-alexa/wlan1/alexa2.wlan1.local.pcap";
-        // TP-Link Plug DEVICE signatures
-        final String onSignatureFile = path + "/training/amazon-alexa/signatures/amazon-alexa-onSignature-device-side.sig";
-        final String offSignatureFile = path + "/training/amazon-alexa/signatures/amazon-alexa-offSignature-device-side.sig";
+//        final String inputPcapFile = path + "/training/amazon-alexa/wlan1/alexa2.wlan1.local.pcap";
+//        // TP-Link Plug DEVICE signatures
+//        final String onSignatureFile = path + "/training/amazon-alexa/signatures/amazon-alexa-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/training/amazon-alexa/signatures/amazon-alexa-offSignature-device-side.sig";
 
         // SmartThings Plug experiment
 //        final String inputPcapFile = path + "/training/st-plug/wlan1/st-plug.wlan1.local.pcap";
@@ -104,6 +105,68 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String onSignatureFile = path + "/training/st-plug/signatures/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/training/st-plug/signatures/st-plug-offSignature-phone-side.sig";
 
+
+        // LiFX Bulb experiment
+//        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";
+//        // LiFX Bulb DEVICE signatures
+//        final String onSignatureFile = path + "/training/lifx-bulb/signatures/lifx-bulb-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/training/lifx-bulb/signatures/lifx-bulb-offSignature-device-side.sig";
+        // LiFX Bulb PHONE signatures
+//        final String onSignatureFile = path + "/training/lifx-bulb/signatures/lifx-bulb-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/lifx-bulb/signatures/lifx-bulb-offSignature-phone-side.sig";
+
+
+        /*
+        // Blossom Sprinkler experiment
+        final String inputPcapFile = path + "/training/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+        // Blossom Sprinkler DEVICE signatures
+        final String onSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
+        */
+
+
+        /*
+        // Nest Thermostat experiment
+        final String inputPcapFile = path + "/training/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
+        // Nest Thermostat DEVICE signatures
+//        final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-device-side.sig";
+        // Nest Thermostat PHONE signatures
+        final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-phone-side.sig";
+        */
+
+        /*
+        // Hue Bulb experiment
+        final String inputPcapFile = path + "/training/hue-bulb/wlan1/hue-bulb.wlan1.local.pcap";
+        // Hue Bulb PHONE signatures
+        final String onSignatureFile = path + "/training/hue-bulb/signatures/hue-bulb-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/training/hue-bulb/signatures/hue-bulb-offSignature-phone-side.sig";
+        */
+
+        /*
+        // TP-Link Bulb experiment
+        final String inputPcapFile = path + "/training/tplink-bulb/wlan1/tplink-bulb.wlan1.local.pcap";
+        // TP-Link Bulb PHONE signatures
+        final String onSignatureFile = path + "/training/tplink-bulb/signatures/tplink-bulb-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/training/tplink-bulb/signatures/tplink-bulb-offSignature-phone-side.sig";
+        */
+
+        /*
+        // WeMo Plug experiment
+        final String inputPcapFile = path + "/training/wemo-plug/wlan1/wemo-plug.wlan1.local.pcap";
+        // WeMo Plug PHONE signatures
+        final String onSignatureFile = path + "/training/wemo-plug/signatures/wemo-plug-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/training/wemo-plug/signatures/wemo-plug-offSignature-device-side.sig";
+        */
+
+        /*
+        // WeMo Insight Plug experiment
+        final String inputPcapFile = path + "/training/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
+        // WeMo Insight Plug PHONE signatures
+        final String onSignatureFile = path + "/training/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/training/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-device-side.sig";
+        */
 
         /*
         // Kwikset Doorlock Sep 12 experiment
