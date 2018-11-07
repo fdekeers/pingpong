@@ -19,7 +19,7 @@ WEBSITE[3]="https://www.amazon.com"
 WEBSITE[4]="https://www.reddit.com"
 WEBSITE[5]="https://www.wikipedia.org"
 WEBSITE[6]="https://www.yahoo.com"
-WEBSITE[7]="https://www.twitter.com"
+WEBSITE[7]="https://twitter.com"
 WEBSITE[8]="https://www.instagram.com"
 WEBSITE[9]="https://www.linkedin.com"
 
