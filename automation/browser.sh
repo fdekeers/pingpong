@@ -15,8 +15,13 @@ SLP_RAN_END=500
 WEBSITE[0]="https://www.google.com"
 WEBSITE[1]="https://www.youtube.com"
 WEBSITE[2]="https://www.facebook.com"
-WEBSITE[3]="https://www.yahoo.com"
-WEBSITE[4]="https://www.wikipedia.org"
+WEBSITE[3]="https://www.amazon.com"
+WEBSITE[4]="https://www.reddit.com"
+WEBSITE[5]="https://www.wikipedia.org"
+WEBSITE[6]="https://www.yahoo.com"
+WEBSITE[7]="https://www.twitter.com"
+WEBSITE[8]="https://www.instagram.com"
+WEBSITE[9]="https://www.linkedin.com"
 
 while true
 do
