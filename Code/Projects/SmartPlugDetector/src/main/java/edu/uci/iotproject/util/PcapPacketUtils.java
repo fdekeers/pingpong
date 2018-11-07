@@ -363,7 +363,7 @@ public final class PcapPacketUtils {
     public static void printSignatures(List<List<List<PcapPacket>>> signatures) {
 
         // Iterate over the list of all clusters/sequences
-        int sequenceCounter = 1;
+        int sequenceCounter = 0;
         for(List<List<PcapPacket>> listListPcapPacket : signatures) {
             // Iterate over every member of a cluster/sequence
             System.out.print("====== SEQUENCE " + sequenceCounter++);
@@ -382,5 +382,19 @@ public final class PcapPacketUtils {
                 }
             }
         }
+    }
+
+    /**
+     * Remove a sequence in a signature object.
+     *
+     * @param signatures A {@link List} of {@link List} of {@link List} of
+     *          {@link PcapPacket} objects.
+     * @param sequenceIndex An index for a sequence that consists of {{@link List} of {@link List} of
+     *          {@link PcapPacket} objects.
+     */
+    public static void removeSequenceFromSignature(List<List<List<PcapPacket>>> signatures, int sequenceIndex) {
+
+        // Sequence index starts from 0
+        signatures.remove(sequenceIndex);
     }
 }

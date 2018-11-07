@@ -44,12 +44,14 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-phone.sig";
 //        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-phone.sig";
 
+        /*
         // Kwikset Doorlock Sep 12 experiment
 //        final String inputPcapFile = path + "/evaluation/kwikset-doorlock/kwikset-doorlock.data.wlan1.pcap";
         final String inputPcapFile = path + "/evaluation/kwikset-doorlock/kwikset-doorlock.data.eth0.pcap";
 //        // Kwikset Doorlock PHONE signatures
         final String onSignatureFile = path + "/2018-08/kwikset-doorlock/onSignature-Kwikset-Doorlock-phone-new.sig";
         final String offSignatureFile = path + "/2018-08/kwikset-doorlock/offSignature-Kwikset-Doorlock-phone-new.sig";
+        */
 
         // D-Link Plug experiment
         //final String inputPcapFile = path + "/evaluation/dlink/dlink-plug.data.wlan1.pcap";
@@ -69,11 +71,11 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // D-Link Plug experiment
         final String inputPcapFile = path + "/training/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
         // D-Link Plug DEVICE signatures
-        final String onSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig";
-        final String offSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig";
+        //final String onSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig";
+        //final String offSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig";
         // D-Link Plug PHONE signatures
-        //final String onSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig";
-        //final String offSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig";
+        final String onSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig";
         */
 
         /*
@@ -118,14 +120,13 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
         /*
         // Blossom Sprinkler experiment
-        final String inputPcapFile = path + "/training/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+        //final String inputPcapFile = path + "/training/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+        final String inputPcapFile = path + "/training/blossom-sprinkler/eth0/blossom-sprinkler.eth0.local.pcap";
         // Blossom Sprinkler DEVICE signatures
         final String onSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
         final String offSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
         */
 
-
-        /*
         // Nest Thermostat experiment
         final String inputPcapFile = path + "/training/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
         // Nest Thermostat DEVICE signatures
@@ -134,7 +135,6 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // Nest Thermostat PHONE signatures
         final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig";
         final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-phone-side.sig";
-        */
 
         /*
         // Hue Bulb experiment
@@ -168,13 +168,13 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         final String offSignatureFile = path + "/training/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-device-side.sig";
         */
 
-        /*
+
         // Kwikset Doorlock Sep 12 experiment
-        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
-        // Kwikset Doorlock PHONE signatures
-        final String onSignatureFile = path + "/2018-08/kwikset-doorlock/onSignature-Kwikset-Doorlock-phone.sig";
-        final String offSignatureFile = path + "/2018-08/kwikset-doorlock/offSignature-Kwikset-Doorlock-phone.sig";
-        */
+//        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
+//        // Kwikset Doorlock PHONE signatures
+//        final String onSignatureFile = path + "/2018-08/kwikset-doorlock/onSignature-Kwikset-Doorlock-phone.sig";
+//        final String offSignatureFile = path + "/2018-08/kwikset-doorlock/offSignature-Kwikset-Doorlock-phone.sig";
+
 
         /*
         // D-Link Siren experiment
@@ -191,11 +191,11 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
 
         // LAN
-//        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
-//        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
+        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
+        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
         // WAN
-        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
-        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
+//        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
+//        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));

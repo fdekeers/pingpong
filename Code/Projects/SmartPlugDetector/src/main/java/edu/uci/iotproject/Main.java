@@ -144,10 +144,10 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-10/lifx-bulb/lifx-bulb-oct-18-2018.timestamps";
 //        final String deviceIp = "192.168.1.231"; // .246 == phone; .231 == Lifx
         // November 1
-        final String inputPcapFile = path + "/2018-10/lifx-bulb/lifx-bulb.wlan1.local.pcap";
-        final String outputPcapFile = path + "/2018-10/lifx-bulb/lifx-bulb-processed.pcap";
-        final String triggerTimesFile = path + "/2018-10/lifx-bulb/lifx-bulb-nov-1-2018.timestamps";
-        final String deviceIp = "192.168.1.231"; // .246 == phone; .231 == Lifx
+//        final String inputPcapFile = path + "/2018-10/lifx-bulb/lifx-bulb.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-10/lifx-bulb/lifx-bulb-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-10/lifx-bulb/lifx-bulb-nov-1-2018.timestamps";
+//        final String deviceIp = "192.168.1.231"; // .246 == phone; .231 == Lifx
 
         // 10) Amcrest Camera August 9 experiment
 //        final String inputPcapFile = path + "/2018-08/amcrest-camera/amcrest-camera.wlan1.local.pcap";
@@ -166,6 +166,11 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/blossom/blossom-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/blossom/blossom-aug-13-2018.timestamps";
 //        final String deviceIp = "192.168.1.229"; // .246 == phone; .229 == sprinkler
+        // 2 November
+//        final String inputPcapFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler-processed.pcap";
+//        final String triggerTimesFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler-nov-2-2018.timestamps";
+//        final String deviceIp = "192.168.1.229"; // .246 == phone; .229 == sprinkler
 
 //        // 13) DLink siren August 14 experiment
 //        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
@@ -177,10 +182,10 @@ public class Main {
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .183 == siren
 
         // 14) Nest thermostat August 15 experiment
-//        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/2018-08/nest/nest-processed.pcap";
-//        final String triggerTimesFile = path + "/2018-08/nest/nest-aug-15-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .127 == Nest thermostat
+        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";
+        final String outputPcapFile = path + "/2018-08/nest/nest-processed.pcap";
+        final String triggerTimesFile = path + "/2018-08/nest/nest-aug-15-2018.timestamps";
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .127 == Nest thermostat
 
         // 15) Alexa August 16 experiment
 //        final String inputPcapFile = path + "/2018-08/alexa/alexa.wlan1.local.pcap";
@@ -369,6 +374,8 @@ public class Main {
         // TODO: Merging test
         ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
         ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
+        // TODO: Need to remove sequence number 1 for Nest Thermostat since it is not a good signature!
+        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
         PcapPacketUtils.printSignatures(ppListOfListListOff);
         //count = 0;
         /*for (List<List<PcapPacket>> ll : ppListOfListListOff) {
@@ -386,8 +393,6 @@ public class Main {
         File fileOnEvents = new File(onPairsPath);
         PrintWriter pwOn = null;
         try {
-
-
             pwOn = new PrintWriter(fileOnEvents);
         } catch(Exception ex) {
             ex.printStackTrace();

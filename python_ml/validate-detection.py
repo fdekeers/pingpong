@@ -16,9 +16,9 @@ path = "/scratch/July-2018/training/"
 #fileExperiment = "blossom-sprinkler-aug-13-2018.timestamps"
 #fileDetection = "detection-on-training-device-side"
 # Nest thermostat
-#device = "nest-thermostat/self-test"
-#fileExperiment = "nest-aug-15-2018.timestamps"
-#fileDetection = "detection-on-training-phone-side"
+device = "nest-thermostat/self-test"
+fileExperiment = "nest-aug-15-2018.timestamps"
+fileDetection = "detection-on-training-phone-side"
 # Hue bulb
 #device = "hue-bulb/self-test"
 #fileExperiment = "hue-bulb-aug-7-2018.timestamps"
@@ -28,9 +28,9 @@ path = "/scratch/July-2018/training/"
 #fileExperiment = "tplink-bulb-aug-3-2018.timestamps"
 #fileDetection = "detection-on-training-phone-side"
 # WeMo Insight Plug
-device = "wemo-insight-plug/self-test"
-fileExperiment = "wemo-insight-july-31-2018.timestamps"
-fileDetection = "detection-on-training-device-side"
+#device = "wemo-insight-plug/self-test"
+#fileExperiment = "wemo-insight-july-31-2018.timestamps"
+#fileDetection = "detection-on-training-device-side"
 
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds
