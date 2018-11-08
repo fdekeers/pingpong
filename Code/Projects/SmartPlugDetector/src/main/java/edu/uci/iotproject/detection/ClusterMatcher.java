@@ -83,31 +83,35 @@ public class ClusterMatcher implements PacketListener {
      *                          {@code cluster}.
      */
     public ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, ClusterMatchObserver... detectionObservers) {
-        mCluster = Collections.unmodifiableList(Objects.requireNonNull(cluster, "cluster cannot be null"));
-        mObservers = Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
-        if (mCluster.isEmpty() || mCluster.stream().anyMatch(inner -> inner.isEmpty())) {
+        // ===================== PRECONDITION SECTION =====================
+        cluster = Objects.requireNonNull(cluster, "cluster cannot be null");
+        if (cluster.isEmpty() || cluster.stream().anyMatch(inner -> inner.isEmpty())) {
             throw new IllegalArgumentException("cluster is empty (or contains an empty inner List)");
         }
+        mObservers = Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
         if (mObservers.length == 0) {
             throw new IllegalArgumentException("no detectionObservers provided");
         }
-        mRouterWanIp = routerWanIp;
         // Build the cluster members' direction sequence.
         // Note: assumes that the provided cluster was captured within the local network (routerWanIp is set to null).
-        mClusterMemberDirections = getPacketDirections(mCluster.get(0), null);
+        mClusterMemberDirections = getPacketDirections(cluster.get(0), null);
         /*
          * Enforce restriction on cluster members: all representatives must exhibit the same direction pattern and
          * contain the same number of packets. Note that this is a somewhat heavy operation, so it may be disabled later
          * on in favor of performance. However, it is only run once (at instantiation), so the overhead may be warranted
          * in order to ensure correctness, especially during the development/debugging phase.
          */
-        if (mCluster.stream().
+        if (cluster.stream().
                 anyMatch(inner -> !Arrays.equals(mClusterMemberDirections, getPacketDirections(inner, null)))) {
             throw new IllegalArgumentException(
                     "cluster members must contain the same number of packets and exhibit the same packet direction " +
                             "pattern"
             );
         }
+        // ================================================================
+        // Prune the provided cluster.
+        mCluster = pruneCluster(cluster);
+        mRouterWanIp = routerWanIp;
     }
 
     @Override
@@ -145,21 +149,13 @@ public class ClusterMatcher implements PacketListener {
                  * Note: we embed the attempt to detect the signature sequence in a loop in order to capture those cases
                  * where the same signature sequence appears multiple times in one Conversation.
                  *
-                 * Note: as the cluster can be made up of identical sequences, we must keep track of whether we detected
-                 * a match and, if so, break the inner for-each loop in order to prevent raising an alarm for each
-                 * cluster-member (prevent duplicate detections of the same event). However, a negative side-effect of
-                 * this is that, in doing so, we will also skip searching for subsequent different cluster members in
-                 * the current conversation if the current cluster member is a match.
-                 *
                  * Note: since we expect all sequences that together make up the signature to exhibit the same direction
                  * pattern, we can simply pass the precomputed direction array for the signature sequence so that it
                  * won't have to be recomputed internally in each call to findSubsequenceInSequence().
                  */
                 Optional<List<PcapPacket>> match;
-                boolean matchFound = false;
                 while ((match = findSubsequenceInSequence(signatureSequence, cPkts, mClusterMemberDirections, null)).
                         isPresent()) {
-                    matchFound = true;
                     List<PcapPacket> matchSeq = match.get();
                     // Notify observers about the match.
                     Arrays.stream(mObservers).forEach(o -> o.onMatch(ClusterMatcher.this, matchSeq));
@@ -170,10 +166,6 @@ public class ClusterMatcher implements PacketListener {
                     int matchSeqEndIdx = cPkts.indexOf(matchSeq.get(matchSeq.size()-1));
                     // We restart the search for the signature sequence immediately after that index, so truncate cPkts.
                     cPkts = cPkts.stream().skip(matchSeqEndIdx + 1).collect(Collectors.toList());
-                }
-                if (matchFound) {
-                    // Break inner for-each loop in order to avoid duplicate detection of same event (see comment above)
-                    break;
                 }
             }
             /*
@@ -289,6 +281,35 @@ public class ClusterMatcher implements PacketListener {
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Given a cluster, produces a pruned version of that cluster. In the pruned version, there are no duplicate cluster
+     * members. Two cluster members are considered identical if their packets lengths and packet directions are
+     * identical. The resulting pruned cluster is unmodifiable (this applies to both the outermost list as well as the
+     * nested lists) in order to preserve its integrity when exposed to external code (e.g., through
+     * {@link #getCluster()}).
+     *
+     * @param cluster A cluster to prune.
+     * @return The resulting pruned cluster.
+     */
+    private final List<List<PcapPacket>> pruneCluster(List<List<PcapPacket>> cluster) {
+        List<List<PcapPacket>> prunedCluster = new ArrayList<>();
+        for (List<PcapPacket> originalClusterSeq : cluster) {
+            boolean alreadyPresent = false;
+            for (List<PcapPacket> prunedClusterSeq : prunedCluster) {
+                Optional<List<PcapPacket>> duplicate = findSubsequenceInSequence(originalClusterSeq, prunedClusterSeq,
+                        mClusterMemberDirections, mClusterMemberDirections);
+                if (duplicate.isPresent()) {
+                    alreadyPresent = true;
+                    break;
+                }
+            }
+            if (!alreadyPresent) {
+                prunedCluster.add(Collections.unmodifiableList(originalClusterSeq));
+            }
+        }
+        return Collections.unmodifiableList(prunedCluster);
     }
 
     /**
