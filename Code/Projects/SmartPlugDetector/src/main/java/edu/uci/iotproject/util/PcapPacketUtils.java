@@ -372,7 +372,9 @@ public final class PcapPacketUtils {
                 // Print out packet lengths in a sequence
                 int packetCounter = 0;
                 for(PcapPacket pcapPacket : listPcapPacket) {
-                    System.out.print(pcapPacket.length());
+                    if(pcapPacket != null) {
+                        System.out.print(pcapPacket.length());
+                    }
                     if(packetCounter < listPcapPacket.size() - 1) {
                         System.out.print(" ");  // Provide space if not last packet
                     } else {

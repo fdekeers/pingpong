@@ -64,9 +64,31 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String onSignatureFile = path + "/2018-07/dlink/onSignature-DLink-Plug-phone.sig";
 //        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-phone.sig";
 
+        // TODO: The following are negative tests against the PCAP file from UNSW
+        /*        final String inputPcapFile = path + "/UNSW/16-09-28.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-02.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-03.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-04.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-07.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-08.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-09.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-10.pcap"; TODO: Seems to be broken! */
+        /*        final String inputPcapFile = path + "/UNSW/16-10-11.pcap"; TODO: Seems to be broken! */
+
+
+//        final String inputPcapFile = path + "/UNSW/16-09-23.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-09-24.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-09-25.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-09-26.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-09-27.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-09-29.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-10-01.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-10-06.pcap";
+
+        // TODO: The following one is very long!!!
+//        final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
 
         // TODO: The following are tests for signatures against training data
-
         /*
         // D-Link Plug experiment
         final String inputPcapFile = path + "/training/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
@@ -77,14 +99,50 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         final String onSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig";
         final String offSignatureFile = path + "/training/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig";
         */
+        // TODO: EXPERIMENT - November 7, 2018
+        // D-Link Plug experiment
+        //final String inputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
+        //final String inputPcapFile = path + "/experimental_result/smarthome/dlink-plug/wlan1/dlink-plug.wlan1.detection.pcap";
+        //final String inputPcapFile = path + "/experimental_result/smarthome/dlink-plug/eth0/dlink-plug.eth0.detection.pcap";
+        // D-Link Plug DEVICE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig";
+        // D-Link Plug PHONE signatures
+        //final String onSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig";
+        //final String offSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig";
 
-        /*
+        // TODO: EXPERIMENT - November 9, 2018
+        // D-Link Siren experiment
+        //final String inputPcapFile = path + "/experimental_result/standalone/dlink-siren/wlan1/dlink-siren.wlan1.local.pcap";
+        //final String inputPcapFile = path + "/experimental_result/smarthome/dlink-siren/wlan1/dlink-siren.wlan1.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/dlink-siren/eth0/dlink-siren.eth0.detection.pcap";
+        // D-Link Siren DEVICE signatures
+        // TODO: The device signature does not have pairs---only one packet which is 216, so we don't consider this as a signature
+//        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-offSignature-device-side.sig";
+        // D-Link Siren PHONE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-offSignature-phone-side.sig";
+
         // TP-Link Plug experiment
-        final String inputPcapFile = path + "/training/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
+        //final String inputPcapFile = path + "/training/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
         // TP-Link Plug DEVICE signatures
         //final String onSignatureFile = path + "/training/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
         //final String offSignatureFile = path + "/training/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
-        */
+        // TODO: EXPERIMENT - November 8, 2018
+        // TP-Link Plug experiment
+//        final String inputPcapFile = path + "/experimental_result/standalone/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/tplink-plug/eth0/tplink-plug.eth0.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/tplink-plug/wlan1/tplink-plug.wlan1.detection.pcap";
+        //final String inputPcapFile = path + "/experimental_result/smarthome/tplink-plug/eth0/tplink-plug.eth0.detection.pcap";
+        // TP-Link Plug DEVICE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-device-side-outbound.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-device-side-outbound.sig";
+        // TP-Link Plug PHONE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-phone-side.sig";
 
         // Arlo camera experiment
 //        final String inputPcapFile = path + "/training/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
@@ -100,10 +158,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
         // SmartThings Plug experiment
 //        final String inputPcapFile = path + "/training/st-plug/wlan1/st-plug.wlan1.local.pcap";
-        // TP-Link Plug DEVICE signatures
-        //final String onSignatureFile = path + "/training/st-plug/signatures/st-plug-onSignature-device-side.sig";
-        //final String offSignatureFile = path + "/training/st-plug/signatures/st-plug-offSignature-device-side.sig";
-        // TP-Link Plug PHONE signatures
+//        // TP-Link Plug DEVICE signatures
+//        //final String onSignatureFile = path + "/training/st-plug/signatures/st-plug-onSignature-device-side.sig";
+//        //final String offSignatureFile = path + "/training/st-plug/signatures/st-plug-offSignature-device-side.sig";
+//        // TP-Link Plug PHONE signatures
 //        final String onSignatureFile = path + "/training/st-plug/signatures/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/training/st-plug/signatures/st-plug-offSignature-phone-side.sig";
 
@@ -128,13 +186,13 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         */
 
         // Nest Thermostat experiment
-        final String inputPcapFile = path + "/training/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
-        // Nest Thermostat DEVICE signatures
-//        final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-device-side.sig";
-//        final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-device-side.sig";
-        // Nest Thermostat PHONE signatures
-        final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-phone-side.sig";
+//        final String inputPcapFile = path + "/training/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
+//        // Nest Thermostat DEVICE signatures
+////        final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-device-side.sig";
+////        final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-device-side.sig";
+//        // Nest Thermostat PHONE signatures
+//        final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-phone-side.sig";
 
         /*
         // Hue Bulb experiment
@@ -174,6 +232,15 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        // Kwikset Doorlock PHONE signatures
 //        final String onSignatureFile = path + "/2018-08/kwikset-doorlock/onSignature-Kwikset-Doorlock-phone.sig";
 //        final String offSignatureFile = path + "/2018-08/kwikset-doorlock/offSignature-Kwikset-Doorlock-phone.sig";
+        // TODO: EXPERIMENT - November 10, 2018
+        // Kwikset Door lock experiment
+//        final String inputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.local.pcap";
+//        //final String inputPcapFile = path + "/experimental_result/smarthome/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.detection.pcap";
+////        final String inputPcapFile = path + "/experimental_result/smarthome/kwikset-doorlock/eth0/kwikset-doorlock.eth0.detection.pcap";
+//        // Kwikset Door lock PHONE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-offSignature-phone-side.sig";
+
 
 
         /*
@@ -191,11 +258,11 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
 
         // LAN
-        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
-        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
+//        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
+//        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
         // WAN
-//        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
-//        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
+        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
+        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));

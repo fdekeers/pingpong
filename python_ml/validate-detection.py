@@ -1,12 +1,44 @@
 from datetime import datetime
 
-
-path = "/scratch/July-2018/training/"
+#path = "/scratch/July-2018/experimental_result/smarthome/"
+path = "/scratch/July-2018/experimental_result/standalone/"
 # D-Link plug
 #device = "dlink-plug/self-test"
-#fileExperiment = "dlink-plug-oct-17-2018.timestamps"
-#fileDetection = "detection-on-training-device-side"
-#fileDetection = "detection-on-training-phone-side"
+#fileExperiment = "dlink-plug-nov-7-2018.timestamps"
+#fileDetection = "device-side-detection"
+#fileDetection = "phone-side-detection"
+#device = "dlink-plug/timestamps"
+#fileExperiment = "dlink-plug-smarthome-nov-8-2018.timestamps"
+#fileDetection = "dlink-plug-smarthome-nov-8-2018.phone.wlan1.detections"
+#fileDetection = "dlink-plug-smarthome-nov-8-2018.phone.eth0.detections"
+#fileDetection = "dlink-plug-smarthome-nov-8-2018.device.eth0.detections"
+
+# TP-Link plug
+#device = "tplink-plug/self-test"
+#fileExperiment = "tplink-plug-nov-8-2018.timestamps"
+#fileDetection = "device-side-detection"
+#fileDetection = "phone-side-detection"
+#device = "tplink-plug/timestamps"
+#fileExperiment = "tplink-plug-smarthome-nov-9-2018.timestamps"
+#fileDetection = "tplink-plug-smarthome-nov-9-2018.eth0.device.detections"
+#fileDetection = "tplink-plug-smarthome-nov-9-2018.wlan1.phone.detections"
+
+# D-Link siren
+#device = "dlink-siren/self-test"
+#fileExperiment = "dlink-siren-nov-9-2018.timestamps"
+#fileDetection = "phone-side-detection"
+device = "dlink-siren/timestamps"
+fileExperiment = "dlink-siren-smarthome-nov-10-2018.timestamps"
+fileDetection = "dlink-siren-smarthome-nov-10-2018.eth0.phone.detections"
+
+# Kwikset door lock
+device = "kwikset-doorlock/self-test"
+fileExperiment = "kwikset-doorlock-nov-10-2018.timestamps"
+fileDetection = "phone-side-detection"
+#device = "kwikset-doorlock/timestamps"
+#fileExperiment = "kwikset-doorlock-smarthome-nov-10-2018.timestamps"
+#fileDetection = "kwikset-doorlock-smarthome-nov-10-2018.eth0.phone.detections"
+
 # Arlo camera
 #device = "arlo-camera/self-test"
 #fileExperiment = "arlo-camera-aug-10-2018.timestamps"
@@ -16,9 +48,9 @@ path = "/scratch/July-2018/training/"
 #fileExperiment = "blossom-sprinkler-aug-13-2018.timestamps"
 #fileDetection = "detection-on-training-device-side"
 # Nest thermostat
-device = "nest-thermostat/self-test"
-fileExperiment = "nest-aug-15-2018.timestamps"
-fileDetection = "detection-on-training-phone-side"
+#device = "nest-thermostat/self-test"
+#fileExperiment = "nest-aug-15-2018.timestamps"
+#fileDetection = "detection-on-training-phone-side"
 # Hue bulb
 #device = "hue-bulb/self-test"
 #fileExperiment = "hue-bulb-aug-7-2018.timestamps"
