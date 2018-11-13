@@ -78,7 +78,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
 //        final String inputPcapFile = path + "/UNSW/16-09-23.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-24.pcap";
-//        final String inputPcapFile = path + "/UNSW/16-09-25.pcap";
+        final String inputPcapFile = path + "/UNSW/16-09-25.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-26.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-27.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-29.pcap";
@@ -164,6 +164,15 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        // TP-Link Plug PHONE signatures
 //        final String onSignatureFile = path + "/training/st-plug/signatures/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/training/st-plug/signatures/st-plug-offSignature-phone-side.sig";
+        // TODO: EXPERIMENT - November 12, 2018
+        // SmartThings Plug experiment
+//        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/wlan1/st-plug.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/eth0/st-plug.eth0.local.pcap";
+//        //final String inputPcapFile = path + "/experimental_result/smarthome/st-plug/wlan1/st-plug.wlan1.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/st-plug/eth0/st-plug.eth0.detection.pcap";
+//        // SmartThings Plug PHONE signatures
+        final String onSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-offSignature-phone-side.sig";
 
 
         // LiFX Bulb experiment
@@ -236,8 +245,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // Kwikset Door lock experiment
 //        final String inputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.local.pcap";
 //        //final String inputPcapFile = path + "/experimental_result/smarthome/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.detection.pcap";
-////        final String inputPcapFile = path + "/experimental_result/smarthome/kwikset-doorlock/eth0/kwikset-doorlock.eth0.detection.pcap";
-//        // Kwikset Door lock PHONE signatures
+//        final String inputPcapFile = path + "/experimental_result/smarthome/kwikset-doorlock/eth0/kwikset-doorlock.eth0.detection.pcap";
+////        // Kwikset Door lock PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-offSignature-phone-side.sig";
 
@@ -293,10 +302,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
             PcapPacket firstPkt = match.get(0).get(0);
             detectedEvents.add(new UserAction(UserAction.Type.TOGGLE_ON, firstPkt.getTimestamp()));
         });
-        offDetector.addObserver((searched, match) -> {
-            PcapPacket firstPkt = match.get(0).get(0);
-            detectedEvents.add(new UserAction(UserAction.Type.TOGGLE_OFF, firstPkt.getTimestamp()));
-        });
+//        offDetector.addObserver((searched, match) -> {
+//            PcapPacket firstPkt = match.get(0).get(0);
+//            detectedEvents.add(new UserAction(UserAction.Type.TOGGLE_OFF, firstPkt.getTimestamp()));
+//        });
 
         PcapHandle handle;
         try {
@@ -309,7 +318,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
         // TODO: need a better way of triggering detection than this...
         onDetector.mClusterMatchers.forEach(cm -> cm.performDetection());
-        offDetector.mClusterMatchers.forEach(cm -> cm.performDetection());
+//        offDetector.mClusterMatchers.forEach(cm -> cm.performDetection());
 
         // Sort the list of detected events by timestamp to make it easier to compare it line-by-line with the trigger
         // times file.

@@ -1,7 +1,7 @@
 from datetime import datetime
 
-#path = "/scratch/July-2018/experimental_result/smarthome/"
-path = "/scratch/July-2018/experimental_result/standalone/"
+path = "/scratch/July-2018/experimental_result/smarthome/"
+#path = "/scratch/July-2018/experimental_result/standalone/"
 # D-Link plug
 #device = "dlink-plug/self-test"
 #fileExperiment = "dlink-plug-nov-7-2018.timestamps"
@@ -27,17 +27,26 @@ path = "/scratch/July-2018/experimental_result/standalone/"
 #device = "dlink-siren/self-test"
 #fileExperiment = "dlink-siren-nov-9-2018.timestamps"
 #fileDetection = "phone-side-detection"
-device = "dlink-siren/timestamps"
-fileExperiment = "dlink-siren-smarthome-nov-10-2018.timestamps"
-fileDetection = "dlink-siren-smarthome-nov-10-2018.eth0.phone.detections"
+#device = "dlink-siren/timestamps"
+#fileExperiment = "dlink-siren-smarthome-nov-10-2018.timestamps"
+#fileDetection = "dlink-siren-smarthome-nov-10-2018.eth0.phone.detections"
 
 # Kwikset door lock
-device = "kwikset-doorlock/self-test"
-fileExperiment = "kwikset-doorlock-nov-10-2018.timestamps"
-fileDetection = "phone-side-detection"
+#device = "kwikset-doorlock/self-test"
+#fileExperiment = "kwikset-doorlock-nov-10-2018.timestamps"
+#fileDetection = "phone-side-detection"
 #device = "kwikset-doorlock/timestamps"
 #fileExperiment = "kwikset-doorlock-smarthome-nov-10-2018.timestamps"
 #fileDetection = "kwikset-doorlock-smarthome-nov-10-2018.eth0.phone.detections"
+
+# SmartThings plug
+#device = "st-plug/self-test"
+#fileExperiment = "st-plug-nov-13-2018.timestamps"
+#fileDetection = "phone-side-detection"
+device = "st-plug/timestamps"
+fileExperiment = "st-plug-smarthome-nov-13-2018.timestamps"
+fileDetection = "st-plug-smarthome-nov-13-2018.eth0.phone.detections"
+
 
 # Arlo camera
 #device = "arlo-camera/self-test"

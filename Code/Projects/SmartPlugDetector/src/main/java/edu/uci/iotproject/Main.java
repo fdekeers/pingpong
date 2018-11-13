@@ -100,6 +100,14 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-10/st-plug/st-plug-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-10/st-plug/st-plug-oct-18-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+        // TODO: EXPERIMENT - November 12, 2018
+        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/wlan1/st-plug.wlan1.local.pcap";
+        final String outputPcapFile = path + "/experimental_result/standalone/st-plug/wlan1/st-plug-processed.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/eth1/st-plug.eth1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/st-plug/eth1/st-plug-processed.pcap";
+        final String triggerTimesFile = path + "/experimental_result/standalone/st-plug/timestamps/st-plug-nov-12-2018.timestamps";
+//        final String deviceIp = "192.168.1.142"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // 4) Wemo July 30 experiment
 //        final String inputPcapFile = path + "/2018-07/wemo/wemo.wlan1.local.pcap";
@@ -127,13 +135,13 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock-8hr-data-oct-11-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
         // TODO: EXPERIMENT - November 10, 2018
-        final String inputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/wlan1/kwikset-doorlock-processed.pcap";
-//        final String inputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/eth1/kwikset-doorlock.eth1.local.pcap";
-//        final String outputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/eth1/kwikset-doorlock-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/kwikset-doorlock/timestamps/kwikset-doorlock-nov-10-2018.timestamps";
-//        final String deviceIp = "192.168.1.183"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+//        final String inputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/wlan1/kwikset-doorlock-processed.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/eth1/kwikset-doorlock.eth1.local.pcap";
+////        final String outputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/eth1/kwikset-doorlock-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/kwikset-doorlock/timestamps/kwikset-doorlock-nov-10-2018.timestamps";
+////        final String deviceIp = "192.168.1.142"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // September 12, 2018 - includes both wlan1 and eth1 interfaces
 //        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset3.wlan1.local.pcap";
