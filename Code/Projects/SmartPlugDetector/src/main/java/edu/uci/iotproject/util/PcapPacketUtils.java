@@ -322,8 +322,8 @@ public final class PcapPacketUtils {
                         if (Integer.signum(compare) != Integer.signum(comparePrev)) {
                             // Throw an exception if the order of the two signatures is not consistent,
                             // E.g., 111, 222, 333 in one occassion and 222, 333, 111 in the other.
-                            throw new Error("For some reason, the order of signatures are not always consistent!" +
-                                    "Returning the original data structure of signatures...");
+//                            throw new Error("For some reason, the order of signatures are not always consistent!" +
+//                                    "Returning the original data structure of signatures...");
                         }
                     }
                     comparePrev = compare;

@@ -101,13 +101,13 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-10/st-plug/st-plug-oct-18-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
         // TODO: EXPERIMENT - November 12, 2018
-        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/wlan1/st-plug.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/st-plug/wlan1/st-plug-processed.pcap";
-//        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/eth1/st-plug.eth1.local.pcap";
-//        final String outputPcapFile = path + "/experimental_result/standalone/st-plug/eth1/st-plug-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/st-plug/timestamps/st-plug-nov-12-2018.timestamps";
-//        final String deviceIp = "192.168.1.142"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+//        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/wlan1/st-plug.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/st-plug/wlan1/st-plug-processed.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/eth1/st-plug.eth1.local.pcap";
+////        final String outputPcapFile = path + "/experimental_result/standalone/st-plug/eth1/st-plug-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/st-plug/timestamps/st-plug-nov-12-2018.timestamps";
+////        final String deviceIp = "192.168.1.142"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .142 == SmartThings Hub (note: use eth0 capture for this!)
 
         // 4) Wemo July 30 experiment
 //        final String inputPcapFile = path + "/2018-07/wemo/wemo.wlan1.local.pcap";
@@ -126,6 +126,14 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == TP-Link bulb
+        // TODO: EXPERIMENT - November 16, 2018
+        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb.wlan1.local.pcap";
+        final String outputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb-processed.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/eth0/tplink-bulb.eth1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/tplink-bulb/eth0/tplink-bulb-processed.pcap";
+        final String triggerTimesFile = path + "/experimental_result/standalone/tplink-bulb/timestamps/tplink-bulb-nov-16-2018.timestamps";
+//        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == TP-Link bulb
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == TP-Link bulb
 
         // 7) Kwikset Doorlock August 6 experiment
 //        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.data.wlan1.pcap";
@@ -188,6 +196,14 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/arlo-camera/arlo-camera-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/arlo-camera/arlo-camera-aug-10-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
+        // TODO: EXPERIMENT - November 13, 2018
+//        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera-processed.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth1.local.pcap";
+////        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/arlo-camera/timestamps/arlo-camera-nov-13-2018.timestamps";
+////        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
 
         // 12) Blossom sprinkler August 13 experiment
 //        final String inputPcapFile = path + "/2018-08/blossom/blossom.wlan1.local.pcap";
@@ -219,6 +235,14 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-08/nest/nest.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-08/nest/nest-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/nest/nest-aug-15-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .127 == Nest thermostat
+        // TODO: EXPERIMENT - November 14, 2018
+//        final String inputPcapFile = path + "/experimental_result/standalone/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/nest-thermostat/wlan1/nest-thermostat-processed.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/nest-thermostat/eth0/nest-thermostat.eth1.local.pcap";
+////        final String outputPcapFile = path + "/experimental_result/standalone/nest-thermostat/eth0/nest-thermostat-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/nest-thermostat/timestamps/nest-thermostat-nov-15-2018.timestamps";
+////        final String deviceIp = "192.168.1.127"; // .246 == phone; .127 == Nest thermostat
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .127 == Nest thermostat
 
         // 15) Alexa August 16 experiment
@@ -356,9 +380,11 @@ public class Main {
         Stream.concat(Stream.of(onPairs), Stream.of(offPairs)).flatMap(List::stream).forEach(p -> p.setDnsMap(dnsMap));
         // Perform clustering on conversation logged as part of all ON events.
         DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 45);
+        //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 10);
         List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
         // Perform clustering on conversation logged as part of all OFF events.
         DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 45);
+        //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 10);
         List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
         // Sort the conversations as reference
         List<Conversation> sortedAllConversation = TcpConversationUtils.sortConversationList(allConversations);
@@ -373,6 +399,7 @@ public class Main {
             System.out.println(String.format("<<< Cluster #%02d (%03d points) >>>", ++count, c.getPoints().size()));
             System.out.print(PrintUtils.toSummaryString(c));
             if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
+            //if(c.getPoints().size() > 25) {
                 // Print to file
                 List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
                 ppListOfListListOn.add(ppListOfList);
@@ -383,6 +410,8 @@ public class Main {
         ppListOfListListOn = PcapPacketUtils.sortSignatures(ppListOfListListOn);
         // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
+        // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
+        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
         // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!
         // TODO: This sequence actually belongs to the local communication between the plug and the phone
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
@@ -405,6 +434,7 @@ public class Main {
             System.out.println(String.format("<<< Cluster #%03d (%06d points) >>>", ++count, c.getPoints().size()));
             System.out.print(PrintUtils.toSummaryString(c));
             if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
+            //if(c.getPoints().size() > 25) {
                 // Print to file
                 List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
                 ppListOfListListOff.add(ppListOfList);
@@ -412,11 +442,11 @@ public class Main {
         }
         // TODO: Merging test
         ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
-        ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
+        //ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
         // TODO: Need to remove sequence number 1 for Nest Thermostat since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
         // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
-        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 0);
+        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
         // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 2);
         // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!

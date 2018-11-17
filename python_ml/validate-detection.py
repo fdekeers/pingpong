@@ -1,7 +1,7 @@
 from datetime import datetime
 
-path = "/scratch/July-2018/experimental_result/smarthome/"
-#path = "/scratch/July-2018/experimental_result/standalone/"
+#path = "/scratch/July-2018/experimental_result/smarthome/"
+path = "/scratch/July-2018/experimental_result/standalone/"
 # D-Link plug
 #device = "dlink-plug/self-test"
 #fileExperiment = "dlink-plug-nov-7-2018.timestamps"
@@ -43,10 +43,33 @@ path = "/scratch/July-2018/experimental_result/smarthome/"
 #device = "st-plug/self-test"
 #fileExperiment = "st-plug-nov-13-2018.timestamps"
 #fileDetection = "phone-side-detection"
-device = "st-plug/timestamps"
-fileExperiment = "st-plug-smarthome-nov-13-2018.timestamps"
-fileDetection = "st-plug-smarthome-nov-13-2018.eth0.phone.detections"
+#device = "st-plug/timestamps"
+#fileExperiment = "st-plug-smarthome-nov-13-2018.timestamps"
+#fileDetection = "st-plug-smarthome-nov-13-2018.eth0.phone.detections"
 
+# Arlo camera
+#device = "arlo-camera/self-test"
+#fileExperiment = "arlo-camera-nov-13-2018.timestamps"
+#fileDetection = "phone-side-detection"
+#device = "arlo-camera/timestamps"
+#fileExperiment = "arlo-camera-smarthome-nov-15-2018.timestamps"
+#fileDetection = "arlo-camera-smarthome-nov-15-2018.phone.eth0.detections"
+
+# Nest Thermostat
+#device = "nest-thermostat/self-test"
+#fileExperiment = "nest-thermostat-nov-15-2018.timestamps"
+#fileDetection = "phone-side-detection"
+device = "nest-thermostat/timestamps"
+fileExperiment = "nest-thermostat-smarthome-nov-16-2018.timestamps"
+fileDetection = "nest-thermostat-smarthome-nov-16-2018.phone.eth0.detections"
+
+# TP-Link Bulb
+device = "tplink-bulb/self-test"
+fileExperiment = "tplink-bulb-nov-16-2018.timestamps"
+fileDetection = "phone-side-detection"
+#device = "tplink-bulb/timestamps"
+#fileExperiment = "tplink-bulb-smarthome-nov-16-2018.timestamps"
+#fileDetection = "tplink-bulb-smarthome-nov-16-2018.phone.eth0.detections"
 
 # Arlo camera
 #device = "arlo-camera/self-test"
