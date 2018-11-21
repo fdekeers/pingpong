@@ -1,7 +1,7 @@
 from datetime import datetime
 
-#path = "/scratch/July-2018/experimental_result/smarthome/"
-path = "/scratch/July-2018/experimental_result/standalone/"
+path = "/scratch/July-2018/experimental_result/smarthome/"
+#path = "/scratch/July-2018/experimental_result/standalone/"
 # D-Link plug
 #device = "dlink-plug/self-test"
 #fileExperiment = "dlink-plug-nov-7-2018.timestamps"
@@ -59,42 +59,30 @@ path = "/scratch/July-2018/experimental_result/standalone/"
 #device = "nest-thermostat/self-test"
 #fileExperiment = "nest-thermostat-nov-15-2018.timestamps"
 #fileDetection = "phone-side-detection"
-device = "nest-thermostat/timestamps"
-fileExperiment = "nest-thermostat-smarthome-nov-16-2018.timestamps"
-fileDetection = "nest-thermostat-smarthome-nov-16-2018.phone.eth0.detections"
+#device = "nest-thermostat/timestamps"
+#fileExperiment = "nest-thermostat-smarthome-nov-16-2018.timestamps"
+#fileDetection = "nest-thermostat-smarthome-nov-16-2018.phone.eth0.detections"
 
 # TP-Link Bulb
-device = "tplink-bulb/self-test"
-fileExperiment = "tplink-bulb-nov-16-2018.timestamps"
-fileDetection = "phone-side-detection"
+#device = "tplink-bulb/self-test"
+#fileExperiment = "tplink-bulb-nov-16-2018.timestamps"
+#fileDetection = "phone-side-detection"
 #device = "tplink-bulb/timestamps"
-#fileExperiment = "tplink-bulb-smarthome-nov-16-2018.timestamps"
-#fileDetection = "tplink-bulb-smarthome-nov-16-2018.phone.eth0.detections"
+#fileExperiment = "tplink-bulb-smarthome-nov-19-2018.timestamps"
+#fileDetection = "tplink-bulb-smarthome-nov-19-2018.phone.wlan1.detections"
 
-# Arlo camera
-#device = "arlo-camera/self-test"
-#fileExperiment = "arlo-camera-aug-10-2018.timestamps"
-#fileDetection = "detection-on-training-phone-side"
-# Blossom sprinkler
-#device = "blossom-sprinkler/self-test"
-#fileExperiment = "blossom-sprinkler-aug-13-2018.timestamps"
-#fileDetection = "detection-on-training-device-side"
-# Nest thermostat
-#device = "nest-thermostat/self-test"
-#fileExperiment = "nest-aug-15-2018.timestamps"
-#fileDetection = "detection-on-training-phone-side"
 # Hue bulb
 #device = "hue-bulb/self-test"
 #fileExperiment = "hue-bulb-aug-7-2018.timestamps"
-#fileDetection = "detection-on-training-phone-side"
-# TPLink bulb
-#device = "tplink-bulb/self-test"
-#fileExperiment = "tplink-bulb-aug-3-2018.timestamps"
-#fileDetection = "detection-on-training-phone-side"
-# WeMo Insight Plug
-#device = "wemo-insight-plug/self-test"
-#fileExperiment = "wemo-insight-july-31-2018.timestamps"
-#fileDetection = "detection-on-training-device-side"
+#fileDetection = "phone-side-detection"
+
+# WeMo plug
+#device = "wemo-plug/self-test"
+#fileExperiment = "wemo-plug-nov-20-2018.timestamps"
+#fileDetection = "phone-side-detection"
+device = "wemo-plug/timestamps"
+fileExperiment = "wemo-plug-smarthome-nov-21-2018.timestamps"
+fileDetection = "wemo-plug-smarthome-nov-21-2018.phone.wlan1.detections"
 
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds

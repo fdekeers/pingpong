@@ -43,6 +43,12 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // D-Link Siren PHONE signatures
 //        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-phone.sig";
 //        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-phone.sig";
+        // TODO: EXPERIMENT - November 19, 2018
+        // Hue Bulb experiment
+//        final String inputPcapFile = path + "/2018-08/hue-bulb/hue-bulb.wlan1.local.pcap";
+        // Hue Bulb PHONE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/hue-bulb/signatures/hue-bulb-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/hue-bulb/signatures/hue-bulb-offSignature-phone-side.sig";
 
         /*
         // Kwikset Doorlock Sep 12 experiment
@@ -65,15 +71,15 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-phone.sig";
 
         // TODO: The following are negative tests against the PCAP file from UNSW
-        /*        final String inputPcapFile = path + "/UNSW/16-09-28.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-02.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-03.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-04.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-07.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-08.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-09.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-10.pcap"; TODO: Seems to be broken! */
-        /*        final String inputPcapFile = path + "/UNSW/16-10-11.pcap"; TODO: Seems to be broken! */
+//                final String inputPcapFile = path + "/UNSW/16-09-28.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-02.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-03.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-04.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-07.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-08.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-09.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-10.pcap"; // TODO: Seems to be broken!
+//                final String inputPcapFile = path + "/UNSW/16-10-11.pcap"; // TODO: Seems to be broken!
 
 
 //        final String inputPcapFile = path + "/UNSW/16-09-23.pcap";
@@ -238,13 +244,13 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String offSignatureFile = path + "/training/tplink-bulb/signatures/tplink-bulb-offSignature-phone-side.sig";
         // TODO: EXPERIMENT - November 16, 2018
         // TP-Link Bulb experiment
-        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb.wlan1.local.pcap";
 //        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/eth0/tplink-bulb.eth0.local.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/tplink-bulb/wlan1/tplink-bulb.wlan1.detection.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/tplink-bulb/eth0/tplink-bulb.eth0.detection.pcap";
+////        final String inputPcapFile = path + "/experimental_result/smarthome/tplink-bulb/eth0/tplink-bulb.eth0.detection.pcap";
 //        // TP-Link Bulb PHONE signatures
-        final String onSignatureFile = path + "/experimental_result/standalone/tplink-bulb/signatures/tplink-bulb-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/experimental_result/standalone/tplink-bulb/signatures/tplink-bulb-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/tplink-bulb/signatures/tplink-bulb-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/tplink-bulb/signatures/tplink-bulb-offSignature-phone-side.sig";
 
         /*
         // WeMo Plug experiment
@@ -253,6 +259,17 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         final String onSignatureFile = path + "/training/wemo-plug/signatures/wemo-plug-onSignature-device-side.sig";
         final String offSignatureFile = path + "/training/wemo-plug/signatures/wemo-plug-offSignature-device-side.sig";
         */
+        // TODO: EXPERIMENT - November 20, 2018
+        // WeMo Plug experiment
+//        final String inputPcapFile = path + "/experimental_result/standalone/wemo-plug/wlan1/wemo-plug.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/wemo-plug/eth0/wemo-plug.eth0.local.pcap";
+        // TODO: WE HAVE 4 ADDITIONAL EVENTS (TRIGGERED MANUALLY), SO WE JUST IGNORE THEM BECAUSE THEY HAPPENED BEFORE
+        // TODO: THE ACTUAL TRIGGERS
+        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-plug/eth0/wemo-plug.eth0.detection.pcap";
+        // WeMo Plug PHONE signatures
+        final String onSignatureFile = path + "/experimental_result/standalone/wemo-plug/signatures/wemo-plug-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/wemo-plug/signatures/wemo-plug-offSignature-phone-side.sig";
 
         /*
         // WeMo Insight Plug experiment

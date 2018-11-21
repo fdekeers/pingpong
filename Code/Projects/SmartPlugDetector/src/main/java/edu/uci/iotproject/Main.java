@@ -114,6 +114,12 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-07/wemo/wemo-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-07/wemo/wemo-july-30-2018.timestamps";
 //        final String deviceIp = "192.168.1.145";  // .246 == phone; .145 == WeMo
+        // TODO: EXPERIMENT - November 20, 2018
+        final String inputPcapFile = path + "/experimental_result/standalone/wemo-plug/wlan1/wemo-plug.wlan1.local.pcap";
+        final String outputPcapFile = path + "/experimental_result/standalone/wemo-plug/wlan1/wemo-plug-processed.pcap";
+        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-plug/timestamps/wemo-plug-nov-20-2018.timestamps";
+//        final String deviceIp = "192.168.1.145"; // .246 == phone; .145 == WeMo
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .145 == WeMo
 
         // 5) Wemo Insight July 31 experiment
 //        final String inputPcapFile = path + "/2018-07/wemoinsight/wemoinsight.wlan1.local.pcap";
@@ -127,13 +133,13 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-08/tplink-bulb/tplink-bulb-aug-3-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == TP-Link bulb
         // TODO: EXPERIMENT - November 16, 2018
-        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb-processed.pcap";
-//        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/eth0/tplink-bulb.eth1.local.pcap";
-//        final String outputPcapFile = path + "/experimental_result/standalone/tplink-bulb/eth0/tplink-bulb-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/tplink-bulb/timestamps/tplink-bulb-nov-16-2018.timestamps";
-//        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == TP-Link bulb
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == TP-Link bulb
+//        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/tplink-bulb/wlan1/tplink-bulb-processed.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/tplink-bulb/eth0/tplink-bulb.eth1.local.pcap";
+////        final String outputPcapFile = path + "/experimental_result/standalone/tplink-bulb/eth0/tplink-bulb-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/tplink-bulb/timestamps/tplink-bulb-nov-16-2018.timestamps";
+////        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == TP-Link bulb
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == TP-Link bulb
 
         // 7) Kwikset Doorlock August 6 experiment
 //        final String inputPcapFile = path + "/2018-08/kwikset-doorlock/kwikset-doorlock.data.wlan1.pcap";
@@ -167,6 +173,12 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-10/hue-bulb/hue-bulb.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-10/hue-bulb/hue-bulb-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-10/hue-bulb/hue-bulb-oct-30-2018.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .100 == Hue hub
+        // TODO: EXPERIMENT - November 19, 2018
+//        final String inputPcapFile = path + "/experimental_result/standalone/hue-bulb/wlan1/hue-bulb.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/hue-bulb/wlan1/hue-bulb-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/hue-bulb/timestamps/hue-bulb-nov-19-2018.timestamps";
+//        final String deviceIp = "192.168.1.100"; // .246 == phone; .100 == Hue hub
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .100 == Hue hub
 
         // 9) Lifx Bulb August 8 experiment
