@@ -115,17 +115,23 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-07/wemo/wemo-july-30-2018.timestamps";
 //        final String deviceIp = "192.168.1.145";  // .246 == phone; .145 == WeMo
         // TODO: EXPERIMENT - November 20, 2018
-        final String inputPcapFile = path + "/experimental_result/standalone/wemo-plug/wlan1/wemo-plug.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/wemo-plug/wlan1/wemo-plug-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-plug/timestamps/wemo-plug-nov-20-2018.timestamps";
-//        final String deviceIp = "192.168.1.145"; // .246 == phone; .145 == WeMo
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .145 == WeMo
+//        final String inputPcapFile = path + "/experimental_result/standalone/wemo-plug/wlan1/wemo-plug.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/wemo-plug/wlan1/wemo-plug-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-plug/timestamps/wemo-plug-nov-20-2018.timestamps";
+////        final String deviceIp = "192.168.1.145"; // .246 == phone; .145 == WeMo
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .145 == WeMo
 
         // 5) Wemo Insight July 31 experiment
 //        final String inputPcapFile = path + "/2018-07/wemoinsight/wemoinsight.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-07/wemoinsight/wemoinsight-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-07/wemoinsight/wemo-insight-july-31-2018.timestamps";
 //        final String deviceIp = "192.168.1.135";
+        // TODO: EXPERIMENT - November 21, 2018
+        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
+        final String outputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug-processed.pcap";
+        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-insight-plug/timestamps/wemo-insight-plug-nov-21-2018.timestamps";
+//        final String deviceIp = "192.168.1.145"; // .246 == phone; .135 == WeMo Insight
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .135 == WeMo Insight
 
         // 6) TP-Link Bulb August 1 experiment
 //        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";

@@ -265,11 +265,11 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String inputPcapFile = path + "/experimental_result/standalone/wemo-plug/eth0/wemo-plug.eth0.local.pcap";
         // TODO: WE HAVE 4 ADDITIONAL EVENTS (TRIGGERED MANUALLY), SO WE JUST IGNORE THEM BECAUSE THEY HAPPENED BEFORE
         // TODO: THE ACTUAL TRIGGERS
-        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-plug/eth0/wemo-plug.eth0.detection.pcap";
-        // WeMo Plug PHONE signatures
-        final String onSignatureFile = path + "/experimental_result/standalone/wemo-plug/signatures/wemo-plug-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/experimental_result/standalone/wemo-plug/signatures/wemo-plug-offSignature-phone-side.sig";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap";
+////        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-plug/eth0/wemo-plug.eth0.detection.pcap";
+//        // WeMo Plug PHONE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/wemo-plug/signatures/wemo-plug-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/wemo-plug/signatures/wemo-plug-offSignature-phone-side.sig";
 
         /*
         // WeMo Insight Plug experiment
@@ -278,6 +278,15 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         final String onSignatureFile = path + "/training/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-device-side.sig";
         final String offSignatureFile = path + "/training/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-device-side.sig";
         */
+        // TODO: EXPERIMENT - November 21, 2018
+        // WeMo Insight Plug experiment
+        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/eth0/wemo-insight-plug.eth0.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-insight-plug/eth0/wemo-insight-plug.eth0.detection.pcap";
+        // WeMo Insight Plug PHONE signatures
+        final String onSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig";
 
 
         // Kwikset Doorlock Sep 12 experiment

@@ -1,7 +1,7 @@
 from datetime import datetime
 
-path = "/scratch/July-2018/experimental_result/smarthome/"
-#path = "/scratch/July-2018/experimental_result/standalone/"
+#path = "/scratch/July-2018/experimental_result/smarthome/"
+path = "/scratch/July-2018/experimental_result/standalone/"
 # D-Link plug
 #device = "dlink-plug/self-test"
 #fileExperiment = "dlink-plug-nov-7-2018.timestamps"
@@ -80,9 +80,17 @@ path = "/scratch/July-2018/experimental_result/smarthome/"
 #device = "wemo-plug/self-test"
 #fileExperiment = "wemo-plug-nov-20-2018.timestamps"
 #fileDetection = "phone-side-detection"
-device = "wemo-plug/timestamps"
-fileExperiment = "wemo-plug-smarthome-nov-21-2018.timestamps"
-fileDetection = "wemo-plug-smarthome-nov-21-2018.phone.wlan1.detections"
+#device = "wemo-plug/timestamps"
+#fileExperiment = "wemo-plug-smarthome-nov-21-2018.timestamps"
+#fileDetection = "wemo-plug-smarthome-nov-21-2018.phone.wlan1.detections"
+
+# WeMo Insight plug
+device = "wemo-insight-plug/self-test"
+fileExperiment = "wemo-insight-plug-nov-21-2018.timestamps"
+fileDetection = "phone-side-detection"
+#device = "wemo-plug/timestamps"
+#fileExperiment = "wemo-plug-smarthome-nov-21-2018.timestamps"
+#fileDetection = "wemo-plug-smarthome-nov-21-2018.phone.wlan1.detections"
 
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds
