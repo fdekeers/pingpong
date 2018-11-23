@@ -280,9 +280,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         */
         // TODO: EXPERIMENT - November 21, 2018
         // WeMo Insight Plug experiment
-        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
 //        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/eth0/wemo-insight-plug.eth0.local.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.detection.pcap";
+        // TODO: WE HAVE 1 ADDITIONAL EVENT (FROM WEMO PLUG)
+        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-insight-plug/eth0/wemo-insight-plug.eth0.detection.pcap";
         // WeMo Insight Plug PHONE signatures
         final String onSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig";
