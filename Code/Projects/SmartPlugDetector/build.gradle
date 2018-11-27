@@ -6,7 +6,9 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
-mainClassName = "edu.uci.iotproject.Main"
+//mainClassName = "edu.uci.iotproject.Main"
+mainClassName = "edu.uci.iotproject.detection.SignatureDetector"
+
 
 repositories {
     mavenCentral()
