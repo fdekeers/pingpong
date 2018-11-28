@@ -195,7 +195,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        // SmartThings Plug PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-offSignature-phone-side.sig";
-
+        final String onSignatureFile = path + "/training/signatures/st-plug/st-plug-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/training/signatures/st-plug/st-plug-offSignature-phone-side.sig";
 
         // LiFX Bulb experiment
 //        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";
@@ -309,8 +310,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 ////        // Kwikset Door lock PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-offSignature-phone-side.sig";
-        final String onSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-offSignature-phone-side.sig";
 
 
 
