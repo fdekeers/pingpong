@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Detects an event signature that spans one or multiple TCP connections.
@@ -28,8 +29,20 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
-        String path = "/scratch/July-2018"; // Rahmadi
-        //String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
+        if (args.length < 3) {
+            String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile",
+                    SignatureDetector.class.getSimpleName());
+            System.out.println(errMsg);
+            return;
+        }
+        final String inputPcapFile = args[0];
+        final String onSignatureFile = args[1];
+        final String offSignatureFile = args[2];
+
+//        String path = "/scratch/July-2018"; // Rahmadi
+//        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
+//        String path = "/home/jvarmark/iot_project/datasets"; // Hera (server)
+//        String path = "/raid/varmarken/iot_project/datasets"; // Zeus (server)
 
         // No activity test
         //final String inputPcapFile = path + "/evaluation/no-activity/no-activity.wlan1.pcap";
@@ -81,7 +94,6 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //                final String inputPcapFile = path + "/UNSW/16-10-10.pcap"; // TODO: Seems to be broken!
 //                final String inputPcapFile = path + "/UNSW/16-10-11.pcap"; // TODO: Seems to be broken!
 
-
 //        final String inputPcapFile = path + "/UNSW/16-09-23.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-24.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-25.pcap";
@@ -89,7 +101,9 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String inputPcapFile = path + "/UNSW/16-09-27.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-29.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-10-01.pcap";
-        final String inputPcapFile = path + "/UNSW/16-10-06.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-10-06.pcap";
+        // Negative test: dataset from UNB
+//        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint.pcap";
 
         // TODO: The following one is very long!!!
 //        final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
@@ -129,6 +143,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // D-Link Siren PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-offSignature-phone-side.sig";
 
         // TP-Link Plug experiment
         //final String inputPcapFile = path + "/training/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
@@ -189,7 +205,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        // SmartThings Plug PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-offSignature-phone-side.sig";
-
+//        final String onSignatureFile = path + "/training/signatures/st-plug/st-plug-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/signatures/st-plug/st-plug-offSignature-phone-side.sig";
 
         // LiFX Bulb experiment
 //        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";
@@ -286,8 +303,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/wemo-insight-plug/eth0/wemo-insight-plug.eth0.detection.pcap";
         // WeMo Insight Plug PHONE signatures
-        final String onSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig";
 
 
         // Kwikset Doorlock Sep 12 experiment
@@ -303,29 +320,35 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 ////        // Kwikset Door lock PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-offSignature-phone-side.sig";
 
 
 
-        /*
         // D-Link Siren experiment
-        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
         // D-Link Siren DEVICE signatures
         //final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-device.sig";
         //final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-device.sig";
         // D-Link Siren PHONE signatures
-        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-phone.sig";
-        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-phone.sig";
-        */
+//        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-phone.sig";
+//        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-phone.sig";
+
+
+        // Output file names used (to make it easy to catch if one forgets to change them)
+        System.out.println("ON signature file in use is " + onSignatureFile);
+        System.out.println("OFF signature file in use is " + offSignatureFile);
+        System.out.println("PCAP file that is the target of detection is " + inputPcapFile);
 
         List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
 
         // LAN
-//        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
-//        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
+        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
+        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
         // WAN
-        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
-        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
+//        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
+//        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
@@ -378,13 +401,18 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // times file.
         Collections.sort(detectedEvents, Comparator.comparing(UserAction::getTimestamp));
 
-
         // Output the detected events
-        //detectedEvents.forEach(outputter);
+        detectedEvents.forEach(outputter);
+
+        System.out.println("Number of detected events of type " + UserAction.Type.TOGGLE_ON + ": " +
+                detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_ON).count());
+        System.out.println("Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
+                detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count());
+
 
         // TODO: Temporary clean up until we clean the pipeline
-        List<UserAction> cleanedDetectedEvents = SignatureDetector.removeDuplicates(detectedEvents);
-        cleanedDetectedEvents.forEach(outputter);
+//        List<UserAction> cleanedDetectedEvents = SignatureDetector.removeDuplicates(detectedEvents);
+//        cleanedDetectedEvents.forEach(outputter);
     }
 
     /**
