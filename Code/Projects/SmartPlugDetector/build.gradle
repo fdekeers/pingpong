@@ -4,6 +4,9 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'application'
 
+// Increase max memory
+applicationDefaultJvmArgs = ["-Xmx64g"]
+
 sourceCompatibility = 1.8
 
 //mainClassName = "edu.uci.iotproject.Main"

@@ -92,8 +92,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String inputPcapFile = path + "/UNSW/16-10-01.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-10-06.pcap";
         // Negative test: dataset from UNB
-//        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint.pcap";
-        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint-subsample_00009_20170703102920.pcap";
+        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint.pcap";
 
         // TODO: The following one is very long!!!
 //        final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
