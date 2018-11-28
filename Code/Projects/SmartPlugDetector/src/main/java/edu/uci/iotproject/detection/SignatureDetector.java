@@ -29,10 +29,20 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
+        if (args.length < 3) {
+            String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile",
+                    SignatureDetector.class.getSimpleName());
+            System.out.println(errMsg);
+            return;
+        }
+        final String inputPcapFile = args[0];
+        final String onSignatureFile = args[1];
+        final String offSignatureFile = args[2];
+
 //        String path = "/scratch/July-2018"; // Rahmadi
 //        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
 //        String path = "/home/jvarmark/iot_project/datasets"; // Hera (server)
-        String path = "/raid/varmarken/iot_project/datasets"; // Zeus (server)
+//        String path = "/raid/varmarken/iot_project/datasets"; // Zeus (server)
 
         // No activity test
         //final String inputPcapFile = path + "/evaluation/no-activity/no-activity.wlan1.pcap";
@@ -93,7 +103,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String inputPcapFile = path + "/UNSW/16-10-01.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-10-06.pcap";
         // Negative test: dataset from UNB
-        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint.pcap";
+//        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint.pcap";
 
         // TODO: The following one is very long!!!
 //        final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
@@ -195,8 +205,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        // SmartThings Plug PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-offSignature-phone-side.sig";
-        final String onSignatureFile = path + "/training/signatures/st-plug/st-plug-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/training/signatures/st-plug/st-plug-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/training/signatures/st-plug/st-plug-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/signatures/st-plug/st-plug-offSignature-phone-side.sig";
 
         // LiFX Bulb experiment
 //        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";
