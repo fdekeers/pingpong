@@ -228,7 +228,7 @@ public class TcpReassembler implements PacketListener {
                 // network, but that obviously won't be a useful strategy for an observer at the WAN port.
                 String srcIp = pcapPacket.get(IpV4Packet.class).getHeader().getSrcAddr().getHostAddress();
                 // TODO: REPLACE THE ROUTER'S IP WITH A PARAMETER!!!
-                boolean clientIsSrc = srcIp.startsWith("10.0.1.") || srcIp.startsWith("192.168.1.") || srcIp.equals("128.195.205.105");
+                boolean clientIsSrc = srcIp.startsWith("10.") || srcIp.startsWith("192.168.") || srcIp.equals("128.195.205.105");
                 conv = Conversation.fromPcapPacket(pcapPacket, clientIsSrc);
             }
             mOpenConversations.put(conv, conv);
