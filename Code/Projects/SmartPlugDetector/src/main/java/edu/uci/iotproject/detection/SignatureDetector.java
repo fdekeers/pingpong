@@ -133,8 +133,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // D-Link Siren PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-offSignature-phone-side.sig";
-        final String onSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-offSignature-phone-side.sig";
 
         // TP-Link Plug experiment
         //final String inputPcapFile = path + "/training/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
@@ -309,7 +309,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 ////        // Kwikset Door lock PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-offSignature-phone-side.sig";
-
+        final String onSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-offSignature-phone-side.sig";
 
 
 
@@ -322,6 +323,11 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-phone.sig";
 //        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-phone.sig";
 
+
+        // Output file names used (to make it easy to catch if one forgets to change them)
+        System.out.println("ON signature file in use is " + onSignatureFile);
+        System.out.println("OFF signature file in use is " + offSignatureFile);
+        System.out.println("PCAP file that is the target of detection is " + inputPcapFile);
 
         List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
