@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 // Increase max memory
-applicationDefaultJvmArgs = ["-Xmx64g"]
+applicationDefaultJvmArgs = ["-Xmx300g"]
 
 sourceCompatibility = 1.8
 

@@ -31,7 +31,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
 //        String path = "/scratch/July-2018"; // Rahmadi
 //        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
-        String path = "/home/jvarmark/iot_project/datasets"; // Hera (server)
+//        String path = "/home/jvarmark/iot_project/datasets"; // Hera (server)
+        String path = "/raid/varmarken/iot_project/datasets"; // Zeus (server)
 
         // No activity test
         //final String inputPcapFile = path + "/evaluation/no-activity/no-activity.wlan1.pcap";
