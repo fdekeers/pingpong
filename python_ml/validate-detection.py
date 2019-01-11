@@ -88,9 +88,19 @@ path = "/scratch/July-2018/experimental_result/smarthome/"
 #device = "wemo-insight-plug/self-test"
 #fileExperiment = "wemo-insight-plug-nov-21-2018.timestamps"
 #fileDetection = "phone-side-detection"
-device = "wemo-insight-plug/timestamps"
-fileExperiment = "wemo-insight-plug-smarthome-nov-22-2018.timestamps"
-fileDetection = "wemo-insight-plug-smarthome-nov-22-2018.phone.wlan1.detections"
+#device = "wemo-insight-plug/timestamps"
+#fileExperiment = "wemo-insight-plug-smarthome-nov-22-2018.timestamps"
+#fileDetection = "wemo-insight-plug-smarthome-nov-22-2018.phone.wlan1.detections"
+
+# Blossom sprinkler
+device = "blossom-sprinkler/self-test"
+fileExperiment = "blossom-sprinkler-standalone-jan-9-2019.timestamps"
+#fileDetection = "phone-side-detection"
+#fileDetection = "device-side-detection"
+device = "blossom-sprinkler/timestamps"
+fileExperiment = "blossom-sprinkler-smarthome-jan-10-2019.timestamps"
+fileDetection = "blossom-sprinkler-smarthome-jan-10-2019.device.wlan1.detections"
+#fileDetection = "blossom-sprinkler-smarthome-jan-10-2019.phone.wlan1.detections"
 
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds

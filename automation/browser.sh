@@ -27,12 +27,15 @@ while true
 do
 	# Choose a website randomly
 	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
-	RAND=$[`jot -r 1 $BRO_RAN_STA $BRO_RAN_END`]
+	#RAND=$[`jot -r 1 $BRO_RAN_STA $BRO_RAN_END`]
+	RAND=$[`shuf -i $BRO_RAN_STA-$BRO_RAN_END -n 1`]
 	echo "${WEBSITE[$RAND]}"
 	curl ${WEBSITE[$RAND]}
 	
 	# Sleep with random delay time	
-	RAND=$[`jot -r 1 $SLP_RAN_STA $SLP_RAN_END`]
+	#RAND=$[`jot -r 1 $SLP_RAN_STA $SLP_RAN_END`]
+	#RAND=$[( $RANDOM % $RAN_END ) + $RAN_STA]
+	RAND=$[`shuf -i $SLP_RAN_STA-$SLP_RAN_END -n 1`]
 	echo "Delay: $RAND seconds"
 	sleep $[$RAND]s
 

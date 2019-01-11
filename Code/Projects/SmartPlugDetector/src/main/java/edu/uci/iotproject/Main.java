@@ -127,11 +127,11 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-07/wemoinsight/wemo-insight-july-31-2018.timestamps";
 //        final String deviceIp = "192.168.1.135";
         // TODO: EXPERIMENT - November 21, 2018
-        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-insight-plug/timestamps/wemo-insight-plug-nov-21-2018.timestamps";
-//        final String deviceIp = "192.168.1.145"; // .246 == phone; .135 == WeMo Insight
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .135 == WeMo Insight
+//        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-insight-plug/timestamps/wemo-insight-plug-nov-21-2018.timestamps";
+////        final String deviceIp = "192.168.1.145"; // .246 == phone; .135 == WeMo Insight
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .135 == WeMo Insight
 
         // 6) TP-Link Bulb August 1 experiment
 //        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
@@ -228,11 +228,16 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-08/blossom/blossom-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-08/blossom/blossom-aug-13-2018.timestamps";
 //        final String deviceIp = "192.168.1.229"; // .246 == phone; .229 == sprinkler
-        // 2 November
+//        // 2 November
 //        final String inputPcapFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler-nov-2-2018.timestamps";
 //        final String deviceIp = "192.168.1.229"; // .246 == phone; .229 == sprinkler
+        // January 9
+        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+        final String outputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler-processed.pcap";
+        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-9-2018.timestamps";
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
 
 //        // 13) DLink siren August 14 experiment
 //        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
@@ -348,26 +353,96 @@ public class Main {
          * sequence identifiers as we do not care about hostnames and sequences during clustering.
          * We can simply use the UserAction->List<Conversation> map to generate ON/OFF groupings of conversations.
          */
-        /*
-        // Contains all ON events: hostname -> sequence identifier -> list of conversations with that sequence
-        Map<String, Map<String, List<Conversation>>> ons = new HashMap<>();
-        // Contains all OFF events: hostname -> sequence identifier -> list of conversations with that sequence
-        Map<String, Map<String, List<Conversation>>> offs = new HashMap<>();
-        userActionsToConvsByHostname.forEach((ua, hostnameToConvs) -> {
-            Map<String, Map<String, List<Conversation>>> outer = ua.getType() == Type.TOGGLE_ON ? ons : offs;
-            hostnameToConvs.forEach((host, convs) -> {
-                Map<String, List<Conversation>> seqsToConvs = TcpConversationUtils.
-                        groupConversationsByPacketSequence(convs, verbose);
-                outer.merge(host, seqsToConvs, (oldMap, newMap) -> {
-                    newMap.forEach((sequence, cs) -> oldMap.merge(sequence, cs, (list1, list2) -> {
-                        list1.addAll(list2);
-                        return list1;
-                    }));
-                    return oldMap;
-                });
-            });
-        });
-        */
+
+//        // Contains all ON events: hostname -> sequence identifier -> list of conversations with that sequence
+//        Map<String, Map<String, List<Conversation>>> ons = new HashMap<>();
+//        // Contains all OFF events: hostname -> sequence identifier -> list of conversations with that sequence
+//        Map<String, Map<String, List<Conversation>>> offs = new HashMap<>();
+//        userActionsToConvsByHostname.forEach((ua, hostnameToConvs) -> {
+//            Map<String, Map<String, List<Conversation>>> outer = ua.getType() == Type.TOGGLE_ON ? ons : offs;
+//            hostnameToConvs.forEach((host, convs) -> {
+//                Map<String, List<Conversation>> seqsToConvs = TcpConversationUtils.
+//                        groupConversationsByPacketSequence(convs, verbose);
+//                outer.merge(host, seqsToConvs, (oldMap, newMap) -> {
+//                    newMap.forEach((sequence, cs) -> oldMap.merge(sequence, cs, (list1, list2) -> {
+//                        list1.addAll(list2);
+//                        return list1;
+//                    }));
+//                    return oldMap;
+//                });
+//            });
+//        });
+//
+//        System.out.println("==== ON ====");
+//        // Print out all the pairs into a file for ON events
+//        File fileOnEvents = new File(onPairsPath);
+//        PrintWriter pwOn = null;
+//        try {
+//            pwOn = new PrintWriter(fileOnEvents);
+//        } catch(Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        for(Map.Entry<String, Map<String, List<Conversation>>> entry : ons.entrySet()) {
+//            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
+//            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
+//                List<Conversation> listConv = entryConv.getValue();
+//                // Just get the first Conversation because all Conversations in this group
+//                // should have the same pairs of Application Data.
+//                for(Conversation conv : listConv) {
+//                    // Process only if it is a TLS packet
+//                    if (conv.isTls()) {
+//                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
+//                        for(PcapPacketPair pair: tlsAppDataList) {
+//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+//                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
+//                        }
+//                    } else { // Non-TLS conversations
+//                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
+//                        for(PcapPacketPair pair: packetList) {
+//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+//                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        pwOn.close();
+//
+//        System.out.println("==== OFF ====");
+//        // Print out all the pairs into a file for ON events
+//        File fileOffEvents = new File(offPairsPath);
+//        PrintWriter pwOff = null;
+//        try {
+//            pwOff = new PrintWriter(fileOffEvents);
+//        } catch(Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        for(Map.Entry<String, Map<String, List<Conversation>>> entry : offs.entrySet()) {
+//            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
+//            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
+//                List<Conversation> listConv = entryConv.getValue();
+//                // Just get the first Conversation because all Conversations in this group
+//                // should have the same pairs of Application Data.
+//                for(Conversation conv : listConv) {
+//                    // Process only if it is a TLS packet
+//                    if (conv.isTls()) {
+//                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
+//                        for(PcapPacketPair pair: tlsAppDataList) {
+//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+//                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
+//                        }
+//                    } else { // Non-TLS conversations
+//                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
+//                        for (PcapPacketPair pair : packetList) {
+//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+//                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        pwOff.close();
+
 
         // ================================================ CLUSTERING ================================================
         // Note: no need to use the more convoluted on/off maps; can simply use the UserAction->List<Conversation> map
@@ -398,10 +473,12 @@ public class Main {
         Stream.concat(Stream.of(onPairs), Stream.of(offPairs)).flatMap(List::stream).forEach(p -> p.setDnsMap(dnsMap));
         // Perform clustering on conversation logged as part of all ON events.
         DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 45);
+        //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(7.0, 45);
         //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 10);
         List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
         // Perform clustering on conversation logged as part of all OFF events.
         DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 45);
+        //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(7.0, 45);
         //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 10);
         List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
         // Sort the conversations as reference
@@ -426,6 +503,12 @@ public class Main {
         // TODO: Merging test
         ppListOfListListOn = PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
         ppListOfListListOn = PcapPacketUtils.sortSignatures(ppListOfListListOn);
+        // TODO: Need to remove sequence numbers 0,1 for Blossom phone side since it is not a good signature!
+        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
+        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 1);
+        // TODO: Need to remove sequence numbers 0 for Blossom device side since it is not a good signature!
+        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
+        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
         // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
         // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
@@ -461,6 +544,9 @@ public class Main {
         // TODO: Merging test
         ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
         //ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
+        // TODO: Need to remove sequence numbers 0,2 for Blossom device side since it is not a good signature!
+        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 0);
+        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 2);
         // TODO: Need to remove sequence number 1 for Nest Thermostat since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
         // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
@@ -481,77 +567,6 @@ public class Main {
         System.out.println("========================================");
         // ============================================================================================================
 
-        /*
-        System.out.println("==== ON ====");
-        // Print out all the pairs into a file for ON events
-        File fileOnEvents = new File(onPairsPath);
-        PrintWriter pwOn = null;
-        try {
-            pwOn = new PrintWriter(fileOnEvents);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-        for(Map.Entry<String, Map<String, List<Conversation>>> entry : ons.entrySet()) {
-            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
-            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
-                List<Conversation> listConv = entryConv.getValue();
-                // Just get the first Conversation because all Conversations in this group
-                // should have the same pairs of Application Data.
-                for(Conversation conv : listConv) {
-                    // Process only if it is a TLS packet
-                    if (conv.isTls()) {
-                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
-                        for(PcapPacketPair pair: tlsAppDataList) {
-                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
-                        }
-                    } else { // Non-TLS conversations
-                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
-                        for(PcapPacketPair pair: packetList) {
-                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
-                        }
-                    }
-                }
-            }
-        }
-        pwOn.close();
-
-        System.out.println("==== OFF ====");
-        // Print out all the pairs into a file for ON events
-        File fileOffEvents = new File(offPairsPath);
-        PrintWriter pwOff = null;
-        try {
-            pwOff = new PrintWriter(fileOffEvents);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-        for(Map.Entry<String, Map<String, List<Conversation>>> entry : offs.entrySet()) {
-            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
-            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
-                List<Conversation> listConv = entryConv.getValue();
-                // Just get the first Conversation because all Conversations in this group
-                // should have the same pairs of Application Data.
-                for(Conversation conv : listConv) {
-                    // Process only if it is a TLS packet
-                    if (conv.isTls()) {
-                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
-                        for(PcapPacketPair pair: tlsAppDataList) {
-                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
-                        }
-                    } else { // Non-TLS conversations
-                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
-                        for (PcapPacketPair pair : packetList) {
-                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
-                        }
-                    }
-                }
-            }
-        }
-        pwOff.close();
-        */
 
 //        // ================================================================================================
 //        // <<< Some work-in-progress/explorative code that extracts a "representative" sequence >>>

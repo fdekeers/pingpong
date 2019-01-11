@@ -2,8 +2,7 @@ package edu.uci.iotproject;
 
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapPacket;
-import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.TcpPacket;
+import org.pcap4j.packet.*;
 
 import java.util.*;
 
@@ -42,11 +41,21 @@ public class TcpReassembler implements PacketListener {
     public void gotPacket(PcapPacket pcapPacket) {
         IpV4Packet ipPacket = pcapPacket.get(IpV4Packet.class);
         TcpPacket tcpPacket = pcapPacket.get(TcpPacket.class);
+
         if (ipPacket == null || tcpPacket == null) {
             return;
         }
         // ... TODO?
         processPacket(pcapPacket);
+//        Class clazz = pcapPacket.getClass();
+//        RadiotapPacket radiotapPacket = pcapPacket.get(RadiotapPacket.class);
+//        Dot11ManagementPacket dot11ManagementPacket = pcapPacket.get(Dot11ManagementPacket.class);
+//        if (dot11ManagementPacket != null) {
+//            return;
+//        }
+//        if (radiotapPacket != null) {
+//            processRadiotapPacket(pcapPacket);
+//        }
     }
 
     /**
@@ -59,6 +68,19 @@ public class TcpReassembler implements PacketListener {
         combined.addAll(mTerminatedConversations);
         combined.addAll(mOpenConversations.values());
         return combined;
+    }
+
+    private void processRadiotapPacket(PcapPacket pcapPacket) {
+        RadiotapPacket radiotapPacket = pcapPacket.get(RadiotapPacket.class);
+
+        RadiotapPacket.RadiotapHeader header = radiotapPacket.getHeader();
+        short length = header.getLength();
+        ArrayList<RadiotapPacket.RadiotapData> radiotapData = header.getDataFields();
+        // TODO: We can handle this 802.11 QoS data by creating our own class
+        // TODO: We only need to handle the first few bytes for source, destination, receiver, and transmitter
+        // TODO: addresses
+        Packet dataPacket = radiotapPacket.getPayload();
+        int dataLength = dataPacket.length();
     }
 
     private void processPacket(PcapPacket pcapPacket) {
@@ -151,8 +173,8 @@ public class TcpReassembler implements PacketListener {
         if (!conv.isRetransmission(srvSynPacket) && !conv.addSynPacket(srvSynPacket)) {
             // For safety/debugging: if NOT a retransmission and add fails,
             // something has gone terribly wrong/invariant is broken.
-            throw new AssertionError("Attempt to add SYN ACK packet that was NOT a retransmission failed." +
-                    Conversation.class.getSimpleName() + " invariant broken.");
+//            throw new AssertionError("Attempt to add SYN ACK packet that was NOT a retransmission failed." +
+//                    Conversation.class.getSimpleName() + " invariant broken.");
         }
     }
 

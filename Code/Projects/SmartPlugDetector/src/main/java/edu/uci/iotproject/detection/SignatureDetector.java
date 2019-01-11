@@ -29,17 +29,17 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
-        if (args.length < 3) {
-            String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile",
-                    SignatureDetector.class.getSimpleName());
-            System.out.println(errMsg);
-            return;
-        }
-        final String inputPcapFile = args[0];
-        final String onSignatureFile = args[1];
-        final String offSignatureFile = args[2];
+//        if (args.length < 3) {
+//            String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile",
+//                    SignatureDetector.class.getSimpleName());
+//            System.out.println(errMsg);
+//            return;
+//        }
+//        final String inputPcapFile = args[0];
+//        final String onSignatureFile = args[1];
+//        final String offSignatureFile = args[2];
 
-//        String path = "/scratch/July-2018"; // Rahmadi
+        String path = "/scratch/July-2018"; // Rahmadi
 //        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
 //        String path = "/home/jvarmark/iot_project/datasets"; // Hera (server)
 //        String path = "/raid/varmarken/iot_project/datasets"; // Zeus (server)
@@ -84,15 +84,24 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String offSignatureFile = path + "/2018-07/dlink/offSignature-DLink-Plug-phone.sig";
 
         // TODO: The following are negative tests against the PCAP file from UNSW
-//                final String inputPcapFile = path + "/UNSW/16-09-28.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-02.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-03.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-04.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-07.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-08.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-09.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-10.pcap"; // TODO: Seems to be broken!
-//                final String inputPcapFile = path + "/UNSW/16-10-11.pcap"; // TODO: Seems to be broken!
+//        final String inputPcapFile = path + "/UNSW/16-10-04.pcap"; // TODO: Seems to be broken! Zero-payload!
+//        final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
+
+//        final String inputPcapFile = path + "/UNSW/16-09-28.pcap"; // TODO: Seems to be broken! Zero-payload!
+//        final String inputPcapFile = path + "/UNSW/16-10-02.pcap"; // TODO: Seems to be broken!
+//        final String inputPcapFile = path + "/UNSW/16-10-03.pcap"; // TODO: Seems to be broken!
+//        final String inputPcapFile = path + "/UNSW/16-10-04-a.pcap"; // TODO: Seems to be broken! Zero-payload!
+//        final String inputPcapFile = path + "/UNSW/16-10-04-b.pcap"; // TODO: Seems to be broken! Zero-payload!
+//        final String inputPcapFile = path + "/UNSW/16-10-07.pcap"; // TODO: Seems to be broken!
+//        final String inputPcapFile = path + "/UNSW/16-10-08.pcap"; // TODO: Seems to be broken!
+//        final String inputPcapFile = path + "/UNSW/16-10-09.pcap"; // TODO: Seems to be broken!
+//        final String inputPcapFile = path + "/UNSW/16-10-10.pcap"; // TODO: Seems to be broken!
+//        final String inputPcapFile = path + "/UNSW/16-10-11.pcap"; // TODO: Seems to be broken!
+        // TODO: The following one is very long!!! - Split into smaller files!
+//        final String inputPcapFile = path + "/UNSW/16-10-12-a.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-10-12-b.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-10-12-c.pcap";
+//        final String inputPcapFile = path + "/UNSW/16-10-12-d.pcap";
 
 //        final String inputPcapFile = path + "/UNSW/16-09-23.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-09-24.pcap";
@@ -104,9 +113,6 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String inputPcapFile = path + "/UNSW/16-10-06.pcap";
         // Negative test: dataset from UNB
 //        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint.pcap";
-
-        // TODO: The following one is very long!!!
-//        final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
 
         // TODO: The following are tests for signatures against training data
 
@@ -128,8 +134,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String onSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig";
         // D-Link Plug PHONE signatures
-        //final String onSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig";
-        //final String offSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig";
 
         // TODO: EXPERIMENT - November 9, 2018
         // D-Link Siren experiment
@@ -147,10 +153,12 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String offSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-offSignature-phone-side.sig";
 
         // TP-Link Plug experiment
-        //final String inputPcapFile = path + "/training/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
-        // TP-Link Plug DEVICE signatures
-        //final String onSignatureFile = path + "/training/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
-        //final String offSignatureFile = path + "/training/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
+////        final String inputPcapFile = path + "/training/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
+////        final String inputPcapFile = path + "/experimental_result/wifi-Sniffer/tests2/airtool_2019-01-04_11.08.45.AM.pcap";
+//        final String inputPcapFile = path + "/experimental_result/wifi-Sniffer/tests2/command-frames-only.pcap";
+//        // TP-Link Plug DEVICE signatures
+//        final String onSignatureFile = path + "/training/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/training/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
         // TODO: EXPERIMENT - November 8, 2018
         // TP-Link Plug experiment
 //        final String inputPcapFile = path + "/experimental_result/standalone/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
@@ -208,6 +216,18 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String onSignatureFile = path + "/training/signatures/st-plug/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/training/signatures/st-plug/st-plug-offSignature-phone-side.sig";
 
+        // TODO: EXPERIMENT - January 9, 2018
+        // Blossom Sprinkler experiment
+//        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
+        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
+        // Blossom Sprinkler DEVICE signatures
+//        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
+        // Blossom Sprinkler PHONE signatures
+        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
+
         // LiFX Bulb experiment
 //        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";
 //        // LiFX Bulb DEVICE signatures
@@ -217,15 +237,13 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
 //        final String onSignatureFile = path + "/training/lifx-bulb/signatures/lifx-bulb-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/training/lifx-bulb/signatures/lifx-bulb-offSignature-phone-side.sig";
 
-
-        /*
         // Blossom Sprinkler experiment
-        //final String inputPcapFile = path + "/training/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
-        final String inputPcapFile = path + "/training/blossom-sprinkler/eth0/blossom-sprinkler.eth0.local.pcap";
-        // Blossom Sprinkler DEVICE signatures
-        final String onSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
-        final String offSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
-        */
+//        //final String inputPcapFile = path + "/training/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/2018-08/blossom/blossom.wlan1.local.pcap";
+//        //final String inputPcapFile = path + "/training/blossom-sprinkler/eth0/blossom-sprinkler.eth0.local.pcap";
+//        // Blossom Sprinkler DEVICE signatures
+//        final String onSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
 
         // Nest Thermostat experiment
 //        final String inputPcapFile = path + "/training/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
@@ -252,6 +270,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         final String onSignatureFile = path + "/training/hue-bulb/signatures/hue-bulb-onSignature-phone-side.sig";
         final String offSignatureFile = path + "/training/hue-bulb/signatures/hue-bulb-offSignature-phone-side.sig";
         */
+
 
 
         // TP-Link Bulb experiment
