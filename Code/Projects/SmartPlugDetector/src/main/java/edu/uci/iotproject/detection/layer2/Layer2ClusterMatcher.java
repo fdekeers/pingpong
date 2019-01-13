@@ -4,7 +4,7 @@ import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassembler;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2Flow;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassemblerObserver;
 import edu.uci.iotproject.detection.AbstractClusterMatcher;
-import edu.uci.iotproject.detection.Layer2FlowObserver;
+import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowObserver;
 import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.util.PrintUtils;
 import org.pcap4j.core.*;

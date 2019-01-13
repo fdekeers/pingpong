@@ -1,4 +1,4 @@
-package edu.uci.iotproject.detection;
+package edu.uci.iotproject.detection.layer3;
 
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.analysis.UserAction;
@@ -11,13 +11,11 @@ import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.pcap4j.core.*;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Detects an event signature that spans one or multiple TCP connections.
@@ -25,7 +23,7 @@ import java.util.stream.Collectors;
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class SignatureDetector implements PacketListener, ClusterMatcher.ClusterMatchObserver {
+public class SignatureDetector implements PacketListener, Layer3ClusterMatcher.ClusterMatchObserver {
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
@@ -440,23 +438,23 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
     private final List<List<List<PcapPacket>>> mSignature;
 
     /**
-     * The {@link ClusterMatcher}s in charge of detecting each individual sequence of packets that together make up the
+     * The {@link Layer3ClusterMatcher}s in charge of detecting each individual sequence of packets that together make up the
      * the signature.
      */
-    private final List<ClusterMatcher> mClusterMatchers;
+    private final List<Layer3ClusterMatcher> mClusterMatchers;
 
     /**
      * For each {@code i} ({@code i >= 0 && i < pendingMatches.length}), {@code pendingMatches[i]} holds the matches
-     * found by the {@link ClusterMatcher} at {@code mClusterMatchers.get(i)} that have yet to be "consumed", i.e.,
+     * found by the {@link Layer3ClusterMatcher} at {@code mClusterMatchers.get(i)} that have yet to be "consumed", i.e.,
      * have yet to be included in a signature detected by this {@link SignatureDetector} (a signature can be encompassed
      * of multiple packet sequences occurring shortly after one another on multiple connections).
      */
     private final List<List<PcapPacket>>[] pendingMatches;
 
     /**
-     * Maps a {@link ClusterMatcher} to its corresponding index in {@link #pendingMatches}.
+     * Maps a {@link Layer3ClusterMatcher} to its corresponding index in {@link #pendingMatches}.
      */
-    private final Map<ClusterMatcher, Integer> mClusterMatcherIds;
+    private final Map<Layer3ClusterMatcher, Integer> mClusterMatcherIds;
 
     private final List<SignatureDetectionObserver> mObservers = new ArrayList<>();
 
@@ -489,9 +487,9 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // note: doesn't protect inner lists from changes :'(
         mSignature = Collections.unmodifiableList(searchedSignature);
         // Generate corresponding/appropriate ClusterMatchers based on the provided signature
-        List<ClusterMatcher> clusterMatchers = new ArrayList<>();
+        List<Layer3ClusterMatcher> clusterMatchers = new ArrayList<>();
         for (List<List<PcapPacket>> cluster : mSignature) {
-            clusterMatchers.add(new ClusterMatcher(cluster, routerWanIp, this));
+            clusterMatchers.add(new Layer3ClusterMatcher(cluster, routerWanIp, this));
         }
         mClusterMatchers = Collections.unmodifiableList(clusterMatchers);
 
@@ -500,7 +498,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         for (int i = 0; i < pendingMatches.length; i++) {
             pendingMatches[i] = new ArrayList<>();
         }
-        Map<ClusterMatcher, Integer> clusterMatcherIds = new HashMap<>();
+        Map<Layer3ClusterMatcher, Integer> clusterMatcherIds = new HashMap<>();
         for (int i = 0; i < mClusterMatchers.size(); i++) {
             clusterMatcherIds.put(mClusterMatchers.get(i), i);
         }
@@ -522,7 +520,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
     }
 
     @Override
-    public void onMatch(ClusterMatcher clusterMatcher, List<PcapPacket> match) {
+    public void onMatch(Layer3ClusterMatcher clusterMatcher, List<PcapPacket> match) {
         // Add the match at the corresponding index
         pendingMatches[mClusterMatcherIds.get(clusterMatcher)].add(match);
         checkSignatureMatch();
@@ -532,7 +530,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // << Graph-based approach using Balint's idea. >>
         // This implementation assumes that the packets in the inner lists (the sequences) are ordered by asc timestamp.
 
-        // There cannot be a signature match until each ClusterMatcher has found a match of its respective sequence.
+        // There cannot be a signature match until each Layer3ClusterMatcher has found a match of its respective sequence.
         if (Arrays.stream(pendingMatches).noneMatch(l -> l.isEmpty())) {
             // Construct the DAG
             final SimpleDirectedWeightedGraph<Vertex, DefaultWeightedEdge> graph =
@@ -553,19 +551,19 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
             final Vertex sink = new Vertex(null);
             graph.addVertex(source);
             graph.addVertex(sink);
-            // The source is connected to all vertices that wrap the sequences detected by ClusterMatcher at index 0.
+            // The source is connected to all vertices that wrap the sequences detected by Layer3ClusterMatcher at index 0.
             // Note: zero cost edges as this is just a dummy link to facilitate search from a common start node.
             for (Vertex v : vertices[0]) {
                 DefaultWeightedEdge edge = graph.addEdge(source, v);
                 graph.setEdgeWeight(edge, 0.0);
             }
-            // Similarly, all vertices that wrap the sequences detected by the last ClusterMatcher of the signature
+            // Similarly, all vertices that wrap the sequences detected by the last Layer3ClusterMatcher of the signature
             // are connected to the sink node.
             for (Vertex v : vertices[vertices.length-1]) {
                 DefaultWeightedEdge edge = graph.addEdge(v, sink);
                 graph.setEdgeWeight(edge, 0.0);
             }
-            // Now link sequences detected by ClusterMatcher at index i to sequences detected by ClusterMatcher at index
+            // Now link sequences detected by Layer3ClusterMatcher at index i to sequences detected by Layer3ClusterMatcher at index
             // i+1 if they obey the timestamp constraint (i.e., that the latter is later in time than the former).
             for (int i = 0; i < vertices.length; i++) {
                 int j = i + 1;

@@ -1,6 +1,5 @@
 package edu.uci.iotproject.trafficreassembly.layer2;
 
-import edu.uci.iotproject.detection.Layer2FlowObserver;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.EthernetPacket;
 import org.pcap4j.util.MacAddress;
@@ -10,15 +9,26 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The packets exchanged between two endpoints (MAC addresses).
+ * Models a layer 2 flow: groups packets exchanged between two specific endpoints (MAC addresses).
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class Layer2Flow {
 
+    /**
+     * The first endpoint of this layer 2 flow.
+     */
     private final MacAddress mEndpoint1;
+
+    /**
+     * The second endpoint of this layer 2 flow.
+     */
     private final MacAddress mEndpoint2;
 
+    /**
+     * Clients observing for changes to this layer 2 flow.
+     */
     private final List<Layer2FlowObserver> mFlowObservers = new ArrayList<>();
 
     public Layer2Flow(MacAddress endpoint1, MacAddress endpoint2) {
@@ -26,10 +36,18 @@ public class Layer2Flow {
         mEndpoint2 = endpoint2;
     }
 
+    /**
+     * Register as an observer of this flow.
+     * @param observer The client that is to be notified whenever this flow changes (has new packets added).
+     */
     public void addFlowObserver(Layer2FlowObserver observer) {
         mFlowObservers.add(observer);
     }
 
+    /**
+     * Deregister as an observer of this flow.
+     * @param observer The client that no longer wishes to be notified whenever this flow changes.
+     */
     public void removeFlowObserver(Layer2FlowObserver observer) {
         mFlowObservers.remove(observer);
     }
@@ -50,10 +68,18 @@ public class Layer2Flow {
         mFlowObservers.forEach(o -> o.onNewPacket(this, packet));
     }
 
+    /**
+     * Get the packets pertaining to this flow.
+     * @return The packets pertaining to this flow.
+     */
     public List<PcapPacket> getPackets() {
         return Collections.unmodifiableList(mPackets);
     }
 
+    /**
+     * Verify that a packet pertains to this flow.
+     * @param packet The packet that is to be verified.
+     */
     private void verifyAddresses(PcapPacket packet) {
         EthernetPacket ethPkt = packet.get(EthernetPacket.class);
         MacAddress srcAddr = ethPkt.getHeader().getSrcAddr();
@@ -67,13 +93,3 @@ public class Layer2Flow {
     }
 
 }
-
-
-
-/*
-
-
- Packet stream -> flow reassembler -> flow1, flow2, flow3... -> for each flow, keep a sequence matcher for each sequence of cluster
-
-
- */

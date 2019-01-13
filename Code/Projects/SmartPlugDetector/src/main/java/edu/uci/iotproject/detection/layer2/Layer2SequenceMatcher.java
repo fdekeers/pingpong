@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO add class documentation.
+ * Attempts to detect the presence of a specific packet sequence in the set of packets provided through multiple calls
+ * to {@link #matchPacket(PcapPacket)}, considering only layer 2 information.
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class Layer2SequenceMatcher {
 
@@ -24,10 +26,21 @@ public class Layer2SequenceMatcher {
      */
     private final List<PcapPacket> mMatchedPackets = new ArrayList<>();
 
+    /**
+     * Create a {@code Layer2SequenceMatcher}.
+     * @param sequence The sequence to match against (search for).
+     */
     public Layer2SequenceMatcher(List<PcapPacket> sequence) {
         mSequence = sequence;
     }
 
+    /**
+     * Attempt to advance this {@code Layer2SequenceMatcher} by matching {@code packet} against the packet that this
+     * {@code Layer2SequenceMatcher} expects as the next packet of the sequence it is searching for.
+     * @param packet
+     * @return {@code true} if this {@code Layer2SequenceMatcher} could advance by adding {@code packet} to its set of
+     *         matched packets, {@code false} otherwise.
+     */
     public boolean matchPacket(PcapPacket packet) {
         // The packet we want to match next.
         PcapPacket expected = mSequence.get(mMatchedPackets.size());

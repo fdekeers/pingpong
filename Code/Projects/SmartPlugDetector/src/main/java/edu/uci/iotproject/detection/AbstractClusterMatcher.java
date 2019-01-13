@@ -6,14 +6,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * TODO add class documentation.
+ * Base class for classes that search a traffic trace for sequences of packets that "belong to" a given cluster (in
+ * other words, classes that attempt to classify traffic as pertaining to a given cluster).
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 abstract public class AbstractClusterMatcher {
 
+    /**
+     * The cluster that describes the sequence of packets that this {@link AbstractClusterMatcher} is trying to detect
+     * in the observed traffic.
+     */
     protected final List<List<PcapPacket>> mCluster;
-
 
     protected AbstractClusterMatcher(List<List<PcapPacket>> cluster) {
         // ===================== PRECONDITION SECTION =====================
@@ -21,11 +26,18 @@ abstract public class AbstractClusterMatcher {
         if (cluster.isEmpty() || cluster.stream().anyMatch(inner -> inner.isEmpty())) {
             throw new IllegalArgumentException("cluster is empty (or contains an empty inner List)");
         }
+        for (List<PcapPacket> clusterMember : cluster) {
+            if (clusterMember.size() != cluster.get(0).size()) {
+                throw new IllegalArgumentException("All sequences in cluster must contain the same number of packets");
+            }
+        }
+        // ================================================================
+        // Let the subclass prune the provided cluster
         mCluster = pruneCluster(cluster);
     }
 
     /**
-     * Allows subclasses to specify how to prune input cluster provided to the constructor.
+     * Allows subclasses to specify how to prune the input cluster provided to the constructor.
      * @param cluster The input cluster provided to the constructor.
      * @return The pruned cluster to use in place of the input cluster.
      */
