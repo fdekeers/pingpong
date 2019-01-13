@@ -1,5 +1,7 @@
-package edu.uci.iotproject;
+package edu.uci.iotproject.trafficreassembly.layer2;
 
+import edu.uci.iotproject.trafficreassembly.layer2.Layer2Flow;
+import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassemblerObserver;
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapPacket;
 import org.pcap4j.packet.EthernetPacket;
@@ -14,7 +16,7 @@ import java.util.*;
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class L2FlowReassembler implements PacketListener {
+public class Layer2FlowReassembler implements PacketListener {
 
     /**
      * Maps a pair of MAC addresses to the packets exchanged between the two hosts.

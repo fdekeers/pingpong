@@ -1,4 +1,4 @@
-package edu.uci.iotproject;
+package edu.uci.iotproject.trafficreassembly.layer3;
 
 import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.util.PcapPacketUtils;

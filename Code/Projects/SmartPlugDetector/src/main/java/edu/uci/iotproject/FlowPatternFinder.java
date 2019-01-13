@@ -3,6 +3,7 @@ package edu.uci.iotproject;
 import edu.uci.iotproject.comparison.ComparisonFunctions;
 import edu.uci.iotproject.comparison.CompleteMatchPatternComparisonResult;
 import edu.uci.iotproject.comparison.PatternComparisonTask;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
@@ -15,7 +16,6 @@ import java.io.*;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.concurrent.*;
 

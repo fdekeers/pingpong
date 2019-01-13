@@ -1,4 +1,4 @@
-package edu.uci.iotproject.detection;
+package edu.uci.iotproject.detection.layer2;
 
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import org.pcap4j.core.PcapPacket;

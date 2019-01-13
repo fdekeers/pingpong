@@ -1,8 +1,8 @@
 package edu.uci.iotproject.analysis;
 
-import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.DnsMap;
-import edu.uci.iotproject.TcpReassembler;
+import edu.uci.iotproject.trafficreassembly.layer3.TcpReassembler;
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapPacket;
 

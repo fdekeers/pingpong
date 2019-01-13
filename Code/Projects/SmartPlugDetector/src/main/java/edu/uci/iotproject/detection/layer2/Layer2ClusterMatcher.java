@@ -1,8 +1,10 @@
-package edu.uci.iotproject.detection;
+package edu.uci.iotproject.detection.layer2;
 
-import edu.uci.iotproject.L2FlowReassembler;
-import edu.uci.iotproject.Layer2Flow;
-import edu.uci.iotproject.Layer2FlowReassemblerObserver;
+import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassembler;
+import edu.uci.iotproject.trafficreassembly.layer2.Layer2Flow;
+import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassemblerObserver;
+import edu.uci.iotproject.detection.AbstractClusterMatcher;
+import edu.uci.iotproject.detection.Layer2FlowObserver;
 import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.util.PrintUtils;
 import org.pcap4j.core.*;
@@ -24,7 +26,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
         List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
 
 
-        L2FlowReassembler flowReassembler = new L2FlowReassembler();
+        Layer2FlowReassembler flowReassembler = new Layer2FlowReassembler();
 
         Layer2ClusterMatcher l2ClusterMatcher = new Layer2ClusterMatcher(onSignature.get(0));
         flowReassembler.addObserver(l2ClusterMatcher);
@@ -141,7 +143,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
 
 
     @Override
-    public void onNewFlow(L2FlowReassembler reassembler, Layer2Flow newFlow) {
+    public void onNewFlow(Layer2FlowReassembler reassembler, Layer2Flow newFlow) {
         // Subscribe to the new flow to get updates whenever a new packet pertaining to the flow is processed.
         newFlow.addFlowObserver(this);
     }

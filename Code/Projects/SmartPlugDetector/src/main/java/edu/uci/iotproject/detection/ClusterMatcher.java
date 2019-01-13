@@ -1,7 +1,7 @@
 package edu.uci.iotproject.detection;
 
-import edu.uci.iotproject.Conversation;
-import edu.uci.iotproject.TcpReassembler;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.TcpReassembler;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.util.PrintUtils;

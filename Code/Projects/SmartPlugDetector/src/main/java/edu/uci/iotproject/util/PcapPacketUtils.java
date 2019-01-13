@@ -1,6 +1,6 @@
 package edu.uci.iotproject.util;
 
-import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.analysis.PcapPacketPair;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;

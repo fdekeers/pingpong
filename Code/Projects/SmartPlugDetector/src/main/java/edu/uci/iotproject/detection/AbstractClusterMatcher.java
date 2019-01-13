@@ -1,6 +1,5 @@
 package edu.uci.iotproject.detection;
 
-import edu.uci.iotproject.Conversation;
 import org.pcap4j.core.PcapPacket;
 
 import java.util.List;

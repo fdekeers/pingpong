@@ -1,4 +1,4 @@
-package edu.uci.iotproject;
+package edu.uci.iotproject.trafficreassembly.layer2;
 
 import edu.uci.iotproject.detection.Layer2FlowObserver;
 import org.pcap4j.core.PcapPacket;
