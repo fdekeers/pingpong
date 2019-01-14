@@ -1,13 +1,15 @@
 package edu.uci.iotproject.util;
 
-import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.analysis.PcapPacketPair;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import org.apache.commons.math3.stat.clustering.Cluster;
 import org.pcap4j.core.PcapPacket;
+import org.pcap4j.packet.EthernetPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
+import org.pcap4j.util.MacAddress;
 
 import java.util.*;
 
@@ -25,6 +27,25 @@ public final class PcapPacketUtils {
      * get rid of that signature.
      */
     private static final int SIGNATURE_MERGE_THRESHOLD = 5;
+
+
+    /**
+     * Gets the source address of the Ethernet part of {@code packet}.
+     * @param packet The packet for which the Ethernet source address is to be extracted.
+     * @return The source address of the Ethernet part of {@code packet}.
+     */
+    public static MacAddress getEthSrcAddr(PcapPacket packet) {
+        return getEthernetPacketOrThrow(packet).getHeader().getSrcAddr();
+    }
+
+    /**
+     * Gets the destination address of the Ethernet part of {@code packet}.
+     * @param packet The packet for which the Ethernet destination address is to be extracted.
+     * @return The destination address of the Ethernet part of {@code packet}.
+     */
+    public static MacAddress getEthDstAddr(PcapPacket packet) {
+        return getEthernetPacketOrThrow(packet).getHeader().getDstAddr();
+    }
 
     /**
      * Determines if a given {@link PcapPacket} wraps a {@link TcpPacket}.
@@ -346,12 +367,23 @@ public final class PcapPacketUtils {
     /**
      * Gets the {@link IpV4Packet} contained in {@code packet}, or throws a {@link NullPointerException} if
      * {@code packet} does not contain an {@link IpV4Packet}.
-     * @param packet A {@link PcapPacket} that is expected to contain a {@link IpV4Packet}.
+     * @param packet A {@link PcapPacket} that is expected to contain an {@link IpV4Packet}.
      * @return The {@link IpV4Packet} contained in {@code packet}.
      * @throws NullPointerException if {@code packet} does not encapsulate an {@link IpV4Packet}.
      */
     private static IpV4Packet getIpV4PacketOrThrow(PcapPacket packet) {
         return Objects.requireNonNull(packet.get(IpV4Packet.class), "not an IPv4 packet");
+    }
+
+    /**
+     * Gets the {@link EthernetPacket} contained in {@code packet}, or throws a {@link NullPointerException} if
+     * {@code packet} does not contain an {@link EthernetPacket}.
+     * @param packet A {@link PcapPacket} that is expected to contain an {@link EthernetPacket}.
+     * @return The {@link EthernetPacket} contained in {@code packet}.
+     * @throws NullPointerException if {@code packet} does not encapsulate an {@link EthernetPacket}.
+     */
+    private static final EthernetPacket getEthernetPacketOrThrow(PcapPacket packet) {
+        return Objects.requireNonNull(packet.get(EthernetPacket.class), "not an Ethernet packet");
     }
 
     /**

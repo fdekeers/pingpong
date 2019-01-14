@@ -3,10 +3,9 @@ package edu.uci.iotproject;
 import static edu.uci.iotproject.analysis.UserAction.Type;
 
 import edu.uci.iotproject.analysis.*;
-import edu.uci.iotproject.comparison.seqalignment.ExtractedSequence;
-import edu.uci.iotproject.comparison.seqalignment.SequenceAlignment;
-import edu.uci.iotproject.comparison.seqalignment.SequenceExtraction;
 import edu.uci.iotproject.io.TriggerTimesFileReader;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.TcpReassembler;
 import edu.uci.iotproject.util.PcapPacketUtils;
 import edu.uci.iotproject.util.PrintUtils;
 import org.apache.commons.math3.stat.clustering.Cluster;
@@ -15,8 +14,6 @@ import org.pcap4j.core.*;
 import org.pcap4j.packet.namednumber.DataLinkType;
 
 import java.io.EOFException;
-import java.io.File;
-import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.*;

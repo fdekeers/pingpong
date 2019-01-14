@@ -1,6 +1,6 @@
 package edu.uci.iotproject.comparison;
 
-import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.FlowPattern;
 
 import java.util.concurrent.Callable;

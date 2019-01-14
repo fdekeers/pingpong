@@ -1,6 +1,6 @@
 package edu.uci.iotproject.comparison.seqalignment;
 
-import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import org.pcap4j.core.PcapPacket;
 
 import java.util.List;

@@ -1,9 +1,8 @@
 package edu.uci.iotproject.comparison.seqalignment;
 
-import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

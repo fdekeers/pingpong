@@ -1,6 +1,6 @@
 package edu.uci.iotproject.analysis;
 
-import edu.uci.iotproject.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.DnsMap;
 import edu.uci.iotproject.util.PcapPacketUtils;
 import org.pcap4j.core.PcapPacket;

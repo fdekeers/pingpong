@@ -1,7 +1,8 @@
-package edu.uci.iotproject.detection;
+package edu.uci.iotproject.detection.layer3;
 
-import edu.uci.iotproject.Conversation;
-import edu.uci.iotproject.TcpReassembler;
+import edu.uci.iotproject.detection.AbstractClusterMatcher;
+import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
+import edu.uci.iotproject.trafficreassembly.layer3.TcpReassembler;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
 import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.util.PrintUtils;
@@ -20,7 +21,7 @@ import static edu.uci.iotproject.util.PcapPacketUtils.*;
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class ClusterMatcher implements PacketListener {
+public class Layer3ClusterMatcher extends AbstractClusterMatcher implements PacketListener {
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
@@ -31,7 +32,7 @@ public class ClusterMatcher implements PacketListener {
         final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
 
         List<List<PcapPacket>> signature = PrintUtils.deserializeClustersFromFile(signatureFile);
-        ClusterMatcher clusterMatcher = new ClusterMatcher(signature, null,
+        Layer3ClusterMatcher clusterMatcher = new Layer3ClusterMatcher(signature, null,
                 (sig, match) -> System.out.println(
                         String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
                                 match.get(0).getTimestamp().atZone(ZoneId.of("America/Los_Angeles")))
@@ -48,12 +49,6 @@ public class ClusterMatcher implements PacketListener {
         reader.readFromHandle();
         clusterMatcher.performDetection();
     }
-
-    /**
-     * The cluster that describes the sequence of packets that this {@link ClusterMatcher} is trying to detect in the
-     * observed traffic.
-     */
-    private final List<List<PcapPacket>> mCluster;
 
     /**
      * The ordered directions of packets in the sequences that make up {@link #mCluster}.
@@ -73,21 +68,18 @@ public class ClusterMatcher implements PacketListener {
     private final ClusterMatchObserver[] mObservers;
 
     /**
-     * Create a {@link ClusterMatcher}.
+     * Create a {@link Layer3ClusterMatcher}.
      * @param cluster The cluster that traffic is matched against.
      * @param routerWanIp The router's WAN IP if examining traffic captured at the ISP's point of view (used for
      *                    determining the direction of packets).
-     * @param detectionObservers Client code that wants to get notified whenever the {@link ClusterMatcher} detects that
+     * @param detectionObservers Client code that wants to get notified whenever the {@link Layer3ClusterMatcher} detects that
      *                          (a subset of) the examined traffic is similar to the traffic that makes up
      *                          {@code cluster}, i.e., when the examined traffic is classified as pertaining to
      *                          {@code cluster}.
      */
-    public ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, ClusterMatchObserver... detectionObservers) {
+    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, ClusterMatchObserver... detectionObservers) {
+        super(cluster);
         // ===================== PRECONDITION SECTION =====================
-        cluster = Objects.requireNonNull(cluster, "cluster cannot be null");
-        if (cluster.isEmpty() || cluster.stream().anyMatch(inner -> inner.isEmpty())) {
-            throw new IllegalArgumentException("cluster is empty (or contains an empty inner List)");
-        }
         mObservers = Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
         if (mObservers.length == 0) {
             throw new IllegalArgumentException("no detectionObservers provided");
@@ -101,7 +93,7 @@ public class ClusterMatcher implements PacketListener {
          * on in favor of performance. However, it is only run once (at instantiation), so the overhead may be warranted
          * in order to ensure correctness, especially during the development/debugging phase.
          */
-        if (cluster.stream().
+        if (mCluster.stream().
                 anyMatch(inner -> !Arrays.equals(mClusterMemberDirections, getPacketDirections(inner, null)))) {
             throw new IllegalArgumentException(
                     "cluster members must contain the same number of packets and exhibit the same packet direction " +
@@ -109,8 +101,6 @@ public class ClusterMatcher implements PacketListener {
             );
         }
         // ================================================================
-        // Prune the provided cluster.
-        mCluster = pruneCluster(cluster);
         mRouterWanIp = routerWanIp;
     }
 
@@ -121,8 +111,8 @@ public class ClusterMatcher implements PacketListener {
     }
 
     /**
-     * Get the cluster that describes the packet sequence that this {@link ClusterMatcher} is searching for.
-     * @return the cluster that describes the packet sequence that this {@link ClusterMatcher} is searching for.
+     * Get the cluster that describes the packet sequence that this {@link Layer3ClusterMatcher} is searching for.
+     * @return the cluster that describes the packet sequence that this {@link Layer3ClusterMatcher} is searching for.
      */
     public List<List<PcapPacket>> getCluster() {
         return mCluster;
@@ -158,7 +148,7 @@ public class ClusterMatcher implements PacketListener {
                         isPresent()) {
                     List<PcapPacket> matchSeq = match.get();
                     // Notify observers about the match.
-                    Arrays.stream(mObservers).forEach(o -> o.onMatch(ClusterMatcher.this, matchSeq));
+                    Arrays.stream(mObservers).forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
                     /*
                      * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                      * signature sequence.
@@ -293,7 +283,8 @@ public class ClusterMatcher implements PacketListener {
      * @param cluster A cluster to prune.
      * @return The resulting pruned cluster.
      */
-    private final List<List<PcapPacket>> pruneCluster(List<List<PcapPacket>> cluster) {
+    @Override
+    protected List<List<PcapPacket>> pruneCluster(List<List<PcapPacket>> cluster) {
         List<List<PcapPacket>> prunedCluster = new ArrayList<>();
         for (List<PcapPacket> originalClusterSeq : cluster) {
             boolean alreadyPresent = false;
@@ -343,20 +334,20 @@ public class ClusterMatcher implements PacketListener {
     }
 
     /**
-     * Interface used by client code to register for receiving a notification whenever the {@link ClusterMatcher}
+     * Interface used by client code to register for receiving a notification whenever the {@link Layer3ClusterMatcher}
      * detects traffic that is similar to the traffic that makes up the cluster returned by
-     * {@link ClusterMatcher#getCluster()}.
+     * {@link Layer3ClusterMatcher#getCluster()}.
      */
     interface ClusterMatchObserver {
         /**
          * Callback that is invoked whenever a sequence that is similar to a sequence associated with the cluster (i.e.,
-         * a sequence is a member of the cluster) is detected in the traffic that the associated {@link ClusterMatcher}
+         * a sequence is a member of the cluster) is detected in the traffic that the associated {@link Layer3ClusterMatcher}
          * observes.
-         * @param clusterMatcher The {@link ClusterMatcher} that detected a match (classified traffic as pertaining to
+         * @param clusterMatcher The {@link Layer3ClusterMatcher} that detected a match (classified traffic as pertaining to
          *                       its associated cluster).
          * @param match The traffic that was deemed to match the cluster associated with {@code clusterMatcher}.
          */
-        void onMatch(ClusterMatcher clusterMatcher, List<PcapPacket> match);
+        void onMatch(Layer3ClusterMatcher clusterMatcher, List<PcapPacket> match);
     }
 
 }
