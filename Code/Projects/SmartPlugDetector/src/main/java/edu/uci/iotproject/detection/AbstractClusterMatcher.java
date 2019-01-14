@@ -2,6 +2,7 @@ package edu.uci.iotproject.detection;
 
 import org.pcap4j.core.PcapPacket;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +21,11 @@ abstract public class AbstractClusterMatcher {
      */
     protected final List<List<PcapPacket>> mCluster;
 
+    /**
+     * Observers registered for callbacks from this {@link AbstractClusterMatcher}.
+     */
+    protected final List<ClusterMatcherObserver> mObservers;
+
     protected AbstractClusterMatcher(List<List<PcapPacket>> cluster) {
         // ===================== PRECONDITION SECTION =====================
         cluster = Objects.requireNonNull(cluster, "cluster cannot be null");
@@ -34,6 +40,23 @@ abstract public class AbstractClusterMatcher {
         // ================================================================
         // Let the subclass prune the provided cluster
         mCluster = pruneCluster(cluster);
+        mObservers = new ArrayList<>();
+    }
+
+    /**
+     * Register for callbacks from this cluster matcher.
+     * @param observer The target of the callbacks.
+     */
+    public final void addObserver(ClusterMatcherObserver observer) {
+        mObservers.add(observer);
+    }
+
+    /**
+     * Deregister for callbacks from this cluster matcher.
+     * @param observer The callback target that is to be deregistered.
+     */
+    public final void removeObserver(ClusterMatcherObserver observer) {
+        mObservers.remove(observer);
     }
 
     /**

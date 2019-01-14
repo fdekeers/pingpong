@@ -2,6 +2,8 @@ package edu.uci.iotproject.detection.layer3;
 
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.analysis.UserAction;
+import edu.uci.iotproject.detection.AbstractClusterMatcher;
+import edu.uci.iotproject.detection.ClusterMatcherObserver;
 import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.util.PrintUtils;
 import org.jgrapht.GraphPath;
@@ -23,7 +25,7 @@ import java.util.function.Consumer;
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class SignatureDetector implements PacketListener, Layer3ClusterMatcher.ClusterMatchObserver {
+public class SignatureDetector implements PacketListener, ClusterMatcherObserver {
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
@@ -520,7 +522,7 @@ public class SignatureDetector implements PacketListener, Layer3ClusterMatcher.C
     }
 
     @Override
-    public void onMatch(Layer3ClusterMatcher clusterMatcher, List<PcapPacket> match) {
+    public void onMatch(AbstractClusterMatcher clusterMatcher, List<PcapPacket> match) {
         // Add the match at the corresponding index
         pendingMatches[mClusterMatcherIds.get(clusterMatcher)].add(match);
         checkSignatureMatch();

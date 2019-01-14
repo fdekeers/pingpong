@@ -1,6 +1,7 @@
 package edu.uci.iotproject.detection.layer3;
 
 import edu.uci.iotproject.detection.AbstractClusterMatcher;
+import edu.uci.iotproject.detection.ClusterMatcherObserver;
 import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.trafficreassembly.layer3.TcpReassembler;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
@@ -65,8 +66,6 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
      */
     private final String mRouterWanIp;
 
-    private final ClusterMatchObserver[] mObservers;
-
     /**
      * Create a {@link Layer3ClusterMatcher}.
      * @param cluster The cluster that traffic is matched against.
@@ -77,12 +76,12 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
      *                          {@code cluster}, i.e., when the examined traffic is classified as pertaining to
      *                          {@code cluster}.
      */
-    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, ClusterMatchObserver... detectionObservers) {
+    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp,
+                                ClusterMatcherObserver... detectionObservers) {
         super(cluster);
-        // ===================== PRECONDITION SECTION =====================
-        mObservers = Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
-        if (mObservers.length == 0) {
-            throw new IllegalArgumentException("no detectionObservers provided");
+        Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
+        for (ClusterMatcherObserver obs : detectionObservers) {
+            addObserver(obs);
         }
         // Build the cluster members' direction sequence.
         // Note: assumes that the provided cluster was captured within the local network (routerWanIp is set to null).
@@ -100,7 +99,6 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                             "pattern"
             );
         }
-        // ================================================================
         mRouterWanIp = routerWanIp;
     }
 
@@ -148,7 +146,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                         isPresent()) {
                     List<PcapPacket> matchSeq = match.get();
                     // Notify observers about the match.
-                    Arrays.stream(mObservers).forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
                     /*
                      * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                      * signature sequence.
@@ -331,23 +329,6 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
             }
         }
         return directions;
-    }
-
-    /**
-     * Interface used by client code to register for receiving a notification whenever the {@link Layer3ClusterMatcher}
-     * detects traffic that is similar to the traffic that makes up the cluster returned by
-     * {@link Layer3ClusterMatcher#getCluster()}.
-     */
-    interface ClusterMatchObserver {
-        /**
-         * Callback that is invoked whenever a sequence that is similar to a sequence associated with the cluster (i.e.,
-         * a sequence is a member of the cluster) is detected in the traffic that the associated {@link Layer3ClusterMatcher}
-         * observes.
-         * @param clusterMatcher The {@link Layer3ClusterMatcher} that detected a match (classified traffic as pertaining to
-         *                       its associated cluster).
-         * @param match The traffic that was deemed to match the cluster associated with {@code clusterMatcher}.
-         */
-        void onMatch(Layer3ClusterMatcher clusterMatcher, List<PcapPacket> match);
     }
 
 }
