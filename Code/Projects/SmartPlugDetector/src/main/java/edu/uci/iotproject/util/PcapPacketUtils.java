@@ -297,9 +297,9 @@ public final class PcapPacketUtils {
     public static List<List<List<PcapPacket>>> sortSignatures(List<List<List<PcapPacket>>> signatures) {
         // TODO: This is the simplest solution!!! Might not cover all corner cases.
         // TODO: Sort the list of lists based on the first packet's timestamps!
-        //Collections.sort(signatures, (p1, p2) -> {
-        //    return p1.get(0).get(0).getTimestamp().compareTo(p2.get(0).get(0).getTimestamp());
-        //});
+//        Collections.sort(signatures, (p1, p2) -> {
+//            return p1.get(0).get(0).getTimestamp().compareTo(p2.get(0).get(0).getTimestamp());
+//        });
         // TODO: The following is a more complete solution that covers corner cases.
         // Sort the list of lists based on one-to-one comparison between timestamps of signatures on both lists.
         // This also takes into account the fact that the number of signatures in the two lists could be different.

@@ -336,7 +336,7 @@ public class ClusterMatcher implements PacketListener {
             } else if (isDstIpLocal(pkt) || getDestinationIp(pkt).equals(routerWanIp)) {
                 directions[i] = Conversation.Direction.SERVER_TO_CLIENT;
             } else {
-                throw new IllegalArgumentException("no local IP or router WAN port IP found, can't detect direction");
+                //throw new IllegalArgumentException("no local IP or router WAN port IP found, can't detect direction");
             }
         }
         return directions;

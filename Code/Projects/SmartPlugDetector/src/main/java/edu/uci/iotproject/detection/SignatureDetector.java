@@ -219,14 +219,14 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         // TODO: EXPERIMENT - January 9, 2018
         // Blossom Sprinkler experiment
 //        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
-        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
+        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
         // Blossom Sprinkler DEVICE signatures
-//        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
-//        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
+        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
         // Blossom Sprinkler PHONE signatures
-        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
 
         // LiFX Bulb experiment
 //        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";
@@ -363,11 +363,11 @@ public class SignatureDetector implements PacketListener, ClusterMatcher.Cluster
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
 
         // LAN
-        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
-        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
+//        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
+//        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
         // WAN
-//        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
-//        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
+        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
+        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
