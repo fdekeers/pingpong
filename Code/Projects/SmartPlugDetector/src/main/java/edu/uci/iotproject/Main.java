@@ -59,8 +59,8 @@ public class Main {
 //        final String inputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug-processed.pcap";
 //        final String triggerTimesFile = path + "/experimental_result/standalone/dlink-plug/timestamps/dlink-plug-nov-7-2018.timestamps";
-//        //final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+//        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
+////        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // 2) TP-Link July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -71,7 +71,7 @@ public class Main {
 //        final String inputPcapFile = path + "/2018-10/tplink-plug/tplink-plug.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/2018-10/tplink-plug/tplink-plug-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-10/tplink-plug/tplink-plug-oct-17-2018.timestamps";
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .159 == tplink plug
+//        final String deviceIp = "192.168.1.159"; // .246 == phone; .159 == tplink plug
         // TODO: EXPERIMENT - November 8, 2018
 //        final String inputPcapFile = path + "/experimental_result/standalone/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
 //        final String outputPcapFile = path + "/experimental_result/standalone/tplink-plug/wlan1/tplink-plug-processed.pcap";
@@ -230,10 +230,10 @@ public class Main {
 //        final String outputPcapFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler-processed.pcap";
 //        final String triggerTimesFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler-nov-2-2018.timestamps";
 //        final String deviceIp = "192.168.1.229"; // .246 == phone; .229 == sprinkler
-        // January 9, 11
+        // January 9, 11, 13, 14
         final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
         final String outputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-9-2019.timestamps";
+        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-14-2019.timestamps";
 //        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-11-2019.timestamps";
         final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
 
@@ -471,12 +471,12 @@ public class Main {
         Stream.concat(Stream.of(onPairs), Stream.of(offPairs)).flatMap(List::stream).forEach(p -> p.setDnsMap(dnsMap));
         // Perform clustering on conversation logged as part of all ON events.
         DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 45);
-        //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(7.0, 45);
+        //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(3, 45);
         //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 10);
         List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
         // Perform clustering on conversation logged as part of all OFF events.
         DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 45);
-        //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(7.0, 45);
+        //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(3, 45);
         //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 10);
         List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
         // Sort the conversations as reference
@@ -500,13 +500,10 @@ public class Main {
         }
         // TODO: Merging test
         ppListOfListListOn = PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
-        ppListOfListListOn = PcapPacketUtils.sortSignatures(ppListOfListListOn);
-        // TODO: Need to remove sequence numbers 0,1 for Blossom phone side since it is not a good signature!
-        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
+        // TODO: Need to remove sequence 550 567 for Blossom phone side since it is not a good signature (overlap)!
         PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 1);
-        // TODO: Need to remove sequence numbers 0 for Blossom device side since it is not a good signature!
-//        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
-//        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
+        // TODO: Need to remove sequence 69 296 for Blossom device side since it is not a good signature (overlap)!
+//        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
         // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
         // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
@@ -514,6 +511,7 @@ public class Main {
         // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!
         // TODO: This sequence actually belongs to the local communication between the plug and the phone
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
+        ppListOfListListOn = PcapPacketUtils.sortSignatures(ppListOfListListOn);
         PcapPacketUtils.printSignatures(ppListOfListListOn);
         //count = 0;
         /*for (List<List<PcapPacket>> ll : ppListOfListListOn) {
@@ -541,10 +539,8 @@ public class Main {
         }
         // TODO: Merging test
         ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
-        ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
-        // TODO: Need to remove sequence numbers 0,2 for Blossom device side since it is not a good signature!
-//        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 0);
-//        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 0);
+        // TODO: Need to remove sequence 69 296 for Blossom device side since it is not a good signature (overlap)!
+//        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 3);
         // TODO: Need to remove sequence number 1 for Nest Thermostat since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
         // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
@@ -554,6 +550,7 @@ public class Main {
         // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!
         // TODO: This sequence actually belongs to the local communication between the plug and the phone
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 0);
+        ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
         PcapPacketUtils.printSignatures(ppListOfListListOff);
         //count = 0;
         /*for (List<List<PcapPacket>> ll : ppListOfListListOff) {

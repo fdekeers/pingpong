@@ -220,11 +220,11 @@ public class SignatureDetector implements PacketListener, Layer3ClusterMatcher.C
         final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
         // Blossom Sprinkler DEVICE signatures
-        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
-        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
         // Blossom Sprinkler PHONE signatures
-//        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
-//        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
+        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
 
         // LiFX Bulb experiment
 //        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";

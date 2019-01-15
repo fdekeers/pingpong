@@ -319,7 +319,9 @@ public final class PcapPacketUtils {
         // TODO: This is the simplest solution!!! Might not cover all corner cases.
         // TODO: Sort the list of lists based on the first packet's timestamps!
 //        Collections.sort(signatures, (p1, p2) -> {
-//            return p1.get(0).get(0).getTimestamp().compareTo(p2.get(0).get(0).getTimestamp());
+//            //return p1.get(0).get(0).getTimestamp().compareTo(p2.get(0).get(0).getTimestamp());
+//            int compare = p1.get(0).get(0).getTimestamp().compareTo(p2.get(0).get(0).getTimestamp());
+//            return compare;
 //        });
         // TODO: The following is a more complete solution that covers corner cases.
         // Sort the list of lists based on one-to-one comparison between timestamps of signatures on both lists.
@@ -339,14 +341,17 @@ public final class PcapPacketUtils {
                 if (Math.abs(timestamp1 - timestamp2) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
                     // If these two are within INCLUSION_WINDOW_MILLIS window then compare!
                     compare = p1.get(count1).get(0).getTimestamp().compareTo(p2.get(count2).get(0).getTimestamp());
-                    if (comparePrev != 0) { // First time since it is 0
-                        if (Integer.signum(compare) != Integer.signum(comparePrev)) {
-                            // Throw an exception if the order of the two signatures is not consistent,
-                            // E.g., 111, 222, 333 in one occassion and 222, 333, 111 in the other.
-//                            throw new Error("For some reason, the order of signatures are not always consistent!" +
-//                                    "Returning the original data structure of signatures...");
-                        }
-                    }
+//                    if (comparePrev != 0) { // First time since it is 0
+//                        if (Integer.signum(compare) != Integer.signum(comparePrev)) {
+//                            // Throw an exception if the order of the two signatures is not consistent,
+//                            // E.g., 111, 222, 333 in one occassion and 222, 333, 111 in the other.
+//                            throw new Error("OVERLAP WARNING: " + "" +
+//                                    "Please remove one of the sequences: " +
+//                                    p1.get(0).get(0).length() + "... OR " +
+//                                    p2.get(0).get(0).length() + "...");
+//                        }
+//                    }
+                    overlapChecking(compare, comparePrev, p1.get(count1), p2.get(count2));
                     comparePrev = compare;
                     count1++;
                     count2++;
@@ -362,6 +367,42 @@ public final class PcapPacketUtils {
             return compare;
         });
         return signatures;
+    }
+
+    /**
+     * Checks for overlapping between two packet sequences.
+     * @param compare Current comparison value between packet sequences p1 and p2
+     * @param comparePrev Previous comparison value between packet sequences p1 and p2
+     * @param sequence1 The packet sequence ({@link List} of {@link PcapPacket} objects).
+     * @param sequence2 The packet sequence ({@link List} of {@link PcapPacket} objects).
+     */
+    private static void overlapChecking(int compare, int comparePrev, List<PcapPacket> sequence1, List<PcapPacket> sequence2) {
+
+        // Check if p1 occurs before p2 but both have same overlap
+        if (comparePrev != 0) { // First time since it is 0
+            if (Integer.signum(compare) != Integer.signum(comparePrev)) {
+                // Throw an exception if the order of the two signatures is not consistent,
+                // E.g., 111, 222, 333 in one occassion and 222, 333, 111 in the other.
+                throw new Error("OVERLAP WARNING: " + "" +
+                        "Two sequences have some overlap. Please remove one of the sequences: " +
+                        sequence1.get(0).length() + "... OR " +
+                        sequence2.get(0).length() + "...");
+            }
+        }
+        // Check if p1 is longer than p2 and p2 occurs during the occurrence of p1
+        int lastIndexOfSequence1 = sequence1.size() - 1;
+        int lastIndexOfSequence2 = sequence2.size() - 1;
+        int compareLast =
+                sequence1.get(lastIndexOfSequence1).getTimestamp().compareTo(sequence2.get(lastIndexOfSequence2).getTimestamp());
+        // Check the signs of compare and compareLast
+        if ((compare <= 0 && compareLast > 0) ||
+            (compareLast <= 0 && compare > 0)) {
+            throw new Error("OVERLAP WARNING: " + "" +
+                    "One sequence is in the other. Please remove one of the sequences: " +
+                    sequence1.get(0).length() + "... OR " +
+                    sequence2.get(0).length() + "...");
+        }
+
     }
 
     /**
