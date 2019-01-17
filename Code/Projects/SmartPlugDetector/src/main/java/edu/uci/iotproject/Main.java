@@ -212,13 +212,13 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-08/arlo-camera/arlo-camera-aug-10-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
         // TODO: EXPERIMENT - November 13, 2018
-//        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera-processed.pcap";
-////        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth1.local.pcap";
-////        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera-processed.pcap";
-//        final String triggerTimesFile = path + "/experimental_result/standalone/arlo-camera/timestamps/arlo-camera-nov-13-2018.timestamps";
-////        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
+        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
+        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera-processed.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera-processed.pcap";
+        final String triggerTimesFile = path + "/experimental_result/standalone/arlo-camera/timestamps/arlo-camera-nov-13-2018.timestamps";
+//        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
 
         // 12) Blossom sprinkler August 13 experiment
 //        final String inputPcapFile = path + "/2018-08/blossom/blossom.wlan1.local.pcap";
@@ -231,11 +231,11 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-10/blossom-sprinkler/blossom-sprinkler-nov-2-2018.timestamps";
 //        final String deviceIp = "192.168.1.229"; // .246 == phone; .229 == sprinkler
         // January 9, 11, 13, 14
-        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-14-2019.timestamps";
-//        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-11-2019.timestamps";
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
+//        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-14-2019.timestamps";
+////        final String triggerTimesFile = path + "/experimental_result/standalone/blossom-sprinkler/timestamps/blossom-sprinkler-standalone-jan-11-2019.timestamps";
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .229 == sprinkler
 
 //        // 13) DLink siren August 14 experiment
 //        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
@@ -501,7 +501,7 @@ public class Main {
         // TODO: Merging test
         ppListOfListListOn = PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
         // TODO: Need to remove sequence 550 567 for Blossom phone side since it is not a good signature (overlap)!
-        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 1);
+//        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 1);
         // TODO: Need to remove sequence 69 296 for Blossom device side since it is not a good signature (overlap)!
 //        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
         // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
@@ -544,7 +544,7 @@ public class Main {
         // TODO: Need to remove sequence number 1 for Nest Thermostat since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
         // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
-        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
+        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
         // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
         //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 2);
         // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!

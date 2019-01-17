@@ -85,7 +85,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 
         // TODO: The following are negative tests against the PCAP file from UNSW
 //        final String inputPcapFile = path + "/UNSW/16-10-04.pcap"; // TODO: Seems to be broken! Zero-payload!
-//        final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
+//          final String inputPcapFile = path + "/UNSW/16-10-12.pcap";
 
 //        final String inputPcapFile = path + "/UNSW/16-09-28.pcap"; // TODO: Seems to be broken! Zero-payload!
 //        final String inputPcapFile = path + "/UNSW/16-10-02.pcap"; // TODO: Seems to be broken!
@@ -112,7 +112,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        final String inputPcapFile = path + "/UNSW/16-10-01.pcap";
 //        final String inputPcapFile = path + "/UNSW/16-10-06.pcap";
         // Negative test: dataset from UNB
-//        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint.pcap";
+        final String inputPcapFile = path + "/evaluation/negative-datasets/UNB/Monday-WorkingHours_one-local-endpoint-001.pcap";
 
         // TODO: The following are tests for signatures against training data
 
@@ -219,14 +219,14 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
         // TODO: EXPERIMENT - January 9, 2018
         // Blossom Sprinkler experiment
 //        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
-        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
         // Blossom Sprinkler DEVICE signatures
-//        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
-//        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
+        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
         // Blossom Sprinkler PHONE signatures
-        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
-        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
 
         // LiFX Bulb experiment
 //        final String inputPcapFile = path + "/training/lifx-bulb/wlan1/lifx-bulb.wlan1.local.pcap";
