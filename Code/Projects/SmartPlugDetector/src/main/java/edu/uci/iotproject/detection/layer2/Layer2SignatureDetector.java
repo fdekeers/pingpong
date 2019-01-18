@@ -15,9 +15,6 @@ import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.pcap4j.core.*;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -35,17 +32,11 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // Create signature detectors and add observers that output their detected events.
         Layer2SignatureDetector onDetector = new Layer2SignatureDetector(PrintUtils.deserializeSignatureFromFile(onSignatureFile));
         Layer2SignatureDetector offDetector = new Layer2SignatureDetector(PrintUtils.deserializeSignatureFromFile(offSignatureFile));
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, uuuu h:mm:ss a").
-                withZone(ZoneId.systemDefault()).withLocale(Locale.US);
         onDetector.addObserver((signature, match) -> {
             System.out.println(new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp()));
-//            System.out.println("ON event detected at " + match.get(0).get(0).getTimestamp());
-//            System.out.println(dateFormatter.format(match.get(0).get(0).getTimestamp()));
         });
         offDetector.addObserver((signature, match) -> {
             System.out.println(new UserAction(UserAction.Type.TOGGLE_OFF, match.get(0).get(0).getTimestamp()));
-//            System.out.println("OFF event detected at " + match.get(0).get(0).getTimestamp());
-//            System.out.println(dateFormatter.format(match.get(0).get(0).getTimestamp()));
         });
 
         // Load the PCAP file
