@@ -106,7 +106,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
             if (matched && sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
                 // This sequence matcher has a match of the sequence it was searching for
                 // TODO report it.... for now just do a dummy printout.
-                System.out.println("SEQUENCE MATCHER HAS A MATCH AT " + sm.getMatchedPackets().get(0).getTimestamp());
+                mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+//                System.out.println("SEQUENCE MATCHER HAS A MATCH AT " + sm.getMatchedPackets().get(0).getTimestamp());
                 // Mark the sequence matcher for removal. No need to create a replacement one as we do that whenever the
                 // first packet of the sequence is matched (see above).
                 terminatedSeqMatchers.add(sm);
