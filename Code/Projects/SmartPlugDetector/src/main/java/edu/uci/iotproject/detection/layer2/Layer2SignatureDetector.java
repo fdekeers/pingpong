@@ -14,6 +14,10 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.pcap4j.core.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.*;
 
@@ -24,23 +28,67 @@ import java.util.*;
  */
 public class Layer2SignatureDetector implements PacketListener, ClusterMatcherObserver {
 
+    /**
+     * If set to {@code true}, output written to the results file is also dumped to standard out.
+     */
+    private static boolean STD_OUT_OUTPUT = true;
+
+
     // Main method only intended for easier debugging.
-    public static void main(String[] args) throws PcapNativeException, NotOpenException {
-        String onSignatureFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock-onSignature-phone-side.sig";
-        String offSignatureFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock-offSignature-phone-side.sig";
+    public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
+        if (args.length < 4) {
+            String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile resultsFile [stdOut]" +
+                            "\n - inputPcapFile: the target of the detection" +
+                            "\n - onSignatureFile: the file that contains the ON signature to search for" +
+                            "\n - offSignatureFile: the file that contains the OFF signature to search for" +
+                            "\n - resultsFile: where to write the results of the detection" +
+                            "\n - stdOut: optional true/false literal indicating if output should also be printed to std out; default is true",
+                    Layer2SignatureDetector.class.getSimpleName());
+            System.out.println(errMsg);
+            return;
+        }
+        final String pcapFile = args[0];
+        final String onSignatureFile = args[1];
+        final String offSignatureFile = args[2];
+        final String resultsFile = args[3];
+        if (args.length == 5) {
+            STD_OUT_OUTPUT = Boolean.parseBoolean(args[4]);
+        }
+
+//        String pcapFileBaseDir = "/Users/varmarken/temp/UCI IoT Project/layer2/evaluation/experimental_result/standalone";
+//        String signatureFilesBaseDir = "/Users/varmarken/temp/UCI IoT Project/layer2/evaluation/experimental_result/standalone";
+//        String pcapFile = pcapFileBaseDir + "/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
+//        String onSignatureFile = signatureFilesBaseDir + "/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
+//        String offSignatureFile = signatureFilesBaseDir + "/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
+
+//        String pcapFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock.wlan1.local.pcap";
+//        String onSignatureFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock-onSignature-phone-side.sig";
+//        String offSignatureFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock-offSignature-phone-side.sig";
+
+        // Prepare file outputter.
+        File outputFile = new File(resultsFile);
+        outputFile.getParentFile().mkdirs();
+        final PrintWriter resultsWriter = new PrintWriter(new FileWriter(outputFile));
+        // Include metadata as comments at the top
+        outputLine("# Detection results for:", resultsWriter);
+        outputLine("# - inputPcapFile: " + pcapFile, resultsWriter);
+        outputLine("# - onSignatureFile: " + onSignatureFile, resultsWriter);
+        outputLine("# - onSignatureFile: " + offSignatureFile, resultsWriter);
+        resultsWriter.flush();
 
         // Create signature detectors and add observers that output their detected events.
         Layer2SignatureDetector onDetector = new Layer2SignatureDetector(PrintUtils.deserializeSignatureFromFile(onSignatureFile));
         Layer2SignatureDetector offDetector = new Layer2SignatureDetector(PrintUtils.deserializeSignatureFromFile(offSignatureFile));
         onDetector.addObserver((signature, match) -> {
-            System.out.println(new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp()));
+            UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
+            outputLine(event.toString(), resultsWriter);
         });
         offDetector.addObserver((signature, match) -> {
-            System.out.println(new UserAction(UserAction.Type.TOGGLE_OFF, match.get(0).get(0).getTimestamp()));
+            UserAction event = new UserAction(UserAction.Type.TOGGLE_OFF, match.get(0).get(0).getTimestamp());
+            outputLine(event.toString(), resultsWriter);
         });
 
         // Load the PCAP file
-        String pcapFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock.wlan1.local.pcap";
         PcapHandle handle;
         try {
             handle = Pcaps.openOffline(pcapFile, PcapHandle.TimestampPrecision.NANO);
@@ -50,8 +98,18 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         PcapHandleReader reader = new PcapHandleReader(handle, p -> true, onDetector, offDetector);
         // Parse the file
         reader.readFromHandle();
+
+        // Flush output to results file and close it.
+        resultsWriter.flush();
+        resultsWriter.close();
     }
 
+    private static void outputLine(String line, PrintWriter pw) {
+        if (STD_OUT_OUTPUT) {
+            System.out.println(line);
+        }
+        pw.println(line);
+    }
 
     /**
      * The signature that this {@link Layer2SignatureDetector} is searching for.

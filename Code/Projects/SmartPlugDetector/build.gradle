@@ -10,7 +10,9 @@ applicationDefaultJvmArgs = ["-Xmx300g"]
 sourceCompatibility = 1.8
 
 //mainClassName = "edu.uci.iotproject.Main"
-mainClassName = "edu.uci.iotproject.detection.SignatureDetector"
+//mainClassName = "edu.uci.iotproject.detection.SignatureDetector"
+mainClassName = "edu.uci.iotproject.detection.layer2.Layer2SignatureDetector"
+//mainClassName = "edu.uci.iotproject.evaluation.DetectionResultsAnalyzer"
 
 
 repositories {

@@ -42,6 +42,10 @@ public class DetectionResultsAnalyzer {
         try (BufferedReader br = new BufferedReader(new FileReader(detectionOutputFile))) {
             String s;
             while ((s = br.readLine()) != null) {
+                if (s.startsWith("#")) {
+                    // Ignore comments.
+                    continue;
+                }
                 detectedEvents.add(UserAction.fromString(s));
             }
         }
