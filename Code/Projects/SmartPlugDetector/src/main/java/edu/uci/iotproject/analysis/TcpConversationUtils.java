@@ -71,10 +71,10 @@ public class TcpConversationUtils {
     // Helper method for implementing the public API of similarly named methods.
     private static List<PcapPacketPair> extractPacketPairs(List<PcapPacket> packets) {
         List<PcapPacketPair> pairs = new ArrayList<>();
-        for(PcapPacket pp : packets) {
-            System.out.print(pp.length() + " ");
-        }
-        System.out.println();
+//        for(PcapPacket pp : packets) {
+//            System.out.print(pp.length() + " ");
+//        }
+//        System.out.println();
 
         int i = 0;
         while (i < packets.size()) {

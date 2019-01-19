@@ -28,6 +28,11 @@ public final class PcapPacketUtils {
      */
     private static final int SIGNATURE_MERGE_THRESHOLD = 5;
 
+    /**
+     * This is an overlap counter (we consider overlaps between signatures if it happens more than once)
+     */
+    private static int mOverlapCounter = 0;
+
 
     /**
      * Gets the source address of the Ethernet part of {@code packet}.
@@ -113,7 +118,7 @@ public final class PcapPacketUtils {
      * @param port The port to look for in the tcp.port field of {@code packet}.
      * @return {@code true} if the given ip+port match the corresponding fields in {@code packet}.
      */
-    public static boolean isSource(PcapPacket packet, String ip, int port) {
+    public static boolean isSource(PcapPacket packet,         String ip, int port) {
         IpV4Packet ipPacket = Objects.requireNonNull(packet.get(IpV4Packet.class));
         // For now we only support TCP flows.
         TcpPacket tcpPacket = Objects.requireNonNull(packet.get(TcpPacket.class));
@@ -174,7 +179,7 @@ public final class PcapPacketUtils {
     }
 
     /**
-     * Checks if {@code packet} wraps a TCP packet that has the ACK flag set.
+     * Checks if {@code packet} wraps a TCP packet th        at has the ACK flag set.
      * @param packet A {@link PcapPacket} that is suspected to contain a {@link TcpPacket} for which the ACK flag is set.
      * @return {@code true} <em>iff</em> {@code packet} contains a {@code TcpPacket} for which the ACK flag is set,
      *         {@code false} otherwise.
@@ -204,7 +209,7 @@ public final class PcapPacketUtils {
             ppListOfList.add(ppList);
         }
         // Sort the list of lists based on the first packet's timestamp!
-        Collections.sort(ppListOfList, (p1, p2) -> p1.get(0).getTimestamp().compareTo(p2.get(0).getTimestamp()));
+        Collections.sort(ppListOfList, (p1, p2) -> p1.        get(0).getTimestamp().compareTo(p2.get(0).getTimestamp()));
         return ppListOfList;
     }
 
@@ -397,10 +402,14 @@ public final class PcapPacketUtils {
         // Check the signs of compare and compareLast
         if ((compare <= 0 && compareLast > 0) ||
             (compareLast <= 0 && compare > 0)) {
-            throw new Error("OVERLAP WARNING: " + "" +
-                    "One sequence is in the other. Please remove one of the sequences: " +
-                    sequence1.get(0).length() + "... OR " +
-                    sequence2.get(0).length() + "...");
+            mOverlapCounter++;
+            // TODO: Probably not the best approach but we consider overlap if it happens more than once
+            if (mOverlapCounter > 1) {
+                throw new Error("OVERLAP WARNING: " + "" +
+                        "One sequence is in the other. Please remove one of the sequences: " +
+                        sequence1.get(0).length() + "... OR " +
+                        sequence2.get(0).length() + "...");
+            }
         }
 
     }
@@ -439,7 +448,7 @@ public final class PcapPacketUtils {
         int sequenceCounter = 0;
         for(List<List<PcapPacket>> listListPcapPacket : signatures) {
             // Iterate over every member of a cluster/sequence
-            System.out.print("====== SEQUENCE " + sequenceCounter++);
+            System.out.print("====== SEQUENCE " + ++sequenceCounter);
             System.out.println(" - " + listListPcapPacket.size() + " MEMBERS ======");
             for(List<PcapPacket> listPcapPacket : listListPcapPacket) {
                 // Print out packet lengths in a sequence
