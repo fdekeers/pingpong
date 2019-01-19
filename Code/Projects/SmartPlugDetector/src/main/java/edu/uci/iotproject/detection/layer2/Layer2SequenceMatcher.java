@@ -140,6 +140,14 @@ public class Layer2SequenceMatcher {
     }
 
     /**
+     * Utility for {@code getMatchedPackets().get(getMatchedPackets().size()-1)}.
+     * @return The last matched packet, or {@code null} if no packets have been matched yet.
+     */
+    public PcapPacket getLastPacket() {
+        return mSequence.size() > 0 ? mSequence.get(mSequence.size()-1) : null;
+    }
+
+    /**
      * Compute the direction of a packet based on the previous packet. If no previous packet is provided, the direction
      * of {@code currPkt} is {@code true} by definition.
      * @param prevPkt The previous packet, if any.

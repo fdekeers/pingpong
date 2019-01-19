@@ -5,8 +5,6 @@ import edu.uci.iotproject.trafficreassembly.layer2.Layer2Flow;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassemblerObserver;
 import edu.uci.iotproject.detection.AbstractClusterMatcher;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowObserver;
-import edu.uci.iotproject.io.PcapHandleReader;
-import edu.uci.iotproject.util.PrintUtils;
 import org.pcap4j.core.*;
 
 import java.util.ArrayList;
@@ -15,107 +13,81 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO add class documentation.
+ * Attempts to detect members of a cluster (packet sequence mutations) in layer 2 flows.
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Layer2FlowReassemblerObserver, Layer2FlowObserver {
 
-    public static void main(String[] args) throws PcapNativeException, NotOpenException {
-        final String onSignatureFile = "/Users/varmarken/temp/UCI IoT Project/experiments/training/signatures/tplink-plug/tplink-plug-onSignature-device-side.sig";
-        List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
+    /**
+     * Maps from a flow to a table of {@link Layer2SequenceMatcher}s for that particular flow. The table {@code t} is
+     * structured such that {@code t[i][j]} is a {@link Layer2SequenceMatcher} that attempts to match member {@code i}
+     * of {@link #mCluster} and has so far matched {@code j} packets of that particular sequence.
+     */
+    private final Map<Layer2Flow, Layer2SequenceMatcher[][]> mPerFlowSeqMatchers = new HashMap<>();
 
-
-        Layer2FlowReassembler flowReassembler = new Layer2FlowReassembler();
-
-        Layer2ClusterMatcher l2ClusterMatcher = new Layer2ClusterMatcher(onSignature.get(0));
-        flowReassembler.addObserver(l2ClusterMatcher);
-
-        final String inputPcapFile = "/Users/varmarken/temp/UCI IoT Project/experiments/2018-07/tplink/tplink.wlan1.local.pcap";
-
-        PcapHandle handle;
-        try {
-            handle = Pcaps.openOffline(inputPcapFile, PcapHandle.TimestampPrecision.NANO);
-        } catch (PcapNativeException pne) {
-            handle = Pcaps.openOffline(inputPcapFile);
-        }
-        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, flowReassembler);
-        reader.readFromHandle();
-
-
-    }
-
-
-    private final List<Layer2SequenceMatcher> mSeqMatchers;
 
     public Layer2ClusterMatcher(List<List<PcapPacket>> cluster) {
         super(cluster);
-        // Setup a sequence matcher for each sequence of the pruned cluster
-        mSeqMatchers = new ArrayList<>();
-        mCluster.forEach(seq -> mSeqMatchers.add(new Layer2SequenceMatcher(seq)));
-
-//        for (int i = 0; i < mCluster.size(); i++) {
-//
-//
-//            mSeqMatchers[i] = new Layer2SequenceMatcher(mCluster.get(i));
-//
-//
-//        }
     }
-
-//    @Override
-//    public void gotPacket(PcapPacket packet) {
-//        // Forward the packet to all sequence matchers.
-//        for (Layer2SequenceMatcher matcher : mSeqMatchers) {
-//            matcher.gotPacket(packet);
-//        }
-//
-//
-//    }
-
-
-    private final Map<Layer2Flow, List<Layer2SequenceMatcher>> mPerFlowSeqMatchers = new HashMap<>();
 
     @Override
     public void onNewPacket(Layer2Flow flow, PcapPacket newPacket) {
         if (mPerFlowSeqMatchers.get(flow) == null) {
             // If this is the first time we encounter this flow, we need to set up sequence matchers for it.
-            List<Layer2SequenceMatcher> matchers = new ArrayList<>();
-            mCluster.forEach(seq -> matchers.add(new Layer2SequenceMatcher(seq)));
+            // All sequences of the cluster have the same length, so we only need to compute the length of the nested
+            // arrays once. We want to make room for a cluster matcher in each state, including the initial empty state
+            // but excluding the final "full match" state (as there is no point in keeping a terminated sequence matcher
+            // around), so the length of the inner array is simply the sequence length.
+            Layer2SequenceMatcher[][] matchers = new Layer2SequenceMatcher[mCluster.size()][mCluster.get(0).size()];
+            // Prepare a "state 0" sequence matcher for each sequence variation in the cluster.
+            for (int i = 0; i < matchers.length; i++) {
+                matchers[i][0] = new Layer2SequenceMatcher(mCluster.get(i));
+            }
+            // Associate the new sequence matcher table with the new flow
             mPerFlowSeqMatchers.put(flow, matchers);
         }
-        // Buffer for new sequence matchers that will take over the job of observing for the first packet when a
-        // sequence matcher advances beyond the first packet.
-        List<Layer2SequenceMatcher> newSeqMatchers = new ArrayList<>();
-        // Buffer for sequence matchers that have terminated and are to be removed from mPerFlowSeqMatchers.
-        List<Layer2SequenceMatcher> terminatedSeqMatchers = new ArrayList<>();
-        // Present the new packet to all sequence matchers
-        for (Layer2SequenceMatcher sm : mPerFlowSeqMatchers.get(flow)) {
-            boolean matched = sm.matchPacket(newPacket);
-            if (matched && sm.getMatchedPacketsCount() == 1) {
-                // Setup a new sequence matcher that matches from the beginning of the sequence so as to keep
-                // progressing in the sequence matcher that just matched the current packet, while still allowing
-                // for matches of the full sequence in later traffic. This is to accommodate the case where the
-                // first packet of a sequence is detected in an early packet, but where the remaining packets of
-                // that sequence do not appear until way later in time (e.g., if the first packet of the sequence
-                // by chance is generated from traffic unrelated to the trigger traffic).
-                // Note that we must store the new sequence matcher in a buffer and add it outside the loop in order to
-                // prevent concurrent modification exceptions.
-                newSeqMatchers.add(new Layer2SequenceMatcher(sm.getTargetSequence()));
-            }
-            if (matched && sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
-                // This sequence matcher has a match of the sequence it was searching for
-                // TODO report it.... for now just do a dummy printout.
-                System.out.println("SEQUENCE MATCHER HAS A MATCH AT " + sm.getMatchedPackets().get(0).getTimestamp());
-                // Mark the sequence matcher for removal. No need to create a replacement one as we do that whenever the
-                // first packet of the sequence is matched (see above).
-                terminatedSeqMatchers.add(sm);
+        // Fetch table that contains sequence matchers for this flow.
+        Layer2SequenceMatcher[][] matchers = mPerFlowSeqMatchers.get(flow);
+        // Present the packet to all sequence matchers.
+        for (int i = 0; i < matchers.length; i++) {
+            // Present packet to the sequence matchers that has advanced the most first. This is to prevent discarding
+            // the sequence matchers that have advanced the most in the special case where the searched sequence
+            // contains two packets of the same length going in the same direction.
+            for (int j = matchers[i].length - 1; j >= 0 ; j--) {
+                Layer2SequenceMatcher sm = matchers[i][j];
+                if (sm == null) {
+                    // There is currently no sequence matcher that has managed to match j packets.
+                    continue;
+                }
+                boolean matched = sm.matchPacket(newPacket);
+                if (matched) {
+                    if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
+                        // Sequence matcher has a match. Report it to observers.
+                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        // Remove the now terminated sequence matcher.
+                        matchers[i][j] = null;
+                    } else {
+                        // Sequence matcher advanced one step, so move it to its corresponding new position iff the
+                        // packet that advanced it has a later timestamp than that of the last matched packet of the
+                        // sequence matcher at the new index, if any. In most traces, a small amount of the packets
+                        // appear out of order (with regards to their timestamp), which is why this check is required.
+                        // Obviously it would not be needed if packets where guaranteed to be processed in timestamp
+                        // order here.
+                        if (matchers[i][j+1] == null ||
+                                newPacket.getTimestamp().isAfter(matchers[i][j+1].getLastPacket().getTimestamp())) {
+                            matchers[i][j+1] = sm;
+                        }
+                        // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
+                        // from state zero replaced a different one in state 1 or not.
+                        if (sm.getMatchedPacketsCount() == 1) {
+                            matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence());
+                        }
+                    }
+                }
             }
         }
-        // Add the new sequence matchers, if any.
-        mPerFlowSeqMatchers.get(flow).addAll(newSeqMatchers);
-        // Remove the terminated sequence matchers, if any.
-        mPerFlowSeqMatchers.get(flow).removeAll(terminatedSeqMatchers);
     }
 
 
