@@ -6,6 +6,7 @@ import edu.uci.iotproject.detection.AbstractClusterMatcher;
 import edu.uci.iotproject.detection.ClusterMatcherObserver;
 import edu.uci.iotproject.detection.SignatureDetectorObserver;
 import edu.uci.iotproject.io.PcapHandleReader;
+import edu.uci.iotproject.io.PrintWriterUtils;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassembler;
 import edu.uci.iotproject.util.PrintUtils;
 import org.jgrapht.GraphPath;
@@ -22,19 +23,18 @@ import java.time.Duration;
 import java.util.*;
 
 /**
- * TODO add class documentation.
+ * Performs layer 2 signature detection.
  *
- * @author Janus Varmarken
+ * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
+ * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
 public class Layer2SignatureDetector implements PacketListener, ClusterMatcherObserver {
 
     /**
      * If set to {@code true}, output written to the results file is also dumped to standard out.
      */
-    private static boolean STD_OUT_OUTPUT = true;
+    private static boolean DUPLICATE_OUTPUT_TO_STD_OUT = true;
 
-
-    // Main method only intended for easier debugging.
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         if (args.length < 4) {
             String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile resultsFile [stdOut]" +
@@ -52,28 +52,18 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         final String offSignatureFile = args[2];
         final String resultsFile = args[3];
         if (args.length == 5) {
-            STD_OUT_OUTPUT = Boolean.parseBoolean(args[4]);
+            DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[4]);
         }
-
-//        String pcapFileBaseDir = "/Users/varmarken/temp/UCI IoT Project/layer2/evaluation/experimental_result/standalone";
-//        String signatureFilesBaseDir = "/Users/varmarken/temp/UCI IoT Project/layer2/evaluation/experimental_result/standalone";
-//        String pcapFile = pcapFileBaseDir + "/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
-//        String onSignatureFile = signatureFilesBaseDir + "/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
-//        String offSignatureFile = signatureFilesBaseDir + "/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
-
-//        String pcapFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock.wlan1.local.pcap";
-//        String onSignatureFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock-onSignature-phone-side.sig";
-//        String offSignatureFile = "/Users/varmarken/temp/UCI IoT Project/layer2/kwikset-doorlock-offSignature-phone-side.sig";
 
         // Prepare file outputter.
         File outputFile = new File(resultsFile);
         outputFile.getParentFile().mkdirs();
         final PrintWriter resultsWriter = new PrintWriter(new FileWriter(outputFile));
         // Include metadata as comments at the top
-        outputLine("# Detection results for:", resultsWriter);
-        outputLine("# - inputPcapFile: " + pcapFile, resultsWriter);
-        outputLine("# - onSignatureFile: " + onSignatureFile, resultsWriter);
-        outputLine("# - onSignatureFile: " + offSignatureFile, resultsWriter);
+        PrintWriterUtils.println("# Detection results for:", resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println("# - inputPcapFile: " + pcapFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println("# - onSignatureFile: " + onSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println("# - onSignatureFile: " + offSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         resultsWriter.flush();
 
         // Create signature detectors and add observers that output their detected events.
@@ -81,11 +71,11 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         Layer2SignatureDetector offDetector = new Layer2SignatureDetector(PrintUtils.deserializeSignatureFromFile(offSignatureFile));
         onDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
-            outputLine(event.toString(), resultsWriter);
+            PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         });
         offDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_OFF, match.get(0).get(0).getTimestamp());
-            outputLine(event.toString(), resultsWriter);
+            PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         });
 
         // Load the PCAP file
@@ -102,13 +92,6 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // Flush output to results file and close it.
         resultsWriter.flush();
         resultsWriter.close();
-    }
-
-    private static void outputLine(String line, PrintWriter pw) {
-        if (STD_OUT_OUTPUT) {
-            System.out.println(line);
-        }
-        pw.println(line);
     }
 
     /**
