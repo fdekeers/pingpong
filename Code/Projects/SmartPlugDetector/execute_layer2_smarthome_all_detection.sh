@@ -219,7 +219,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
 # ===================================================== WEMO PLUG ======================================================
 PCAP_FILE="$PCAPS_BASE_DIR/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap"
 
-# Has no device side signature
+# Has no device side signature.
 
 # PHONE SIDE
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug/signatures/wemo-plug-onSignature-phone-side.sig"
