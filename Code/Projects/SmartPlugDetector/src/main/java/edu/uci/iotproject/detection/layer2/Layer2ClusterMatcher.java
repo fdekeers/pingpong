@@ -79,11 +79,11 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                                 newPacket.getTimestamp().isAfter(matchers[i][j+1].getLastPacket().getTimestamp())) {
                             matchers[i][j+1] = sm;
                         }
-                        // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
-                        // from state zero replaced a different one in state 1 or not.
-                        if (sm.getMatchedPacketsCount() == 1) {
-                            matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence());
-                        }
+                    }
+                    // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
+                    // from state zero completed its matching or if it replaced a different one in state 1 or not.
+                    if (sm.getMatchedPacketsCount() == 1) {
+                        matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence());
                     }
                 }
             }
