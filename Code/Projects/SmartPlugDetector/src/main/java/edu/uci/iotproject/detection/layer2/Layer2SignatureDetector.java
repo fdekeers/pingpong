@@ -63,7 +63,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         PrintWriterUtils.println("# Detection results for:", resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println("# - inputPcapFile: " + pcapFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println("# - onSignatureFile: " + onSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        PrintWriterUtils.println("# - onSignatureFile: " + offSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println("# - offSignatureFile: " + offSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         resultsWriter.flush();
 
         // Create signature detectors and add observers that output their detected events.
