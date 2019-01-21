@@ -224,7 +224,7 @@ PCAP_FILE="$PCAPS_BASE_DIR/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap"
 # PHONE SIDE
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug/signatures/wemo-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug/signatures/wemo-plug-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap___phone-side.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/wemo-plug/wemo-plug.wlan1.detection.pcap___phone-side.detectionresults"
 
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
