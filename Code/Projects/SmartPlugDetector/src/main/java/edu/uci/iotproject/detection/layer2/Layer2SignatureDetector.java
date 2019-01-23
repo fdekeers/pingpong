@@ -7,6 +7,7 @@ import edu.uci.iotproject.detection.ClusterMatcherObserver;
 import edu.uci.iotproject.detection.SignatureDetectorObserver;
 import edu.uci.iotproject.io.PcapHandleReader;
 import edu.uci.iotproject.io.PrintWriterUtils;
+import edu.uci.iotproject.trafficreassembly.layer2.Layer2Flow;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassembler;
 import edu.uci.iotproject.util.PrintUtils;
 import org.jgrapht.GraphPath;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.*;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Performs layer 2 signature detection.
@@ -35,24 +38,62 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
      */
     private static boolean DUPLICATE_OUTPUT_TO_STD_OUT = true;
 
+    private static List<Function<Layer2Flow, Boolean>> parseSignatureMacFilters(String filtersString) {
+        List<Function<Layer2Flow, Boolean>> filters = new ArrayList<>();
+        String[] filterRegexes = filtersString.split(";");
+        for (String filterRegex : filterRegexes) {
+            final Pattern regex = Pattern.compile(filterRegex);
+            // Create a filter that includes all flows where one of the two MAC addresses match the regex.
+            filters.add(flow -> regex.matcher(flow.getEndpoint1().toString()).matches() || regex.matcher(flow.getEndpoint2().toString()).matches());
+        }
+        return filters;
+    }
+
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
+        // Parse required parameters.
         if (args.length < 4) {
-            String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile resultsFile [stdOut]" +
-                            "\n - inputPcapFile: the target of the detection" +
-                            "\n - onSignatureFile: the file that contains the ON signature to search for" +
-                            "\n - offSignatureFile: the file that contains the OFF signature to search for" +
-                            "\n - resultsFile: where to write the results of the detection" +
-                            "\n - stdOut: optional true/false literal indicating if output should also be printed to std out; default is true",
+            String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile resultsFile" +
+                            "\n  inputPcapFile: the target of the detection" +
+                            "\n  onSignatureFile: the file that contains the ON signature to search for" +
+                            "\n  offSignatureFile: the file that contains the OFF signature to search for" +
+                            "\n  resultsFile: where to write the results of the detection",
                     Layer2SignatureDetector.class.getSimpleName());
             System.out.println(errMsg);
+            String optParamsExplained = "Above are the required, positional arguments. In addition to these, the " +
+                    "following options and associated positional arguments may be used:\n" +
+                    "  '-onmacfilters <regex>;<regex>;...;<regex>' which specifies that sequence matching should ONLY" +
+                    " be performed on flows where the MAC of one of the two endpoints matches the given regex. Note " +
+                    "that you MUST specify a regex for each cluster of the signature. This is to facilitate more " +
+                    "aggressive filtering on parts of the signature (e.g., the communication that involves the " +
+                    "smart home device itself as one can drop all flows that do not include an endpoint with a MAC " +
+                    "that matches the vendor's prefix).\n" +
+                    "  '-offmacfilters <regex>;<regex>;...;<regex>' works exactly the same as onmacfilters, but " +
+                    "applies to the OFF signature instead of the ON signature.\n" +
+                    "  '-sout <boolean literal>' true/false literal indicating if output should also be printed to std out; default is true.";
+            System.out.println(optParamsExplained);
             return;
         }
         final String pcapFile = args[0];
         final String onSignatureFile = args[1];
         final String offSignatureFile = args[2];
         final String resultsFile = args[3];
-        if (args.length == 5) {
-            DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[4]);
+
+        // Parse optional parameters.
+        List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
+        final int optParamsStartIdx = 4;
+        if (args.length > optParamsStartIdx) {
+            for (int i = optParamsStartIdx; i < args.length; i++) {
+                if (args[i].equalsIgnoreCase("-onMacFilters")) {
+                    // Next argument is the cluster-wise MAC filters (separated by semicolons).
+                    onSignatureMacFilters = parseSignatureMacFilters(args[i+1]);
+                } else if (args[i].equalsIgnoreCase("-offMacFilters")) {
+                    // Next argument is the cluster-wise MAC filters (separated by semicolons).
+                    offSignatureMacFilters = parseSignatureMacFilters(args[i+1]);
+                } else if (args[i].equalsIgnoreCase("-sout")) {
+                    // Next argument is a boolean true/false literal.
+                    DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[i+1]);
+                }
+            }
         }
 
         // Prepare file outputter.
@@ -67,8 +108,12 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         resultsWriter.flush();
 
         // Create signature detectors and add observers that output their detected events.
-        Layer2SignatureDetector onDetector = new Layer2SignatureDetector(PrintUtils.deserializeSignatureFromFile(onSignatureFile));
-        Layer2SignatureDetector offDetector = new Layer2SignatureDetector(PrintUtils.deserializeSignatureFromFile(offSignatureFile));
+        List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
+        List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
+        Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
+                new Layer2SignatureDetector(onSignature) : new Layer2SignatureDetector(onSignature, onSignatureMacFilters);
+        Layer2SignatureDetector offDetector = offSignatureMacFilters == null ?
+                new Layer2SignatureDetector(offSignature) : new Layer2SignatureDetector(offSignature, offSignatureMacFilters);
         onDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
             PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
@@ -126,10 +171,19 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
     private final List<SignatureDetectorObserver> mObservers = new ArrayList<>();
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature) {
+        this(searchedSignature, null);
+    }
+
+    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, List<Function<Layer2Flow, Boolean>> flowFilters) {
+        if (flowFilters != null && flowFilters.size() != searchedSignature.size()) {
+            throw new IllegalArgumentException("If flow filters are used, there must be a flow filter for each cluster of the signature.");
+        }
         mSignature = Collections.unmodifiableList(searchedSignature);
         List<Layer2ClusterMatcher> clusterMatchers = new ArrayList<>();
-        for (List<List<PcapPacket>> cluster : mSignature) {
-            Layer2ClusterMatcher clusterMatcher = new Layer2ClusterMatcher(cluster);
+        for (int i = 0; i < mSignature.size(); i++) {
+            List<List<PcapPacket>> cluster = mSignature.get(i);
+            Layer2ClusterMatcher clusterMatcher = flowFilters == null ?
+                    new Layer2ClusterMatcher(cluster) : new Layer2ClusterMatcher(cluster, flowFilters.get(i));
             clusterMatcher.addObserver(this);
             clusterMatchers.add(clusterMatcher);
         }
@@ -146,7 +200,6 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // Register all cluster matchers to receive a notification whenever a new flow is encountered.
         mClusterMatchers.forEach(cm -> mFlowReassembler.addObserver(cm));
     }
-
 
     @Override
     public void gotPacket(PcapPacket packet) {
