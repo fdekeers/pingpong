@@ -3,7 +3,7 @@
 #set -x # echo invoked commands to std out
 
 # Arg1 should point to the UNB trace (PCAP w/o any expected events).
-PCAP_FILE = $1
+PCAP_FILE=$1
 
 readonly PCAP_FILE
 
