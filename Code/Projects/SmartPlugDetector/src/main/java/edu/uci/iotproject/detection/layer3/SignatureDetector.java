@@ -218,8 +218,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 
         // TODO: EXPERIMENT - January 9, 2018
         // Blossom Sprinkler experiment
-        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
         // Blossom Sprinkler DEVICE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
