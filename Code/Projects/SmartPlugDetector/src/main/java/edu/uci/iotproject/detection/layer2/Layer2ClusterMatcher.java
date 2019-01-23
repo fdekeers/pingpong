@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Attempts to detect members of a cluster (packet sequence mutations) in layer 2 flows.
@@ -27,9 +28,30 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      */
     private final Map<Layer2Flow, Layer2SequenceMatcher[][]> mPerFlowSeqMatchers = new HashMap<>();
 
+    private final Function<Layer2Flow, Boolean> mFlowFilter;
 
+    /**
+     * Create a new {@link Layer2ClusterMatcher} that attempts to find occurrences of {@code cluster}'s members.
+     * @param cluster The sequence mutations that the new {@link Layer2ClusterMatcher} should search for.
+     */
     public Layer2ClusterMatcher(List<List<PcapPacket>> cluster) {
+        // Consider all flows if no flow filter specified.
+        this(cluster, flow -> true);
+    }
+
+    /**
+     * Create a new {@link Layer2ClusterMatcher} that attempts to find occurrences of {@code cluster}'s members.
+     * @param cluster The sequence mutations that the new {@link Layer2ClusterMatcher} should search for.
+     * @param flowFilter A filter that defines what {@link Layer2Flow}s the new {@link Layer2ClusterMatcher} should
+     *                   search for {@code cluster}'s members in. If {@code flowFilter} returns {@code true}, the flow
+     *                   will be included (searched). Note that {@code flowFilter} is only queried once for each flow,
+     *                   namely when the {@link Layer2FlowReassembler} notifies the {@link Layer2ClusterMatcher} about
+     *                   the new flow. This functionality may for example come in handy when one only wants to search
+     *                   for matches in the subset of flows that involves a specific (range of) MAC(s).
+     */
+    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, Function<Layer2Flow, Boolean> flowFilter) {
         super(cluster);
+        mFlowFilter = flowFilter;
     }
 
     @Override
@@ -79,11 +101,11 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                                 newPacket.getTimestamp().isAfter(matchers[i][j+1].getLastPacket().getTimestamp())) {
                             matchers[i][j+1] = sm;
                         }
-                        // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
-                        // from state zero replaced a different one in state 1 or not.
-                        if (sm.getMatchedPacketsCount() == 1) {
-                            matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence());
-                        }
+                    }
+                    // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
+                    // from state zero completed its matching or if it replaced a different one in state 1 or not.
+                    if (sm.getMatchedPacketsCount() == 1) {
+                        matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence());
                     }
                 }
             }
@@ -113,10 +135,19 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
         return prunedCluster;
     }
 
+    private static final boolean DEBUG = false;
 
     @Override
     public void onNewFlow(Layer2FlowReassembler reassembler, Layer2Flow newFlow) {
-        // Subscribe to the new flow to get updates whenever a new packet pertaining to the flow is processed.
-        newFlow.addFlowObserver(this);
+        // New flow detected. Check if we should consider it when searching for cluster member matches.
+        if (mFlowFilter.apply(newFlow)) {
+            if (DEBUG) {
+                System.out.println(">>> ACCEPTING FLOW: " + newFlow + " <<<");
+            }
+            // Subscribe to the new flow to get updates whenever a new packet pertaining to the flow is processed.
+            newFlow.addFlowObserver(this);
+        } else if (DEBUG) {
+            System.out.println(">>> IGNORING FLOW: " + newFlow + " <<<");
+        }
     }
 }

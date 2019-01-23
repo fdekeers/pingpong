@@ -37,6 +37,22 @@ public class Layer2Flow {
     }
 
     /**
+     * Get the first endpoint of this flow.
+     * @return the first endpoint of this flow.
+     */
+    public MacAddress getEndpoint1() {
+        return mEndpoint1;
+    }
+
+    /**
+     * Get the second endpoint of this flow.
+     * @return the second endpoint of this flow.
+     */
+    public MacAddress getEndpoint2() {
+        return mEndpoint2;
+    }
+
+    /**
      * Register as an observer of this flow.
      * @param observer The client that is to be notified whenever this flow changes (has new packets added).
      */
@@ -92,4 +108,8 @@ public class Layer2Flow {
         throw new IllegalArgumentException("Mismatch in MACs: packet does not pertain to this flow");
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + String.format(" with mEndpoint1=%s and mEndpoint2=%s", mEndpoint1, mEndpoint2);
+    }
 }

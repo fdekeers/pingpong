@@ -2,12 +2,10 @@ package edu.uci.iotproject.evaluation;
 
 import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.analysis.UserAction;
+import edu.uci.iotproject.io.PrintWriterUtils;
 import edu.uci.iotproject.io.TriggerTimesFileReader;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +19,27 @@ import java.util.Optional;
  */
 public class DetectionResultsAnalyzer {
 
+    private static boolean DUPLICATE_OUTPUT_TO_STD_OUT = true;
+
     public static void main(String[] args) throws IOException {
+        if (args.length < 3) {
+            String errMsg = String.format("Usage: %s triggerTimesFile detectionOutputFile [stdOut]" +
+                            "\n - triggerTimesFile: the file that contains the timestamps for the user actions" +
+                            "\n - detectionOutputFile: the file that contains the detected events" +
+                            "\n - analysisResultsFile: where to write the results of the detection analysis" +
+                            "\n - stdOut: optional true/false literal indicating if output should also be printed to std out; default is true",
+                    DetectionResultsAnalyzer.class.getSimpleName());
+            return;
+        }
+        String triggerTimesFile = args[0];
+        File detectionOutputFile = new File(args[1]);
+        String analysisResultsFile = args[2];
+        if (args.length > 3) {
+            DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[3]);
+        }
+
         // -------------------------------------- Parse the input files --------------------------------------
 
-        String triggerTimesFile = args[0];
         // Read the trigger times.
         // The trigger times file does not contain event types as we initially assumed that we would just be alternating
         // between ON and OFF.
@@ -37,11 +52,14 @@ public class DetectionResultsAnalyzer {
             triggers.add(new UserAction(actionType, triggerTimestamps.get(i)));
         }
         // Read the detection output file, assuming a format as specified in UserAction.toString()
-        File detectionOutputFile = new File(args[1]);
         List<UserAction> detectedEvents = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(detectionOutputFile))) {
             String s;
             while ((s = br.readLine()) != null) {
+                if (s.startsWith("#")) {
+                    // Ignore comments.
+                    continue;
+                }
                 detectedEvents.add(UserAction.fromString(s));
             }
         }
@@ -69,18 +87,22 @@ public class DetectionResultsAnalyzer {
         List<UserAction> falsePositives = new ArrayList<>();
         falsePositives.addAll(detectedEvents);
         falsePositives.removeAll(truePositives);
-        // Print the results...
-        System.out.println("---------- False negatives (events that where not detected) ----------");
+
+        // Output the results...
+        PrintWriter outputter = new PrintWriter(new FileWriter(analysisResultsFile));
+        PrintWriterUtils.println("---------- False negatives (events that where not detected) ----------", outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
         for (UserAction missing : triggers) {
-            System.out.println(missing);
+            PrintWriterUtils.println(missing, outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
         }
-        System.out.println("Total of " + Integer.toString(triggers.size()));
-        System.out.println();
-        System.out.println("---------- False positives (detected, but no matching trigger) ----------");
+        PrintWriterUtils.println("Total of " + Integer.toString(triggers.size()), outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.printEmptyLine(outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println("---------- False positives (detected, but no matching trigger) ----------", outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
         for (UserAction fp : falsePositives) {
-            System.out.println(fp);
+            PrintWriterUtils.println(fp, outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
         }
-        System.out.println("Total of " + Integer.toString(falsePositives.size()));
+        PrintWriterUtils.println("Total of " + Integer.toString(falsePositives.size()), outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        outputter.flush();
+        outputter.close();
     }
 
 }
