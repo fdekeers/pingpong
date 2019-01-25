@@ -51,12 +51,13 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         // Parse required parameters.
-        if (args.length < 4) {
+        if (args.length < 5) {
             String errMsg = String.format("Usage: %s inputPcapFile onSignatureFile offSignatureFile resultsFile" +
                             "\n  inputPcapFile: the target of the detection" +
                             "\n  onSignatureFile: the file that contains the ON signature to search for" +
                             "\n  offSignatureFile: the file that contains the OFF signature to search for" +
-                            "\n  resultsFile: where to write the results of the detection",
+                            "\n  resultsFile: where to write the results of the detection" +
+                            "\n  signatureDuration: the maximum duration of signature detection",
                     Layer2SignatureDetector.class.getSimpleName());
             System.out.println(errMsg);
             String optParamsExplained = "Above are the required, positional arguments. In addition to these, the " +
@@ -77,10 +78,11 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         final String onSignatureFile = args[1];
         final String offSignatureFile = args[2];
         final String resultsFile = args[3];
+        final int signatureDuration = Integer.parseInt(args[4]);
 
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
-        final int optParamsStartIdx = 4;
+        final int optParamsStartIdx = 5;
         if (args.length > optParamsStartIdx) {
             for (int i = optParamsStartIdx; i < args.length; i++) {
                 if (args[i].equalsIgnoreCase("-onMacFilters")) {
@@ -111,9 +113,9 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
         Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
-                new Layer2SignatureDetector(onSignature) : new Layer2SignatureDetector(onSignature, onSignatureMacFilters);
+                new Layer2SignatureDetector(onSignature) : new Layer2SignatureDetector(onSignature, onSignatureMacFilters, signatureDuration);
         Layer2SignatureDetector offDetector = offSignatureMacFilters == null ?
-                new Layer2SignatureDetector(offSignature) : new Layer2SignatureDetector(offSignature, offSignatureMacFilters);
+                new Layer2SignatureDetector(offSignature) : new Layer2SignatureDetector(offSignature, offSignatureMacFilters, signatureDuration);
         onDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
             PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
@@ -170,11 +172,13 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     private final List<SignatureDetectorObserver> mObservers = new ArrayList<>();
 
+    private int mInclusionTimeMillis;
+
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature) {
-        this(searchedSignature, null);
+        this(searchedSignature, null, 0);
     }
 
-    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, List<Function<Layer2Flow, Boolean>> flowFilters) {
+    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, List<Function<Layer2Flow, Boolean>> flowFilters, int inclusionTimeMillis) {
         if (flowFilters != null && flowFilters.size() != searchedSignature.size()) {
             throw new IllegalArgumentException("If flow filters are used, there must be a flow filter for each cluster of the signature.");
         }
@@ -199,6 +203,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         mClusterMatcherIds = Collections.unmodifiableMap(clusterMatcherIds);
         // Register all cluster matchers to receive a notification whenever a new flow is encountered.
         mClusterMatchers.forEach(cm -> mFlowReassembler.addObserver(cm));
+        mInclusionTimeMillis =
+                inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
     }
 
     @Override
@@ -304,7 +310,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                 // the signature to span. For now we just use the inclusion window we defined for training purposes.
                 // Note however, that we must convert back from double to long as the weight is stored as a double in
                 // JGraphT's API.
-                if (((long)shortestPath.getWeight()) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
+                if (((long)shortestPath.getWeight()) < mInclusionTimeMillis) {
                     // There's a signature match!
                     // Extract the match from the vertices
                     List<List<PcapPacket>> signatureMatch = new ArrayList<>();

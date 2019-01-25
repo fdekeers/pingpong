@@ -366,8 +366,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
 //        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
         // WAN
-        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105");
-        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105");
+        SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105", 0);
+        SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105", 0);
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
@@ -460,6 +460,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 
     private final List<SignatureDetectionObserver> mObservers = new ArrayList<>();
 
+    private int mInclusionTimeMillis;
+
     /**
      * Remove duplicates in {@code List} of {@code UserAction} objects. We need to clean this up for user actions
      * that appear multiple times.
@@ -485,7 +487,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
         return listUserActionClean;
     }
 
-    public SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp) {
+    public SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp, int inclusionTimeMillis) {
         // note: doesn't protect inner lists from changes :'(
         mSignature = Collections.unmodifiableList(searchedSignature);
         // Generate corresponding/appropriate ClusterMatchers based on the provided signature
@@ -505,6 +507,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
             clusterMatcherIds.put(mClusterMatchers.get(i), i);
         }
         mClusterMatcherIds = Collections.unmodifiableMap(clusterMatcherIds);
+        mInclusionTimeMillis =
+                inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
     }
 
     public void addObserver(SignatureDetectionObserver observer) {
@@ -604,7 +608,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
                 // the signature to span. For now we just use the inclusion window we defined for training purposes.
                 // Note however, that we must convert back from double to long as the weight is stored as a double in
                 // JGraphT's API.
-                if (((long)shortestPath.getWeight()) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
+                if (((long)shortestPath.getWeight()) < mInclusionTimeMillis) {
                     // There's a signature match!
                     // Extract the match from the vertices
                     List<List<PcapPacket>> signatureMatch = new ArrayList<>();
