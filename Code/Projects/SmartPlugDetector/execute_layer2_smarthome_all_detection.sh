@@ -26,8 +26,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/arlo-camera/wlan1/arlo-camera.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/arlo-camera/arlo-camera.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="213"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -40,16 +41,18 @@ PCAP_FILE="$PCAPS_BASE_DIR/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detec
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/blossom-sprinkler/blossom-sprinkler.wlan1.detection.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="9274"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/blossom-sprinkler/blossom-sprinkler.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="3670"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -62,16 +65,18 @@ PCAP_FILE="$PCAPS_BASE_DIR/dlink-plug/wlan1/dlink-plug.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/dlink-plug/dlink-plug.wlan1.detection.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="8866"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/dlink-plug/signatures/dlink-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/dlink-plug/signatures/dlink-plug-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/dlink-plug/dlink-plug.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="193"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -84,8 +89,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/dlink-siren/wlan1/dlink-siren.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/dlink-siren/signatures/dlink-siren-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/dlink-siren/signatures/dlink-siren-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/dlink-siren/dlink-siren.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="71"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -100,8 +106,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/hue-bulb/wlan1/hue-bulb.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/signatures/hue-bulb-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/signatures/hue-bulb-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/hue-bulb/hue-bulb.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="27"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -116,8 +123,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.detecti
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/kwikset-doorlock/signatures/kwikset-doorlock-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/kwikset-doorlock/signatures/kwikset-doorlock-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/kwikset-doorlock/kwikset-doorlock.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="3161"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -132,8 +140,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/nest-thermostat/wlan1/nest-thermostat.wlan1.detection
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/nest-thermostat/signatures/nest-thermostat-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/nest-thermostat/nest-thermostat.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="1179"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -148,8 +157,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/st-plug/wlan1/st-plug.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/st-plug/signatures/st-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/st-plug/signatures/st-plug-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/st-plug/st-plug.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="2445"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -164,8 +174,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/tplink-bulb/wlan1/tplink-bulb.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb/signatures/tplink-bulb-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb/signatures/tplink-bulb-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/tplink-bulb/tplink-bulb.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="162"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' -onmacfilters 50:c7:bf:.* -offmacfilters 50:c7:bf:.*"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' -onmacfilters 50:c7:bf:.* -offmacfilters 50:c7:bf:.*"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -178,16 +189,18 @@ PCAP_FILE="$PCAPS_BASE_DIR/tplink-plug/wlan1/tplink-plug.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="3660"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' -onmacfilters 50:c7:bf:.*;50:c7:bf:.* -offmacfilters 50:c7:bf:.*;50:c7:bf:.*"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' -onmacfilters 50:c7:bf:.*;50:c7:bf:.* -offmacfilters 50:c7:bf:.*;50:c7:bf:.*"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 
 # DEVICE SIDE OUTBOUND (contains only those packets that go through the WAN port, i.e., only the 556, 1293 sequence)
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-onSignature-device-side-outbound.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-offSignature-device-side-outbound.sig"
 RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side-outbound.detectionresults"
+SIGNATURE_DURATION="224"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' -onmacfilters 50:c7:bf:.* -offmacfilters 50:c7:bf:.*"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' -onmacfilters 50:c7:bf:.* -offmacfilters 50:c7:bf:.*"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 
 # Phone side does not make sense as it is merely a subset of the device side and does not differentiate ONs from OFFs.
@@ -204,8 +217,9 @@ PCAP_FILE="$PCAPS_BASE_DIR/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.detec
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/wemo-insight-plug/wemo-insight-plug.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="106"
 
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
@@ -220,8 +234,8 @@ PCAP_FILE="$PCAPS_BASE_DIR/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug/signatures/wemo-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug/signatures/wemo-plug-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/wemo-plug/wemo-plug.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="147"
 
-
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE'"
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================

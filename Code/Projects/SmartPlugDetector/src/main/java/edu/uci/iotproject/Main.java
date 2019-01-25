@@ -213,13 +213,13 @@ public class Main {
 //        final String triggerTimesFile = path + "/2018-08/arlo-camera/arlo-camera-aug-10-2018.timestamps";
 //        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
         // TODO: EXPERIMENT - November 13, 2018
-        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera-processed.pcap";
-//        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth1.local.pcap";
-//        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/arlo-camera/timestamps/arlo-camera-nov-13-2018.timestamps";
-//        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
+//        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera-processed.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth1.local.pcap";
+////        final String outputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/arlo-camera/timestamps/arlo-camera-nov-13-2018.timestamps";
+////        final String deviceIp = "192.168.1.140"; // .246 == phone; .140 == camera
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .140 == camera
 
         // 12) Blossom sprinkler August 13 experiment
 //        final String inputPcapFile = path + "/2018-08/blossom/blossom.wlan1.local.pcap";
@@ -305,11 +305,14 @@ public class Main {
 //        final String onSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig";
         // TP-Link plug
-//        final String triggerTimesFile = path + "/experimental_result/standalone/tplink-plug/timestamps/tplink-plug-nov-8-2018.timestamps";
+        final String triggerTimesFile = path + "/experimental_result/standalone/tplink-plug/timestamps/tplink-plug-nov-8-2018.timestamps";
 ////        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-phone-side.sig";
 ////        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-phone-side.sig";
 //        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-device-side-outbound.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-device-side-outbound.sig";
+        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
+
         // D-Link siren
 //        final String triggerTimesFile = path + "/experimental_result/standalone/dlink-siren/timestamps/dlink-siren-nov-9-2018.timestamps";
 //        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-phone-side.sig";
@@ -354,293 +357,415 @@ public class Main {
 //        final String offSignatureFile = path + "/experimental_result/standalone/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig";
 
 
-//        TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
-//        List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
-//
-//        System.out.println("ON signature file in use is " + onSignatureFile);
-//        System.out.println("OFF signature file in use is " + offSignatureFile);
-//
-//        List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
-//        List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
-//
-//        List<Instant> signatureTimestamps = new ArrayList<>();
-//        // Load ON signature last packet's timestamp
-//        // Get the last only
-//        List<List<PcapPacket>> lastListOn = onSignature.get(onSignature.size()-1);
-//        for (List<PcapPacket> list : lastListOn) {
-//            // Get timestamp Instant from the last packet
-//            int lastPacketIndex = list.size()-1;
-//            signatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
-//        }
-//        // Load OFF signature last packet's timestamp
-//        // Get the last only
-//        List<List<PcapPacket>> lastListOff = offSignature.get(offSignature.size()-1);
-//        for (List<PcapPacket> list : lastListOff) {
-//            // Get timestamp Instant from the last packet
-//            int lastPacketIndex = list.size()-1;
-//            signatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
-//        }
-//        // Sort the timestamps
-//        signatureTimestamps.sort((p1, p2) -> {
-//            return p1.compareTo(p2);
-//        });
-//
-//        Iterator<Instant> iterTrig = triggerTimes.iterator();
-//        Iterator<Instant> iterSign = signatureTimestamps.iterator();
-//        System.out.println("Trigger to Last Packet:");
-//        while (iterTrig.hasNext() && iterSign.hasNext()) {
-//            Instant trigInst = (Instant) iterTrig.next();
-//            Instant signInst = (Instant) iterSign.next();
-//            Duration dur = Duration.between(trigInst, signInst);
-//            long duration = dur.toMillis();
-//            // Check duration --- should be below 15 seconds
-//            if (duration >= 0 && duration <= 15000) {
-//                System.out.println(dur.toMillis());
-//            } else if (duration > 15000) {
-//                while (duration > 15000) { // that means we have to move to the next trigger
-//                    trigInst = (Instant) iterTrig.next();
-//                    dur = Duration.between(trigInst, signInst);
-//                    duration = dur.toMillis();
-//                }
-//                System.out.println(dur.toMillis());
-//            } else { // below 0 / negative --- that means we have to move to the next signature
-//                while (duration < 0) { // that means we have to move to the next trigger
-//                    signInst = (Instant) iterSign.next();
-//                    dur = Duration.between(trigInst, signInst);
-//                    duration = dur.toMillis();
-//                }
-//                System.out.println(dur.toMillis());
-//            }
-//        }
-//
-//
-//        // ==========================================================================
-//        List<Instant> firstSignatureTimestamps = new ArrayList<>();
-//        List<Instant> lastSignatureTimestamps = new ArrayList<>();
-//        List<List<PcapPacket>> firstListOnSign = onSignature.get(0);
-//        List<List<PcapPacket>> lastListOnSign = onSignature.get(onSignature.size()-1);
-//        // Load ON signature first and last packet's timestamps
-//        for (List<PcapPacket> list : firstListOnSign) {
-//            // Get timestamp Instant from the last packet
-//            firstSignatureTimestamps.add(list.get(0).getTimestamp());
-//        }
-//        for (List<PcapPacket> list : lastListOnSign) {
-//            // Get timestamp Instant from the last packet
-//            int lastPacketIndex = list.size()-1;
-//            lastSignatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
-//        }
-//
-//        List<List<PcapPacket>> firstListOffSign = offSignature.get(0);
-//        List<List<PcapPacket>> lastListOffSign = offSignature.get(offSignature.size()-1);
-//        // Load OFF signature first and last packet's timestamps
-//        for (List<PcapPacket> list : firstListOffSign) {
-//            // Get timestamp Instant from the last packet
-//            firstSignatureTimestamps.add(list.get(0).getTimestamp());
-//        }
-//        for (List<PcapPacket> list : lastListOffSign) {
-//            // Get timestamp Instant from the last packet
-//            int lastPacketIndex = list.size()-1;
-//            lastSignatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
-//        }
-//        // Sort the timestamps
-//        firstSignatureTimestamps.sort((p1, p2) -> {
-//            return p1.compareTo(p2);
-//        });
-//        // Sort the timestamps
-//        lastSignatureTimestamps.sort((p1, p2) -> {
-//            return p1.compareTo(p2);
-//        });
-//
-//        Iterator<Instant> iterFirst = firstSignatureTimestamps.iterator();
-//        Iterator<Instant> iterLast = lastSignatureTimestamps.iterator();
-//        System.out.println("First to Last Packet:");
-//        while (iterFirst.hasNext() && iterLast.hasNext()) {
-//            Instant firstInst = (Instant) iterFirst.next();
-//            Instant lastInst = (Instant) iterLast.next();
-//            Duration dur = Duration.between(firstInst, lastInst);
-//            long duration = dur.toMillis();
-//            // Check duration --- should be below 15 seconds
-//            if (duration >= 0 && duration <= 15000) {
-//                System.out.println(dur.toMillis());
-//            } else if (duration > 15000) {
-//                while (duration > 15000) { // that means we have to move to the next trigger
-//                    firstInst = (Instant) iterFirst.next();
-//                    dur = Duration.between(firstInst, lastInst);
-//                    duration = dur.toMillis();
-//                }
-//                System.out.println(dur.toMillis());
-//            } else { // below 0 / negative --- that means we have to move to the next signature
-//                while (duration < 0) { // that means we have to move to the next trigger
-//                    lastInst = (Instant) iterLast.next();
-//                    dur = Duration.between(firstInst, lastInst);
-//                    duration = dur.toMillis();
-//                }
-//                System.out.println(dur.toMillis());
-//            }
-//            if (duration > 8000) {
-//                break;
-//            }
-//        }
-
-        // TODO: The above part is just for 15-second time sensitivity experiment
-        // TODO: The above part is just for 15-second time sensitivity experiment
-        // TODO: The above part is just for 15-second time sensitivity experiment
-
-
-
-
         TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
         List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
-        // Tag each trigger with "ON" or "OFF", assuming that the first trigger is an "ON" and that they alternate.
-        List<UserAction> userActions = new ArrayList<>();
-        for (int i = 0; i < triggerTimes.size(); i++) {
-            userActions.add(new UserAction(i % 2 == 0 ? Type.TOGGLE_ON : Type.TOGGLE_OFF, triggerTimes.get(i)));
+
+        System.out.println("ON signature file in use is " + onSignatureFile);
+        System.out.println("OFF signature file in use is " + offSignatureFile);
+
+        List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
+        List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
+
+        List<Instant> signatureTimestamps = new ArrayList<>();
+        // Load ON signature last packet's timestamp
+        // Get the last only
+        List<List<PcapPacket>> lastListOn = onSignature.get(onSignature.size()-1);
+        for (List<PcapPacket> list : lastListOn) {
+            // Get timestamp Instant from the last packet
+            int lastPacketIndex = list.size()-1;
+            signatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
         }
-        TriggerTrafficExtractor tte = new TriggerTrafficExtractor(inputPcapFile, triggerTimes, deviceIp);
-        final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen(outputPcapFile);
-        DnsMap dnsMap = new DnsMap();
-        TcpReassembler tcpReassembler = new TcpReassembler();
-        TrafficLabeler trafficLabeler = new TrafficLabeler(userActions);
-        tte.performExtraction(pkt -> {
-            try {
-                outputter.dump(pkt);
-            } catch (NotOpenException e) {
-                e.printStackTrace();
+        // Load OFF signature last packet's timestamp
+        // Get the last only
+        List<List<PcapPacket>> lastListOff = offSignature.get(offSignature.size()-1);
+        for (List<PcapPacket> list : lastListOff) {
+            // Get timestamp Instant from the last packet
+            int lastPacketIndex = list.size()-1;
+            signatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
+        }
+        // Sort the timestamps
+        signatureTimestamps.sort((p1, p2) -> {
+            return p1.compareTo(p2);
+        });
+
+        Iterator<Instant> iterTrig = triggerTimes.iterator();
+        Iterator<Instant> iterSign = signatureTimestamps.iterator();
+        System.out.println("Trigger to Last Packet:");
+        while (iterTrig.hasNext() && iterSign.hasNext()) {
+            Instant trigInst = (Instant) iterTrig.next();
+            Instant signInst = (Instant) iterSign.next();
+            Duration dur = Duration.between(trigInst, signInst);
+            long duration = dur.toMillis();
+            // Check duration --- should be below 15 seconds
+            if (duration >= 0 && duration <= 15000) {
+                System.out.println(dur.toMillis());
+            } else if (duration > 15000) {
+                while (duration > 15000) { // that means we have to move to the next trigger
+                    trigInst = (Instant) iterTrig.next();
+                    dur = Duration.between(trigInst, signInst);
+                    duration = dur.toMillis();
+                }
+                System.out.println(dur.toMillis());
+            } else { // below 0 / negative --- that means we have to move to the next signature
+                while (duration < 0) { // that means we have to move to the next trigger
+                    signInst = (Instant) iterSign.next();
+                    dur = Duration.between(trigInst, signInst);
+                    duration = dur.toMillis();
+                }
+                System.out.println(dur.toMillis());
             }
-        }, dnsMap, tcpReassembler, trafficLabeler);
-        outputter.flush();
-        outputter.close();
-
-        if (tte.getPacketsIncludedCount() != trafficLabeler.getTotalPacketCount()) {
-            // Sanity/debug check
-            throw new AssertionError(String.format("mismatch between packet count in %s and %s",
-                    TriggerTrafficExtractor.class.getSimpleName(), TrafficLabeler.class.getSimpleName()));
         }
 
-        // Extract all conversations present in the filtered trace.
-        List<Conversation> allConversations = tcpReassembler.getTcpConversations();
-        // Group conversations by hostname.
-        Map<String, List<Conversation>> convsByHostname = TcpConversationUtils.groupConversationsByHostname(allConversations, dnsMap);
-        System.out.println("Grouped conversations by hostname.");
-        // For each hostname, count the frequencies of packet lengths exchanged with that hostname.
-        final Map<String, Map<Integer, Integer>> pktLenFreqsByHostname = new HashMap<>();
-        convsByHostname.forEach((host, convs) -> pktLenFreqsByHostname.put(host, TcpConversationUtils.countPacketLengthFrequencies(convs)));
-        System.out.println("Counted frequencies of packet lengths exchanged with each hostname.");
-        // For each hostname, count the frequencies of packet sequences (i.e., count how many conversations exchange a
-        // sequence of packets of some specific lengths).
-        final Map<String, Map<String, Integer>> pktSeqFreqsByHostname = new HashMap<>();
-        convsByHostname.forEach((host, convs) -> pktSeqFreqsByHostname.put(host, TcpConversationUtils.countPacketSequenceFrequencies(convs)));
-        System.out.println("Counted frequencies of packet sequences exchanged with each hostname.");
-        // For each hostname, count frequencies of packet pairs exchanged with that hostname across all conversations
-        final Map<String, Map<String, Integer>> pktPairFreqsByHostname =
-                TcpConversationUtils.countPacketPairFrequenciesByHostname(allConversations, dnsMap);
-        System.out.println("Counted frequencies of packet pairs per hostname");
-        // For each user action, reassemble the set of TCP connections occurring shortly after
-        final Map<UserAction, List<Conversation>> userActionToConversations = trafficLabeler.getLabeledReassembledTcpTraffic();
-        final Map<UserAction, Map<String, List<Conversation>>> userActionsToConvsByHostname = trafficLabeler.getLabeledReassembledTcpTraffic(dnsMap);
-        System.out.println("Reassembled TCP conversations occurring shortly after each user event");
+
+        // ==========================================================================
+        List<Instant> firstSignatureTimestamps = new ArrayList<>();
+        List<Instant> lastSignatureTimestamps = new ArrayList<>();
+        List<List<PcapPacket>> firstListOnSign = onSignature.get(0);
+        List<List<PcapPacket>> lastListOnSign = onSignature.get(onSignature.size()-1);
+        // Load ON signature first and last packet's timestamps
+        for (List<PcapPacket> list : firstListOnSign) {
+            // Get timestamp Instant from the last packet
+            firstSignatureTimestamps.add(list.get(0).getTimestamp());
+        }
+        for (List<PcapPacket> list : lastListOnSign) {
+            // Get timestamp Instant from the last packet
+            int lastPacketIndex = list.size()-1;
+            lastSignatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
+        }
+
+        List<List<PcapPacket>> firstListOffSign = offSignature.get(0);
+        List<List<PcapPacket>> lastListOffSign = offSignature.get(offSignature.size()-1);
+        // Load OFF signature first and last packet's timestamps
+        for (List<PcapPacket> list : firstListOffSign) {
+            // Get timestamp Instant from the last packet
+            firstSignatureTimestamps.add(list.get(0).getTimestamp());
+        }
+        for (List<PcapPacket> list : lastListOffSign) {
+            // Get timestamp Instant from the last packet
+            int lastPacketIndex = list.size()-1;
+            lastSignatureTimestamps.add(list.get(lastPacketIndex).getTimestamp());
+        }
+        // Sort the timestamps
+        firstSignatureTimestamps.sort((p1, p2) -> {
+            return p1.compareTo(p2);
+        });
+        // Sort the timestamps
+        lastSignatureTimestamps.sort((p1, p2) -> {
+            return p1.compareTo(p2);
+        });
+
+        Iterator<Instant> iterFirst = firstSignatureTimestamps.iterator();
+        Iterator<Instant> iterLast = lastSignatureTimestamps.iterator();
+        System.out.println("First to Last Packet:");
+        while (iterFirst.hasNext() && iterLast.hasNext()) {
+            Instant firstInst = (Instant) iterFirst.next();
+            Instant lastInst = (Instant) iterLast.next();
+            Duration dur = Duration.between(firstInst, lastInst);
+            long duration = dur.toMillis();
+            // Check duration --- should be below 15 seconds
+            if (duration >= 0 && duration <= 15000) {
+                System.out.println(dur.toMillis());
+            } else if (duration > 15000) {
+                while (duration > 15000) { // that means we have to move to the next trigger
+                    firstInst = (Instant) iterFirst.next();
+                    dur = Duration.between(firstInst, lastInst);
+                    duration = dur.toMillis();
+                }
+                System.out.println(dur.toMillis());
+            } else { // below 0 / negative --- that means we have to move to the next signature
+                while (duration < 0) { // that means we have to move to the next trigger
+                    lastInst = (Instant) iterLast.next();
+                    dur = Duration.between(firstInst, lastInst);
+                    duration = dur.toMillis();
+                }
+                System.out.println(dur.toMillis());
+            }
+            if (duration > 8000) {
+                break;
+            }
+        }
+
+        // TODO: The above part is just for 15-second time sensitivity experiment
+        // TODO: The above part is just for 15-second time sensitivity experiment
+        // TODO: The above part is just for 15-second time sensitivity experiment
 
 
 
-        /*
-         * NOTE: no need to generate these more complex on/off maps that also contain mappings from hostname and
-         * sequence identifiers as we do not care about hostnames and sequences during clustering.
-         * We can simply use the UserAction->List<Conversation> map to generate ON/OFF groupings of conversations.
-         */
 
-//        // Contains all ON events: hostname -> sequence identifier -> list of conversations with that sequence
-//        Map<String, Map<String, List<Conversation>>> ons = new HashMap<>();
-//        // Contains all OFF events: hostname -> sequence identifier -> list of conversations with that sequence
-//        Map<String, Map<String, List<Conversation>>> offs = new HashMap<>();
-//        userActionsToConvsByHostname.forEach((ua, hostnameToConvs) -> {
-//            Map<String, Map<String, List<Conversation>>> outer = ua.getType() == Type.TOGGLE_ON ? ons : offs;
-//            hostnameToConvs.forEach((host, convs) -> {
-//                Map<String, List<Conversation>> seqsToConvs = TcpConversationUtils.
-//                        groupConversationsByPacketSequence(convs, verbose);
-//                outer.merge(host, seqsToConvs, (oldMap, newMap) -> {
-//                    newMap.forEach((sequence, cs) -> oldMap.merge(sequence, cs, (list1, list2) -> {
-//                        list1.addAll(list2);
-//                        return list1;
-//                    }));
-//                    return oldMap;
-//                });
-//            });
-//        });
-//
-//        System.out.println("==== ON ====");
-//        // Print out all the pairs into a file for ON events
-//        File fileOnEvents = new File(onPairsPath);
-//        PrintWriter pwOn = null;
-//        try {
-//            pwOn = new PrintWriter(fileOnEvents);
-//        } catch(Exception ex) {
-//            ex.printStackTrace();
+//        TriggerTimesFileReader ttfr = new TriggerTimesFileReader();
+//        List<Instant> triggerTimes = ttfr.readTriggerTimes(triggerTimesFile, false);
+//        // Tag each trigger with "ON" or "OFF", assuming that the first trigger is an "ON" and that they alternate.
+//        List<UserAction> userActions = new ArrayList<>();
+//        for (int i = 0; i < triggerTimes.size(); i++) {
+//            userActions.add(new UserAction(i % 2 == 0 ? Type.TOGGLE_ON : Type.TOGGLE_OFF, triggerTimes.get(i)));
 //        }
-//        for(Map.Entry<String, Map<String, List<Conversation>>> entry : ons.entrySet()) {
-//            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
-//            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
-//                List<Conversation> listConv = entryConv.getValue();
-//                // Just get the first Conversation because all Conversations in this group
-//                // should have the same pairs of Application Data.
-//                for(Conversation conv : listConv) {
-//                    // Process only if it is a TLS packet
-//                    if (conv.isTls()) {
-//                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
-//                        for(PcapPacketPair pair: tlsAppDataList) {
-//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-//                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
-//                        }
-//                    } else { // Non-TLS conversations
-//                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
-//                        for(PcapPacketPair pair: packetList) {
-//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-//                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
-//                        }
-//                    }
-//                }
+//        TriggerTrafficExtractor tte = new TriggerTrafficExtractor(inputPcapFile, triggerTimes, deviceIp);
+//        final PcapDumper outputter = Pcaps.openDead(DataLinkType.EN10MB, 65536).dumpOpen(outputPcapFile);
+//        DnsMap dnsMap = new DnsMap();
+//        TcpReassembler tcpReassembler = new TcpReassembler();
+//        TrafficLabeler trafficLabeler = new TrafficLabeler(userActions);
+//        tte.performExtraction(pkt -> {
+//            try {
+//                outputter.dump(pkt);
+//            } catch (NotOpenException e) {
+//                e.printStackTrace();
 //            }
-//        }
-//        pwOn.close();
+//        }, dnsMap, tcpReassembler, trafficLabeler);
+//        outputter.flush();
+//        outputter.close();
 //
-//        System.out.println("==== OFF ====");
-//        // Print out all the pairs into a file for ON events
-//        File fileOffEvents = new File(offPairsPath);
-//        PrintWriter pwOff = null;
-//        try {
-//            pwOff = new PrintWriter(fileOffEvents);
-//        } catch(Exception ex) {
-//            ex.printStackTrace();
+//        if (tte.getPacketsIncludedCount() != trafficLabeler.getTotalPacketCount()) {
+//            // Sanity/debug check
+//            throw new AssertionError(String.format("mismatch between packet count in %s and %s",
+//                    TriggerTrafficExtractor.class.getSimpleName(), TrafficLabeler.class.getSimpleName()));
 //        }
-//        for(Map.Entry<String, Map<String, List<Conversation>>> entry : offs.entrySet()) {
-//            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
-//            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
-//                List<Conversation> listConv = entryConv.getValue();
-//                // Just get the first Conversation because all Conversations in this group
-//                // should have the same pairs of Application Data.
-//                for(Conversation conv : listConv) {
-//                    // Process only if it is a TLS packet
-//                    if (conv.isTls()) {
-//                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
-//                        for(PcapPacketPair pair: tlsAppDataList) {
-//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-//                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
-//                        }
-//                    } else { // Non-TLS conversations
-//                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
-//                        for (PcapPacketPair pair : packetList) {
-//                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
-//                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        pwOff.close();
-
-
-        // ================================================ CLUSTERING ================================================
-        // Note: no need to use the more convoluted on/off maps; can simply use the UserAction->List<Conversation> map
-        // when don't care about hostnames and sequences (see comment earlier).
+//
+//        // Extract all conversations present in the filtered trace.
+//        List<Conversation> allConversations = tcpReassembler.getTcpConversations();
+//        // Group conversations by hostname.
+//        Map<String, List<Conversation>> convsByHostname = TcpConversationUtils.groupConversationsByHostname(allConversations, dnsMap);
+//        System.out.println("Grouped conversations by hostname.");
+//        // For each hostname, count the frequencies of packet lengths exchanged with that hostname.
+//        final Map<String, Map<Integer, Integer>> pktLenFreqsByHostname = new HashMap<>();
+//        convsByHostname.forEach((host, convs) -> pktLenFreqsByHostname.put(host, TcpConversationUtils.countPacketLengthFrequencies(convs)));
+//        System.out.println("Counted frequencies of packet lengths exchanged with each hostname.");
+//        // For each hostname, count the frequencies of packet sequences (i.e., count how many conversations exchange a
+//        // sequence of packets of some specific lengths).
+//        final Map<String, Map<String, Integer>> pktSeqFreqsByHostname = new HashMap<>();
+//        convsByHostname.forEach((host, convs) -> pktSeqFreqsByHostname.put(host, TcpConversationUtils.countPacketSequenceFrequencies(convs)));
+//        System.out.println("Counted frequencies of packet sequences exchanged with each hostname.");
+//        // For each hostname, count frequencies of packet pairs exchanged with that hostname across all conversations
+//        final Map<String, Map<String, Integer>> pktPairFreqsByHostname =
+//                TcpConversationUtils.countPacketPairFrequenciesByHostname(allConversations, dnsMap);
+//        System.out.println("Counted frequencies of packet pairs per hostname");
+//        // For each user action, reassemble the set of TCP connections occurring shortly after
+//        final Map<UserAction, List<Conversation>> userActionToConversations = trafficLabeler.getLabeledReassembledTcpTraffic();
+//        final Map<UserAction, Map<String, List<Conversation>>> userActionsToConvsByHostname = trafficLabeler.getLabeledReassembledTcpTraffic(dnsMap);
+//        System.out.println("Reassembled TCP conversations occurring shortly after each user event");
+//
+//
+//
+//        /*
+//         * NOTE: no need to generate these more complex on/off maps that also contain mappings from hostname and
+//         * sequence identifiers as we do not care about hostnames and sequences during clustering.
+//         * We can simply use the UserAction->List<Conversation> map to generate ON/OFF groupings of conversations.
+//         */
+//
+////        // Contains all ON events: hostname -> sequence identifier -> list of conversations with that sequence
+////        Map<String, Map<String, List<Conversation>>> ons = new HashMap<>();
+////        // Contains all OFF events: hostname -> sequence identifier -> list of conversations with that sequence
+////        Map<String, Map<String, List<Conversation>>> offs = new HashMap<>();
+////        userActionsToConvsByHostname.forEach((ua, hostnameToConvs) -> {
+////            Map<String, Map<String, List<Conversation>>> outer = ua.getType() == Type.TOGGLE_ON ? ons : offs;
+////            hostnameToConvs.forEach((host, convs) -> {
+////                Map<String, List<Conversation>> seqsToConvs = TcpConversationUtils.
+////                        groupConversationsByPacketSequence(convs, verbose);
+////                outer.merge(host, seqsToConvs, (oldMap, newMap) -> {
+////                    newMap.forEach((sequence, cs) -> oldMap.merge(sequence, cs, (list1, list2) -> {
+////                        list1.addAll(list2);
+////                        return list1;
+////                    }));
+////                    return oldMap;
+////                });
+////            });
+////        });
+////
+////        System.out.println("==== ON ====");
+////        // Print out all the pairs into a file for ON events
+////        File fileOnEvents = new File(onPairsPath);
+////        PrintWriter pwOn = null;
+////        try {
+////            pwOn = new PrintWriter(fileOnEvents);
+////        } catch(Exception ex) {
+////            ex.printStackTrace();
+////        }
+////        for(Map.Entry<String, Map<String, List<Conversation>>> entry : ons.entrySet()) {
+////            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
+////            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
+////                List<Conversation> listConv = entryConv.getValue();
+////                // Just get the first Conversation because all Conversations in this group
+////                // should have the same pairs of Application Data.
+////                for(Conversation conv : listConv) {
+////                    // Process only if it is a TLS packet
+////                    if (conv.isTls()) {
+////                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
+////                        for(PcapPacketPair pair: tlsAppDataList) {
+////                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+////                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
+////                        }
+////                    } else { // Non-TLS conversations
+////                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
+////                        for(PcapPacketPair pair: packetList) {
+////                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+////                            pwOn.println(PrintUtils.toCsv(pair, dnsMap));
+////                        }
+////                    }
+////                }
+////            }
+////        }
+////        pwOn.close();
+////
+////        System.out.println("==== OFF ====");
+////        // Print out all the pairs into a file for ON events
+////        File fileOffEvents = new File(offPairsPath);
+////        PrintWriter pwOff = null;
+////        try {
+////            pwOff = new PrintWriter(fileOffEvents);
+////        } catch(Exception ex) {
+////            ex.printStackTrace();
+////        }
+////        for(Map.Entry<String, Map<String, List<Conversation>>> entry : offs.entrySet()) {
+////            Map<String, List<Conversation>> seqsToConvs = entry.getValue();
+////            for(Map.Entry<String, List<Conversation>> entryConv : seqsToConvs.entrySet()) {
+////                List<Conversation> listConv = entryConv.getValue();
+////                // Just get the first Conversation because all Conversations in this group
+////                // should have the same pairs of Application Data.
+////                for(Conversation conv : listConv) {
+////                    // Process only if it is a TLS packet
+////                    if (conv.isTls()) {
+////                        List<PcapPacketPair> tlsAppDataList = TcpConversationUtils.extractTlsAppDataPacketPairs(conv);
+////                        for(PcapPacketPair pair: tlsAppDataList) {
+////                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+////                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
+////                        }
+////                    } else { // Non-TLS conversations
+////                        List<PcapPacketPair> packetList = TcpConversationUtils.extractPacketPairs(conv);
+////                        for (PcapPacketPair pair : packetList) {
+////                            System.out.println(PrintUtils.toCsv(pair, dnsMap));
+////                            pwOff.println(PrintUtils.toCsv(pair, dnsMap));
+////                        }
+////                    }
+////                }
+////            }
+////        }
+////        pwOff.close();
+//
+//
+//        // ================================================ CLUSTERING ================================================
+//        // Note: no need to use the more convoluted on/off maps; can simply use the UserAction->List<Conversation> map
+//        // when don't care about hostnames and sequences (see comment earlier).
+////        List<Conversation> onConversations = userActionToConversations.entrySet().stream().
+////                filter(e -> e.getKey().getType() == Type.TOGGLE_ON). // drop all OFF events from stream
+////                map(e -> e.getValue()). // no longer interested in the UserActions
+////                flatMap(List::stream). // flatten List<List<T>> to a List<T>
+////                collect(Collectors.toList());
+////        List<Conversation> offConversations = userActionToConversations.entrySet().stream().
+////                filter(e -> e.getKey().getType() == Type.TOGGLE_OFF).
+////                map(e -> e.getValue()).
+////                flatMap(List::stream).
+////                collect(Collectors.toList());
+////        //Collections.sort(onConversations, (c1, c2) -> c1.getPackets().)
+////
+////        List<PcapPacketPair> onPairs = onConversations.stream().
+////                map(c -> c.isTls() ? TcpConversationUtils.extractTlsAppDataPacketPairs(c) :
+////                        TcpConversationUtils.extractPacketPairs(c)).
+////                flatMap(List::stream). // flatten List<List<>> to List<>
+////                collect(Collectors.toList());
+////        List<PcapPacketPair> offPairs = offConversations.stream().
+////                map(c -> c.isTls() ? TcpConversationUtils.extractTlsAppDataPacketPairs(c) :
+////                        TcpConversationUtils.extractPacketPairs(c)).
+////                flatMap(List::stream). // flatten List<List<>> to List<>
+////                collect(Collectors.toList());
+////        // Note: need to update the DnsMap of all PcapPacketPairs if we want to use the IP/hostname-sensitive distance.
+////        Stream.concat(Stream.of(onPairs), Stream.of(offPairs)).flatMap(List::stream).forEach(p -> p.setDnsMap(dnsMap));
+////        // Perform clustering on conversation logged as part of all ON events.
+//////        DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 45);
+////        DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(2, 2);
+////        //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 10);
+////        List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
+////        // Perform clustering on conversation logged as part of all OFF events.
+//////        DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 45);
+////        DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(2, 2);
+////        //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 10);
+////        List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
+////        // Sort the conversations as reference
+////        List<Conversation> sortedAllConversation = TcpConversationUtils.sortConversationList(allConversations);
+////        // Output clusters
+////        System.out.println("========================================");
+////        System.out.println("       Clustering results for ON        ");
+////        System.out.println("       Number of clusters: " + onClusters.size());
+////        int count = 0;
+////        List<List<List<PcapPacket>>> ppListOfListReadOn = new ArrayList<>();
+////        List<List<List<PcapPacket>>> ppListOfListListOn = new ArrayList<>();
+////        for (Cluster<PcapPacketPair> c : onClusters) {
+////            System.out.println(String.format("<<< Cluster #%02d (%03d points) >>>", ++count, c.getPoints().size()));
+////            System.out.print(PrintUtils.toSummaryString(c));
+////            if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
+////            //if(c.getPoints().size() > 25) {
+////                // Print to file
+////                List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
+////                ppListOfListListOn.add(ppListOfList);
+////            }
+////        }
+////        // TODO: Merging test
+////        ppListOfListListOn = PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
+////        // TODO: Need to remove sequence 550 567 for Blossom phone side since it is not a good signature (overlap)!
+//////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 1);
+////        // TODO: Need to remove sequence 69 296 for Blossom device side since it is not a good signature (overlap)!
+//////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
+////        // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
+////        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
+////        // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
+////        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
+////        // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!
+////        // TODO: This sequence actually belongs to the local communication between the plug and the phone
+////        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
+////        ppListOfListListOn = PcapPacketUtils.sortSignatures(ppListOfListListOn);
+////        PcapPacketUtils.printSignatures(ppListOfListListOn);
+////        //count = 0;
+////        /*for (List<List<PcapPacket>> ll : ppListOfListListOn) {
+////            PrintUtils.serializeClustersIntoFile("./onSignature" + ++count + ".sig", ll);
+////            ppListOfListReadOn.add(PrintUtils.deserializeClustersFromFile("./onSignature" + count + ".sig"));
+////        }*/
+////        PrintUtils.serializeSignatureIntoFile("./onSignature.sig", ppListOfListListOn);
+////        ppListOfListReadOn = PrintUtils.deserializeSignatureFromFile("./onSignature.sig");
+////
+////        System.out.println("========================================");
+////        System.out.println("       Clustering results for OFF       ");
+////        System.out.println("       Number of clusters: " + offClusters.size());
+////        count = 0;
+////        List<List<List<PcapPacket>>> ppListOfListReadOff = new ArrayList<>();
+////        List<List<List<PcapPacket>>> ppListOfListListOff = new ArrayList<>();
+////        for (Cluster<PcapPacketPair> c : offClusters) {
+////            System.out.println(String.format("<<< Cluster #%03d (%06d points) >>>", ++count, c.getPoints().size()));
+////            System.out.print(PrintUtils.toSummaryString(c));
+////            if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
+////            //if(c.getPoints().size() > 25) {
+////                // Print to file
+////                List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
+////                ppListOfListListOff.add(ppListOfList);
+////            }
+////        }
+////        // TODO: Merging test
+////        ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
+////        // TODO: Need to remove sequence 69 296 for Blossom device side since it is not a good signature (overlap)!
+//////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 3);
+////        // TODO: Need to remove sequence number 1 for Nest Thermostat since it is not a good signature!
+////        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
+////        // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
+//////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
+////        // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
+////        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 2);
+////        // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!
+////        // TODO: This sequence actually belongs to the local communication between the plug and the phone
+////        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 0);
+////        ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
+////        PcapPacketUtils.printSignatures(ppListOfListListOff);
+////        //count = 0;
+////        /*for (List<List<PcapPacket>> ll : ppListOfListListOff) {
+////            PrintUtils.serializeClustersIntoFile("./offSignature" + ++count + ".sig", ll);
+////            ppListOfListReadOff.add(PrintUtils.deserializeClustersFromFile("./offSignature" + count + ".sig"));
+////        }*/
+////        PrintUtils.serializeSignatureIntoFile("./offSignature.sig", ppListOfListListOff);
+////        ppListOfListReadOff = PrintUtils.deserializeSignatureFromFile("./offSignature.sig");
+////        System.out.println("========================================");
+//        // ============================================================================================================
+//
+//        // TODO: This part is just for DBSCAN sensitivity experiment
+//        // TODO: This part is just for DBSCAN sensitivity experiment
+//        // TODO: This part is just for DBSCAN sensitivity experiment
+//        // TODO: This part is just for DBSCAN sensitivity experiment
+//        // TODO: This part is just for DBSCAN sensitivity experiment
 //        List<Conversation> onConversations = userActionToConversations.entrySet().stream().
 //                filter(e -> e.getKey().getType() == Type.TOGGLE_ON). // drop all OFF events from stream
 //                map(e -> e.getValue()). // no longer interested in the UserActions
@@ -665,180 +790,58 @@ public class Main {
 //                collect(Collectors.toList());
 //        // Note: need to update the DnsMap of all PcapPacketPairs if we want to use the IP/hostname-sensitive distance.
 //        Stream.concat(Stream.of(onPairs), Stream.of(offPairs)).flatMap(List::stream).forEach(p -> p.setDnsMap(dnsMap));
-//        // Perform clustering on conversation logged as part of all ON events.
-////        DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 45);
-//        DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(2, 2);
-//        //DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(10.0, 10);
-//        List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
-//        // Perform clustering on conversation logged as part of all OFF events.
-////        DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 45);
-//        DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(2, 2);
-//        //DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(10.0, 10);
-//        List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
-//        // Sort the conversations as reference
-//        List<Conversation> sortedAllConversation = TcpConversationUtils.sortConversationList(allConversations);
-//        // Output clusters
-//        System.out.println("========================================");
-//        System.out.println("       Clustering results for ON        ");
-//        System.out.println("       Number of clusters: " + onClusters.size());
-//        int count = 0;
-//        List<List<List<PcapPacket>>> ppListOfListReadOn = new ArrayList<>();
-//        List<List<List<PcapPacket>>> ppListOfListListOn = new ArrayList<>();
-//        for (Cluster<PcapPacketPair> c : onClusters) {
-//            System.out.println(String.format("<<< Cluster #%02d (%03d points) >>>", ++count, c.getPoints().size()));
-//            System.out.print(PrintUtils.toSummaryString(c));
-//            if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
-//            //if(c.getPoints().size() > 25) {
-//                // Print to file
-//                List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
-//                ppListOfListListOn.add(ppListOfList);
-//            }
-//        }
-//        // TODO: Merging test
-//        ppListOfListListOn = PcapPacketUtils.mergeSignatures(ppListOfListListOn, sortedAllConversation);
-//        // TODO: Need to remove sequence 550 567 for Blossom phone side since it is not a good signature (overlap)!
-////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 1);
-//        // TODO: Need to remove sequence 69 296 for Blossom device side since it is not a good signature (overlap)!
-////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
-//        // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
-//        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 2);
-//        // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
-//        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
-//        // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!
-//        // TODO: This sequence actually belongs to the local communication between the plug and the phone
-//        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, 0);
-//        ppListOfListListOn = PcapPacketUtils.sortSignatures(ppListOfListListOn);
-//        PcapPacketUtils.printSignatures(ppListOfListListOn);
-//        //count = 0;
-//        /*for (List<List<PcapPacket>> ll : ppListOfListListOn) {
-//            PrintUtils.serializeClustersIntoFile("./onSignature" + ++count + ".sig", ll);
-//            ppListOfListReadOn.add(PrintUtils.deserializeClustersFromFile("./onSignature" + count + ".sig"));
-//        }*/
-//        PrintUtils.serializeSignatureIntoFile("./onSignature.sig", ppListOfListListOn);
-//        ppListOfListReadOn = PrintUtils.deserializeSignatureFromFile("./onSignature.sig");
 //
-//        System.out.println("========================================");
-//        System.out.println("       Clustering results for OFF       ");
-//        System.out.println("       Number of clusters: " + offClusters.size());
-//        count = 0;
-//        List<List<List<PcapPacket>>> ppListOfListReadOff = new ArrayList<>();
-//        List<List<List<PcapPacket>>> ppListOfListListOff = new ArrayList<>();
-//        for (Cluster<PcapPacketPair> c : offClusters) {
-//            System.out.println(String.format("<<< Cluster #%03d (%06d points) >>>", ++count, c.getPoints().size()));
-//            System.out.print(PrintUtils.toSummaryString(c));
-//            if(c.getPoints().size() > 45 && c.getPoints().size() < 55) {
-//            //if(c.getPoints().size() > 25) {
-//                // Print to file
-//                List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
-//                ppListOfListListOff.add(ppListOfList);
+//        double eps = 10; // loop from eps 1-10
+//        int minPts = 50; // loop from minPts 30-50
+//        for(int epsCount = 7; epsCount <= eps; epsCount++) {
+//            for(int minPtsCount = 30; minPtsCount <= minPts; minPtsCount++) {
+//                System.out.println("Eps: " + epsCount + " --- minPts: " + minPtsCount);
+//                DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(epsCount, minPtsCount);
+//                DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(epsCount, minPtsCount);
+//                List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
+//                List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
+//                // Sort the conversations as reference
+//                List<Conversation> sortedAllConversation = TcpConversationUtils.sortConversationList(allConversations);
+//                // Output clusters
+//                System.out.println("========================================");
+//                System.out.println("       Clustering results for ON        ");
+//                System.out.println("       Number of clusters: " + onClusters.size());
+//                int count = 0;
+//                List<List<List<PcapPacket>>> ppListOfListListOn = new ArrayList<>();
+//                for (Cluster<PcapPacketPair> c : onClusters) {
+//                    System.out.println(String.format("<<< Cluster #%02d (%03d points) >>>", ++count, c.getPoints().size()));
+////                    System.out.print(PrintUtils.toSummaryString(c));
+//                    if (c.getPoints().size() > 45 && c.getPoints().size() < 55) {
+////                        if(c.getPoints().size() > 25) {
+//                        // Print to file
+//                        List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
+//                        ppListOfListListOn.add(ppListOfList);
+//                    }
+//                }
+//                PcapPacketUtils.printSignatures(ppListOfListListOn);
+//
+//                System.out.println("========================================");
+//                System.out.println("       Clustering results for OFF       ");
+//                System.out.println("       Number of clusters: " + offClusters.size());
+//                count = 0;
+//                List<List<List<PcapPacket>>> ppListOfListListOff = new ArrayList<>();
+//                for (Cluster<PcapPacketPair> c : offClusters) {
+//                    System.out.println(String.format("<<< Cluster #%03d (%06d points) >>>", ++count, c.getPoints().size()));
+////                    System.out.print(PrintUtils.toSummaryString(c));
+//                    if (c.getPoints().size() > 45 && c.getPoints().size() < 55) {
+//                        //if(c.getPoints().size() > 25) {
+//                        // Print to file
+//                        List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
+//                        ppListOfListListOff.add(ppListOfList);
+//                    }
+//                }
+//                PcapPacketUtils.printSignatures(ppListOfListListOff);
+//                System.out.println();
+//                System.out.println();
+//                System.out.println();
+//                // ============================================================================================================
 //            }
 //        }
-//        // TODO: Merging test
-//        ppListOfListListOff = PcapPacketUtils.mergeSignatures(ppListOfListListOff, sortedAllConversation);
-//        // TODO: Need to remove sequence 69 296 for Blossom device side since it is not a good signature (overlap)!
-////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 3);
-//        // TODO: Need to remove sequence number 1 for Nest Thermostat since it is not a good signature!
-//        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
-//        // TODO: Need to remove sequence number 0 for Arlo Camera since it is not a good signature!
-////        PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 1);
-//        // TODO: Need to remove sequence number 2 for ST plug since it is not a good signature!
-//        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 2);
-//        // TODO: Need to remove sequence number 0 for TP-Link plug since it is not a good signature!
-//        // TODO: This sequence actually belongs to the local communication between the plug and the phone
-//        //PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, 0);
-//        ppListOfListListOff = PcapPacketUtils.sortSignatures(ppListOfListListOff);
-//        PcapPacketUtils.printSignatures(ppListOfListListOff);
-//        //count = 0;
-//        /*for (List<List<PcapPacket>> ll : ppListOfListListOff) {
-//            PrintUtils.serializeClustersIntoFile("./offSignature" + ++count + ".sig", ll);
-//            ppListOfListReadOff.add(PrintUtils.deserializeClustersFromFile("./offSignature" + count + ".sig"));
-//        }*/
-//        PrintUtils.serializeSignatureIntoFile("./offSignature.sig", ppListOfListListOff);
-//        ppListOfListReadOff = PrintUtils.deserializeSignatureFromFile("./offSignature.sig");
-//        System.out.println("========================================");
-        // ============================================================================================================
-
-        // TODO: This part is just for DBSCAN sensitivity experiment
-        // TODO: This part is just for DBSCAN sensitivity experiment
-        // TODO: This part is just for DBSCAN sensitivity experiment
-        // TODO: This part is just for DBSCAN sensitivity experiment
-        // TODO: This part is just for DBSCAN sensitivity experiment
-        List<Conversation> onConversations = userActionToConversations.entrySet().stream().
-                filter(e -> e.getKey().getType() == Type.TOGGLE_ON). // drop all OFF events from stream
-                map(e -> e.getValue()). // no longer interested in the UserActions
-                flatMap(List::stream). // flatten List<List<T>> to a List<T>
-                collect(Collectors.toList());
-        List<Conversation> offConversations = userActionToConversations.entrySet().stream().
-                filter(e -> e.getKey().getType() == Type.TOGGLE_OFF).
-                map(e -> e.getValue()).
-                flatMap(List::stream).
-                collect(Collectors.toList());
-        //Collections.sort(onConversations, (c1, c2) -> c1.getPackets().)
-
-        List<PcapPacketPair> onPairs = onConversations.stream().
-                map(c -> c.isTls() ? TcpConversationUtils.extractTlsAppDataPacketPairs(c) :
-                        TcpConversationUtils.extractPacketPairs(c)).
-                flatMap(List::stream). // flatten List<List<>> to List<>
-                collect(Collectors.toList());
-        List<PcapPacketPair> offPairs = offConversations.stream().
-                map(c -> c.isTls() ? TcpConversationUtils.extractTlsAppDataPacketPairs(c) :
-                        TcpConversationUtils.extractPacketPairs(c)).
-                flatMap(List::stream). // flatten List<List<>> to List<>
-                collect(Collectors.toList());
-        // Note: need to update the DnsMap of all PcapPacketPairs if we want to use the IP/hostname-sensitive distance.
-        Stream.concat(Stream.of(onPairs), Stream.of(offPairs)).flatMap(List::stream).forEach(p -> p.setDnsMap(dnsMap));
-
-        double eps = 10; // loop from eps 1-10
-        int minPts = 50; // loop from minPts 30-50
-        for(int epsCount = 7; epsCount <= eps; epsCount++) {
-            for(int minPtsCount = 30; minPtsCount <= minPts; minPtsCount++) {
-                System.out.println("Eps: " + epsCount + " --- minPts: " + minPtsCount);
-                DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(epsCount, minPtsCount);
-                DBSCANClusterer<PcapPacketPair> offClusterer = new DBSCANClusterer<>(epsCount, minPtsCount);
-                List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
-                List<Cluster<PcapPacketPair>> offClusters = offClusterer.cluster(offPairs);
-                // Sort the conversations as reference
-                List<Conversation> sortedAllConversation = TcpConversationUtils.sortConversationList(allConversations);
-                // Output clusters
-                System.out.println("========================================");
-                System.out.println("       Clustering results for ON        ");
-                System.out.println("       Number of clusters: " + onClusters.size());
-                int count = 0;
-                List<List<List<PcapPacket>>> ppListOfListListOn = new ArrayList<>();
-                for (Cluster<PcapPacketPair> c : onClusters) {
-                    System.out.println(String.format("<<< Cluster #%02d (%03d points) >>>", ++count, c.getPoints().size()));
-//                    System.out.print(PrintUtils.toSummaryString(c));
-                    if (c.getPoints().size() > 45 && c.getPoints().size() < 55) {
-//                        if(c.getPoints().size() > 25) {
-                        // Print to file
-                        List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
-                        ppListOfListListOn.add(ppListOfList);
-                    }
-                }
-                PcapPacketUtils.printSignatures(ppListOfListListOn);
-
-                System.out.println("========================================");
-                System.out.println("       Clustering results for OFF       ");
-                System.out.println("       Number of clusters: " + offClusters.size());
-                count = 0;
-                List<List<List<PcapPacket>>> ppListOfListListOff = new ArrayList<>();
-                for (Cluster<PcapPacketPair> c : offClusters) {
-                    System.out.println(String.format("<<< Cluster #%03d (%06d points) >>>", ++count, c.getPoints().size()));
-//                    System.out.print(PrintUtils.toSummaryString(c));
-                    if (c.getPoints().size() > 45 && c.getPoints().size() < 55) {
-                        //if(c.getPoints().size() > 25) {
-                        // Print to file
-                        List<List<PcapPacket>> ppListOfList = PcapPacketUtils.clusterToListOfPcapPackets(c);
-                        ppListOfListListOff.add(ppListOfList);
-                    }
-                }
-                PcapPacketUtils.printSignatures(ppListOfListListOff);
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                // ============================================================================================================
-            }
-        }
 
 
 //        // ================================================================================================
