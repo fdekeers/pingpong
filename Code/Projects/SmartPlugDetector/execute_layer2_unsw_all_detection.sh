@@ -12,7 +12,7 @@ readonly SIGNATURES_BASE_DIR
 OUTPUT_DIR=$3
 readonly OUTPUT_DIR
 
-set -x # echo invoked commands to std out
+#set -x # echo invoked commands to std out
 
 for PCAP_FILE in $UNSW_TRACES_DIR/*.pcap; do
     # skip non pcap files
