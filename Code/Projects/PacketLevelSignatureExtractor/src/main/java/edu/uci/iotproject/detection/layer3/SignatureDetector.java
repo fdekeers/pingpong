@@ -127,10 +127,10 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 
         // TODO: EXPERIMENT - November 7, 2018
         // D-Link Plug experiment
-        //final String inputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
-        //final String inputPcapFile = path + "/experimental_result/smarthome/dlink-plug/wlan1/dlink-plug.wlan1.detection.pcap";
-        //final String inputPcapFile = path + "/experimental_result/smarthome/dlink-plug/eth0/dlink-plug.eth0.detection.pcap";
-        // D-Link Plug DEVICE signatures
+//        //final String inputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/dlink-plug/wlan1/dlink-plug.wlan1.detection.pcap";
+//        //final String inputPcapFile = path + "/experimental_result/smarthome/dlink-plug/eth0/dlink-plug.eth0.detection.pcap";
+//        // D-Link Plug DEVICE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-onSignature-device-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/dlink-plug/signatures/dlink-plug-offSignature-device-side.sig";
         // D-Link Plug PHONE signatures
@@ -142,11 +142,11 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
         //final String inputPcapFile = path + "/experimental_result/standalone/dlink-siren/wlan1/dlink-siren.wlan1.local.pcap";
         //final String inputPcapFile = path + "/experimental_result/smarthome/dlink-siren/wlan1/dlink-siren.wlan1.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/dlink-siren/eth0/dlink-siren.eth0.detection.pcap";
-        // D-Link Siren DEVICE signatures
-        // TODO: The device signature does not have pairs---only one packet which is 216, so we don't consider this as a signature
-//        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-device-side.sig";
-//        final String offSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-offSignature-device-side.sig";
-        // D-Link Siren PHONE signatures
+//        // D-Link Siren DEVICE signatures
+//        // TODO: The device signature does not have pairs---only one packet which is 216, so we don't consider this as a signature
+////        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-device-side.sig";
+////        final String offSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-offSignature-device-side.sig";
+//        // D-Link Siren PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/dlink-siren/signatures/dlink-siren-offSignature-phone-side.sig";
 //        final String onSignatureFile = path + "/training/signatures/dlink-siren/dlink-siren-onSignature-phone-side.sig";
@@ -162,12 +162,12 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
         // TODO: EXPERIMENT - November 8, 2018
         // TP-Link Plug experiment
 //        final String inputPcapFile = path + "/experimental_result/standalone/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap";
-//        final String inputPcapFile = path + "/experimental_result/standalone/tplink-plug/eth0/tplink-plug.eth0.local.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/tplink-plug/wlan1/tplink-plug.wlan1.detection.pcap";
-        //final String inputPcapFile = path + "/experimental_result/smarthome/tplink-plug/eth0/tplink-plug.eth0.detection.pcap";
-        // TP-Link Plug DEVICE signatures
-//        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
-//        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
+////        final String inputPcapFile = path + "/experimental_result/standalone/tplink-plug/eth0/tplink-plug.eth0.local.pcap";
+////        final String inputPcapFile = path + "/experimental_result/smarthome/tplink-plug/wlan1/tplink-plug.wlan1.detection.pcap";
+//        //final String inputPcapFile = path + "/experimental_result/smarthome/tplink-plug/eth0/tplink-plug.eth0.detection.pcap";
+//        // TP-Link Plug DEVICE signatures
+////        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig";
+////        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig";
 //        final String onSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-onSignature-device-side-outbound.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/tplink-plug/signatures/tplink-plug-offSignature-device-side-outbound.sig";
         // TP-Link Plug PHONE signatures
@@ -181,12 +181,12 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        final String offSignatureFile = path + "/training/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig";
         // TODO: EXPERIMENT - November 13, 2018
         // Arlo Camera experiment
-//        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
-//        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth0.local.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
+////        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth0.local.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/arlo-camera/wlan1/arlo-camera.wlan1.detection.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/arlo-camera/eth0/arlo-camera.eth0.detection.pcap";
-//        final String inputPcapFile = path + "/training/arlo-camera/eth0/arlo-camera.eth0.local.pcap";
-        // Arlo Camera PHONE signatures
+////        final String inputPcapFile = path + "/experimental_result/smarthome/arlo-camera/eth0/arlo-camera.eth0.detection.pcap";
+////        final String inputPcapFile = path + "/training/arlo-camera/eth0/arlo-camera.eth0.local.pcap";
+//        // Arlo Camera PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig";
 
@@ -210,7 +210,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        final String inputPcapFile = path + "/experimental_result/standalone/st-plug/eth0/st-plug.eth0.local.pcap";
 //        //final String inputPcapFile = path + "/experimental_result/smarthome/st-plug/wlan1/st-plug.wlan1.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/st-plug/eth0/st-plug.eth0.detection.pcap";
-//        // SmartThings Plug PHONE signatures
+////        // SmartThings Plug PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-offSignature-phone-side.sig";
 //        final String onSignatureFile = path + "/training/signatures/st-plug/st-plug-onSignature-phone-side.sig";
@@ -253,12 +253,12 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        // Nest Thermostat PHONE signatures
 //        final String onSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/training/nest-thermostat/signatures/nest-thermostat-offSignature-phone-side.sig";
-        // TODO: EXPERIMENT - November 15, 2018
+//        // TODO: EXPERIMENT - November 15, 2018
         // Nest Thermostat experiment
 //        final String inputPcapFile = path + "/experimental_result/standalone/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
 ////        final String inputPcapFile = path + "/experimental_result/standalone/nest-thermostat/eth0/nest-thermostat.eth0.local.pcap";
 ////        final String inputPcapFile = path + "/experimental_result/smarthome/nest-thermostat/wlan1/nest-thermostat.wlan1.detection.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/nest-thermostat/eth0/nest-thermostat.eth0.detection.pcap";
+////        final String inputPcapFile = path + "/experimental_result/smarthome/nest-thermostat/eth0/nest-thermostat.eth0.detection.pcap";
 ////        // Nest Thermostat PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/nest-thermostat/signatures/nest-thermostat-offSignature-phone-side.sig";
@@ -336,7 +336,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        final String inputPcapFile = path + "/experimental_result/standalone/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.local.pcap";
 //        //final String inputPcapFile = path + "/experimental_result/smarthome/kwikset-doorlock/wlan1/kwikset-doorlock.wlan1.detection.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/kwikset-doorlock/eth0/kwikset-doorlock.eth0.detection.pcap";
-////        // Kwikset Door lock PHONE signatures
+//        // Kwikset Door lock PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/kwikset-doorlock/signatures/kwikset-doorlock-offSignature-phone-side.sig";
 //        final String onSignatureFile = path + "/training/signatures/kwikset-doorlock/kwikset-doorlock-onSignature-phone-side.sig";
@@ -362,13 +362,24 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
         List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
 
+        // TODO: BUILD A CLASS OR A METHOD TO CHECK IF THERE IS AN OVERLAP BETWEEN THE TWO SIGNATURES HERE
+        // 1) The two signatures have to be a range-based signature
+        // 2) The two ranges overlap
+        // 3) If they overlap then we apply strict matching, if not then we apply range-based matching
+
         // LAN
 //        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
 //        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
         // WAN
         SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105", 0);
         SignatureDetector offDetector = new SignatureDetector(offSignature, "128.195.205.105", 0);
+        if (onDetector.isConservativeChecking(offSignature)) {
+            System.out.println("Do conservative checking!");
+        } else {
+            System.out.println("Do range-based checking!");
+        }
 
+        /*
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
 
@@ -431,7 +442,8 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 
         // TODO: Temporary clean up until we clean the pipeline
 //        List<UserAction> cleanedDetectedEvents = SignatureDetector.removeDuplicates(detectedEvents);
-//        cleanedDetectedEvents.forEach(outputter);
+//        cleanedDetectedEvents.forEach(outputter);*/
+
     }
 
     /**
@@ -485,6 +497,128 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
             }
         }
         return listUserActionClean;
+    }
+
+    /**
+     * Check if there is any overlap between the signature stored in this class and another signature.
+     * Conditions:
+     * 1) If both signatures do not have any range, then we need to do conservative checking (return true).
+     * 2) If both signatures have the same number of packets/packet lengths, then we check the range; if the
+     *    numbers of packets/packet lengths are different then we assume that there is no overlap.
+     * 3) If there is any range in the signatures, then we need to check for overlap.
+     * 4) If there is overlap for every packet/packet length, then we return false (range-based checking); otherwise,
+     *    true (conservative checking).
+     *
+     * @param otherSignature A {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects to be checked
+     *                       for overlaps with the signature stored in this class.
+     * @return A boolean that is true if there is an overlap; false otherwise.
+     */
+    public boolean isConservativeChecking(List<List<List<PcapPacket>>> otherSignature) {
+
+        // Get the ranges of the two signatures
+        List<List<List<PcapPacket>>> signatureRanges = getSequenceRanges(mSignature);
+        List<List<List<PcapPacket>>> otherSignatureRanges = getSequenceRanges(otherSignature);
+        if (!isRangeBased(signatureRanges) && !isRangeBased(otherSignatureRanges)) {
+            // Conservative checking when there is no range
+            return true;
+        } else if(signatureRanges.size() != otherSignatureRanges.size()) {
+            // The two signatures have different numbers of packets/packet lengths
+            return false;
+        } else {
+            // There is range; check if there is overlap
+            return checkOverlap(signatureRanges, otherSignatureRanges);
+        }
+    }
+
+    /*
+     * Check for overlap since we have range in at least one of the signatures.
+     * Overlap is only true when all ranges overlap. We need to check in order.
+     */
+    private boolean checkOverlap(List<List<List<PcapPacket>>> signatureRanges,
+                                 List<List<List<PcapPacket>>> otherSignatureRanges) {
+
+        for(List<List<PcapPacket>> listListPcapPacket : signatureRanges) {
+            // Lower bound of the range is in index 0
+            // Upper bound of the range is in index 1
+            int sequenceSetIndex = signatureRanges.indexOf(listListPcapPacket);
+            List<PcapPacket> minSequenceSignature = listListPcapPacket.get(0);
+            List<PcapPacket> maxSequenceSignature = listListPcapPacket.get(1);
+            for(PcapPacket pcapPacket : minSequenceSignature) {
+                // Get the lower and upper bounds of the current signature
+                int packetIndex = minSequenceSignature.indexOf(pcapPacket);
+                int lowerBound = pcapPacket.length();
+                int upperBound = maxSequenceSignature.get(packetIndex).length();
+                // Check for range overlap in the other signature!
+                // Check the packet/packet length at the same position
+                List<PcapPacket> minSequenceSignatureOther = otherSignatureRanges.get(sequenceSetIndex).get(0);
+                List<PcapPacket> maxSequenceSignatureOther = otherSignatureRanges.get(sequenceSetIndex).get(1);
+                int lowerBoundOther = minSequenceSignatureOther.get(packetIndex).length();
+                int upperBoundOther = maxSequenceSignatureOther.get(packetIndex).length();
+                if (!(lowerBoundOther <= lowerBound && lowerBound <= upperBoundOther) &&
+                    !(lowerBoundOther <= upperBound && upperBound <= upperBoundOther)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * Check and see if there is any range in the signatures
+     */
+    private boolean isRangeBased(List<List<List<PcapPacket>>> signatureRanges) {
+
+        for(List<List<PcapPacket>> listListPcapPacket : signatureRanges) {
+            // Lower bound of the range is in index 0
+            // Upper bound of the range is in index 1
+            List<PcapPacket> minSequence = listListPcapPacket.get(0);
+            List<PcapPacket> maxSequence = listListPcapPacket.get(1);
+            for(PcapPacket pcapPacket : minSequence) {
+                int index = minSequence.indexOf(pcapPacket);
+                if (pcapPacket.length() != maxSequence.get(index).length()) {
+                    // If there is any packet length that differs in the minSequence
+                    // and maxSequence, then it is range-based
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /* Find the sequence with the minimum packet lengths.
+     * The second-layer list should contain the minimum sequence for element 0 and maximum sequence for element 1.
+     */
+    private List<List<List<PcapPacket>>> getSequenceRanges(List<List<List<PcapPacket>>> signature) {
+
+        // Start from the first index
+        List<List<List<PcapPacket>>> rangeBasedSequence = new ArrayList<>();
+        for(List<List<PcapPacket>> listListPcapPacket : signature) {
+            List<List<PcapPacket>> minMaxSequence = new ArrayList<>();
+            // Both searches start from index 0
+            List<PcapPacket> minSequence = new ArrayList<>(listListPcapPacket.get(0));
+            List<PcapPacket> maxSequence = new ArrayList<>(listListPcapPacket.get(0));
+            for(List<PcapPacket> listPcapPacket : listListPcapPacket) {
+                for(PcapPacket pcapPacket : listPcapPacket) {
+                    int index = listPcapPacket.indexOf(pcapPacket);
+                    // Set the new minimum if length at the index is minimum
+                    if (pcapPacket.length() < minSequence.get(index).length()) {
+                        minSequence.set(index, pcapPacket);
+                    }
+                    // Set the new maximum if length at the index is maximum
+                    if (pcapPacket.length() > maxSequence.get(index).length()) {
+                        maxSequence.set(index, pcapPacket);
+                    }
+                }
+            }
+            // minSequence as element 0 and maxSequence as element 1
+            minMaxSequence.add(minSequence);
+            minMaxSequence.add(maxSequence);
+            rangeBasedSequence.add(minMaxSequence);
+        }
+
+        return rangeBasedSequence;
     }
 
     public SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp, int inclusionTimeMillis) {
