@@ -28,27 +28,27 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
 
 //        String path = "/scratch/July-2018"; // Rahmadi
-        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
-        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-        final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
-
-        List<List<PcapPacket>> signature = PrintUtils.deserializeClustersFromFile(signatureFile);
-        Layer3ClusterMatcher clusterMatcher = new Layer3ClusterMatcher(signature, null,
-                (sig, match) -> System.out.println(
-                        String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
-                                match.get(0).getTimestamp().atZone(ZoneId.of("America/Los_Angeles")))
-                )
-        );
-
-        PcapHandle handle;
-        try {
-            handle = Pcaps.openOffline(inputPcapFile, PcapHandle.TimestampPrecision.NANO);
-        } catch (PcapNativeException pne) {
-            handle = Pcaps.openOffline(inputPcapFile);
-        }
-        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, clusterMatcher);
-        reader.readFromHandle();
-        clusterMatcher.performDetection();
+//        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
+//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
+//        final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
+//
+//        List<List<PcapPacket>> signature = PrintUtils.deserializeClustersFromFile(signatureFile);
+//        Layer3ClusterMatcher clusterMatcher = new Layer3ClusterMatcher(signature, null,
+//                (sig, match) -> System.out.println(
+//                        String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
+//                                match.get(0).getTimestamp().atZone(ZoneId.of("America/Los_Angeles")))
+//                )
+//        );
+//
+//        PcapHandle handle;
+//        try {
+//            handle = Pcaps.openOffline(inputPcapFile, PcapHandle.TimestampPrecision.NANO);
+//        } catch (PcapNativeException pne) {
+//            handle = Pcaps.openOffline(inputPcapFile);
+//        }
+//        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, clusterMatcher);
+//        reader.readFromHandle();
+//        clusterMatcher.performDetection();
     }
 
     /**
@@ -76,7 +76,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
      *                          {@code cluster}, i.e., when the examined traffic is classified as pertaining to
      *                          {@code cluster}.
      */
-    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp,
+    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, List<List<List<List<PcapPacket>>>> otherSignatures,
                                 ClusterMatcherObserver... detectionObservers) {
         super(cluster);
         Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
@@ -100,12 +100,26 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
             );
         }
         mRouterWanIp = routerWanIp;
+
+        checkOverlaps(otherSignatures);
     }
 
     @Override
     public void gotPacket(PcapPacket packet) {
         // Present packet to TCP reassembler so that it can be mapped to a connection (if it is a TCP packet).
         mTcpReassembler.gotPacket(packet);
+    }
+
+    // TODO: UNDER CONSTRUCTION NOW!
+    private void checkOverlaps(List<List<List<List<PcapPacket>>>> otherSignatures) {
+        // Unpack the list
+        for(List<List<List<PcapPacket>>> listListListPcapPacket : otherSignatures) {
+            for(List<List<PcapPacket>> listListPcapPacket : listListListPcapPacket) {
+                for(List<PcapPacket> listPcapPacket : listListPcapPacket) {
+
+                }
+            }
+        }
     }
 
     /**
