@@ -26,7 +26,7 @@ abstract public class AbstractClusterMatcher {
      */
     protected final List<ClusterMatcherObserver> mObservers;
 
-    protected AbstractClusterMatcher(List<List<PcapPacket>> cluster) {
+    protected AbstractClusterMatcher(List<List<PcapPacket>> cluster, boolean isRangeBased) {
         // ===================== PRECONDITION SECTION =====================
         cluster = Objects.requireNonNull(cluster, "cluster cannot be null");
         if (cluster.isEmpty() || cluster.stream().anyMatch(inner -> inner.isEmpty())) {
@@ -38,8 +38,12 @@ abstract public class AbstractClusterMatcher {
             }
         }
         // ================================================================
-        // Let the subclass prune the provided cluster
-        mCluster = pruneCluster(cluster);
+        // Let the subclass prune the provided cluster---only if it is not range-based
+        if (!isRangeBased) {
+            mCluster = pruneCluster(cluster);
+        } else {
+            mCluster = cluster;
+        }
         mObservers = new ArrayList<>();
     }
 

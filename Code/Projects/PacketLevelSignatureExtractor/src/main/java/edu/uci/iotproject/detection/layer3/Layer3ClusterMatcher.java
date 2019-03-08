@@ -67,18 +67,29 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
     private final String mRouterWanIp;
 
     /**
+     * Range-based vs. strict matching.
+     */
+    private final boolean mRangeBased;
+
+    /**
+     * Epsilon value used by the DBSCAN algorithm; it is used again for range-based matching here.
+     */
+    private final double mEps;
+
+    /**
      * Create a {@link Layer3ClusterMatcher}.
      * @param cluster The cluster that traffic is matched against.
      * @param routerWanIp The router's WAN IP if examining traffic captured at the ISP's point of view (used for
      *                    determining the direction of packets).
+     * @param isRangeBased The boolean that decides if it is range-based vs. strict matching.
      * @param detectionObservers Client code that wants to get notified whenever the {@link Layer3ClusterMatcher} detects that
      *                          (a subset of) the examined traffic is similar to the traffic that makes up
      *                          {@code cluster}, i.e., when the examined traffic is classified as pertaining to
      *                          {@code cluster}.
      */
-    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, List<List<List<List<PcapPacket>>>> otherSignatures,
+    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, boolean isRangeBased, double eps,
                                 ClusterMatcherObserver... detectionObservers) {
-        super(cluster);
+        super(cluster, isRangeBased);
         Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
         for (ClusterMatcherObserver obs : detectionObservers) {
             addObserver(obs);
@@ -92,34 +103,24 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
          * on in favor of performance. However, it is only run once (at instantiation), so the overhead may be warranted
          * in order to ensure correctness, especially during the development/debugging phase.
          */
-        if (mCluster.stream().
-                anyMatch(inner -> !Arrays.equals(mClusterMemberDirections, getPacketDirections(inner, null)))) {
-            throw new IllegalArgumentException(
-                    "cluster members must contain the same number of packets and exhibit the same packet direction " +
-                            "pattern"
-            );
+        mRangeBased = isRangeBased;
+        if (!mRangeBased) {    // Only when it is not range-based
+            if (mCluster.stream().
+                    anyMatch(inner -> !Arrays.equals(mClusterMemberDirections, getPacketDirections(inner, null)))) {
+                throw new IllegalArgumentException(
+                        "cluster members must contain the same number of packets and exhibit the same packet direction " +
+                                "pattern"
+                );
+            }
         }
+        mEps = eps;
         mRouterWanIp = routerWanIp;
-
-        checkOverlaps(otherSignatures);
     }
 
     @Override
     public void gotPacket(PcapPacket packet) {
         // Present packet to TCP reassembler so that it can be mapped to a connection (if it is a TCP packet).
         mTcpReassembler.gotPacket(packet);
-    }
-
-    // TODO: UNDER CONSTRUCTION NOW!
-    private void checkOverlaps(List<List<List<List<PcapPacket>>>> otherSignatures) {
-        // Unpack the list
-        for(List<List<List<PcapPacket>>> listListListPcapPacket : otherSignatures) {
-            for(List<List<PcapPacket>> listListPcapPacket : listListListPcapPacket) {
-                for(List<PcapPacket> listPcapPacket : listListPcapPacket) {
-
-                }
-            }
-        }
     }
 
     /**
@@ -130,7 +131,42 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
         return mCluster;
     }
 
-    public void performDetection() {
+    public void performDetectionRangeBased() {
+        /*
+         * Let's start out simple by building a version that only works for signatures that do not span across multiple
+         * TCP conversations...
+         */
+        for (Conversation c : mTcpReassembler.getTcpConversations()) {
+            if (c.isTls() && c.getTlsApplicationDataPackets().isEmpty() || !c.isTls() && c.getPackets().isEmpty()) {
+                // Skip empty conversations.
+                continue;
+            }
+            List<PcapPacket> lowerBound = mCluster.get(0);
+            List<PcapPacket> upperBound = mCluster.get(1);
+            if (isTlsSequence(lowerBound) != c.isTls() || isTlsSequence(upperBound) != c.isTls()) {
+                // We consider it a mismatch if one is a TLS application data sequence and the other is not.
+                continue;
+            }
+            // Fetch set of packets to examine based on TLS or not.
+            List<PcapPacket> cPkts = c.isTls() ? c.getTlsApplicationDataPackets() : c.getPackets();
+            Optional<List<PcapPacket>> match;
+            while ((match = findSubsequenceInSequence(lowerBound, upperBound, cPkts, mClusterMemberDirections, null)).
+                    isPresent()) {
+                List<PcapPacket> matchSeq = match.get();
+                // Notify observers about the match.
+                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+                /*
+                 * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
+                 * signature sequence.
+                 */
+                int matchSeqEndIdx = cPkts.indexOf(matchSeq.get(matchSeq.size() - 1));
+                // We restart the search for the signature sequence immediately after that index, so truncate cPkts.
+                cPkts = cPkts.stream().skip(matchSeqEndIdx + 1).collect(Collectors.toList());
+            }
+        }
+    }
+
+    public void performDetectionConservative() {
         /*
          * Let's start out simple by building a version that only works for signatures that do not span across multiple
          * TCP conversations...
@@ -165,11 +201,12 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                      * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                      * signature sequence.
                      */
-                    int matchSeqEndIdx = cPkts.indexOf(matchSeq.get(matchSeq.size()-1));
+                    int matchSeqEndIdx = cPkts.indexOf(matchSeq.get(matchSeq.size() - 1));
                     // We restart the search for the signature sequence immediately after that index, so truncate cPkts.
                     cPkts = cPkts.stream().skip(matchSeqEndIdx + 1).collect(Collectors.toList());
                 }
             }
+
             /*
              * TODO:
              * if no item in cluster matches, also perform a distance-based matching to cover those cases where we did
@@ -262,6 +299,95 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                      * for live traces!
                      */
                     return Optional.of(sequence.subList(seqIdx - subsequence.size(), seqIdx));
+                }
+            } else {
+                // Mismatch.
+                if (subseqIdx > 0) {
+                    /*
+                     * If we managed to match parts of subsequence, we restart the search for subsequence in sequence at
+                     * the index of sequence where the current mismatch occurred. I.e., we must reset subseqIdx, but
+                     * leave seqIdx untouched.
+                     */
+                    subseqIdx = 0;
+                } else {
+                    /*
+                     * First packet of subsequence didn't match packet at seqIdx of sequence, so we move forward in
+                     * sequence, i.e., we continue the search for subsequence in sequence starting at index seqIdx+1 of
+                     * sequence.
+                     */
+                    seqIdx++;
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Overloading the method {@code findSubsequenceInSequence} for range-based matching. Instead of a sequence,
+     * we have sequences of lower and upper bounds.
+     *
+     * @param lowerBound The lower bound of the sequence we search for.
+     * @param upperBound The upper bound of the sequence we search for.
+     * @param subsequenceDirections The directions of packets in {@code subsequence} such that for all {@code i},
+     *                              {@code subsequenceDirections[i]} is the direction of the packet returned by
+     *                              {@code subsequence.get(i)}. May be set to {@code null}, in which this call will
+     *                              internally compute the packet directions.
+     * @param sequenceDirections The directions of packets in {@code sequence} such that for all {@code i},
+     *                           {@code sequenceDirections[i]} is the direction of the packet returned by
+     *                           {@code sequence.get(i)}. May be set to {@code null}, in which this call will internally
+     *                           compute the packet directions.
+     *
+     * @return An {@link Optional} containing the part of {@code sequence} that matches {@code subsequence}, or an empty
+     *         {@link Optional} if no part of {@code sequence} matches {@code subsequence}.
+     */
+    private Optional<List<PcapPacket>> findSubsequenceInSequence(List<PcapPacket> lowerBound,
+                                                                 List<PcapPacket> upperBound,
+                                                                 List<PcapPacket> sequence,
+                                                                 Conversation.Direction[] subsequenceDirections,
+                                                                 Conversation.Direction[] sequenceDirections) {
+        // Just do the checks for either lower or upper bound!
+        // TODO: For now we use just the lower bound
+        if (sequence.size() < lowerBound.size()) {
+            // If subsequence is longer, it cannot be contained in sequence.
+            return Optional.empty();
+        }
+        if (isTlsSequence(lowerBound) != isTlsSequence(sequence)) {
+            // We consider it a mismatch if one is a TLS application data sequence and the other is not.
+            return Optional.empty();
+        }
+        // If packet directions have not been precomputed by calling code, we need to construct them.
+        if (subsequenceDirections == null) {
+            subsequenceDirections = getPacketDirections(lowerBound, mRouterWanIp);
+        }
+        if (sequenceDirections == null) {
+            sequenceDirections = getPacketDirections(sequence, mRouterWanIp);
+        }
+        int subseqIdx = 0;
+        int seqIdx = 0;
+        while (seqIdx < sequence.size()) {
+            PcapPacket lowBndPkt = lowerBound.get(subseqIdx);
+            PcapPacket upBndPkt = upperBound.get(subseqIdx);
+            PcapPacket seqPkt = sequence.get(seqIdx);
+            // We only have a match if packet lengths and directions match.
+            // The packet lengths have to be in the range of [lowerBound - eps, upperBound+eps]
+            // TODO: Maybe we could do better here for the double to integer conversion?
+            int epsLowerBound = lowBndPkt.length() - (int) mEps;
+            int epsUpperBound = upBndPkt.length() + (int) mEps;
+            if (epsLowerBound <= seqPkt.getOriginalLength() &&
+                    seqPkt.getOriginalLength() <= epsUpperBound &&
+                    subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) {
+                // A match; advance both indices to consider next packet in subsequence vs. next packet in sequence.
+                subseqIdx++;
+                seqIdx++;
+                if (subseqIdx == lowerBound.size()) {
+                    // We managed to match the entire subsequence in sequence.
+                    // Return the sublist of sequence that matches subsequence.
+                    /*
+                     * TODO:
+                     * ASSUMES THE BACKING LIST (i.e., 'sequence') IS _NOT_ STRUCTURALLY MODIFIED, hence may not work
+                     * for live traces!
+                     */
+                    return Optional.of(sequence.subList(seqIdx - lowerBound.size(), seqIdx));
                 }
             } else {
                 // Mismatch.

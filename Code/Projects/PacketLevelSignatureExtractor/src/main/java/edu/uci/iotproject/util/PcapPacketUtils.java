@@ -469,6 +469,339 @@ public final class PcapPacketUtils {
     }
 
     /**
+     * Extract core point range in the form of {@code List} of {@code List} of {@code PcapPacket} objects.
+     *
+     * @param pairs The pairs for core points extraction.
+     * @param eps Epsilon value for the DBSCAN algorithm.
+     * @param minPts minPts value for the DBSCAN algorithm.
+     * @return A {@link List} of {@link List} of {@code PcapPacket} objects that contains core points range
+     *          in the first and second element.
+     */
+    public static List<List<PcapPacket>> extractRangeCorePoints(List<List<PcapPacket>> pairs, double eps, int minPts) {
+
+        // Initialize min and max value
+        PcapPacket minFirstElement = null;
+        PcapPacket maxFirstElement = null;
+        PcapPacket minSecondElement = null;
+        PcapPacket maxSecondElement = null;
+
+        // Iterate over pairs
+        for(List<PcapPacket> pair : pairs) {
+            if (isCorePoint(pair, pairs, eps, minPts)) {
+                // Record the first element
+                if (minFirstElement == null || pair.get(0).length() < minFirstElement.length()) {
+                    minFirstElement = pair.get(0);
+                }
+                if (maxFirstElement == null || pair.get(0).length() > maxFirstElement.length()) {
+                    maxFirstElement = pair.get(0);
+                }
+                // Record the second element
+                if (minSecondElement == null || pair.get(1).length() < minSecondElement.length()) {
+                    minSecondElement = pair.get(1);
+                }
+                if (maxSecondElement == null || pair.get(1).length() > maxSecondElement.length()) {
+                    maxSecondElement = pair.get(1);
+                }
+            }
+        }
+        List<PcapPacket> corePointLowerBound = new ArrayList<>();
+        corePointLowerBound.add(0, minFirstElement);
+        corePointLowerBound.add(1, minSecondElement);
+        List<PcapPacket> corePointUpperBound = new ArrayList<>();
+        corePointUpperBound.add(0, maxFirstElement);
+        corePointUpperBound.add(1, maxSecondElement);
+        // Combine lower and upper bounds
+        List<List<PcapPacket>> listRangeCorePoints = new ArrayList<>();
+        listRangeCorePoints.add(corePointLowerBound);
+        listRangeCorePoints.add(corePointUpperBound);
+
+        return listRangeCorePoints;
+    }
+
+    /**
+     * Test whether the {@code List} of {@code PcapPacket} objects is a core point.
+     *
+     * @param pair The pair to be tested.
+     * @param pairs All of the pairs.
+     * @param eps Epsilon value for the DBSCAN algorithm.
+     * @param minPts minPts value for the DBSCAN algorithm.
+     * @return True if the pair is a core point.
+     */
+    private static boolean isCorePoint(List<PcapPacket> pair, List<List<PcapPacket>> pairs, double eps, int minPts) {
+
+        int corePoints = 0;
+        int x1 = pair.get(0) == null ? 0 : pair.get(0).length();
+        int y1 = pair.get(1) == null ? 0 : pair.get(1).length();
+        // Check if we have enough core points
+        for(List<PcapPacket> pairInPairs : pairs) {
+            int x2 = pairInPairs.get(0) == null ? 0 : pairInPairs.get(0).length();
+            int y2 = pairInPairs.get(1) == null ? 0 : pairInPairs.get(1).length();
+            // Measure distance between x and y
+            double distance = Math.sqrt(Math.pow((double)(x2 - x1), 2) + Math.pow((double)(y2 - y1), 2));
+            // Increment core points count if this point is within eps
+            if (distance <= eps) {
+                corePoints++;
+            }
+        }
+        // Return true if the number of core points >= minPts
+        if (corePoints >= minPts) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Test the conservativeness of the signatures (basically whether we want strict or range-based matching).
+     * We go for a conservative approach (strict matching) when there is no range or there are ranges but the
+     * ranges overlap across multiple signatures, e.g., ON and OFF signatures.
+     *
+     * @param signature The signature we want to check and overwrite if needed.
+     * @param eps Epsilon value for the DBSCAN algorithm.
+     * @param otherSignatures Other signatures we want to check against this signature.
+     * @return A boolean that is True when range-based matching is used.
+     */
+    public static boolean isRangeBasedMatching(List<List<List<PcapPacket>>> signature, double eps,
+                                                List<List<List<PcapPacket>>> ...otherSignatures) {
+        // Check against multiple signatures
+        // TODO: Per March 2019 we only support ON and OFF signatures though
+        for(List<List<List<PcapPacket>>> otherSig : otherSignatures) {
+            // Do conservative strict matching if there is any overlap
+            if (isConservativeChecking(signature, otherSig, eps)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Test the conservativeness of the signatures (basically whether we want strict or range-based matching).
+     * We go for a conservative approach (strict matching) when there is no range or there are ranges but the
+     * ranges overlap across multiple signatures, e.g., ON and OFF signatures.
+     *
+     * @param signature The signature we want to check and overwrite if needed.
+     * @param corePointRange The core points range of this signature.
+     * @return A boolean that is True when range-based matching is used.
+     */
+    public static List<List<List<PcapPacket>>> useRangeBasedMatching(List<List<List<PcapPacket>>> signature,
+                                                                     List<List<List<PcapPacket>>> corePointRange) {
+        // Do range-based checking instead if there is no overlap
+        // Transform our signature into a range-based format
+        List<List<List<PcapPacket>>> rangeBasedSignature = getSequenceRanges(signature);
+        // We have to iterate sequence by sequence in the signature that has already gone through concatenation/merging
+        // And compare the packet lengths against the ones in corePointRange that are still in pairs/points
+        List<List<List<PcapPacket>>> finalSignature = new ArrayList<>();
+
+        // Construct the range-based signature
+        for(List<List<PcapPacket>> listOfSequences : rangeBasedSignature) {
+            List<PcapPacket> sequenceLowerBound = listOfSequences.get(0);
+            List<PcapPacket> sequenceUpperBound = listOfSequences.get(1);
+            List<List<PcapPacket>> newList = new ArrayList<>();
+            List<PcapPacket> newListLowerBound = new ArrayList<>();
+            List<PcapPacket> newListUpperBound = new ArrayList<>();
+            // Iterate over the packets
+            for(PcapPacket lowerBound : sequenceLowerBound) {
+                // Look for the lower and upper bounds from the signature
+                PcapPacket upperBound = sequenceUpperBound.get(sequenceLowerBound.indexOf(lowerBound));
+                // Look for the lower and upper bounds from the cluster analysis (core point range)
+                List<PcapPacket> bounds = getCorePointBounds(corePointRange, lowerBound, upperBound);
+                // Add into list
+                // The first element is the lower bound and the second element is the upper bound
+                newListLowerBound.add(bounds.get(0));
+                newListUpperBound.add(bounds.get(1));
+            }
+            newList.add(0, newListLowerBound);
+            newList.add(1, newListUpperBound);
+            finalSignature.add(newList);
+        }
+
+        return finalSignature;
+    }
+
+    /*
+     * Get the corresponding PcapPacket object for lower and upper bounds.
+     */
+    private static List<PcapPacket> getCorePointBounds(List<List<List<PcapPacket>>> corePointRange,
+                                                       PcapPacket lowerBound, PcapPacket upperBound) {
+
+        List<PcapPacket> listBounds = new ArrayList<>();
+        // Iterate over PcapPacket one by one
+        for(List<List<PcapPacket>> listOfListPcapPacket : corePointRange) {
+            List<PcapPacket> listCorePointLowerBound = listOfListPcapPacket.get(0);
+            List<PcapPacket> listCorePointUpperBound = listOfListPcapPacket.get(1);
+            for(PcapPacket corePointLowerBound : listCorePointLowerBound) {
+                PcapPacket corePointUpperBound =
+                        listCorePointUpperBound.get(listCorePointLowerBound.indexOf(corePointLowerBound));
+                // Return if the match for the core point bounds is found
+                // Basically the core point range has to be within the signature range
+                if (lowerBound.length() <= corePointLowerBound.length() &&
+                    corePointUpperBound.length() <= upperBound.length()) {
+                    listBounds.add(0, corePointLowerBound);
+                    listBounds.add(1, corePointUpperBound);
+                    return listBounds;
+                }
+                // Just skip the null elements
+                if (lowerBound == null && upperBound == null) {
+                    continue;
+                }
+            }
+        }
+        // Return null if not found
+        return null;
+    }
+
+    /*
+     * Get the corresponding PcapPacket object for upper bound.
+     */
+//    private static PcapPacket getUpperBound(List<List<List<PcapPacket>>> corePointRange, PcapPacket pcapPacket) {
+//
+//        // Iterate over PcapPacket one by one
+//        int counter = 0;
+//        for(List<List<PcapPacket>> listOfListPcapPacket : corePointRange) {
+//            List<PcapPacket> listUpperBound = listOfListPcapPacket.get(1);
+//            for(PcapPacket upperBound : listUpperBound) {
+//                // Return the counter matches
+//                if (counter == pcapPacketIndex) {
+//                    return upperBound;
+//                }
+//                if (upperBound == null) {
+//                    continue;
+//                }
+//                counter++;
+//            }
+//        }
+//
+//        return null;
+//    }
+
+    /**
+     * Check if there is any overlap between the signature stored in this class and another signature.
+     * Conditions:
+     * 1) If both signatures do not have any range, then we need to do conservative checking (return true).
+     * 2) If both signatures have the same number of packets/packet lengths, then we check the range; if the
+     *    numbers of packets/packet lengths are different then we assume that there is no overlap.
+     * 3) If there is any range in the signatures, then we need to check for overlap.
+     * 4) If there is overlap for EVERY packet/packet length, then we return true (conservative checking);
+     *    otherwise false (range-based checking).
+     *
+     * @param signature A {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects to be checked
+     *                  for overlaps with the other signature.
+     * @param otherSignature A {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects to be checked
+     *                       for overlaps with the signature.
+     * @param eps Epsilon value for the DBSCAN algorithm.
+     * @return A boolean that is true if there is an overlap; false otherwise.
+     */
+    public static boolean isConservativeChecking(List<List<List<PcapPacket>>> signature,
+                                                 List<List<List<PcapPacket>>> otherSignature,
+                                                 double eps) {
+
+        // Get the ranges of the two signatures
+        List<List<List<PcapPacket>>> signatureRanges = getSequenceRanges(signature);
+        List<List<List<PcapPacket>>> otherSignatureRanges = getSequenceRanges(otherSignature);
+        if (!isRangeBased(signatureRanges) && !isRangeBased(otherSignatureRanges)) {
+            // Conservative checking when there is no range
+            return true;
+        } else if(signatureRanges.size() != otherSignatureRanges.size()) {
+            // The two signatures have different numbers of packets/packet lengths
+            return false;
+        } else {
+            // There is range; check if there is overlap
+            return checkOverlap(signatureRanges, otherSignatureRanges, eps);
+        }
+    }
+
+    /* Find the sequence with the minimum packet lengths.
+     * The second-layer list should contain the minimum sequence for element 0 and maximum sequence for element 1.
+     */
+    private static List<List<List<PcapPacket>>> getSequenceRanges(List<List<List<PcapPacket>>> signature) {
+
+        // Start from the first index
+        List<List<List<PcapPacket>>> rangeBasedSequence = new ArrayList<>();
+        for(List<List<PcapPacket>> listListPcapPacket : signature) {
+            List<List<PcapPacket>> minMaxSequence = new ArrayList<>();
+            // Both searches start from index 0
+            List<PcapPacket> minSequence = new ArrayList<>(listListPcapPacket.get(0));
+            List<PcapPacket> maxSequence = new ArrayList<>(listListPcapPacket.get(0));
+            for(List<PcapPacket> listPcapPacket : listListPcapPacket) {
+                for(PcapPacket pcapPacket : listPcapPacket) {
+                    int index = listPcapPacket.indexOf(pcapPacket);
+                    // Set the new minimum if length at the index is minimum
+                    if (pcapPacket.length() < minSequence.get(index).length()) {
+                        minSequence.set(index, pcapPacket);
+                    }
+                    // Set the new maximum if length at the index is maximum
+                    if (pcapPacket.length() > maxSequence.get(index).length()) {
+                        maxSequence.set(index, pcapPacket);
+                    }
+                }
+            }
+            // minSequence as element 0 and maxSequence as element 1
+            minMaxSequence.add(minSequence);
+            minMaxSequence.add(maxSequence);
+            rangeBasedSequence.add(minMaxSequence);
+        }
+
+        return rangeBasedSequence;
+    }
+
+    /*
+     * Check for overlap since we have range in at least one of the signatures.
+     * Overlap is only true when all ranges overlap. We need to check in order.
+     */
+    private static boolean checkOverlap(List<List<List<PcapPacket>>> signatureRanges,
+                                 List<List<List<PcapPacket>>> otherSignatureRanges, double eps) {
+
+        for(List<List<PcapPacket>> listListPcapPacket : signatureRanges) {
+            // Lower bound of the range is in index 0
+            // Upper bound of the range is in index 1
+            int sequenceSetIndex = signatureRanges.indexOf(listListPcapPacket);
+            List<PcapPacket> minSequenceSignature = listListPcapPacket.get(0);
+            List<PcapPacket> maxSequenceSignature = listListPcapPacket.get(1);
+            for(PcapPacket pcapPacket : minSequenceSignature) {
+                // Get the lower and upper bounds of the current signature
+                int packetIndex = minSequenceSignature.indexOf(pcapPacket);
+                int lowerBound = pcapPacket.length();
+                int upperBound = maxSequenceSignature.get(packetIndex).length();
+                // Check for range overlap in the other signature!
+                // Check the packet/packet length at the same position
+                List<PcapPacket> minSequenceSignatureOther = otherSignatureRanges.get(sequenceSetIndex).get(0);
+                List<PcapPacket> maxSequenceSignatureOther = otherSignatureRanges.get(sequenceSetIndex).get(1);
+                int lowerBoundOther = minSequenceSignatureOther.get(packetIndex).length();
+                int upperBoundOther = maxSequenceSignatureOther.get(packetIndex).length();
+                if (!(lowerBoundOther-(int)eps <= lowerBound && lowerBound <= upperBoundOther+(int)eps) &&
+                    !(lowerBoundOther-(int)eps <= upperBound && upperBound <= upperBoundOther+(int)eps)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * Check and see if there is any range in the signatures
+     */
+    private static boolean isRangeBased(List<List<List<PcapPacket>>> signatureRanges) {
+
+        for(List<List<PcapPacket>> listListPcapPacket : signatureRanges) {
+            // Lower bound of the range is in index 0
+            // Upper bound of the range is in index 1
+            List<PcapPacket> minSequence = listListPcapPacket.get(0);
+            List<PcapPacket> maxSequence = listListPcapPacket.get(1);
+            for(PcapPacket pcapPacket : minSequence) {
+                int index = minSequence.indexOf(pcapPacket);
+                if (pcapPacket.length() != maxSequence.get(index).length()) {
+                    // If there is any packet length that differs in the minSequence
+                    // and maxSequence, then it is range-based
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Remove a sequence in a signature object.
      *
      * @param signatures A {@link List} of {@link List} of {@link List} of

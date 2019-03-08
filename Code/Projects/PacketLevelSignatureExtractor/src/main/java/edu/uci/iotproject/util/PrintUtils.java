@@ -65,10 +65,11 @@ public class PrintUtils {
     }
 
     /**
-     * Write the signature {@code List<List<List<PcapPacket>>>} into a file.
+     * Write the signature and cluster analysis {@code List<List<List<PcapPacket>>>} into a file.
      *
-     * After the DBSCAN algorithm derives the clusters from pairs, we save the signature in the form of list of
-     * packet pairs. We harvest the pairs and transform them back into a list of PcapPacket objects.
+     * After the DBSCAN algorithm derives the clusters from pairs, we save the signature and cluster analysis
+     * in the form of list of packet pairs. We harvest the pairs and transform them back into a list of PcapPacket
+     * objects.
      * We do not maintain the pairs in the form of {@code Cluster<PcapPacketPair>} objects because there might be
      * a situation where we could combine multiple PcapPacketPair objects into a longer signature, i.e., a string of
      * PcapPacket objects and not just a pair.
@@ -77,7 +78,7 @@ public class PrintUtils {
      *                 default file name {@code SERIALIZABLE_FILE_PATH}.
      * @param signature The {@link Cluster} objects in the form of list of {@code PcapPacket} objects.
      */
-    public static void serializeSignatureIntoFile(String fileName, List<List<List<PcapPacket>>> signature) {
+    public static void serializeIntoFile(String fileName, List<List<List<PcapPacket>>> signature) {
         if (fileName == null)
             fileName = SERIALIZABLE_FILE_PATH;
         try (ObjectOutputStream oos =
@@ -118,18 +119,12 @@ public class PrintUtils {
     /**
      * Read the list of list of packet pairs {@code List<List<List<PcapPacket>>>} from a file.
      *
-     * After the DBSCAN algorithm derives the clusters from pairs, we save the signature in the form of list of
-     * packet pairs. We harvest the pairs and transform them back into a list of PcapPacket objects.
-     * We do not maintain the pairs in the form of {@code Cluster<PcapPacketPair>} objects because there might be
-     * a situation where we could combine multiple PcapPacketPair objects into a longer signature, i.e., a string of
-     * PcapPacket objects and not just a pair.
-     *
      * @param fileName The path of the file in {@link String}. We could leave this one {@code null} if we wanted the
      *                 default file name {@code SERIALIZABLE_FILE_PATH}.
      * @return The list of list of list of {@link Cluster} objects ({@code List<List<List<PcapPacket>>>})
      *         that is read from file.
      */
-    public static List<List<List<PcapPacket>>> deserializeSignatureFromFile(String fileName) {
+    public static List<List<List<PcapPacket>>> deserializeFromFile(String fileName) {
         if (fileName == null)
             fileName = SERIALIZABLE_FILE_PATH;
         List<List<List<PcapPacket>>> ppListOfListOfList = null;

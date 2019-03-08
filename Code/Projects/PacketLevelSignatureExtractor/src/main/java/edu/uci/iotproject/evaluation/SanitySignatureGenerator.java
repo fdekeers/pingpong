@@ -109,7 +109,7 @@ public class SanitySignatureGenerator {
                 cluster.add(sequence);
                 signature.add(cluster);
                 // Output the signature to a file.
-                PrintUtils.serializeSignatureIntoFile(mSignatureOutputPath, signature);
+                PrintUtils.serializeIntoFile(mSignatureOutputPath, signature);
             }
         }
 

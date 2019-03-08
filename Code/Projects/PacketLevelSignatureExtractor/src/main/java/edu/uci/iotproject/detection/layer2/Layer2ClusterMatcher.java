@@ -36,7 +36,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      */
     public Layer2ClusterMatcher(List<List<PcapPacket>> cluster) {
         // Consider all flows if no flow filter specified.
-        this(cluster, flow -> true);
+        this(cluster, flow -> true, false);
     }
 
     /**
@@ -48,9 +48,11 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      *                   namely when the {@link Layer2FlowReassembler} notifies the {@link Layer2ClusterMatcher} about
      *                   the new flow. This functionality may for example come in handy when one only wants to search
      *                   for matches in the subset of flows that involves a specific (range of) MAC(s).
+     * @param isRangeBased The boolean that decides if it is range-based vs. strict matching.
      */
-    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, Function<Layer2Flow, Boolean> flowFilter) {
-        super(cluster);
+    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, Function<Layer2Flow, Boolean> flowFilter,
+                                boolean isRangeBased) {
+        super(cluster, isRangeBased);
         mFlowFilter = flowFilter;
     }
 
