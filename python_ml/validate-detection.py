@@ -55,14 +55,16 @@ path = "/scratch/July-2018/experimental_result/smarthome/"
 #device = "arlo-camera/timestamps"
 #fileExperiment = "arlo-camera-smarthome-nov-15-2018.timestamps"
 #fileDetection = "arlo-camera-smarthome-nov-15-2018.phone.eth0.detections"
+#fileDetection = "arlo-camera-smarthome-nov-15-2018.phone.eth0.detections.range-based.complete"
 
 # Nest Thermostat
 #device = "nest-thermostat/self-test"
 #fileExperiment = "nest-thermostat-nov-15-2018.timestamps"
 #fileDetection = "phone-side-detection"
-#device = "nest-thermostat/timestamps"
-#fileExperiment = "nest-thermostat-smarthome-nov-16-2018.timestamps"
+device = "nest-thermostat/timestamps"
+fileExperiment = "nest-thermostat-smarthome-nov-16-2018.timestamps"
 #fileDetection = "nest-thermostat-smarthome-nov-16-2018.phone.eth0.detections"
+fileDetection = "nest-thermostat-smarthome-nov-16-2018.phone.eth0.range-based.detections"
 
 # TP-Link Bulb
 #device = "tplink-bulb/self-test"
@@ -100,14 +102,14 @@ path = "/scratch/July-2018/experimental_result/smarthome/"
 #fileExperiment = "blossom-sprinkler-standalone-jan-14-2019.timestamps"
 #fileDetection = "phone-side-detection"
 #fileDetection = "device-side-detection"
-device = "blossom-sprinkler/timestamps"
+#device = "blossom-sprinkler/timestamps"
 #fileExperiment = "blossom-sprinkler-smarthome-jan-10-2019.timestamps"
 #fileExperiment = "blossom-sprinkler-smarthome-jan-11-2019.timestamps"
-fileExperiment = "blossom-sprinkler-smarthome-jan-14-2019.timestamps"
+#fileExperiment = "blossom-sprinkler-smarthome-jan-14-2019.timestamps"
 #fileDetection = "blossom-sprinkler-smarthome-jan-10-2019.device.wlan1.detections"
 #fileDetection = "blossom-sprinkler-smarthome-jan-11-2019.phone.wlan1.detections"
 #fileDetection = "blossom-sprinkler-smarthome-jan-14-2019.device.eth0.detections"
-fileDetection = "blossom-sprinkler-smarthome-jan-14-2019.phone.eth0.detections"
+#fileDetection = "blossom-sprinkler-smarthome-jan-14-2019.phone.eth0.detections"
 
 TIME_WINDOW = 15 # detection/signature window of 15 seconds
 #NEG_TIME_WINDOW = -15 # detection/signature window of 15 seconds
