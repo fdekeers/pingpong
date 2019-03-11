@@ -16,5 +16,4 @@ public interface Layer2FlowObserver {
      * @param newPacket The packet that was added to the flow.
      */
     void onNewPacket(Layer2Flow flow, PcapPacket newPacket);
-
 }

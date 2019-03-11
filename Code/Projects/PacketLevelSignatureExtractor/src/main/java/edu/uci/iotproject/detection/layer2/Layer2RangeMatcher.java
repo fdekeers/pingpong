@@ -10,42 +10,38 @@ import java.util.List;
 
 /**
  * Attempts to detect the presence of a specific packet sequence in the set of packets provided through multiple calls
- * to {@link #matchPacket(PcapPacket)}, considering only layer 2 information.
+ * to {@link #matchPacket(PcapPacket)}, considering only layer 2 information. This class has the same flavor as the
+ * {@link Layer2SequenceMatcher} class.
  *
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
+public class Layer2RangeMatcher extends Layer2AbstractMatcher {
+    /**
+     * The range this {@link Layer2RangeMatcher} is searching for.
+     */
+    private final List<PcapPacket> mLowerBound;
+    private final List<PcapPacket> mUpperBound;
+    private final double mEps;
 
     /**
-     * The sequence this {@link Layer2SequenceMatcher} is searching for.
+     * Create a {@code Layer2RangeMatcher}.
+     * @param lowerBound The lower bound of the sequence to match against (search for).
+     * @param upperBound The upper bound of the sequence to match against (search for).
+     * @param eps The epsilon value used in the DBSCAN algorithm.
      */
-    private final List<PcapPacket> mSequence;
-
-    /**
-     * Create a {@code Layer2SequenceMatcher}.
-     * @param sequence The sequence to match against (search for).
-     */
-    public Layer2SequenceMatcher(List<PcapPacket> sequence) {
-        super(sequence);
-        mSequence = sequence;
-        // Compute packet directions for sequence.
-        for (int i = 0; i < sequence.size(); i++) {
-            if (i == 0) {
-                // No previous packet; boolean parameter is ignored in this special case.
-                mPacketDirections[i] = getPacketDirection(null, true, sequence.get(i));
-            } else {
-                // Base direction marker on direction of previous packet.
-                PcapPacket prevPkt = mSequence.get(i-1);
-                boolean prevPktDirection = mPacketDirections[i-1];
-                mPacketDirections[i] = getPacketDirection(prevPkt, prevPktDirection, sequence.get(i));
-            }
-        }
+    public Layer2RangeMatcher(List<PcapPacket> lowerBound, List<PcapPacket> upperBound, double eps) {
+        // TODO: Just use the lower bound since both lower and upper bounds' packets essentially have the same direction
+        // TODO: for the same position in the array. Both arrays also have the same length.
+        super(lowerBound);
+        mLowerBound = lowerBound;
+        mUpperBound = upperBound;
+        mEps = eps;
     }
 
     /**
-     * Attempt to advance this {@code Layer2SequenceMatcher} by matching {@code packet} against the packet that this
-     * {@code Layer2SequenceMatcher} expects as the next packet of the sequence it is searching for.
+     * Attempt to advance this {@code Layer2RangeMatcher} by matching {@code packet} against the packet that this
+     * {@code Layer2RangeMatcher} expects as the next packet of the sequence it is searching for.
      * @param packet
      * @return {@code true} if this {@code Layer2SequenceMatcher} could advance by adding {@code packet} to its set of
      *         matched packets, {@code false} otherwise.
@@ -69,9 +65,13 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
         }
 
         // Get representative of the packet we expect to match next.
-        PcapPacket expected = mSequence.get(mMatchedPackets.size());
-        // First verify if the received packet has the length we're looking for.
-        if (packet.getOriginalLength() == expected.getOriginalLength()) {
+        PcapPacket expectedLowerBound = mLowerBound.get(mMatchedPackets.size());
+        PcapPacket expectedUpperBound = mUpperBound.get(mMatchedPackets.size());
+        // First verify if the received packet has the length we're looking for (the length should be within the range).
+//        if (expectedLowerBound.getOriginalLength() - (int) mEps <= packet.getOriginalLength() &&
+//            packet.getOriginalLength() <= expectedUpperBound.getOriginalLength() + (int) mEps){
+        if (expectedLowerBound.getOriginalLength() - (int) mEps <= packet.getOriginalLength() &&
+                packet.getOriginalLength() <= expectedUpperBound.getOriginalLength() + (int) mEps){
             // If this is the first packet, we only need to verify that its length is correct. Time constraints are
             // obviously satisfied as there are no previous packets. Furthermore, direction matches by definition as we
             // don't know the MAC of the device (or phone) in advance, so we can't enforce a rule saying "first packet
@@ -95,13 +95,13 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
                 return false;
             }
             if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
-                            plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
+                    plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
                 return false;
             }
             // If we made it here, it means that this packet has the expected length, direction, and obeys the timing
             // constraints, so we store it and advance.
             mMatchedPackets.add(packet);
-            if (mMatchedPackets.size() == mSequence.size()) {
+            if (mMatchedPackets.size() == mLowerBound.size()) {
                 // TODO report (to observers?) that we are done?
             }
             return true;
@@ -110,11 +110,14 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
     }
 
     public int getTargetSequencePacketCount() {
-        return mSequence.size();
+        return mLowerBound.size();
     }
 
-    public List<PcapPacket> getTargetSequence() {
-        return mSequence;
+    public List<PcapPacket> getTargetLowerBound() {
+        return mLowerBound;
     }
 
+    public List<PcapPacket> getTargetUpperBound() {
+        return mLowerBound;
+    }
 }

@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * @author Janus Varmarken {@literal <jvarmark@uci.edu>}
  * @author Rahmadi Trimananda {@literal <rtrimana@uci.edu>}
  */
-public class SignatureDetector implements PacketListener, ClusterMatcherObserver {
+public class Layer3SignatureDetector implements PacketListener, ClusterMatcherObserver {
 
     // Test client
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
@@ -242,15 +242,15 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/wlan1/arlo-camera.wlan1.local.pcap";
 //        final String inputPcapFile = path + "/experimental_result/standalone/arlo-camera/eth0/arlo-camera.eth0.local.pcap";
 //        final String inputPcapFile = path + "/experimental_result/smarthome/arlo-camera/wlan1/arlo-camera.wlan1.detection.pcap";
-        final String inputPcapFile = path + "/experimental_result/smarthome/arlo-camera/eth0/arlo-camera.eth0.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/arlo-camera/eth0/arlo-camera.eth0.detection.pcap";
 //        final String inputPcapFile = path + "/training/arlo-camera/eth0/arlo-camera.eth0.local.pcap";
         // Arlo Camera PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig";
-        final String onSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig.complete";
-        final String offSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig.complete";
-        final String onClusterAnalysisFile = path + "/experimental_result/standalone/arlo-camera/analysis/arlo-camera-onClusters-phone-side.cls";
-        final String offClusterAnalysisFile = path + "/experimental_result/standalone/arlo-camera/analysis/arlo-camera-offClusters-phone-side.cls";
+//        final String onSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig.complete";
+//        final String offSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig.complete";
+//        final String onClusterAnalysisFile = path + "/experimental_result/standalone/arlo-camera/analysis/arlo-camera-onClusters-phone-side.cls";
+//        final String offClusterAnalysisFile = path + "/experimental_result/standalone/arlo-camera/analysis/arlo-camera-offClusters-phone-side.cls";
 
         // TODO: NEST THERMOSTAT experiment
 //        final String inputPcapFile = path + "/training/nest-thermostat/wlan1/nest-thermostat.wlan1.local.pcap";
@@ -282,15 +282,15 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        final String onSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
 //        final String offSignatureFile = path + "/training/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
 
-////        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
-//        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
-////        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
-//        // Blossom Sprinkler DEVICE signatures
-////        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
-////        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
-////        final String onClusterAnalysisFile = path + "/experimental_result/standalone/blossom-sprinkler/analysis/blossom-sprinkler-onClusters-device-side.cls";
-////        final String offClusterAnalysisFile = path + "/experimental_result/standalone/blossom-sprinkler/analysis/blossom-sprinkler-offClusters-device-side.cls";
-//        // Blossom Sprinkler PHONE signatures
+//        final String inputPcapFile = path + "/experimental_result/standalone/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.local.pcap";
+        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/eth0/blossom-sprinkler.eth0.detection.pcap";
+//        final String inputPcapFile = path + "/experimental_result/smarthome/blossom-sprinkler/wlan1/blossom-sprinkler.wlan1.detection.pcap";
+        // Blossom Sprinkler DEVICE signatures
+        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-device-side.sig";
+        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-device-side.sig";
+        final String onClusterAnalysisFile = path + "/experimental_result/standalone/blossom-sprinkler/analysis/blossom-sprinkler-onClusters-device-side.cls";
+        final String offClusterAnalysisFile = path + "/experimental_result/standalone/blossom-sprinkler/analysis/blossom-sprinkler-offClusters-device-side.cls";
+        // Blossom Sprinkler PHONE signatures
 //        final String onSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig";
 //        final String offSignatureFile = path + "/experimental_result/standalone/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig";
 //        final String onClusterAnalysisFile = path + "/experimental_result/standalone/blossom-sprinkler/analysis/blossom-sprinkler-onClusters-phone-side.cls";
@@ -357,30 +357,6 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
 //        final String onClusterAnalysisFile = path + "/experimental_result/standalone/wemo-insight-plug/analysis/wemo-insight-plug-onClusters-phone-side.cls";
 //        final String offClusterAnalysisFile = path + "/experimental_result/standalone/wemo-insight-plug/analysis/wemo-insight-plug-offClusters-phone-side.cls";
 
-
-        /*
-        // WeMo Plug experiment
-        final String inputPcapFile = path + "/training/wemo-plug/wlan1/wemo-plug.wlan1.local.pcap";
-        // WeMo Plug PHONE signatures
-        final String onSignatureFile = path + "/training/wemo-plug/signatures/wemo-plug-onSignature-device-side.sig";
-        final String offSignatureFile = path + "/training/wemo-plug/signatures/wemo-plug-offSignature-device-side.sig";
-        // WeMo Insight Plug experiment
-        final String inputPcapFile = path + "/training/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
-        // WeMo Insight Plug PHONE signatures
-        final String onSignatureFile = path + "/training/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-device-side.sig";
-        final String offSignatureFile = path + "/training/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-device-side.sig";
-        */
-
-        // D-Link Siren experiment
-//        final String inputPcapFile = path + "/2018-08/dlink-siren/dlink-siren.wlan1.local.pcap";
-        // D-Link Siren DEVICE signatures
-        //final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-device.sig";
-        //final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-device.sig";
-        // D-Link Siren PHONE signatures
-//        final String onSignatureFile = path + "/2018-08/dlink-siren/onSignature-DLink-Siren-phone.sig";
-//        final String offSignatureFile = path + "/2018-08/dlink-siren/offSignature-DLink-Siren-phone.sig";
-
-
         // Output file names used (to make it easy to catch if one forgets to change them)
         System.out.println("ON signature file in use is " + onSignatureFile);
         System.out.println("OFF signature file in use is " + offSignatureFile);
@@ -408,9 +384,6 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
             offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
         }
 
-        // LAN
-//        SignatureDetector onDetector = new SignatureDetector(onSignature, null);
-//        SignatureDetector offDetector = new SignatureDetector(offSignature, null);
         // WAN
         SignatureDetector onDetector = new SignatureDetector(onSignature, "128.195.205.105",
                 0, isRangeBasedForOn, eps);
@@ -539,7 +512,7 @@ public class SignatureDetector implements PacketListener, ClusterMatcherObserver
         return listUserActionClean;
     }
 
-    public SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp,
+    public Layer3SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp,
                              int inclusionTimeMillis, boolean isRangeBased, double eps) {
         // note: doesn't protect inner lists from changes :'(
         mSignature = Collections.unmodifiableList(searchedSignature);

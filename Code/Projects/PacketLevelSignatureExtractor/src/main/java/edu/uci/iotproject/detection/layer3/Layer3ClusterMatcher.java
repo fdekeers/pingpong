@@ -67,11 +67,6 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
     private final String mRouterWanIp;
 
     /**
-     * Range-based vs. strict matching.
-     */
-    private final boolean mRangeBased;
-
-    /**
      * Epsilon value used by the DBSCAN algorithm; it is used again for range-based matching here.
      */
     private final double mEps;
@@ -81,6 +76,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
      * @param cluster The cluster that traffic is matched against.
      * @param routerWanIp The router's WAN IP if examining traffic captured at the ISP's point of view (used for
      *                    determining the direction of packets).
+     * @param eps The epsilon value used in the DBSCAN algorithm.
      * @param isRangeBased The boolean that decides if it is range-based vs. strict matching.
      * @param detectionObservers Client code that wants to get notified whenever the {@link Layer3ClusterMatcher} detects that
      *                          (a subset of) the examined traffic is similar to the traffic that makes up
@@ -103,8 +99,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
          * on in favor of performance. However, it is only run once (at instantiation), so the overhead may be warranted
          * in order to ensure correctness, especially during the development/debugging phase.
          */
-        mRangeBased = isRangeBased;
-        if (!mRangeBased) {    // Only when it is not range-based
+        if (!isRangeBased) {    // Only when it is not range-based
             if (mCluster.stream().
                     anyMatch(inner -> !Arrays.equals(mClusterMemberDirections, getPacketDirections(inner, null)))) {
                 throw new IllegalArgumentException(
