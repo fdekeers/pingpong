@@ -52,11 +52,12 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         // Parse required parameters.
-        if (args.length < 7) {
+//        if (args.length < 7) {
+        if (args.length < 5) {
             String errMsg = String.format("Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
                             "\n  inputPcapFile: the target of the detection" +
-                            "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
-                            "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
+//                            "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
+//                            "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
                             "\n  onSignatureFile: the file that contains the ON signature to search for" +
                             "\n  offSignatureFile: the file that contains the OFF signature to search for" +
                             "\n  resultsFile: where to write the results of the detection" +
@@ -77,13 +78,19 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             System.out.println(optParamsExplained);
             return;
         }
+//        final String pcapFile = args[0];
+//        final String onClusterAnalysisFile = args[1];
+//        final String offClusterAnalysisFile = args[2];
+//        final String onSignatureFile = args[3];
+//        final String offSignatureFile = args[4];
+//        final String resultsFile = args[5];
+//        final int signatureDuration = Integer.parseInt(args[6]);
+
         final String pcapFile = args[0];
-        final String onClusterAnalysisFile = args[1];
-        final String offClusterAnalysisFile = args[2];
-        final String onSignatureFile = args[3];
-        final String offSignatureFile = args[4];
-        final String resultsFile = args[5];
-        final int signatureDuration = Integer.parseInt(args[6]);
+        final String onSignatureFile = args[1];
+        final String offSignatureFile = args[2];
+        final String resultsFile = args[3];
+        final int signatureDuration = Integer.parseInt(args[4]);
 
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
@@ -110,8 +117,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // Include metadata as comments at the top
         PrintWriterUtils.println("# Detection results for:", resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println("# - inputPcapFile: " + pcapFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        PrintWriterUtils.println("# - onAnalysisFile: " + onClusterAnalysisFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        PrintWriterUtils.println("# - offAnalysisFile: " + offClusterAnalysisFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+//        PrintWriterUtils.println("# - onAnalysisFile: " + onClusterAnalysisFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+//        PrintWriterUtils.println("# - offAnalysisFile: " + offClusterAnalysisFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println("# - onSignatureFile: " + onSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println("# - offSignatureFile: " + offSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         resultsWriter.flush();
@@ -121,23 +128,23 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeFromFile(onSignatureFile);
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeFromFile(offSignatureFile);
         // Load signature analyses
-        List<List<List<PcapPacket>>> onClusterAnalysis = PrintUtils.deserializeFromFile(onClusterAnalysisFile);
-        List<List<List<PcapPacket>>> offClusterAnalysis = PrintUtils.deserializeFromFile(offClusterAnalysisFile);
+//        List<List<List<PcapPacket>>> onClusterAnalysis = PrintUtils.deserializeFromFile(onClusterAnalysisFile);
+//        List<List<List<PcapPacket>>> offClusterAnalysis = PrintUtils.deserializeFromFile(offClusterAnalysisFile);
         // TODO: FOR NOW WE DECIDE PER SIGNATURE AND THEN WE OR THE BOOLEANS
         // TODO: SINCE WE ONLY HAVE 2 SIGNATURES FOR NOW (ON AND OFF), THEN IT IS USUALLY EITHER RANGE-BASED OR
         // TODO: STRICT MATCHING
         // Check if we should use range-based matching
 //        boolean isRangeBasedForOn = PcapPacketUtils.isRangeBasedMatching(onSignature, eps, offSignature);
 //        boolean isRangeBasedForOff = PcapPacketUtils.isRangeBasedMatching(offSignature, eps, onSignature);
+//        // Update the signature with ranges if it is range-based
+//        if (isRangeBasedForOn && isRangeBasedForOff) {
+//            onSignature = PcapPacketUtils.useRangeBasedMatching(onSignature, onClusterAnalysis);
+//            offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
+//        }
         // TODO: WE DON'T DO RANGE-BASED FOR NOW BECAUSE THE RESULTS ARE TERRIBLE FOR LAYER 2 MATCHING
         // TODO: THIS WOULD ONLY WORK FOR SIGNATURES LONGER THAN 2 PACKETS
         boolean isRangeBasedForOn = false;
         boolean isRangeBasedForOff = false;
-        // Update the signature with ranges if it is range-based
-        if (isRangeBasedForOn && isRangeBasedForOff) {
-            onSignature = PcapPacketUtils.useRangeBasedMatching(onSignature, onClusterAnalysis);
-            offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
-        }
         Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
                 new Layer2SignatureDetector(onSignature, isRangeBasedForOn, eps) :
                 new Layer2SignatureDetector(onSignature, onSignatureMacFilters, signatureDuration, isRangeBasedForOn, eps);

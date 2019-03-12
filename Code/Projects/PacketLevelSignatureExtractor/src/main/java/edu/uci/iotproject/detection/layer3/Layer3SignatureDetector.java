@@ -104,9 +104,9 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
 
         // WAN
         Layer3SignatureDetector onDetector = new Layer3SignatureDetector(onSignature, ROUTER_WAN_IP,
-                0, isRangeBasedForOn, eps);
+                signatureDuration, isRangeBasedForOn, eps);
         Layer3SignatureDetector offDetector = new Layer3SignatureDetector(offSignature, ROUTER_WAN_IP,
-                0, isRangeBasedForOff, eps);
+                signatureDuration, isRangeBasedForOff, eps);
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
@@ -170,10 +170,15 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         // Output the detected events
         detectedEvents.forEach(outputter);
 
-        System.out.println("Number of detected events of type " + UserAction.Type.TOGGLE_ON + ": " +
-                detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_ON).count());
-        System.out.println("Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
-                detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count());
+        String resultOn = "Number of detected events of type " + UserAction.Type.TOGGLE_ON + ": " +
+                detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_ON).count();
+        String resultOff = "Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
+                detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count();
+        PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        System.out.println(resultOn);
+        System.out.println(resultOff);
+
 
         // Flush output to results file and close it.
         resultsWriter.flush();
