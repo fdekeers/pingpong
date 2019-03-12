@@ -650,30 +650,6 @@ public final class PcapPacketUtils {
         return null;
     }
 
-    /*
-     * Get the corresponding PcapPacket object for upper bound.
-     */
-//    private static PcapPacket getUpperBound(List<List<List<PcapPacket>>> corePointRange, PcapPacket pcapPacket) {
-//
-//        // Iterate over PcapPacket one by one
-//        int counter = 0;
-//        for(List<List<PcapPacket>> listOfListPcapPacket : corePointRange) {
-//            List<PcapPacket> listUpperBound = listOfListPcapPacket.get(1);
-//            for(PcapPacket upperBound : listUpperBound) {
-//                // Return the counter matches
-//                if (counter == pcapPacketIndex) {
-//                    return upperBound;
-//                }
-//                if (upperBound == null) {
-//                    continue;
-//                }
-//                counter++;
-//            }
-//        }
-//
-//        return null;
-//    }
-
     /**
      * Check if there is any overlap between the signature stored in this class and another signature.
      * Conditions:
