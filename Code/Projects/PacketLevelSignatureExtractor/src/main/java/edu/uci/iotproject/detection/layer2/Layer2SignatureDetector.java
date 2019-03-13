@@ -78,6 +78,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             System.out.println(optParamsExplained);
             return;
         }
+        // TODO: We could take 7 inputs if we decided to use the cluster analyses.
 //        final String pcapFile = args[0];
 //        final String onClusterAnalysisFile = args[1];
 //        final String offClusterAnalysisFile = args[2];

@@ -46,7 +46,7 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
     private static String ROUTER_WAN_IP = "128.195.205.105";
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
-        if (args.length < 7) {
+        if (args.length < 8) {
             String errMsg = String.format("Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
                             "\n  inputPcapFile: the target of the detection" +
                             "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
@@ -54,7 +54,8 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
                             "\n  onSignatureFile: the file that contains the ON signature to search for" +
                             "\n  offSignatureFile: the file that contains the OFF signature to search for" +
                             "\n  resultsFile: where to write the results of the detection" +
-                            "\n  signatureDuration: the maximum duration of signature detection",
+                            "\n  signatureDuration: the maximum duration of signature detection" +
+                            "\n  epsilon: the epsilon value for the DBSCAN algorithm",
                     Layer3SignatureDetector.class.getSimpleName());
             System.out.println(errMsg);
             return;
@@ -66,6 +67,7 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         final String offSignatureFile = args[4];
         final String resultsFile = args[5];
         final int signatureDuration = Integer.parseInt(args[6]);
+        final double eps = Double.parseDouble(args[7]);
 
         // Prepare file outputter.
         File outputFile = new File(resultsFile);
@@ -80,9 +82,6 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         PrintWriterUtils.println("# - offSignatureFile: " + offSignatureFile, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         resultsWriter.flush();
 
-        // Specify epsilon
-        // TODO: This would be specified through command line option
-        double eps = 10.0;
         // Load signatures
         List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeFromFile(onSignatureFile);
         List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeFromFile(offSignatureFile);
@@ -96,17 +95,27 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         // Check if we should use range-based matching
         boolean isRangeBasedForOn = PcapPacketUtils.isRangeBasedMatching(onSignature, eps, offSignature);
         boolean isRangeBasedForOff = PcapPacketUtils.isRangeBasedMatching(offSignature, eps, onSignature);
+//        boolean isRangeBasedForOn = false;
+//        boolean isRangeBasedForOff = false;
         // Update the signature with ranges if it is range-based
         if (isRangeBasedForOn && isRangeBasedForOff) {
             onSignature = PcapPacketUtils.useRangeBasedMatching(onSignature, onClusterAnalysis);
             offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
         }
-
         // WAN
+        double onEps = eps;
+        double offEps = eps;
+        // IFF the signature is just one pair of packets then we set EPS to 0 to make it tighter
+        if (onSignature.get(0).size() == 1 && onSignature.get(0).get(0).size() == 2) {
+            onEps = 0;
+        }
+        if (offSignature.get(0).size() == 1 && offSignature.get(0).get(0).size() == 2) {
+            offEps = 0;
+        }
         Layer3SignatureDetector onDetector = new Layer3SignatureDetector(onSignature, ROUTER_WAN_IP,
-                signatureDuration, isRangeBasedForOn, eps);
+                signatureDuration, isRangeBasedForOn, onEps);
         Layer3SignatureDetector offDetector = new Layer3SignatureDetector(offSignature, ROUTER_WAN_IP,
-                signatureDuration, isRangeBasedForOff, eps);
+                signatureDuration, isRangeBasedForOff, offEps);
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
@@ -128,6 +137,7 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
             // String output = String.format("%s",
             // dateTimeFormatter.format(ua.getTimestamp()));
             // System.out.println(output);
+            PrintWriterUtils.println(ua, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         };
 
         // Let's create observers that construct a UserAction representing the detected event.
@@ -135,13 +145,12 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         onDetector.addObserver((searched, match) -> {
             PcapPacket firstPkt = match.get(0).get(0);
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, firstPkt.getTimestamp());
-            PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
             detectedEvents.add(event);
         });
         offDetector.addObserver((searched, match) -> {
             PcapPacket firstPkt = match.get(0).get(0);
             UserAction event = new UserAction(UserAction.Type.TOGGLE_OFF, firstPkt.getTimestamp());
-            PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+            //PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
             detectedEvents.add(event);
         });
 

@@ -57,11 +57,11 @@ public class SignatureGenerator {
 //        final String triggerTimesFile = path + "/2018-10/dlink-plug/dlink-plug-oct-17-2018.timestamps";
 //        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
         // TODO: EXPERIMENT - November 7, 2018
-//        final String inputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
-//        final String outputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug-processed.pcap";
-//        final String triggerTimesFile = path + "/experimental_result/standalone/dlink-plug/timestamps/dlink-plug-nov-7-2018.timestamps";
-////        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
-//        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
+        final String inputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug.wlan1.local.pcap";
+        final String outputPcapFile = path + "/experimental_result/standalone/dlink-plug/wlan1/dlink-plug-processed.pcap";
+        final String triggerTimesFile = path + "/experimental_result/standalone/dlink-plug/timestamps/dlink-plug-nov-7-2018.timestamps";
+//        final String deviceIp = "192.168.1.199"; // .246 == phone; .199 == dlink plug?
+        final String deviceIp = "192.168.1.246"; // .246 == phone; .199 == dlink plug?
 
         // 2) TODO: TP-LINK PLUG July 25 experiment
 //        final String inputPcapFile = path + "/2018-07/tplink/tplink.wlan1.local.pcap";
@@ -125,11 +125,11 @@ public class SignatureGenerator {
 //        final String triggerTimesFile = path + "/2018-07/wemoinsight/wemo-insight-july-31-2018.timestamps";
 //        final String deviceIp = "192.168.1.135";
         // TODO: EXPERIMENT - November 21, 2018
-        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
-        final String outputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug-processed.pcap";
-        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-insight-plug/timestamps/wemo-insight-plug-nov-21-2018.timestamps";
-//        final String deviceIp = "192.168.1.145"; // .246 == phone; .135 == WeMo Insight
-        final String deviceIp = "192.168.1.246"; // .246 == phone; .135 == WeMo Insight
+//        final String inputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap";
+//        final String outputPcapFile = path + "/experimental_result/standalone/wemo-insight-plug/wlan1/wemo-insight-plug-processed.pcap";
+//        final String triggerTimesFile = path + "/experimental_result/standalone/wemo-insight-plug/timestamps/wemo-insight-plug-nov-21-2018.timestamps";
+////        final String deviceIp = "192.168.1.145"; // .246 == phone; .135 == WeMo Insight
+//        final String deviceIp = "192.168.1.246"; // .246 == phone; .135 == WeMo Insight
 
         // 6) TODO: TP-LINK BULB August 1 experiment
 //        final String inputPcapFile = path + "/2018-08/tplink-bulb/tplinkbulb.wlan1.local.pcap";
@@ -327,8 +327,8 @@ public class SignatureGenerator {
 //        final String offSignatureFile = path + "/experimental_result/standalone/st-plug/signatures/st-plug-offSignature-phone-side.sig";
         // Arlo Q
 //        final String triggerTimesFile = path + "/experimental_result/standalone/arlo-camera/timestamps/arlo-camera-nov-13-2018.timestamps";
-//        final String onSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig";
-//        final String offSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig";
+//        final String onSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-onSignature-phone-side.complete.sig";
+//        final String offSignatureFile = path + "/experimental_result/standalone/arlo-camera/signatures/arlo-camera-offSignature-phone-side.complete.sig";
         // Nest thermostat
 //        final String triggerTimesFile = path + "/experimental_result/standalone/nest-thermostat/timestamps/nest-thermostat-nov-15-2018.timestamps";
 //        final String onSignatureFile = path + "/experimental_result/standalone/nest-thermostat/signatures/nest-thermostat-onSignature-phone-side.sig";
@@ -363,8 +363,8 @@ public class SignatureGenerator {
 //        System.out.println("ON signature file in use is " + onSignatureFile);
 //        System.out.println("OFF signature file in use is " + offSignatureFile);
 //
-//        List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeSignatureFromFile(onSignatureFile);
-//        List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeSignatureFromFile(offSignatureFile);
+//        List<List<List<PcapPacket>>> onSignature = PrintUtils.deserializeFromFile(onSignatureFile);
+//        List<List<List<PcapPacket>>> offSignature = PrintUtils.deserializeFromFile(offSignatureFile);
 //
 //        List<Instant> signatureTimestamps = new ArrayList<>();
 //        // Load ON signature last packet's timestamp
@@ -924,51 +924,8 @@ public class SignatureGenerator {
         }
 
         return isRange;
-//        if (!isRangeBased(signatureRanges) && !isRangeBased(otherSignatureRanges)) {
-//            // Conservative checking when there is no range
-//            return true;
-//        } else if(signatureRanges.size() != otherSignatureRanges.size()) {
-//            // The two signatures have different numbers of packets/packet lengths
-//            return false;
-//        } else {
-//            // There is range; check if there is overlap
-//            return checkOverlap(signatureRanges, otherSignatureRanges);
-//        }
     }
 
-    /*
-     * Check for overlap since we have range in at least one of the signatures.
-     * Overlap is only true when all ranges overlap. We need to check in order.
-     */
-//    private boolean checkOverlap(List<List<List<PcapPacket>>> signatureRanges,
-//                                 List<List<List<PcapPacket>>> otherSignatureRanges) {
-//
-//        for(List<List<PcapPacket>> listListPcapPacket : signatureRanges) {
-//            // Lower bound of the range is in index 0
-//            // Upper bound of the range is in index 1
-//            int sequenceSetIndex = signatureRanges.indexOf(listListPcapPacket);
-//            List<PcapPacket> minSequenceSignature = listListPcapPacket.get(0);
-//            List<PcapPacket> maxSequenceSignature = listListPcapPacket.get(1);
-//            for(PcapPacket pcapPacket : minSequenceSignature) {
-//                // Get the lower and upper bounds of the current signature
-//                int packetIndex = minSequenceSignature.indexOf(pcapPacket);
-//                int lowerBound = pcapPacket.length();
-//                int upperBound = maxSequenceSignature.get(packetIndex).length();
-//                // Check for range overlap in the other signature!
-//                // Check the packet/packet length at the same position
-//                List<PcapPacket> minSequenceSignatureOther = otherSignatureRanges.get(sequenceSetIndex).get(0);
-//                List<PcapPacket> maxSequenceSignatureOther = otherSignatureRanges.get(sequenceSetIndex).get(1);
-//                int lowerBoundOther = minSequenceSignatureOther.get(packetIndex).length();
-//                int upperBoundOther = maxSequenceSignatureOther.get(packetIndex).length();
-//                if (!(lowerBoundOther <= lowerBound && lowerBound <= upperBoundOther) &&
-//                    !(lowerBoundOther <= upperBound && upperBound <= upperBoundOther)) {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        return true;
-//    }
 
     /*
      * Check and see if there is any range in the signatures
@@ -992,40 +949,6 @@ public class SignatureGenerator {
 
         return false;
     }
-
-//    /* Find the sequence with the minimum packet lengths.
-//     * The second-layer list should contain the minimum sequence for element 0 and maximum sequence for element 1.
-//     */
-//    private List<List<List<PcapPacket>>> getSequenceRanges(List<List<List<PcapPacket>>> signature) {
-//
-//        // Start from the first index
-//        List<List<List<PcapPacket>>> rangeBasedSequence = new ArrayList<>();
-//        for (List<List<PcapPacket>> listListPcapPacket : signature) {
-//            List<List<PcapPacket>> minMaxSequence = new ArrayList<>();
-//            // Both searches start from index 0
-//            List<PcapPacket> minSequence = new ArrayList<>(listListPcapPacket.get(0));
-//            List<PcapPacket> maxSequence = new ArrayList<>(listListPcapPacket.get(0));
-//            for (List<PcapPacket> listPcapPacket : listListPcapPacket) {
-//                for (PcapPacket pcapPacket : listPcapPacket) {
-//                    int index = listPcapPacket.indexOf(pcapPacket);
-//                    // Set the new minimum if length at the index is minimum
-//                    if (pcapPacket.length() < minSequence.get(index).length()) {
-//                        minSequence.set(index, pcapPacket);
-//                    }
-//                    // Set the new maximum if length at the index is maximum
-//                    if (pcapPacket.length() > maxSequence.get(index).length()) {
-//                        maxSequence.set(index, pcapPacket);
-//                    }
-//                }
-//            }
-//            // minSequence as element 0 and maxSequence as element 1
-//            minMaxSequence.add(minSequence);
-//            minMaxSequence.add(maxSequence);
-//            rangeBasedSequence.add(minMaxSequence);
-//        }
-//
-//        return rangeBasedSequence;
-//    }
 }
 
 
