@@ -106,10 +106,10 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         double onEps = eps;
         double offEps = eps;
         // IFF the signature is just one pair of packets then we set EPS to 0 to make it tighter
-        if (onSignature.get(0).size() == 1 && onSignature.get(0).get(0).size() == 2) {
+        if (onSignature.size() == 1 && onSignature.get(0).size() == 2) {
             onEps = 0;
         }
-        if (offSignature.get(0).size() == 1 && offSignature.get(0).get(0).size() == 2) {
+        if (offSignature.size() == 1 && offSignature.get(0).size() == 2) {
             offEps = 0;
         }
         Layer3SignatureDetector onDetector = new Layer3SignatureDetector(onSignature, ROUTER_WAN_IP,
