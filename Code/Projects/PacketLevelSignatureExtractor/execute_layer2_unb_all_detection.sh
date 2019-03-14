@@ -4,7 +4,6 @@
 
 # Arg1 should point to the UNB trace (PCAP w/o any expected events).
 PCAP_FILE=$1
-
 readonly PCAP_FILE
 
 # Arg2 should point to the base directory  for signature files (i.e., /some/local/path/experimental_result/standalone)
