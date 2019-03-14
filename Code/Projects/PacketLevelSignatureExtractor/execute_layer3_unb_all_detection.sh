@@ -17,11 +17,11 @@ readonly OUTPUT_DIR
 # ==================================================== ARLO CAMERA =====================================================
 # Has no device side signature.
 
-# PHONE SIDE (TODO: may possibly be the .incomplete signatures)
+# PHONE SIDE
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/arlo-camera/analysis/arlo-camera-onClusters-phone-side.cls"
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/arlo-camera/analysis/arlo-camera-offClusters-phone-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-onSignature-phone-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-onSignature-phone-side.complete.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-offSignature-phone-side.complete.sig"
 RESULTS_FILE="$OUTPUT_DIR/arlo-camera/arlo-camera.eth0.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="548"
 EPSILON="10.0"
