@@ -674,7 +674,10 @@ public final class PcapPacketUtils {
         // Get the ranges of the two signatures
         List<List<List<PcapPacket>>> signatureRanges = getSequenceRanges(signature);
         List<List<List<PcapPacket>>> otherSignatureRanges = getSequenceRanges(otherSignature);
-        if (!isRangeBased(signatureRanges) && !isRangeBased(otherSignatureRanges)) {
+        if (signature.size() == 1 && signature.get(0).get(0).size() == 2) {
+            // The signature only has 2 packets
+            return true;
+        } else if (!isRangeBased(signatureRanges) && !isRangeBased(otherSignatureRanges)) {
             // Conservative checking when there is no range
             return true;
         } else if(signatureRanges.size() != otherSignatureRanges.size()) {

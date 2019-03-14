@@ -24,33 +24,6 @@ import static edu.uci.iotproject.util.PcapPacketUtils.*;
  */
 public class Layer3ClusterMatcher extends AbstractClusterMatcher implements PacketListener {
 
-    // Test client
-    public static void main(String[] args) throws PcapNativeException, NotOpenException {
-
-//        String path = "/scratch/July-2018"; // Rahmadi
-//        String path = "/Users/varmarken/temp/UCI IoT Project/experiments"; // Janus
-//        final String inputPcapFile = path + "/2018-07/dlink/dlink.wlan1.local.pcap";
-//        final String signatureFile = path + "/2018-07/dlink/offSignature1.sig";
-//
-//        List<List<PcapPacket>> signature = PrintUtils.deserializeClustersFromFile(signatureFile);
-//        Layer3ClusterMatcher clusterMatcher = new Layer3ClusterMatcher(signature, null,
-//                (sig, match) -> System.out.println(
-//                        String.format("[ !!! SIGNATURE DETECTED AT %s !!! ]",
-//                                match.get(0).getTimestamp().atZone(ZoneId.of("America/Los_Angeles")))
-//                )
-//        );
-//
-//        PcapHandle handle;
-//        try {
-//            handle = Pcaps.openOffline(inputPcapFile, PcapHandle.TimestampPrecision.NANO);
-//        } catch (PcapNativeException pne) {
-//            handle = Pcaps.openOffline(inputPcapFile);
-//        }
-//        PcapHandleReader reader = new PcapHandleReader(handle, p -> true, clusterMatcher);
-//        reader.readFromHandle();
-//        clusterMatcher.performDetection();
-    }
-
     /**
      * The ordered directions of packets in the sequences that make up {@link #mCluster}.
      */

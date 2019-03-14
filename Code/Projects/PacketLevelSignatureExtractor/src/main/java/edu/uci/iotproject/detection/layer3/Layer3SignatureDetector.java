@@ -95,27 +95,18 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         // Check if we should use range-based matching
         boolean isRangeBasedForOn = PcapPacketUtils.isRangeBasedMatching(onSignature, eps, offSignature);
         boolean isRangeBasedForOff = PcapPacketUtils.isRangeBasedMatching(offSignature, eps, onSignature);
-//        boolean isRangeBasedForOn = false;
-//        boolean isRangeBasedForOff = false;
         // Update the signature with ranges if it is range-based
-        if (isRangeBasedForOn && isRangeBasedForOff) {
+        if (isRangeBasedForOn) {
             onSignature = PcapPacketUtils.useRangeBasedMatching(onSignature, onClusterAnalysis);
+        }
+        if (isRangeBasedForOff) {
             offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
         }
         // WAN
-        double onEps = eps;
-        double offEps = eps;
-        // IFF the signature is just one pair of packets then we set EPS to 0 to make it tighter
-        if (onSignature.size() == 1 && onSignature.get(0).size() == 2) {
-            onEps = 0;
-        }
-        if (offSignature.size() == 1 && offSignature.get(0).size() == 2) {
-            offEps = 0;
-        }
         Layer3SignatureDetector onDetector = new Layer3SignatureDetector(onSignature, ROUTER_WAN_IP,
-                signatureDuration, isRangeBasedForOn, onEps);
+                signatureDuration, isRangeBasedForOn, eps);
         Layer3SignatureDetector offDetector = new Layer3SignatureDetector(offSignature, ROUTER_WAN_IP,
-                signatureDuration, isRangeBasedForOff, offEps);
+                signatureDuration, isRangeBasedForOff, eps);
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
@@ -164,11 +155,14 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         reader.readFromHandle();
 
         // TODO: need a better way of triggering detection than this...
-        if (isRangeBasedForOn && isRangeBasedForOff) {
+        if (isRangeBasedForOn) {
             onDetector.mClusterMatchers.forEach(cm -> cm.performDetectionRangeBased());
-            offDetector.mClusterMatchers.forEach(cm -> cm.performDetectionRangeBased());
         } else {
             onDetector.mClusterMatchers.forEach(cm -> cm.performDetectionConservative());
+        }
+        if (isRangeBasedForOff) {
+            offDetector.mClusterMatchers.forEach(cm -> cm.performDetectionRangeBased());
+        } else {
             offDetector.mClusterMatchers.forEach(cm -> cm.performDetectionConservative());
         }
 
@@ -185,9 +179,6 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count();
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        System.out.println(resultOn);
-        System.out.println(resultOff);
-
 
         // Flush output to results file and close it.
         resultsWriter.flush();
