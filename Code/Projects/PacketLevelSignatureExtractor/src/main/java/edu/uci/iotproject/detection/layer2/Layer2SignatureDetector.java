@@ -52,12 +52,11 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         // Parse required parameters.
-//        if (args.length < 7) {
-        if (args.length < 5) {
+        if (args.length < 8) {
             String errMsg = String.format("Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
                             "\n  inputPcapFile: the target of the detection" +
-//                            "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
-//                            "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
+                            "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
+                            "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
                             "\n  onSignatureFile: the file that contains the ON signature to search for" +
                             "\n  offSignatureFile: the file that contains the OFF signature to search for" +
                             "\n  resultsFile: where to write the results of the detection" +
