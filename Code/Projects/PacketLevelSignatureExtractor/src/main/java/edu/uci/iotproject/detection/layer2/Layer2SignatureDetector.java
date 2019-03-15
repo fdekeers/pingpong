@@ -134,12 +134,12 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // TODO: SINCE WE ONLY HAVE 2 SIGNATURES FOR NOW (ON AND OFF), THEN IT IS USUALLY EITHER RANGE-BASED OR
         // TODO: STRICT MATCHING
         // Check if we should use range-based matching
-//        boolean isRangeBasedForOn = PcapPacketUtils.isRangeBasedMatching(onSignature, eps, offSignature);
-//        boolean isRangeBasedForOff = PcapPacketUtils.isRangeBasedMatching(offSignature, eps, onSignature);
+        boolean isRangeBasedForOn = PcapPacketUtils.isRangeBasedMatching(onSignature, eps, offSignature);
+        boolean isRangeBasedForOff = PcapPacketUtils.isRangeBasedMatching(offSignature, eps, onSignature);
         // TODO: WE DON'T DO RANGE-BASED FOR NOW BECAUSE THE RESULTS ARE TERRIBLE FOR LAYER 2 MATCHING
         // TODO: THIS WOULD ONLY WORK FOR SIGNATURES LONGER THAN 2 PACKETS
-        boolean isRangeBasedForOn = false;
-        boolean isRangeBasedForOff = false;
+//        boolean isRangeBasedForOn = false;
+//        boolean isRangeBasedForOff = false;
         // Update the signature with ranges if it is range-based
         if (isRangeBasedForOn) {
             onSignature = PcapPacketUtils.useRangeBasedMatching(onSignature, onClusterAnalysis);
@@ -148,10 +148,10 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
         }
         Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
-                new Layer2SignatureDetector(onSignature, isRangeBasedForOn, eps) :
+                new Layer2SignatureDetector(onSignature, signatureDuration, isRangeBasedForOn, eps) :
                 new Layer2SignatureDetector(onSignature, onSignatureMacFilters, signatureDuration, isRangeBasedForOn, eps);
         Layer2SignatureDetector offDetector = offSignatureMacFilters == null ?
-                new Layer2SignatureDetector(offSignature, isRangeBasedForOff, eps) :
+                new Layer2SignatureDetector(offSignature, signatureDuration, isRangeBasedForOff, eps) :
                 new Layer2SignatureDetector(offSignature, offSignatureMacFilters, signatureDuration, isRangeBasedForOff, eps);
         final List<UserAction> detectedEvents = new ArrayList<>();
         onDetector.addObserver((signature, match) -> {
@@ -162,9 +162,9 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         offDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_OFF, match.get(0).get(0).getTimestamp());
             PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-            for (PcapPacket pcap : match.get(0)) {
-                System.out.println(pcap.length() + " -> " + pcap.getTimestamp());
-            }
+//            for (PcapPacket pcap : match.get(0)) {
+//                System.out.println(pcap.length() + " -> " + pcap.getTimestamp());
+//            }
             detectedEvents.add(event);
         });
 
@@ -224,8 +224,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     private int mInclusionTimeMillis;
 
-    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, boolean isRangeBased, double eps) {
-        this(searchedSignature, null, 0, isRangeBased, eps);
+    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, int signatureDuration, boolean isRangeBased, double eps) {
+        this(searchedSignature, null, signatureDuration, isRangeBased, eps);
     }
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, List<Function<Layer2Flow,
