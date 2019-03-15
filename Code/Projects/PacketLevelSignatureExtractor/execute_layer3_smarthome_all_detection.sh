@@ -130,7 +130,7 @@ SIGNATURE_DURATION="27"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -196,7 +196,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 
 # ==================================================== TP-LINK BULB ====================================================
-PCAP_FILE="$PCAPS_BASE_DIR/tplink-bulb/eth0/tplink-bulb.wlan1.detection.pcap"
+PCAP_FILE="$PCAPS_BASE_DIR/tplink-bulb/wlan1/tplink-bulb.wlan1.detection.pcap"
 
 # Has no device side signature.
 
@@ -248,7 +248,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 
 # ================================================== WEMO INSIGHT PLUG =================================================
-PCAP_FILE="$PCAPS_BASE_DIR/wemo-insight-plug/eth0/wemo-insight-plug.wlan1.detection.pcap"
+PCAP_FILE="$PCAPS_BASE_DIR/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.detection.pcap"
 
 # Has no device side signature.
 
@@ -268,7 +268,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 
 # ===================================================== WEMO PLUG ======================================================
-PCAP_FILE="$PCAPS_BASE_DIR/wemo-plug/eth0/wemo-plug.wlan1.detection.pcap"
+PCAP_FILE="$PCAPS_BASE_DIR/wemo-plug/wlan1/wemo-plug.wlan1.detection.pcap"
 
 # Has no device side signature.
 
