@@ -72,11 +72,11 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
         PcapPacket expectedLowerBound = mLowerBound.get(mMatchedPackets.size());
         PcapPacket expectedUpperBound = mUpperBound.get(mMatchedPackets.size());
         // First verify if the received packet has the length we're looking for (the length should be within the range).
-//        if (expectedLowerBound.getOriginalLength() - (int) mEps <= packet.getOriginalLength() &&
-//                packet.getOriginalLength() <= expectedUpperBound.getOriginalLength() + (int) mEps){
+        if (expectedLowerBound.getOriginalLength() - (int) mEps <= packet.getOriginalLength() &&
+                packet.getOriginalLength() <= expectedUpperBound.getOriginalLength() + (int) mEps){
         // TODO: TEMPORARILY WITHOUT EPS
-        if (expectedLowerBound.getOriginalLength() <= packet.getOriginalLength() &&
-                packet.getOriginalLength() <= expectedUpperBound.getOriginalLength()){
+//        if (expectedLowerBound.getOriginalLength() <= packet.getOriginalLength() &&
+//                packet.getOriginalLength() <= expectedUpperBound.getOriginalLength()){
             // If this is the first packet, we only need to verify that its length is correct. Time constraints are
             // obviously satisfied as there are no previous packets. Furthermore, direction matches by definition as we
             // don't know the MAC of the device (or phone) in advance, so we can't enforce a rule saying "first packet

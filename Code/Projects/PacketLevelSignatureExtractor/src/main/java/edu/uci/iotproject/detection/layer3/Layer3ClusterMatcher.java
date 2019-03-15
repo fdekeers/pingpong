@@ -131,7 +131,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
             while ((match = findSubsequenceInSequence(lowerBound, upperBound, cPkts, mClusterMemberDirections, null)).
                     isPresent()) {
                 List<PcapPacket> matchSeq = match.get();
-//                // Notify observers about the match.
+                // Notify observers about the match.
 //                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
                 if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
                         plusMillis(mInclusionTimeMillis))) {
@@ -178,7 +178,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                 while ((match = findSubsequenceInSequence(signatureSequence, cPkts, mClusterMemberDirections, null)).
                         isPresent()) {
                     List<PcapPacket> matchSeq = match.get();
-//                    // Notify observers about the match.
+                    // Notify observers about the match.
 //                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
                     if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
                            plusMillis(mInclusionTimeMillis))) {
@@ -359,11 +359,11 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
             // We only have a match if packet lengths and directions match.
             // The packet lengths have to be in the range of [lowerBound - eps, upperBound+eps]
             // TODO: Maybe we could do better here for the double to integer conversion?
-//            int epsLowerBound = lowBndPkt.length() - (int) mEps;
-//            int epsUpperBound = upBndPkt.length() + (int) mEps;
+            int epsLowerBound = lowBndPkt.length() - (int) mEps;
+            int epsUpperBound = upBndPkt.length() + (int) mEps;
             // TODO: TEMPORARILY REMOVE EPS BOUNDS
-            int epsLowerBound = lowBndPkt.length();
-            int epsUpperBound = upBndPkt.length();
+//            int epsLowerBound = lowBndPkt.length();
+//            int epsUpperBound = upBndPkt.length();
             if (epsLowerBound <= seqPkt.getOriginalLength() &&
                     seqPkt.getOriginalLength() <= epsUpperBound &&
                     subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) {
