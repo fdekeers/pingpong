@@ -68,8 +68,6 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
         PcapPacket expectedLowerBound = mLowerBound.get(mMatchedPackets.size());
         PcapPacket expectedUpperBound = mUpperBound.get(mMatchedPackets.size());
         // First verify if the received packet has the length we're looking for (the length should be within the range).
-//        if (expectedLowerBound.getOriginalLength() - (int) mEps <= packet.getOriginalLength() &&
-//            packet.getOriginalLength() <= expectedUpperBound.getOriginalLength() + (int) mEps){
         if (expectedLowerBound.getOriginalLength() - (int) mEps <= packet.getOriginalLength() &&
                 packet.getOriginalLength() <= expectedUpperBound.getOriginalLength() + (int) mEps){
             // If this is the first packet, we only need to verify that its length is correct. Time constraints are
@@ -103,6 +101,9 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
             mMatchedPackets.add(packet);
             if (mMatchedPackets.size() == mLowerBound.size()) {
                 // TODO report (to observers?) that we are done?
+                if (mMatchedPackets.size() == 4) {
+                    System.out.println();
+                }
             }
             return true;
         }
