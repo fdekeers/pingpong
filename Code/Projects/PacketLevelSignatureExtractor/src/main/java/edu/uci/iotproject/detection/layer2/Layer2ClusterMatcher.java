@@ -1,5 +1,6 @@
 package edu.uci.iotproject.detection.layer2;
 
+import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassembler;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2Flow;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassemblerObserver;
@@ -41,13 +42,16 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      */
     private final double mEps;
 
+    private int mInclusionTimeMillis;
+
     /**
      * Create a new {@link Layer2ClusterMatcher} that attempts to find occurrences of {@code cluster}'s members.
      * @param cluster The sequence mutations that the new {@link Layer2ClusterMatcher} should search for.
      */
-    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, boolean isRangeBased, double eps) {
+    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, int inclusionTimeMillis,
+                                boolean isRangeBased, double eps) {
         // Consider all flows if no flow filter specified.
-        this(cluster, flow -> true, isRangeBased, eps);
+        this(cluster, flow -> true, inclusionTimeMillis, isRangeBased, eps);
     }
 
     /**
@@ -59,15 +63,18 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      *                   namely when the {@link Layer2FlowReassembler} notifies the {@link Layer2ClusterMatcher} about
      *                   the new flow. This functionality may for example come in handy when one only wants to search
      *                   for matches in the subset of flows that involves a specific (range of) MAC(s).
+     * @param inclusionTimeMillis Packet inclusion limit for matching.
      * @param isRangeBased The boolean that decides if it is range-based vs. strict matching.
      * @param eps The epsilon value used in the DBSCAN algorithm.
      */
     public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, Function<Layer2Flow, Boolean> flowFilter,
-                                boolean isRangeBased, double eps) {
+                                int inclusionTimeMillis, boolean isRangeBased, double eps) {
         super(cluster, isRangeBased);
         mFlowFilter = flowFilter;
         mRangeBased = isRangeBased;
         mEps = eps;
+        mInclusionTimeMillis =
+                inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
     }
 
     @Override
@@ -89,7 +96,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
             Layer2SequenceMatcher[][] matchers = new Layer2SequenceMatcher[mCluster.size()][mCluster.get(0).size()];
             // Prepare a "state 0" sequence matcher for each sequence variation in the cluster.
             for (int i = 0; i < matchers.length; i++) {
-                matchers[i][0] = new Layer2SequenceMatcher(mCluster.get(i));
+                matchers[i][0] = new Layer2SequenceMatcher(mCluster.get(i), mInclusionTimeMillis);
             }
             // Associate the new sequence matcher table with the new flow
             mPerFlowSeqMatchers.put(flow, matchers);
@@ -129,7 +136,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                     // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
                     // from state zero completed its matching or if it replaced a different one in state 1 or not.
                     if (sm.getMatchedPacketsCount() == 1) {
-                        matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence());
+                        matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence(), mInclusionTimeMillis);
                     }
                 }
             }
@@ -146,7 +153,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
             // around), so the length of the array is simply the sequence length.
             Layer2RangeMatcher[] matcher = new Layer2RangeMatcher[mCluster.get(0).size()];
             // Prepare a "state 0" sequence matcher.
-            matcher[0] = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1), mEps);
+            matcher[0] = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1), mInclusionTimeMillis, mEps);
             // Associate the new sequence matcher table with the new flow.
             mPerFlowRangeMatcher.put(flow, matcher);
         }
@@ -181,7 +188,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                 // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
                 // from state zero completed its matching or if it replaced a different one in state 1 or not.
                 if (sm.getMatchedPacketsCount() == 1) {
-                    matcher[j] = new Layer2RangeMatcher(sm.getTargetLowerBound(), sm.getTargetUpperBound(), mEps);
+                    matcher[j] = new Layer2RangeMatcher(sm.getTargetLowerBound(), sm.getTargetUpperBound(),
+                            mInclusionTimeMillis, mEps);
                 }
             }
         }

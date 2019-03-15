@@ -23,6 +23,7 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
     private final List<PcapPacket> mLowerBound;
     private final List<PcapPacket> mUpperBound;
     private final double mEps;
+    private int mInclusionTimeMillis;
 
     /**
      * Create a {@code Layer2RangeMatcher}.
@@ -30,13 +31,16 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
      * @param upperBound The upper bound of the sequence to match against (search for).
      * @param eps The epsilon value used in the DBSCAN algorithm.
      */
-    public Layer2RangeMatcher(List<PcapPacket> lowerBound, List<PcapPacket> upperBound, double eps) {
+    public Layer2RangeMatcher(List<PcapPacket> lowerBound, List<PcapPacket> upperBound,
+                              int inclusionTimeMillis, double eps) {
         // TODO: Just use the lower bound since both lower and upper bounds' packets essentially have the same direction
         // TODO: for the same position in the array. Both arrays also have the same length.
         super(lowerBound);
         mLowerBound = lowerBound;
         mUpperBound = upperBound;
         mEps = eps;
+        mInclusionTimeMillis =
+                inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
     }
 
     /**
@@ -92,8 +96,10 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
             if (!packet.getTimestamp().isAfter(mMatchedPackets.get(getMatchedPacketsCount()-1).getTimestamp())) {
                 return false;
             }
+//            if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
+//                    plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
             if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
-                    plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
+                    plusMillis(mInclusionTimeMillis))) {
                 return false;
             }
             // If we made it here, it means that this packet has the expected length, direction, and obeys the timing

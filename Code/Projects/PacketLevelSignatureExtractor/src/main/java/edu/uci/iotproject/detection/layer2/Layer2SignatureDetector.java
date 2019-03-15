@@ -239,8 +239,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         for (int i = 0; i < mSignature.size(); i++) {
             List<List<PcapPacket>> cluster = mSignature.get(i);
             Layer2ClusterMatcher clusterMatcher = flowFilters == null ?
-                    new Layer2ClusterMatcher(cluster, isRangeBased, eps) :
-                    new Layer2ClusterMatcher(cluster, flowFilters.get(i), isRangeBased, eps);
+                    new Layer2ClusterMatcher(cluster, inclusionTimeMillis, isRangeBased, eps) :
+                    new Layer2ClusterMatcher(cluster, flowFilters.get(i), inclusionTimeMillis, isRangeBased, eps);
             clusterMatcher.addObserver(this);
             clusterMatchers.add(clusterMatcher);
         }

@@ -22,11 +22,13 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
      */
     private final List<PcapPacket> mSequence;
 
+    private int mInclusionTimeMillis;
+
     /**
      * Create a {@code Layer2SequenceMatcher}.
      * @param sequence The sequence to match against (search for).
      */
-    public Layer2SequenceMatcher(List<PcapPacket> sequence) {
+    public Layer2SequenceMatcher(List<PcapPacket> sequence, int inclusionTimeMillis) {
         super(sequence);
         mSequence = sequence;
         // Compute packet directions for sequence.
@@ -41,6 +43,8 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
                 mPacketDirections[i] = getPacketDirection(prevPkt, prevPktDirection, sequence.get(i));
             }
         }
+        mInclusionTimeMillis =
+                inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
     }
 
     /**
@@ -94,8 +98,10 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
             if (!packet.getTimestamp().isAfter(mMatchedPackets.get(getMatchedPacketsCount()-1).getTimestamp())) {
                 return false;
             }
+//            if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
+//                            plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
             if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
-                            plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
+                plusMillis(mInclusionTimeMillis))) {
                 return false;
             }
             // If we made it here, it means that this packet has the expected length, direction, and obeys the timing
