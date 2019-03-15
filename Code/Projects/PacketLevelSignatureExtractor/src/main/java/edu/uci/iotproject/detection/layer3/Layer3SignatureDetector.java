@@ -248,7 +248,8 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         // Generate corresponding/appropriate ClusterMatchers based on the provided signature
         List<Layer3ClusterMatcher> clusterMatchers = new ArrayList<>();
         for (List<List<PcapPacket>> cluster : mSignature) {
-            clusterMatchers.add(new Layer3ClusterMatcher(cluster, routerWanIp, isRangeBased, eps, this));
+            clusterMatchers.add(new Layer3ClusterMatcher(cluster, routerWanIp, inclusionTimeMillis,
+                    isRangeBased, eps, this));
         }
         mClusterMatchers = Collections.unmodifiableList(clusterMatchers);
 

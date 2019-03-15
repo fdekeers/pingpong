@@ -63,7 +63,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      *                   namely when the {@link Layer2FlowReassembler} notifies the {@link Layer2ClusterMatcher} about
      *                   the new flow. This functionality may for example come in handy when one only wants to search
      *                   for matches in the subset of flows that involves a specific (range of) MAC(s).
-     * @param inclusionTimeMillis Packet inclusion limit for matching.
+     * @param inclusionTimeMillis Packet inclusion time limit for matching.
      * @param isRangeBased The boolean that decides if it is range-based vs. strict matching.
      * @param eps The epsilon value used in the DBSCAN algorithm.
      */

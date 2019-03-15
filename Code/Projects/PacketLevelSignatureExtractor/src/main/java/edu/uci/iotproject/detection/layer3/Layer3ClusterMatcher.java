@@ -1,5 +1,6 @@
 package edu.uci.iotproject.detection.layer3;
 
+import edu.uci.iotproject.analysis.TriggerTrafficExtractor;
 import edu.uci.iotproject.detection.AbstractClusterMatcher;
 import edu.uci.iotproject.detection.ClusterMatcherObserver;
 import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
@@ -45,18 +46,25 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
     private final double mEps;
 
     /**
+     * The packet inclusion time for signature.
+     */
+    private int mInclusionTimeMillis;
+
+    /**
      * Create a {@link Layer3ClusterMatcher}.
      * @param cluster The cluster that traffic is matched against.
      * @param routerWanIp The router's WAN IP if examining traffic captured at the ISP's point of view (used for
      *                    determining the direction of packets).
-     * @param eps The epsilon value used in the DBSCAN algorithm.
+     * @param inclusionTimeMillis The packet inclusion time for signature.
      * @param isRangeBased The boolean that decides if it is range-based vs. strict matching.
+     * @param eps The epsilon value used in the DBSCAN algorithm.
      * @param detectionObservers Client code that wants to get notified whenever the {@link Layer3ClusterMatcher} detects that
      *                          (a subset of) the examined traffic is similar to the traffic that makes up
      *                          {@code cluster}, i.e., when the examined traffic is classified as pertaining to
      *                          {@code cluster}.
      */
-    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, boolean isRangeBased, double eps,
+    public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, int inclusionTimeMillis,
+                                boolean isRangeBased, double eps,
                                 ClusterMatcherObserver... detectionObservers) {
         super(cluster, isRangeBased);
         Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
@@ -83,6 +91,8 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
         }
         mEps = eps;
         mRouterWanIp = routerWanIp;
+        mInclusionTimeMillis =
+                inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
     }
 
     @Override
@@ -121,8 +131,13 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
             while ((match = findSubsequenceInSequence(lowerBound, upperBound, cPkts, mClusterMemberDirections, null)).
                     isPresent()) {
                 List<PcapPacket> matchSeq = match.get();
-                // Notify observers about the match.
-                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+//                // Notify observers about the match.
+//                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+                if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
+                        plusMillis(mInclusionTimeMillis))) {
+                    // Notify observers about the match.
+                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+                }
                 /*
                  * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                  * signature sequence.
@@ -163,8 +178,13 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                 while ((match = findSubsequenceInSequence(signatureSequence, cPkts, mClusterMemberDirections, null)).
                         isPresent()) {
                     List<PcapPacket> matchSeq = match.get();
-                    // Notify observers about the match.
-                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+//                    // Notify observers about the match.
+//                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+                    if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
+                           plusMillis(mInclusionTimeMillis))) {
+                        // Notify observers about the match.
+                        mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+                    }
                     /*
                      * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                      * signature sequence.
