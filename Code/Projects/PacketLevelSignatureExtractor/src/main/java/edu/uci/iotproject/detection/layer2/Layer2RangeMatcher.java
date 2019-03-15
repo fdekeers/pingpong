@@ -101,9 +101,6 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
             mMatchedPackets.add(packet);
             if (mMatchedPackets.size() == mLowerBound.size()) {
                 // TODO report (to observers?) that we are done?
-                if (mMatchedPackets.size() == 4) {
-                    System.out.println();
-                }
             }
             return true;
         }
