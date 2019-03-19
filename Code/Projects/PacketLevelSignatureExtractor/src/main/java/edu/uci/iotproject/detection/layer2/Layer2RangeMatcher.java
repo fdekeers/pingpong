@@ -73,8 +73,6 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
         PcapPacket expectedUpperBound = mUpperBound.get(mMatchedPackets.size());
         int lowerBound = expectedLowerBound.getOriginalLength();
         int upperBound = expectedUpperBound.getOriginalLength();
-//        int lowerBound = expectedLowerBound.getOriginalLength() - (int) mEps;
-//        int upperBound = expectedUpperBound.getOriginalLength() + (int) mEps;
         // Do strict matching if the lower and upper bounds are the same length
         // Do range matching with eps otherwise
         if (lowerBound != upperBound) {
@@ -105,8 +103,6 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
             if (!packet.getTimestamp().isAfter(mMatchedPackets.get(getMatchedPacketsCount()-1).getTimestamp())) {
                 return false;
             }
-//            if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
-//                    plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
             if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
                     plusMillis(mInclusionTimeMillis))) {
                 return false;

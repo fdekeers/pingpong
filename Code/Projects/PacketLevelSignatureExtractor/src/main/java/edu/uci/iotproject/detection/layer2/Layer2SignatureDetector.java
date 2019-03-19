@@ -162,9 +162,6 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         offDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_OFF, match.get(0).get(0).getTimestamp());
             PrintWriterUtils.println(event, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-//            for (PcapPacket pcap : match.get(0)) {
-//                System.out.println(pcap.length() + " -> " + pcap.getTimestamp());
-//            }
             detectedEvents.add(event);
         });
 
