@@ -132,12 +132,12 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                     isPresent()) {
                 List<PcapPacket> matchSeq = match.get();
                 // Notify observers about the match.
-//                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-                if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
-                        plusMillis(mInclusionTimeMillis))) {
-                    // Notify observers about the match.
-                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-                }
+                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+//                if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
+//                        plusMillis(mInclusionTimeMillis))) {
+//                    // Notify observers about the match.
+//                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+//                }
                 /*
                  * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                  * signature sequence.
@@ -179,12 +179,12 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                         isPresent()) {
                     List<PcapPacket> matchSeq = match.get();
                     // Notify observers about the match.
-//                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-                    if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
-                           plusMillis(mInclusionTimeMillis))) {
-                        // Notify observers about the match.
-                        mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-                    }
+                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+//                    if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
+//                           plusMillis(mInclusionTimeMillis))) {
+//                        // Notify observers about the match.
+//                        mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
+//                    }
                     /*
                      * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                      * signature sequence.
@@ -358,12 +358,16 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
             PcapPacket seqPkt = sequence.get(seqIdx);
             // We only have a match if packet lengths and directions match.
             // The packet lengths have to be in the range of [lowerBound - eps, upperBound+eps]
-            // TODO: Maybe we could do better here for the double to integer conversion?
-            int epsLowerBound = lowBndPkt.length() - (int) mEps;
-            int epsUpperBound = upBndPkt.length() + (int) mEps;
-            // TODO: TEMPORARILY REMOVE EPS BOUNDS
-//            int epsLowerBound = lowBndPkt.length();
-//            int epsUpperBound = upBndPkt.length();
+            // We initialize the lower and upper bounds first
+            int epsLowerBound = lowBndPkt.length();
+            int epsUpperBound = upBndPkt.length();
+            // Do strict matching if the lower and upper bounds are the same length
+            // Do range matching with eps otherwise
+            if (epsLowerBound != epsUpperBound) {
+                // TODO: Maybe we could do better here for the double to integer conversion?
+                epsLowerBound = epsLowerBound - (int) mEps;
+                epsUpperBound = epsUpperBound + (int) mEps;
+            }
             if (epsLowerBound <= seqPkt.getOriginalLength() &&
                     seqPkt.getOriginalLength() <= epsUpperBound &&
                     subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) {

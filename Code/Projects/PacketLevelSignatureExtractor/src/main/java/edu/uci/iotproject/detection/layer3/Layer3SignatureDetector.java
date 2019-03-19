@@ -66,7 +66,11 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         final String onSignatureFile = args[3];
         final String offSignatureFile = args[4];
         final String resultsFile = args[5];
-        final int signatureDuration = Integer.parseInt(args[6]);
+        // TODO: THIS IS TEMPORARILY SET TO DEFAULT SIGNATURE DURATION
+        // TODO: WE DO NOT WANT TO BE TOO STRICT AT THIS POINT SINCE LAYER 3 ALREADY APPLIES BACK-TO-BACK REQUIREMENT
+        // TODO: FOR PACKETS IN A SIGNATURE
+//        final int signatureDuration = Integer.parseInt(args[6]);
+        final int signatureDuration = TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS;
         final double eps = Double.parseDouble(args[7]);
 
         // Prepare file outputter.
