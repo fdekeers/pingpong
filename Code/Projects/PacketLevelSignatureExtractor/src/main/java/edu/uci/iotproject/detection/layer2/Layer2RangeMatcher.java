@@ -71,12 +71,18 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
         // Get representative of the packet we expect to match next.
         PcapPacket expectedLowerBound = mLowerBound.get(mMatchedPackets.size());
         PcapPacket expectedUpperBound = mUpperBound.get(mMatchedPackets.size());
+        int lowerBound = expectedLowerBound.getOriginalLength();
+        int upperBound = expectedUpperBound.getOriginalLength();
+//        int lowerBound = expectedLowerBound.getOriginalLength() - (int) mEps;
+//        int upperBound = expectedUpperBound.getOriginalLength() + (int) mEps;
+        // Do strict matching if the lower and upper bounds are the same length
+        // Do range matching with eps otherwise
+        if (lowerBound != upperBound) {
+            lowerBound = lowerBound - (int) mEps;
+            upperBound = upperBound + (int) mEps;
+        }
         // First verify if the received packet has the length we're looking for (the length should be within the range).
-        if (expectedLowerBound.getOriginalLength() - (int) mEps <= packet.getOriginalLength() &&
-                packet.getOriginalLength() <= expectedUpperBound.getOriginalLength() + (int) mEps){
-        // TODO: TEMPORARILY WITHOUT EPS
-//        if (expectedLowerBound.getOriginalLength() <= packet.getOriginalLength() &&
-//                packet.getOriginalLength() <= expectedUpperBound.getOriginalLength()){
+        if (lowerBound <= packet.getOriginalLength() && packet.getOriginalLength() <= upperBound){
             // If this is the first packet, we only need to verify that its length is correct. Time constraints are
             // obviously satisfied as there are no previous packets. Furthermore, direction matches by definition as we
             // don't know the MAC of the device (or phone) in advance, so we can't enforce a rule saying "first packet
@@ -94,8 +100,8 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
                 return false;
             }
             // Next apply timing constraints:
-            // 1: to be a match, the packet must have a later timestamp than any other packet currently matched
-            // 2: does adding the packet cause the max allowed time between first packet and last packet to be exceeded?
+            // 1) to be a match, the packet must have a later timestamp than any other packet currently matched
+            // 2) does adding the packet cause the max allowed time between first packet and last packet to be exceeded?
             if (!packet.getTimestamp().isAfter(mMatchedPackets.get(getMatchedPacketsCount()-1).getTimestamp())) {
                 return false;
             }
@@ -125,6 +131,6 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
     }
 
     public List<PcapPacket> getTargetUpperBound() {
-        return mLowerBound;
+        return mUpperBound;
     }
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
 /**
@@ -28,7 +29,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      * of {@link #mCluster} and has so far matched {@code j} packets of that particular sequence.
      */
     private final Map<Layer2Flow, Layer2SequenceMatcher[][]> mPerFlowSeqMatchers = new HashMap<>();
-    private final Map<Layer2Flow, Layer2RangeMatcher[]> mPerFlowRangeMatcher = new HashMap<>();
+//    private final Map<Layer2Flow, Layer2RangeMatcher[]> mPerFlowRangeMatcher = new HashMap<>();
+    private final Map<Layer2Flow, List<Layer2RangeMatcher>> mPerFlowRangeMatcher = new HashMap<>();
 
     private final Function<Layer2Flow, Boolean> mFlowFilter;
 
@@ -144,56 +146,132 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
     }
 
     private void rangeBasedMatching(Layer2Flow flow, PcapPacket newPacket) {
-        // TODO: For range-based matching, we only care about matching a range; therefore it is a matcher array.
+        // TODO: For range-based matching, we need to create a new matcher every time we see the first element of
+        //  the sequence (between lower and upper bounds).
         if (mPerFlowRangeMatcher.get(flow) == null) {
-            // If this is the first time we encounter this flow, we need to set up a sequence matcher.
-            // All sequences of the cluster have the same length, so we only need to compute the length of the
-            // arrays once. We want to make room for a cluster matcher in each state, including the initial empty state
-            // but excluding the final "full match" state (as there is no point in keeping a terminated sequence matcher
-            // around), so the length of the array is simply the sequence length.
-            Layer2RangeMatcher[] matcher = new Layer2RangeMatcher[mCluster.get(0).size()];
+            // If this is the first time we encounter this flow, we need to set up a list of sequence matchers.
+            List<Layer2RangeMatcher> listMatchers = new ArrayList<>();
             // Prepare a "state 0" sequence matcher.
-            matcher[0] = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1), mInclusionTimeMillis, mEps);
+            Layer2RangeMatcher matcher = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1),
+                    mInclusionTimeMillis, mEps);
+            listMatchers.add(matcher);
             // Associate the new sequence matcher table with the new flow.
-            mPerFlowRangeMatcher.put(flow, matcher);
+            mPerFlowRangeMatcher.put(flow, listMatchers);
         }
         // Fetch table that contains sequence matchers for this flow.
-        Layer2RangeMatcher[] matcher = mPerFlowRangeMatcher.get(flow);
-        // Present packet to the sequence matcher.
-        for (int j = matcher.length - 1; j >= 0; j--) {
-            Layer2RangeMatcher sm = matcher[j];
-            if (sm == null) {
-                // There is currently no sequence matcher that has managed to match j packets.
-                continue;
+        List<Layer2RangeMatcher> listMatchers = mPerFlowRangeMatcher.get(flow);
+        // Add a new matcher if all matchers have already advanced to the next stage.
+        // We always need a new matcher to match from NO packets.
+        boolean addOneArray = true;
+        for(Layer2RangeMatcher matcher : listMatchers) {
+            if (matcher.getMatchedPacketsCount() == 0) {
+                addOneArray = false;
             }
-            boolean matched = sm.matchPacket(newPacket);
-            if (matched) {
-                if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
-                    // Sequence matcher has a match. Report it to observers.
-                    mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
-                    // Remove the now terminated sequence matcher.
-                    matcher[j] = null;
-                } else {
-                    // Sequence matcher advanced one step, so move it to its corresponding new position iff the
-                    // packet that advanced it has a later timestamp than that of the last matched packet of the
-                    // sequence matcher at the new index, if any. In most traces, a small amount of the packets
-                    // appear out of order (with regards to their timestamp), which is why this check is required.
-                    // Obviously it would not be needed if packets where guaranteed to be processed in timestamp
-                    // order here.
-                    if (matcher[j+1] == null ||
-                            newPacket.getTimestamp().isAfter(matcher[j+1].getLastPacket().getTimestamp())) {
-                        matcher[j+1] = sm;
+        }
+        // Add the new matcher into the list
+        if (addOneArray) {
+            Layer2RangeMatcher newMatcher = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1),
+                    mInclusionTimeMillis, mEps);
+            listMatchers.add(newMatcher);
+        }
+        // Present packet to the sequence matchers.
+        // Make a shallow copy of the list so that we can clean up the actual list when a matcher is terminated
+        List<Layer2RangeMatcher> listMatchersCopy = new ArrayList<>(listMatchers);
+        for(Layer2RangeMatcher matcher : listMatchersCopy) {
+            Layer2RangeMatcher sm = matcher;
+            // Check if no packets are matched yet or if there are matched packets, the next packet to be matched
+            // has to be later than the last matched packet.
+            // In most traces, a small amount of the packets appear out of order (with regards to their timestamp),
+            // which is why this check is required.
+            // Obviously it would not be needed if packets where guaranteed to be processed in timestamp
+            // order here.
+            if (sm.getMatchedPacketsCount() == 0 ||
+                    newPacket.getTimestamp().isAfter(sm.getLastPacket().getTimestamp())) {
+                boolean matched = sm.matchPacket(newPacket);
+                if (matched) {
+                    if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
+                        // Sequence matcher has a match. Report it to observers.
+                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        // Terminate sequence matcher since matching is complete.
+                        listMatchers.remove(matcher);
                     }
-                }
-                // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
-                // from state zero completed its matching or if it replaced a different one in state 1 or not.
-                if (sm.getMatchedPacketsCount() == 1) {
-                    matcher[j] = new Layer2RangeMatcher(sm.getTargetLowerBound(), sm.getTargetUpperBound(),
-                            mInclusionTimeMillis, mEps);
                 }
             }
         }
     }
+
+//    private void rangeBasedMatching(Layer2Flow flow, PcapPacket newPacket) {
+//        // TODO: For range-based matching, we only care about matching a range; therefore it is a matcher array.
+//        if (mPerFlowRangeMatcher.get(flow) == null) {
+//            // If this is the first time we encounter this flow, we need to set up a sequence matcher.
+//            // All sequences of the cluster have the same length, so we only need to compute the length of the
+//            // arrays once. We want to make room for a cluster matcher in each state, including the initial empty state
+//            // but excluding the final "full match" state (as there is no point in keeping a terminated sequence matcher
+//            // around), so the length of the array is simply the sequence length.
+//            Layer2RangeMatcher[] matcher = new Layer2RangeMatcher[mCluster.get(0).size()];
+//            // Prepare a "state 0" sequence matcher.
+//            matcher[0] = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1), mInclusionTimeMillis, mEps);
+//            // Associate the new sequence matcher table with the new flow.
+//            mPerFlowRangeMatcher.put(flow, matcher);
+//        }
+//        // Fetch table that contains sequence matchers for this flow.
+//        Layer2RangeMatcher[] matcher = mPerFlowRangeMatcher.get(flow);
+//        // Present packet to the sequence matcher.
+//        for (int j = matcher.length - 1; j >= 0; j--) {
+//            Layer2RangeMatcher sm = matcher[j];
+//            if (sm == null) {
+//                // There is currently no sequence matcher that has managed to match j packets.
+//                continue;
+//            }
+//            boolean matched = sm.matchPacket(newPacket);
+//
+//            // TODO: DEBUGGING
+//            long timeStamp = newPacket.getTimestamp().getEpochSecond();
+//            if (339 == newPacket.length() && timeStamp == 1542297773) {
+//                System.out.println("Timestamp of length 339: " + newPacket.getTimestamp().getEpochSecond());
+//                int length = matcher.length;
+//            }
+//            if (329 == newPacket.length() && timeStamp == 1542297773) {
+//                System.out.println("Timestamp of length 329: " + newPacket.getTimestamp().getEpochSecond());
+//            }
+//            if (364 <= newPacket.length() && newPacket.length() <= 365 && timeStamp == 1542297773) {
+//                System.out.println("Timestamp of length 364-365: " + newPacket.getTimestamp().getEpochSecond());
+//            }
+//            if (1061 <= newPacket.length() && newPacket.length() <= 1070 && timeStamp == 1542297773) {
+//                System.out.println("Timestamp of length 1061-1070: " + newPacket.getTimestamp().getEpochSecond());
+//            }
+//            // TODO: DEBUGGING
+//
+//            if (matched) {
+//                if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
+//                    // Sequence matcher has a match. Report it to observers.
+//                    mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+//                    // Remove the now terminated sequence matcher.
+//                    matcher[j] = null;
+//                } else {
+//                    // Sequence matcher advanced one step, so move it to its corresponding new position iff the
+//                    // packet that advanced it has a later timestamp than that of the last matched packet of the
+//                    // sequence matcher at the new index, if any. In most traces, a small amount of the packets
+//                    // appear out of order (with regards to their timestamp), which is why this check is required.
+//                    // Obviously it would not be needed if packets where guaranteed to be processed in timestamp
+//                    // order here.
+//                    if (matcher[j+1] == null ||
+//                            newPacket.getTimestamp().isAfter(matcher[j+1].getLastPacket().getTimestamp())) {
+//                        matcher[j+1] = sm;
+//                        if (matcher[j+1].getTargetUpperBound().size() == 4 && matcher[j+1].mMatchedPackets.size() > 1) {
+//                            System.out.println("Got here");
+//                        }
+//                    }
+//                }
+//                // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
+//                // from state zero completed its matching or if it replaced a different one in state 1 or not.
+//                if (sm.getMatchedPacketsCount() == 1) {
+//                    matcher[j] = new Layer2RangeMatcher(sm.getTargetLowerBound(), sm.getTargetUpperBound(),
+//                            mInclusionTimeMillis, mEps);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     protected List<List<PcapPacket>> pruneCluster(List<List<PcapPacket>> cluster) {
