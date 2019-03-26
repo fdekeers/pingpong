@@ -375,15 +375,16 @@ public class SignatureGenerator {
                 while (duration > TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS && iterFirst.hasNext()) {
                     // that means we have to move to the next trigger
                     firstInst = (Instant) iterFirst.next();
+                    dur = Duration.between(firstInst, lastInst);
+                    duration = dur.toMillis();
                 }
-                dur = Duration.between(firstInst, lastInst);
-                duration = dur.toMillis();
             } else { // Below 0/Negative --- that means we have to move to the next signature
-                while (duration < 0 && iterLast.hasNext()) { // that means we have to move to the next trigger
+                while (duration < 0 && iterLast.hasNext()) {
+                    // that means we have to move to the next trigger
                     lastInst = (Instant) iterLast.next();
+                    dur = Duration.between(firstInst, lastInst);
+                    duration = dur.toMillis();
                 }
-                dur = Duration.between(firstInst, lastInst);
-                duration = dur.toMillis();
             }
             PrintWriterUtils.println(duration, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
             // Update duration if this bigger than the max value and still less than the window inclusion time
