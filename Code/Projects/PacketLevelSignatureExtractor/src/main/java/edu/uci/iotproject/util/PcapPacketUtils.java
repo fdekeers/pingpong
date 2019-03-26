@@ -1,5 +1,6 @@
 package edu.uci.iotproject.util;
 
+import edu.uci.iotproject.io.PrintWriterUtils;
 import edu.uci.iotproject.trafficreassembly.layer3.Conversation;
 import edu.uci.iotproject.analysis.PcapPacketPair;
 import edu.uci.iotproject.analysis.TcpConversationUtils;
@@ -11,6 +12,7 @@ import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.util.MacAddress;
 
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -431,26 +433,32 @@ public final class PcapPacketUtils {
      *
      * @param signatures A {@link List} of {@link List} of {@link List} of
      *          {@link PcapPacket} objects that needs to be printed.
+     * @param resultsWriter PrintWriter object to write into log file.
+     * @param printToOutput Boolean to decide whether to print out to screen or just log file.
      */
-    public static void printSignatures(List<List<List<PcapPacket>>> signatures) {
+    public static void printSignatures(List<List<List<PcapPacket>>> signatures, PrintWriter resultsWriter, boolean
+                                       printToOutput) {
 
         // Iterate over the list of all clusters/sequences
         int sequenceCounter = 0;
         for(List<List<PcapPacket>> listListPcapPacket : signatures) {
             // Iterate over every member of a cluster/sequence
-            System.out.print("====== SEQUENCE " + ++sequenceCounter);
-            System.out.println(" - " + listListPcapPacket.size() + " MEMBERS ======");
+            PrintWriterUtils.print("====== SEQUENCE " + ++sequenceCounter, resultsWriter, printToOutput);
+            PrintWriterUtils.println(" - " + listListPcapPacket.size() + " MEMBERS ======", resultsWriter,
+                    printToOutput);
             for(List<PcapPacket> listPcapPacket : listListPcapPacket) {
                 // Print out packet lengths in a sequence
                 int packetCounter = 0;
                 for(PcapPacket pcapPacket : listPcapPacket) {
                     if(pcapPacket != null) {
-                        System.out.print(pcapPacket.length());
+                        PrintWriterUtils.print(pcapPacket.length(), resultsWriter, printToOutput);
                     }
                     if(packetCounter < listPcapPacket.size() - 1) {
-                        System.out.print(" ");  // Provide space if not last packet
+                        // Provide space if not last packet
+                        PrintWriterUtils.print(" ", resultsWriter, printToOutput);
                     } else {
-                        System.out.println();      // Newline if last packet
+                        // Newline if last packet
+                        PrintWriterUtils.println("", resultsWriter, printToOutput);
                     }
                     packetCounter++;
                 }

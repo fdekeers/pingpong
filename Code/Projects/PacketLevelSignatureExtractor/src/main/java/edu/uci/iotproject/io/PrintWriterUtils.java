@@ -29,6 +29,20 @@ public final class PrintWriterUtils {
     }
 
     /**
+     * Invoke {@link PrintWriter#println(Object)} passing {@code line} as argument while also printing {@code line} to
+     * standard output if {@code duplicateToStdOut} is {@code true}.
+     * @param line The line to be printed.
+     * @param writer The {@link PrintWriter} that is to print {@code line}.
+     * @param duplicateToStdOut Set to {@code true} if {@code line} should also be printed in standard output.
+     */
+    public static void print(Object line, PrintWriter writer, boolean duplicateToStdOut) {
+        if (duplicateToStdOut) {
+            System.out.print(line);
+        }
+        writer.print(line);
+    }
+
+    /**
      * Make writer (and standard output, if {@code duplicateToStdOut} is {@code true}) print an empty line.
      * @param writer The writer that {@link PrintWriter#println()} is to be invoked on.
      * @param duplicateToStdOut If {@code true}, prints an empty line to standard output.
