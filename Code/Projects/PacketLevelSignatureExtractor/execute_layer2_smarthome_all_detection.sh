@@ -205,7 +205,7 @@ ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb/analysis/tplink-bulb-onClusters-ph
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb/analysis/tplink-bulb-offClusters-phone-side.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb/signatures/tplink-bulb-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb/signatures/tplink-bulb-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/tplink-bulb/tplink-bulb.wlan1.wan-detection.pcap___phone-side.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/tplink-bulb/tplink-bulb.wlan1.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="162"
 EPSILON="10.0"
 
@@ -223,7 +223,7 @@ ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analysis/tplink-plug-onClusters.cl
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analysis/tplink-plug-offClusters.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.wan-detection.pcap___device-side.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side.detectionresults"
 SIGNATURE_DURATION="3660"
 EPSILON="10.0"
 
@@ -235,7 +235,7 @@ ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analysis/tplink-plug-onClusters.cl
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analysis/tplink-plug-offClusters.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-onSignature-device-side-outbound.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-offSignature-device-side-outbound.sig"
-RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.wan-detection.pcap___device-side-outbound.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side-outbound.detectionresults"
 SIGNATURE_DURATION="224"
 EPSILON="10.0"
 
@@ -257,7 +257,7 @@ ON_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-insight-plug/analysis/wemo-insight-plug-o
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-insight-plug/analysis/wemo-insight-plug-offClusters-phone-side.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/wemo-insight-plug/wemo-insight-plug.wlan1.wan-detection.pcap___phone-side.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/wemo-insight-plug/wemo-insight-plug.wlan1.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="106"
 EPSILON="10.0"
 
@@ -277,7 +277,7 @@ ON_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-plug/analysis/wemo-plug-onClusters-phone-
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-plug/analysis/wemo-plug-offClusters-phone-side.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug/signatures/wemo-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug/signatures/wemo-plug-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/wemo-plug/wemo-plug.wlan1.wan-detection.pcap___phone-side.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/wemo-plug/wemo-plug.wlan1.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="147"
 EPSILON="10.0"
 
