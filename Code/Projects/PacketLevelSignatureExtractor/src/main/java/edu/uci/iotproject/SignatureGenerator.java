@@ -347,13 +347,8 @@ public class SignatureGenerator {
             }
         }
         // Sort the timestamps
-        firstSignatureTimestamps.sort((p1, p2) -> {
-            return p1.compareTo(p2);
-        });
-        // Sort the timestamps
-        lastSignatureTimestamps.sort((p1, p2) -> {
-            return p1.compareTo(p2);
-        });
+        firstSignatureTimestamps.sort(Comparator.comparing(Instant::toEpochMilli));
+        lastSignatureTimestamps.sort(Comparator.comparing(Instant::toEpochMilli));
 
         Iterator<Instant> iterFirst = firstSignatureTimestamps.iterator();
         Iterator<Instant> iterLast = lastSignatureTimestamps.iterator();
@@ -366,22 +361,22 @@ public class SignatureGenerator {
         PrintWriterUtils.println("========================================", resultsWriter,
                 DUPLICATE_OUTPUT_TO_STD_OUT);
         while (iterFirst.hasNext() && iterLast.hasNext()) {
-            Instant firstInst = (Instant) iterFirst.next();
-            Instant lastInst = (Instant) iterLast.next();
+            Instant firstInst = iterFirst.next();
+            Instant lastInst = iterLast.next();
             Duration dur = Duration.between(firstInst, lastInst);
             duration = dur.toMillis();
             // Check duration --- should be below 15 seconds
             if (duration > TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
                 while (duration > TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS && iterFirst.hasNext()) {
                     // that means we have to move to the next trigger
-                    firstInst = (Instant) iterFirst.next();
+                    firstInst = iterFirst.next();
                     dur = Duration.between(firstInst, lastInst);
                     duration = dur.toMillis();
                 }
             } else { // Below 0/Negative --- that means we have to move to the next signature
                 while (duration < 0 && iterLast.hasNext()) {
                     // that means we have to move to the next trigger
-                    lastInst = (Instant) iterLast.next();
+                    lastInst = iterLast.next();
                     dur = Duration.between(firstInst, lastInst);
                     duration = dur.toMillis();
                 }
