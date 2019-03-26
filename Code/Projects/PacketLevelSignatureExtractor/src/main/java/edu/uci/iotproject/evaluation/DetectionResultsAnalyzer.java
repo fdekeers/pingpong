@@ -20,22 +20,28 @@ import java.util.Optional;
 public class DetectionResultsAnalyzer {
 
     private static boolean DUPLICATE_OUTPUT_TO_STD_OUT = true;
+    private static boolean DETECTED_EVENT_EXACT_MATCH;
 
     public static void main(String[] args) throws IOException {
-        if (args.length < 3) {
+        if (args.length < 4) {
             String errMsg = String.format("Usage: %s triggerTimesFile detectionOutputFile [stdOut]" +
                             "\n - triggerTimesFile: the file that contains the timestamps for the user actions" +
                             "\n - detectionOutputFile: the file that contains the detected events" +
                             "\n - analysisResultsFile: where to write the results of the detection analysis" +
-                            "\n - stdOut: optional true/false literal indicating if output should also be printed to std out; default is true",
+                            "\n - matchEventType: true/false literal indicating if a detected event should" +
+                                " have a matching type" +
+                            "\n - stdOut: optional true/false literal indicating if output should also be printed to" +
+                                " std out; default is true",
                     DetectionResultsAnalyzer.class.getSimpleName());
+            System.out.println(errMsg);
             return;
         }
         String triggerTimesFile = args[0];
         File detectionOutputFile = new File(args[1]);
         String analysisResultsFile = args[2];
-        if (args.length > 3) {
-            DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[3]);
+        DETECTED_EVENT_EXACT_MATCH = Boolean.parseBoolean(args[3]);
+        if (args.length > 4) {
+            DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[4]);
         }
 
         // -------------------------------------- Parse the input files --------------------------------------
@@ -68,20 +74,39 @@ public class DetectionResultsAnalyzer {
 
         // To contain all detected events that could be mapped to a trigger
         List<UserAction> truePositives = new ArrayList<>();
-        for (UserAction detectedEvent : detectedEvents) {
-            Optional<UserAction> matchingTrigger = triggers.stream()
-                    .filter(t -> t.getType() == detectedEvent.getType() &&
-                            t.getTimestamp().isBefore(detectedEvent.getTimestamp()) &&
-                            t.getTimestamp().plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS).
-                                    isAfter(detectedEvent.getTimestamp())
-                    ).findFirst();
-            matchingTrigger.ifPresent(mt -> {
-                // We've consumed the trigger (matched it with a detected event), so remove it so we don't match with
-                // another detected event.
-                triggers.remove(mt);
-                // The current detected event was a true positive as we could match it with a trigger.
-                truePositives.add(detectedEvent);
-            });
+        if (DETECTED_EVENT_EXACT_MATCH) {
+            for (UserAction detectedEvent : detectedEvents) {
+                Optional<UserAction> matchingTrigger = triggers.stream()
+                        .filter(t -> t.getType() == detectedEvent.getType() &&
+                                t.getTimestamp().isBefore(detectedEvent.getTimestamp()) &&
+                                t.getTimestamp().plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS).
+                                        isAfter(detectedEvent.getTimestamp())
+                        ).findFirst();
+                matchingTrigger.ifPresent(mt -> {
+                    // We've consumed the trigger (matched it with a detected event), so remove it so we don't match with
+                    // another detected event.
+                    triggers.remove(mt);
+                    // The current detected event was a true positive as we could match it with a trigger.
+                    truePositives.add(detectedEvent);
+                });
+            }
+            // TODO: Experimental
+        } else { // DETECTED_EVENT_EXACT_MATCH == false
+            for (UserAction detectedEvent : detectedEvents) {
+                Optional<UserAction> matchingTrigger = triggers.stream()
+                        .filter(t ->
+                                t.getTimestamp().isBefore(detectedEvent.getTimestamp()) &&
+                                t.getTimestamp().plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS).
+                                        isAfter(detectedEvent.getTimestamp())
+                        ).findFirst();
+                matchingTrigger.ifPresent(mt -> {
+                    // We've consumed the trigger (matched it with a detected event), so remove it so we don't match with
+                    // another detected event.
+                    triggers.remove(mt);
+                    // The current detected event was a true positive as we could match it with a trigger.
+                    truePositives.add(detectedEvent);
+                });
+            }
         }
         // Now the false positives are those elements in detectedEvents that are not in truePositives
         List<UserAction> falsePositives = new ArrayList<>();
@@ -90,7 +115,7 @@ public class DetectionResultsAnalyzer {
 
         // Output the results...
         PrintWriter outputter = new PrintWriter(new FileWriter(analysisResultsFile));
-        PrintWriterUtils.println("---------- False negatives (events that where not detected) ----------", outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println("---------- False negatives (events that were not detected) ----------", outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
         for (UserAction missing : triggers) {
             PrintWriterUtils.println(missing, outputter, DUPLICATE_OUTPUT_TO_STD_OUT);
         }

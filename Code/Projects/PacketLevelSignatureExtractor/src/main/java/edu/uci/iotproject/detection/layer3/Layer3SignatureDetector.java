@@ -177,9 +177,9 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         // Output the detected events
         detectedEvents.forEach(outputter);
 
-        String resultOn = "Number of detected events of type " + UserAction.Type.TOGGLE_ON + ": " +
+        String resultOn = "# Number of detected events of type " + UserAction.Type.TOGGLE_ON + ": " +
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_ON).count();
-        String resultOff = "Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
+        String resultOff = "# Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count();
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);

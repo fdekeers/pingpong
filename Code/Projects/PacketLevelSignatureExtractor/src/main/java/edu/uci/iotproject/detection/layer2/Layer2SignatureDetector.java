@@ -87,12 +87,6 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         final int signatureDuration = Integer.parseInt(args[6]);
         final double eps = Double.parseDouble(args[7]);
 
-//        final String pcapFile = args[0];
-//        final String onSignatureFile = args[1];
-//        final String offSignatureFile = args[2];
-//        final String resultsFile = args[3];
-//        final int signatureDuration = Integer.parseInt(args[4]);
-
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
         final int optParamsStartIdx = 7;
@@ -176,9 +170,9 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // Parse the file
         reader.readFromHandle();
 
-        String resultOn = "Number of detected events of type " + UserAction.Type.TOGGLE_ON + ": " +
+        String resultOn = "# Number of detected events of type " + UserAction.Type.TOGGLE_ON + ": " +
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_ON).count();
-        String resultOff = "Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
+        String resultOff = "# Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count();
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);

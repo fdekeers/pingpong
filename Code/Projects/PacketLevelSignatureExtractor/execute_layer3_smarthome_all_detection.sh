@@ -57,7 +57,7 @@ ON_ANALYSIS="$SIGNATURES_BASE_DIR/blossom-sprinkler/analysis/blossom-sprinkler-o
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/blossom-sprinkler/analysis/blossom-sprinkler-offClusters-phone-side.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler/signatures/blossom-sprinkler-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler/signatures/blossom-sprinkler-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/blossom-sprinkler/blossom-sprinkler.wlan1.detection.pcap___phone-side.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/blossom-sprinkler/blossom-sprinkler.eth0.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="3670"
 EPSILON="10.0"
 
@@ -185,7 +185,7 @@ ON_ANALYSIS="$SIGNATURES_BASE_DIR/st-plug/analysis/st-plug-onClusters-phone-side
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/st-plug/analysis/st-plug-offClusters-phone-side.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/st-plug/signatures/st-plug-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/st-plug/signatures/st-plug-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/st-plug/st-plug.wlan1.detection.pcap___phone-side.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/st-plug/st-plug.eth0.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="2445"
 EPSILON="10.0"
 
@@ -216,7 +216,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 
 # ==================================================== TP-LINK PLUG ====================================================
-PCAP_FILE="$PCAPS_BASE_DIR/tplink-plug/eth0/tplink-plug.eth0.detection.pcap"
+PCAP_FILE="$PCAPS_BASE_DIR/tplink-plug/wlan1/tplink-plug.wlan1.detection.pcap"
 
 # DEVICE SIDE (both the 112, 115 and 556, 1293 sequences)
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analysis/tplink-plug-onClusters.cls"
@@ -230,12 +230,14 @@ EPSILON="10.0"
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 
+PCAP_FILE="$PCAPS_BASE_DIR/tplink-plug/eth0/tplink-plug.eth0.detection.pcap"
+
 # DEVICE SIDE OUTBOUND (contains only those packets that go through the WAN port, i.e., only the 556, 1293 sequence)
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analysis/tplink-plug-onClusters.cls"
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analysis/tplink-plug-offClusters.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-onSignature-device-side-outbound.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-offSignature-device-side-outbound.sig"
-RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.wan-detection.pcap___device-side-outbound.detectionresults"
+RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.eth0.detection.pcap___device-side-outbound.detectionresults"
 SIGNATURE_DURATION="224"
 EPSILON="10.0"
 
