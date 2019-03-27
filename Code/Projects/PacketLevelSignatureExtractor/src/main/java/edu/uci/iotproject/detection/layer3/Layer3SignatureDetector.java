@@ -47,7 +47,11 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         if (args.length < 8) {
-            String errMsg = String.format("Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
+            String errMsg = String.format("SPECTO version 1.0\n" +
+                            "Copyright (C) 2018-2019 Janus Varmarken and Rahmadi Trimananda.\n" +
+                            "University of California, Irvine.\n" +
+                            "All rights reserved.\n\n" +
+                            "Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
                             "\n  inputPcapFile: the target of the detection" +
                             "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
                             "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
