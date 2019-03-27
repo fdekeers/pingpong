@@ -89,7 +89,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/hue-bulb/hue-bulb.eth0.detection.pcap___phone-si
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-# Note: Hue bulb's signature was gone after September/October 2018, perhaps due to some firmware update.
+# This is commented out because the signature has been missing after October 2018 (perhaps due to firmware update).
 #./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
