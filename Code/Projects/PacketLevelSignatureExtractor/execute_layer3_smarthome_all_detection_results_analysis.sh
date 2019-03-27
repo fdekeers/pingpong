@@ -79,22 +79,6 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 
 
 
-# ===================================================== HUE BULB =======================================================
-TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/hue-bulb/timestamps/hue-bulb-smarthome-nov-20-2018.timestamps"
-
-# Has no device side signature.
-
-# PHONE SIDE
-RESULTS_FILE="$RESULTS_BASE_DIR/hue-bulb/hue-bulb.eth0.detection.pcap___phone-side.detectionresults"
-ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
-EXACT_MATCH="true"
-PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-# This is commented out because the signature has been missing after October 2018 (perhaps due to firmware update).
-#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-
-
 # ================================================= KWIKSET DOORLOCK ===================================================
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/kwikset-doorlock/timestamps/kwikset-doorlock-smarthome-nov-10-2018.timestamps"
 
