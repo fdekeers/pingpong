@@ -120,7 +120,7 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 # ===================================================== HUE BULB =======================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/hue-bulb/wlan1/hue-bulb.wlan1.local.pcap"
 
-# Has no signature: we need to use the old October PCAP file and timestampt to generate signatures for Hue Bulb.
+# Has no signature: we need to use the old October PCAP file and timestamp to generate signatures for Hue Bulb.
 # PHONE SIDE
 OUTPUT_PCAP="$OUTPUT_DIR/hue-bulb/wlan1/hue-bulb-processed.pcap"
 TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/hue-bulb/timestamps/hue-bulb-aug-7-2018.timestamps"
