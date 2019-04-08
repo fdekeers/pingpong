@@ -28,6 +28,12 @@ abstract public class Layer2AbstractMatcher {
     protected final boolean[] mPacketDirections;
 
     /**
+     * Keep track of the numbers of skipped packets
+     */
+    protected int mSkippedPackets;
+    protected int mMaxSkippedPackets;
+
+    /**
      * Create a {@code Layer2AbstractMatcher}.
      * @param sequence The sequence of the signature.
      */
@@ -45,6 +51,8 @@ abstract public class Layer2AbstractMatcher {
                 mPacketDirections[i] = getPacketDirection(prevPkt, prevPktDirection, sequence.get(i));
             }
         }
+        mSkippedPackets = 0;
+        mMaxSkippedPackets = 0;
     }
 
     /**
@@ -89,6 +97,10 @@ abstract public class Layer2AbstractMatcher {
 
     public List<PcapPacket> getMatchedPackets() {
         return mMatchedPackets;
+    }
+
+    public int getMaxSkippedPackets() {
+        return mMaxSkippedPackets;
     }
 
     /**

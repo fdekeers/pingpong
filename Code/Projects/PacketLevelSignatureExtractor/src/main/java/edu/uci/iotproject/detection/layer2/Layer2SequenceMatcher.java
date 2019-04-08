@@ -24,6 +24,7 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
 
     private int mInclusionTimeMillis;
 
+
     /**
      * Create a {@code Layer2SequenceMatcher}.
      * @param sequence The sequence to match against (search for).
@@ -90,22 +91,29 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
                     mPacketDirections[getMatchedPacketsCount()-1], packet);
             boolean expectedDirection = mPacketDirections[getMatchedPacketsCount()];
             if (actualDirection != expectedDirection) {
+                mSkippedPackets++;
                 return false;
             }
             // Next apply timing constraints:
             // 1: to be a match, the packet must have a later timestamp than any other packet currently matched
             // 2: does adding the packet cause the max allowed time between first packet and last packet to be exceeded?
             if (!packet.getTimestamp().isAfter(mMatchedPackets.get(getMatchedPacketsCount()-1).getTimestamp())) {
+                mSkippedPackets++;
                 return false;
             }
 //            if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
 //                            plusMillis(TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS))) {
             if (packet.getTimestamp().isAfter(mMatchedPackets.get(0).getTimestamp().
                 plusMillis(mInclusionTimeMillis))) {
+                mSkippedPackets++;
                 return false;
             }
             // If we made it here, it means that this packet has the expected length, direction, and obeys the timing
             // constraints, so we store it and advance.
+            if (mMaxSkippedPackets < mSkippedPackets) {
+                mMaxSkippedPackets = mSkippedPackets;
+                mSkippedPackets = 0;
+            }
             mMatchedPackets.add(packet);
             if (mMatchedPackets.size() == mSequence.size()) {
                 // TODO report (to observers?) that we are done?

@@ -120,7 +120,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                 if (matched) {
                     if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
                         // Sequence matcher has a match. Report it to observers.
-                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets(),
+                                sm.getMaxSkippedPackets()));
                         // Remove the now terminated sequence matcher.
                         matchers[i][j] = null;
                     } else {
@@ -192,7 +193,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                 if (matched) {
                     if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
                         // Sequence matcher has a match. Report it to observers.
-                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets(),
+                                sm.getMaxSkippedPackets()));
                         // Terminate sequence matcher since matching is complete.
                         listMatchers.remove(matcher);
                     }

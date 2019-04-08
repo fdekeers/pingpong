@@ -290,7 +290,7 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
     }
 
     @Override
-    public void onMatch(AbstractClusterMatcher clusterMatcher, List<PcapPacket> match) {
+    public void onMatch(AbstractClusterMatcher clusterMatcher, List<PcapPacket> match, int maxSkippedPackets) {
         // Add the match at the corresponding index
         pendingMatches[mClusterMatcherIds.get(clusterMatcher)].add(match);
         checkSignatureMatch();

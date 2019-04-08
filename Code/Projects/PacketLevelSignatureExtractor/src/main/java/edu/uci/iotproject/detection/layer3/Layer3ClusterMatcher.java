@@ -132,12 +132,8 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                     isPresent()) {
                 List<PcapPacket> matchSeq = match.get();
                 // Notify observers about the match.
-                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-//                if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
-//                        plusMillis(mInclusionTimeMillis))) {
-//                    // Notify observers about the match.
-//                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-//                }
+                // Max number of skipped packets in layer 3 is 0 (no skipped packets)
+                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq, 0));
                 /*
                  * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                  * signature sequence.
@@ -179,12 +175,8 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                         isPresent()) {
                     List<PcapPacket> matchSeq = match.get();
                     // Notify observers about the match.
-                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-//                    if (!matchSeq.get(matchSeq.size()-1).getTimestamp().isAfter(matchSeq.get(0).getTimestamp().
-//                           plusMillis(mInclusionTimeMillis))) {
-//                        // Notify observers about the match.
-//                        mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
-//                    }
+                    // Max number of skipped packets in layer 3 is 0 (no skipped packets)
+                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq, 0));
                     /*
                      * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                      * signature sequence.

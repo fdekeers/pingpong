@@ -348,7 +348,8 @@ public final class PcapPacketUtils {
                 if (Math.abs(timestamp1 - timestamp2) < TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS) {
                     // If these two are within INCLUSION_WINDOW_MILLIS window then compare!
                     compare = p1.get(count1).get(0).getTimestamp().compareTo(p2.get(count2).get(0).getTimestamp());
-                    overlapChecking(compare, comparePrev, p1.get(count1), p2.get(count2));
+                    overlapChecking(compare, comparePrev, p1.get(count1), p2.get(count2),
+                            signatures.indexOf(p1), signatures.indexOf(p2));
                     comparePrev = compare;
                     count1++;
                     count2++;
@@ -372,8 +373,12 @@ public final class PcapPacketUtils {
      * @param comparePrev Previous comparison value between packet sequences p1 and p2
      * @param sequence1 The packet sequence ({@link List} of {@link PcapPacket} objects).
      * @param sequence2 The packet sequence ({@link List} of {@link PcapPacket} objects).
+     * @param indexSequence1 The index of packet sequence ({@link List} of {@link PcapPacket} objects).
+     * @param indexSequence2 The index of packet sequence ({@link List} of {@link PcapPacket} objects).
      */
-    private static void overlapChecking(int compare, int comparePrev, List<PcapPacket> sequence1, List<PcapPacket> sequence2) {
+    private static void overlapChecking(int compare, int comparePrev,
+                                        List<PcapPacket> sequence1, List<PcapPacket> sequence2,
+                                        int indexSequence1, int indexSequence2) {
 
         // Check if p1 occurs before p2 but both have same overlap
         if (comparePrev != 0) { // First time since it is 0
@@ -382,8 +387,8 @@ public final class PcapPacketUtils {
                 // E.g., 111, 222, 333 in one occassion and 222, 333, 111 in the other.
                 throw new Error("OVERLAP WARNING: " + "" +
                         "Two sequences have some overlap. Please remove one of the sequences: " +
-                        sequence1.get(0).length() + "... OR " +
-                        sequence2.get(0).length() + "...");
+                        sequence1.get(0).length() + " with index " + indexSequence1 + " OR " +
+                        sequence2.get(0).length() + " with index " + indexSequence2);
             }
         }
         // Check if p1 is longer than p2 and p2 occurs during the occurrence of p1

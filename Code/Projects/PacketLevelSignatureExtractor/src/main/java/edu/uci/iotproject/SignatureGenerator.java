@@ -283,6 +283,8 @@ public class SignatureGenerator {
             PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, sequenceToDelete);
         }
         ppListOfListListOn = PcapPacketUtils.sortSequences(ppListOfListListOn);
+        PrintWriterUtils.println("Concatenated and sorted ON signature sequences...", resultsWriter,
+                DUPLICATE_OUTPUT_TO_STD_OUT);
 
         // Concatenate
         ppListOfListListOff = PcapPacketUtils.concatSequences(ppListOfListListOff, sortedAllConversation);
@@ -296,6 +298,9 @@ public class SignatureGenerator {
             PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, sequenceToDelete);
         }
         ppListOfListListOff = PcapPacketUtils.sortSequences(ppListOfListListOff);
+        PrintWriterUtils.println("Concatenated and sorted OFF signature sequences...", resultsWriter,
+                DUPLICATE_OUTPUT_TO_STD_OUT);
+
         // Write the signatures into the screen
         PrintWriterUtils.println("========================================", resultsWriter,
                 DUPLICATE_OUTPUT_TO_STD_OUT);
@@ -318,7 +323,7 @@ public class SignatureGenerator {
         PrintUtils.serializeIntoFile(onClusterAnalysisFile, corePointRangeSignatureOn);
         PrintUtils.serializeIntoFile(offClusterAnalysisFile, corePointRangeSignatureOff);
 
-        // =========================================== SIGNATURE DURATION ===========================================
+        // =========================================== SIGNATURE DURATIONS =============================================
         List<Instant> firstSignatureTimestamps = new ArrayList<>();
         List<Instant> lastSignatureTimestamps = new ArrayList<>();
         if (!ppListOfListListOn.isEmpty()) {
@@ -336,7 +341,7 @@ public class SignatureGenerator {
             }
         }
 
-        if (!ppListOfListListOn.isEmpty()) {
+        if (!ppListOfListListOff.isEmpty()) {
             List<List<PcapPacket>> firstListOffSign = ppListOfListListOff.get(0);
             List<List<PcapPacket>> lastListOffSign = ppListOfListListOff.get(ppListOfListListOff.size() - 1);
             // Load OFF signature first and last packet's timestamps

@@ -24,6 +24,7 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
     private final List<PcapPacket> mUpperBound;
     private final double mEps;
     private int mInclusionTimeMillis;
+    private int mSkippedPackets;
 
     /**
      * Create a {@code Layer2RangeMatcher}.
@@ -41,6 +42,7 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
         mEps = eps;
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
+        mSkippedPackets = 0;
     }
 
     /**
@@ -108,7 +110,7 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
                 return false;
             }
             // If we made it here, it means that this packet has the expected length, direction, and obeys the timing
-            // constraints, so we store it and advance.
+            // constraints, so we store it and advance.zzzz
             mMatchedPackets.add(packet);
             if (mMatchedPackets.size() == mLowerBound.size()) {
                 // TODO report (to observers?) that we are done?

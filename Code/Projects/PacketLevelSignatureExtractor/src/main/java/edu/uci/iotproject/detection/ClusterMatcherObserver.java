@@ -20,7 +20,8 @@ public interface ClusterMatcherObserver {
      * @param clusterMatcher The {@link AbstractClusterMatcher} that detected a match (i.e., classified traffic as
      *                       pertaining to its associated cluster).
      * @param match The traffic that was deemed to match the cluster associated with {@code clusterMatcher}.
+     * @param maxSkippedPackets Maximum number of skipped packets.
      */
-    void onMatch(AbstractClusterMatcher clusterMatcher, List<PcapPacket> match);
+    void onMatch(AbstractClusterMatcher clusterMatcher, List<PcapPacket> match, int maxSkippedPackets);
 
 }
