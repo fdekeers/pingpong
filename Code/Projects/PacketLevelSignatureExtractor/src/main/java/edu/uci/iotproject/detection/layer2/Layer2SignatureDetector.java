@@ -178,10 +178,18 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_ON).count();
         String resultOff = "# Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count();
-        String onMaxSkippedPackets = "# Number of skipped packets in ON signature " +
-                Integer.toString(onDetector.getMaxSkippedPackets());
-        String offMaxSkippedPackets = "# Number of skipped packets in OFF signature " +
-                Integer.toString(offDetector.getMaxSkippedPackets());
+//        String onMaxSkippedPackets = "# Number of skipped packets in ON signature " +
+//                Integer.toString(onDetector.getMaxSkippedPackets());
+        String onMaxSkippedPackets = "# Number of skipped packets in ON signature: ";
+        for(Integer skippedPackets : onDetector.getMaxSkippedPackets()) {
+            System.out.println(skippedPackets);
+        }
+//        String offMaxSkippedPackets = "# Number of skipped packets in OFF signature " +
+//                Integer.toString(offDetector.getMaxSkippedPackets());
+        String offMaxSkippedPackets = "# Number of skipped packets in OFF signature: ";
+        for(Integer skippedPackets : offDetector.getMaxSkippedPackets()) {
+            System.out.println(skippedPackets);
+        }
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(onMaxSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
@@ -225,7 +233,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     private int mInclusionTimeMillis;
 
-    private int mMaxSkippedPackets;
+    //private int mMaxSkippedPackets;
+    private List<Integer> mMaxSkippedPackets;
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, int signatureDuration, boolean isRangeBased, double eps) {
         this(searchedSignature, null, signatureDuration, isRangeBased, eps);
@@ -261,10 +270,14 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         mClusterMatchers.forEach(cm -> mFlowReassembler.addObserver(cm));
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
-        mMaxSkippedPackets = 0;
+        //mMaxSkippedPackets = 0;
+        mMaxSkippedPackets = new ArrayList<>();
     }
 
-    public int getMaxSkippedPackets() {
+//    public int getMaxSkippedPackets() {
+//        return mMaxSkippedPackets;
+//    }
+    public List<Integer> getMaxSkippedPackets() {
         return mMaxSkippedPackets;
     }
 
@@ -275,16 +288,17 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
     }
 
     @Override
-    public void onMatch(AbstractClusterMatcher clusterMatcher, List<PcapPacket> match, int maxSkippedPackets) {
-        // Update the number of skipped packets
-        if (mMaxSkippedPackets < maxSkippedPackets) {
-            mMaxSkippedPackets = maxSkippedPackets;
-        }
+    public void onMatch(AbstractClusterMatcher clusterMatcher, List<PcapPacket> match) {
         // TODO: a cluster matcher found a match
         if (clusterMatcher instanceof Layer2ClusterMatcher) {
             // Add the match at the corresponding index
             mPendingMatches[mClusterMatcherIds.get(clusterMatcher)].add(match);
             checkSignatureMatch();
+            // Update maximum number of skipped packets
+            //if (mMaxSkippedPackets < ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets()) {
+            //    mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
+            //}
+            mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
         }
     }
 

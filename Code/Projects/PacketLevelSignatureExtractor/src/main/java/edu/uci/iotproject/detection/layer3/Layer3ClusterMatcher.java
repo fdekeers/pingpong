@@ -133,7 +133,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                 List<PcapPacket> matchSeq = match.get();
                 // Notify observers about the match.
                 // Max number of skipped packets in layer 3 is 0 (no skipped packets)
-                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq, 0));
+                mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
                 /*
                  * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                  * signature sequence.
@@ -176,7 +176,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                     List<PcapPacket> matchSeq = match.get();
                     // Notify observers about the match.
                     // Max number of skipped packets in layer 3 is 0 (no skipped packets)
-                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq, 0));
+                    mObservers.forEach(o -> o.onMatch(Layer3ClusterMatcher.this, matchSeq));
                     /*
                      * Get the index in cPkts of the last packet in the sequence of packets that matches the searched
                      * signature sequence.
