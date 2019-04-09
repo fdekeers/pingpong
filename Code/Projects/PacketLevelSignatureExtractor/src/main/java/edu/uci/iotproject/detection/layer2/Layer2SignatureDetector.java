@@ -52,19 +52,23 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         // Parse required parameters.
-        if (args.length < 8) {
+        if (args.length < 10) {
             String errMsg = String.format("SPECTO version 1.0\n" +
                             "Copyright (C) 2018-2019 Janus Varmarken and Rahmadi Trimananda.\n" +
                             "University of California, Irvine.\n" +
                             "All rights reserved.\n\n" +
-                            "Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
+                            "Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile " +
+                            "resultsFile signatureDuration eps onMaxSkippedPackets offMaxSkippedPackets" +
                             "\n  inputPcapFile: the target of the detection" +
                             "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
                             "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
                             "\n  onSignatureFile: the file that contains the ON signature to search for" +
                             "\n  offSignatureFile: the file that contains the OFF signature to search for" +
                             "\n  resultsFile: where to write the results of the detection" +
-                            "\n  signatureDuration: the maximum duration of signature detection",
+                            "\n  signatureDuration: the maximum duration of signature detection" +
+                            "\n  eps: the epsilon value for the DBSCAN algorithm" +
+                            "\n  onMaxSkippedPackets: the maximum duration of ON signature detection (put -1 if not used)" +
+                            "\n  offMaxSkippedPackets: the maximum duration of OFF signature detection (put -1 if not used)",
                     Layer2SignatureDetector.class.getSimpleName());
             System.out.println(errMsg);
             String optParamsExplained = "Above are the required, positional arguments. In addition to these, the " +
@@ -81,7 +85,6 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             System.out.println(optParamsExplained);
             return;
         }
-        // TODO: We could take 7 inputs if we decided to use the cluster analyses.
         final String pcapFile = args[0];
         final String onClusterAnalysisFile = args[1];
         final String offClusterAnalysisFile = args[2];
@@ -90,6 +93,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         final String resultsFile = args[5];
         final int signatureDuration = Integer.parseInt(args[6]);
         final double eps = Double.parseDouble(args[7]);
+        final int onMaxSkippedPackets = Integer.parseInt(args[8]);
+        final int offMaxSkippedPackets = Integer.parseInt(args[8]);
 
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
@@ -146,11 +151,13 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
         }
         Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
-                new Layer2SignatureDetector(onSignature, signatureDuration, isRangeBasedForOn, eps) :
-                new Layer2SignatureDetector(onSignature, onSignatureMacFilters, signatureDuration, isRangeBasedForOn, eps);
+                new Layer2SignatureDetector(onSignature, signatureDuration, isRangeBasedForOn, eps, onMaxSkippedPackets) :
+                new Layer2SignatureDetector(onSignature, onSignatureMacFilters, signatureDuration,
+                        isRangeBasedForOn, eps, onMaxSkippedPackets);
         Layer2SignatureDetector offDetector = offSignatureMacFilters == null ?
-                new Layer2SignatureDetector(offSignature, signatureDuration, isRangeBasedForOff, eps) :
-                new Layer2SignatureDetector(offSignature, offSignatureMacFilters, signatureDuration, isRangeBasedForOff, eps);
+                new Layer2SignatureDetector(offSignature, signatureDuration, isRangeBasedForOff, eps, offMaxSkippedPackets) :
+                new Layer2SignatureDetector(offSignature, offSignatureMacFilters, signatureDuration,
+                        isRangeBasedForOff, eps, offMaxSkippedPackets);
         final List<UserAction> detectedEvents = new ArrayList<>();
         onDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
@@ -178,22 +185,22 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_ON).count();
         String resultOff = "# Number of detected events of type " + UserAction.Type.TOGGLE_OFF + ": " +
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count();
-//        String onMaxSkippedPackets = "# Number of skipped packets in ON signature " +
-//                Integer.toString(onDetector.getMaxSkippedPackets());
-        String onMaxSkippedPackets = "# Number of skipped packets in ON signature: ";
-        for(Integer skippedPackets : onDetector.getMaxSkippedPackets()) {
-            System.out.println(skippedPackets);
-        }
-//        String offMaxSkippedPackets = "# Number of skipped packets in OFF signature " +
-//                Integer.toString(offDetector.getMaxSkippedPackets());
-        String offMaxSkippedPackets = "# Number of skipped packets in OFF signature: ";
-        for(Integer skippedPackets : offDetector.getMaxSkippedPackets()) {
-            System.out.println(skippedPackets);
-        }
+        String onMaximumSkippedPackets = "# Maximum number of skipped packets in ON signature " +
+                Integer.toString(onDetector.getMaxSkippedPackets());
+//        String onMaxSkippedPackets = "# Number of skipped packets in ON signature: ";
+//        for(Integer skippedPackets : onDetector.getMaxSkippedPackets()) {
+//            System.out.println(skippedPackets);
+//        }
+        String offMaximumSkippedPackets = "# Maximum number of skipped packets in OFF signature " +
+                Integer.toString(offDetector.getMaxSkippedPackets());
+//        String offMaxSkippedPackets = "# Number of skipped packets in OFF signature: ";
+//        for(Integer skippedPackets : offDetector.getMaxSkippedPackets()) {
+//            System.out.println(skippedPackets);
+//        }
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        PrintWriterUtils.println(onMaxSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        PrintWriterUtils.println(offMaxSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println(onMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        PrintWriterUtils.println(offMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
 
         // Flush output to results file and close it.
         resultsWriter.flush();
@@ -233,15 +240,16 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     private int mInclusionTimeMillis;
 
-    //private int mMaxSkippedPackets;
-    private List<Integer> mMaxSkippedPackets;
+    private int mMaxSkippedPackets;
+//    private List<Integer> mMaxSkippedPackets;
 
-    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, int signatureDuration, boolean isRangeBased, double eps) {
-        this(searchedSignature, null, signatureDuration, isRangeBased, eps);
+    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, int signatureDuration,
+                                   boolean isRangeBased, double eps, int limitSkippedPackets) {
+        this(searchedSignature, null, signatureDuration, isRangeBased, eps, limitSkippedPackets);
     }
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, List<Function<Layer2Flow,
-            Boolean>> flowFilters, int inclusionTimeMillis, boolean isRangeBased, double eps) {
+            Boolean>> flowFilters, int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets) {
         if (flowFilters != null && flowFilters.size() != searchedSignature.size()) {
             throw new IllegalArgumentException("If flow filters are used, there must be a flow filter for each cluster " +
                     "of the signature.");
@@ -251,8 +259,9 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         for (int i = 0; i < mSignature.size(); i++) {
             List<List<PcapPacket>> cluster = mSignature.get(i);
             Layer2ClusterMatcher clusterMatcher = flowFilters == null ?
-                    new Layer2ClusterMatcher(cluster, inclusionTimeMillis, isRangeBased, eps) :
-                    new Layer2ClusterMatcher(cluster, flowFilters.get(i), inclusionTimeMillis, isRangeBased, eps);
+                    new Layer2ClusterMatcher(cluster, inclusionTimeMillis, isRangeBased, eps, limitSkippedPackets) :
+                    new Layer2ClusterMatcher(cluster, flowFilters.get(i), inclusionTimeMillis, isRangeBased,
+                            eps, limitSkippedPackets);
             clusterMatcher.addObserver(this);
             clusterMatchers.add(clusterMatcher);
         }
@@ -270,16 +279,16 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         mClusterMatchers.forEach(cm -> mFlowReassembler.addObserver(cm));
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
-        //mMaxSkippedPackets = 0;
-        mMaxSkippedPackets = new ArrayList<>();
+        mMaxSkippedPackets = 0;
+//        mMaxSkippedPackets = new ArrayList<>();
     }
 
-//    public int getMaxSkippedPackets() {
-//        return mMaxSkippedPackets;
-//    }
-    public List<Integer> getMaxSkippedPackets() {
+    public int getMaxSkippedPackets() {
         return mMaxSkippedPackets;
     }
+//    public List<Integer> getMaxSkippedPackets() {
+//        return mMaxSkippedPackets;
+//    }
 
     @Override
     public void gotPacket(PcapPacket packet) {
@@ -295,10 +304,10 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             mPendingMatches[mClusterMatcherIds.get(clusterMatcher)].add(match);
             checkSignatureMatch();
             // Update maximum number of skipped packets
-            //if (mMaxSkippedPackets < ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets()) {
-            //    mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
-            //}
-            mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
+            if (mMaxSkippedPackets < ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets()) {
+                mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
+            }
+//            mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
         }
     }
 

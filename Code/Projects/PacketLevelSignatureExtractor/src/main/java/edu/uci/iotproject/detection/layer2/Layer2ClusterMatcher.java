@@ -28,7 +28,6 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      * of {@link #mCluster} and has so far matched {@code j} packets of that particular sequence.
      */
     private final Map<Layer2Flow, Layer2SequenceMatcher[][]> mPerFlowSeqMatchers = new HashMap<>();
-//    private final Map<Layer2Flow, Layer2RangeMatcher[]> mPerFlowRangeMatcher = new HashMap<>();
     private final Map<Layer2Flow, List<Layer2RangeMatcher>> mPerFlowRangeMatcher = new HashMap<>();
 
     private final Function<Layer2Flow, Boolean> mFlowFilter;
@@ -48,17 +47,19 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
     /**
      * Keeping track of maximum number of skipped packets
      */
-    //private int mMaxSkippedPackets;
-    private List<Integer> mMaxSkippedPackets;
+    private int mMaxSkippedPackets;
+//    private List<Integer> mMaxSkippedPackets;
+
+    private int mLimitSkippedPackets;
 
     /**
      * Create a new {@link Layer2ClusterMatcher} that attempts to find occurrences of {@code cluster}'s members.
      * @param cluster The sequence mutations that the new {@link Layer2ClusterMatcher} should search for.
      */
     public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, int inclusionTimeMillis,
-                                boolean isRangeBased, double eps) {
+                                boolean isRangeBased, double eps, int limitSkippedPackets) {
         // Consider all flows if no flow filter specified.
-        this(cluster, flow -> true, inclusionTimeMillis, isRangeBased, eps);
+        this(cluster, flow -> true, inclusionTimeMillis, isRangeBased, eps, limitSkippedPackets);
     }
 
     /**
@@ -75,15 +76,17 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      * @param eps The epsilon value used in the DBSCAN algorithm.
      */
     public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, Function<Layer2Flow, Boolean> flowFilter,
-                                int inclusionTimeMillis, boolean isRangeBased, double eps) {
+                                int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets) {
         super(cluster, isRangeBased);
         mFlowFilter = flowFilter;
         mRangeBased = isRangeBased;
         mEps = eps;
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
-        //mMaxSkippedPackets = 0;
-        mMaxSkippedPackets = new ArrayList<>();
+        mMaxSkippedPackets = 0;
+//        mMaxSkippedPackets = new ArrayList<>();
+        // Give integer's MAX_VALUE if -1
+        mLimitSkippedPackets = limitSkippedPackets == -1 ? Integer.MAX_VALUE : limitSkippedPackets;
     }
 
     @Override
@@ -127,9 +130,11 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                 if (matched) {
                     if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
                         // Update maximum skipped packets
-                        updateMaxSkippedPackets(flow.getPackets(), sm.getMatchedPackets());
-                        // Sequence matcher has a match. Report it to observers.
-                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        boolean stillMatch = checkMaxSkippedPackets(flow.getPackets(), sm.getMatchedPackets());
+                        if (stillMatch) {
+                            // Sequence matcher has a match. Report it to observers.
+                            mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        }
                         // Remove the now terminated sequence matcher.
                         matchers[i][j] = null;
                     } else {
@@ -155,18 +160,21 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
     }
 
     // Update the maximum number of skipped packets
-    private void updateMaxSkippedPackets(List<PcapPacket> flowPackets, List<PcapPacket> matchedPackets) {
+    private boolean checkMaxSkippedPackets(List<PcapPacket> flowPackets, List<PcapPacket> matchedPackets) {
         // Count number of skipped packets by looking into
         // the difference of indices of two matched packets
+        boolean stillMatch = true;
         for(int i = 1; i < matchedPackets.size(); ++i) {
             int currIndex = flowPackets.indexOf(matchedPackets.get(i-1));
             int nextIndex = flowPackets.indexOf(matchedPackets.get(i));
             int skippedPackets = nextIndex - currIndex;
-//            if (mMaxSkippedPackets < skippedPackets) {
-//                mMaxSkippedPackets = skippedPackets;
-//            }
-            mMaxSkippedPackets.add(skippedPackets);
+            if (mMaxSkippedPackets < skippedPackets) {
+                mMaxSkippedPackets = skippedPackets;
+                stillMatch = false;
+            }
+//            mMaxSkippedPackets.add(skippedPackets);
         }
+        return stillMatch;
     }
 
     private void rangeBasedMatching(Layer2Flow flow, PcapPacket newPacket) {
@@ -216,9 +224,11 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                 if (matched) {
                     if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
                         // Update maximum skipped packets
-                        updateMaxSkippedPackets(flow.getPackets(), sm.getMatchedPackets());
-                        // Sequence matcher has a match. Report it to observers.
-                        mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        boolean stillMatch = checkMaxSkippedPackets(flow.getPackets(), sm.getMatchedPackets());
+                        if (stillMatch) {
+                            // Sequence matcher has a match. Report it to observers.
+                            mObservers.forEach(o -> o.onMatch(this, sm.getMatchedPackets()));
+                        }
                         // Terminate sequence matcher since matching is complete.
                         listMatchers.remove(matcher);
                     }
@@ -268,10 +278,10 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
     /**
       * Return the maximum number of skipped packets.
       */
-//    public int getMaxSkippedPackets() {
-//       return mMaxSkippedPackets;
-//    }
-    public List<Integer> getMaxSkippedPackets() {
-        return mMaxSkippedPackets;
+    public int getMaxSkippedPackets() {
+       return mMaxSkippedPackets;
     }
+//    public List<Integer> getMaxSkippedPackets() {
+//        return mMaxSkippedPackets;
+//    }
 }
