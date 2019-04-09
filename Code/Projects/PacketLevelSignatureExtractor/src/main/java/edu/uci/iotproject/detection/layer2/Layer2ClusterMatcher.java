@@ -6,14 +6,12 @@ import edu.uci.iotproject.trafficreassembly.layer2.Layer2Flow;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowReassemblerObserver;
 import edu.uci.iotproject.detection.AbstractClusterMatcher;
 import edu.uci.iotproject.trafficreassembly.layer2.Layer2FlowObserver;
-import org.jetbrains.annotations.NotNull;
 import org.pcap4j.core.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
 /**
