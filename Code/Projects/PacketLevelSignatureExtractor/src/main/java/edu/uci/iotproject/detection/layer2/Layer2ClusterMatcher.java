@@ -170,6 +170,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
             int skippedPackets = nextIndex - currIndex;
             if (mMaxSkippedPackets < skippedPackets) {
                 mMaxSkippedPackets = skippedPackets;
+            }
+            if (mLimitSkippedPackets < skippedPackets) {
                 stillMatch = false;
             }
 //            mMaxSkippedPackets.add(skippedPackets);
