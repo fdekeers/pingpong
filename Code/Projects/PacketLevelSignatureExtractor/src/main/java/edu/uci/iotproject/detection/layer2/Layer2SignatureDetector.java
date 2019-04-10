@@ -94,7 +94,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         final int signatureDuration = Integer.parseInt(args[6]);
         final double eps = Double.parseDouble(args[7]);
         final int onMaxSkippedPackets = Integer.parseInt(args[8]);
-        final int offMaxSkippedPackets = Integer.parseInt(args[8]);
+        final int offMaxSkippedPackets = Integer.parseInt(args[9]);
 
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
