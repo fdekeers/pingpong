@@ -633,6 +633,9 @@ public final class PcapPacketUtils {
             List<PcapPacket> listCorePointLowerBound = listOfListPcapPacket.get(0);
             List<PcapPacket> listCorePointUpperBound = listOfListPcapPacket.get(1);
             for(PcapPacket corePointLowerBound : listCorePointLowerBound) {
+                if (corePointLowerBound == null) { // Skip if null!
+                    continue;
+                }
                 PcapPacket corePointUpperBound =
                         listCorePointUpperBound.get(listCorePointLowerBound.indexOf(corePointLowerBound));
                 // Return if the match for the core point bounds is found
