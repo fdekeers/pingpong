@@ -24,6 +24,7 @@ ON_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-onSignatur
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/arlo-camera/signatures/arlo-camera-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/arlo-camera/arlo-camera.eth0.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="548"
+EPSILON="10.0"
 ON_SKIPPED_PACKETS="8"
 OFF_SKIPPED_PACKETS="10"
 
