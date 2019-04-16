@@ -404,17 +404,17 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# ================================================= ARLO CAMERA MODE ===================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-mode/wlan1/arlo-camera-mode.wlan1.local.pcap"
+# ================================================= ARLO CAMERA RECORD =================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-record/wlan1/arlo-camera-record.wlan1.local.pcap"
 
 # No signature found for both phone and device sides
-OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-mode/wlan1/arlo-camera-mode-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-mode/timestamps/arlo-camera-mode-apr-15-2019.timestamps"
+OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-record/wlan1/arlo-camera-record-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-record/timestamps/arlo-camera-record-apr-15-2019.timestamps"
 DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/arlo-camera-mode/signatures/arlo-camera-mode-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/arlo-camera-mode/signatures/arlo-camera-mode-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/arlo-camera-mode/analyses/arlo-camera-mode-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/arlo-camera-mode/analyses/arlo-camera-mode-offClusters-phone-side.cls"
+ON_SIGNATURE="$OUTPUT_DIR/arlo-camera-record/signatures/arlo-camera-record-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/arlo-camera-record/signatures/arlo-camera-record-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/arlo-camera-record/analyses/arlo-camera-record-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/arlo-camera-record/analyses/arlo-camera-record-offClusters-phone-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
