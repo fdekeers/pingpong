@@ -410,7 +410,8 @@ INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-record/wlan1/arlo-camera-record.wla
 # No signature found for both phone and device sides
 OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-record/wlan1/arlo-camera-record-processed.pcap"
 TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-record/timestamps/arlo-camera-record-apr-15-2019.timestamps"
-DEVICE_IP="192.168.1.246"
+# We used a different phone here
+DEVICE_IP="192.168.1.130"
 ON_SIGNATURE="$OUTPUT_DIR/arlo-camera-record/signatures/arlo-camera-record-onSignature-phone-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/arlo-camera-record/signatures/arlo-camera-record-offSignature-phone-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/arlo-camera-record/analyses/arlo-camera-record-onClusters-phone-side.cls"
