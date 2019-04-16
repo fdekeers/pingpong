@@ -282,6 +282,12 @@ public class SignatureGenerator {
             }
             PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, sequenceToDelete);
         }
+        PrintWriterUtils.println("ON Sequences after removal: ", resultsWriter,
+                DUPLICATE_OUTPUT_TO_STD_OUT);
+        for(List<List<PcapPacket>> listOfList : ppListOfListListOn) {
+            PrintWriterUtils.println(listOfList.get(0).get(0).length() + "...", resultsWriter,
+                    DUPLICATE_OUTPUT_TO_STD_OUT);
+        }
         ppListOfListListOn = PcapPacketUtils.sortSequences(ppListOfListListOn);
         PrintWriterUtils.println("Concatenated and sorted ON signature sequences...", resultsWriter,
                 DUPLICATE_OUTPUT_TO_STD_OUT);
@@ -296,6 +302,12 @@ public class SignatureGenerator {
                 break;
             }
             PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, sequenceToDelete);
+        }
+        PrintWriterUtils.println("OFF Sequences after removal: ", resultsWriter,
+                DUPLICATE_OUTPUT_TO_STD_OUT);
+        for(List<List<PcapPacket>> listOfList : ppListOfListListOff) {
+            PrintWriterUtils.println(listOfList.get(0).get(0).length() + "...", resultsWriter,
+                    DUPLICATE_OUTPUT_TO_STD_OUT);
         }
         ppListOfListListOff = PcapPacketUtils.sortSequences(ppListOfListListOff);
         PrintWriterUtils.println("Concatenated and sorted OFF signature sequences...", resultsWriter,

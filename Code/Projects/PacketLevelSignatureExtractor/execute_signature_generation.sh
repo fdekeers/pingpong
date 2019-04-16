@@ -31,7 +31,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ================================================= BLOSSOM SPRINKLER ==================================================
@@ -50,7 +50,7 @@ DELETED_SEQUENCES_ON="2"
 DELETED_SEQUENCES_OFF="3"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 DEVICE_IP="192.168.1.246"
@@ -63,7 +63,7 @@ DELETED_SEQUENCES_ON="0"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ==================================================== D-LINK PLUG =====================================================
@@ -81,7 +81,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 DEVICE_IP="192.168.1.246"
@@ -94,7 +94,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ==================================================== D-LINK SIREN ====================================================
@@ -114,7 +114,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ===================================================== HUE BULB =======================================================
@@ -134,7 +134,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ================================================= KWIKSET DOORLOCK ===================================================
@@ -154,7 +154,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ================================================= NEST THERMOSTAT ====================================================
@@ -174,7 +174,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ====================================================== ST PLUG =======================================================
@@ -194,7 +194,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ==================================================== TP-LINK BULB ====================================================
@@ -213,7 +213,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ==================================================== TP-LINK PLUG ====================================================
@@ -234,7 +234,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 
 # DEVICE SIDE OUTBOUND (contains only those packets that go through the WAN port, i.e., only the 556, 1293 sequence)
 # WAN signature.
@@ -246,7 +246,7 @@ DELETED_SEQUENCES_ON="0"
 DELETED_SEQUENCES_OFF="0"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 
 # Phone side does not make sense as it is merely a subset of the device side and does not differentiate ONs from OFFs.
 # ======================================================================================================================
@@ -267,7 +267,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -288,84 +288,137 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+
+# NEW DEVICES
+# ================================================= DLINK MOTION SENSOR ================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/dlink-sensor/wlan1/dlink-sensor.wlan1.local.pcap"
+
+# No signature found for both phone and device sides
+OUTPUT_PCAP="$OUTPUT_DIR/dlink-sensor/wlan1/dlink-sensor-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/dlink-sensor/timestamps/dlink-sensor-apr-12-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/dlink-sensor/signatures/dlink-sensor-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/dlink-sensor/signatures/dlink-sensor-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/dlink-sensor/analyses/dlink-sensor-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/dlink-sensor/analyses/dlink-sensor-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= TP LINK BULB COLOR =================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-bulb-color/wlan1/tplink-bulb-color.wlan1.local.pcap"
+
+# No signature found for both phone and device sides
+OUTPUT_PCAP="$OUTPUT_DIR/tplink-bulb-color/wlan1/tplink-bulb-color-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-color/timestamps/tplink-bulb-color-apr-12-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/tplink-bulb-color/signatures/tplink-bulb-color-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/tplink-bulb-color/signatures/tplink-bulb-color-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/tplink-bulb-color/analyses/tplink-bulb-color-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/tplink-bulb-color/analyses/tplink-bulb-color-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== TP LINK BULB INTENSITY ===============================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/wlan1/tplink-bulb-intensity.wlan1.local.pcap"
+
+# No signature found for both phone and device sides
+OUTPUT_PCAP="$OUTPUT_DIR/tplink-bulb-intensity/wlan1/tplink-bulb-intensity-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/timestamps/tplink-bulb-intensity-apr-12-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/tplink-bulb-intensity/signatures/tplink-bulb-intensity-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/tplink-bulb-intensity/signatures/tplink-bulb-intensity-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== BLOSSOM SPRINKLER MODE ===============================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/wlan1/blossom-sprinkler-mode.wlan1.local.pcap"
+
+# PHONE SIDE
+OUTPUT_PCAP="$OUTPUT_DIR/blossom-sprinkler-mode/wlan1/blossom-sprinkler-mode-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/timestamps/blossom-sprinkler-mode-apr-15-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/blossom-sprinkler-mode/signatures/blossom-sprinkler-mode-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/blossom-sprinkler-mode/signatures/blossom-sprinkler-mode-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="1,1,1"
+DELETED_SEQUENCES_OFF="2,2,2"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+
+# DEVICE SIDE
+# TODO: For some reason there is no OFF signature for the device side, so we do not report it for now
+DEVICE_IP="192.168.1.229"
+ON_SIGNATURE="$OUTPUT_DIR/blossom-sprinkler-mode/signatures/blossom-sprinkler-mode-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/blossom-sprinkler-mode/signatures/blossom-sprinkler-mode-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="2"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== NEST THERMOSTAT MODE =================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode.wlan1.local.pcap"
+
+# No signature found for both phone and device sides
+OUTPUT_PCAP="$OUTPUT_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/timestamps/nest-thermostat-mode-apr-15-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= ARLO CAMERA MODE ===================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-mode/wlan1/arlo-camera-mode.wlan1.local.pcap"
+
+# No signature found for both phone and device sides
+OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-mode/wlan1/arlo-camera-mode-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-mode/timestamps/arlo-camera-mode-apr-15-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/arlo-camera-mode/signatures/arlo-camera-mode-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/arlo-camera-mode/signatures/arlo-camera-mode-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/arlo-camera-mode/analyses/arlo-camera-mode-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/arlo-camera-mode/analyses/arlo-camera-mode-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 ./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-
-
-# NEW DEVICES WITH ST APP
-# ================================================= WEMO PLUG ST APP ===================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/wemo-plug-stapp/wlan1/wemo-plug-stapp.wlan1.local.pcap"
-
-# Has WAN signature.
-OUTPUT_PCAP="$OUTPUT_DIR/wemo-plug-stapp/wlan1/wemo-plug-stapp-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/wemo-plug-stapp/timestamps/wemo-plug-stapp-apr-4-2019.timestamps"
-DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/wemo-plug-stapp/signatures/wemo-plug-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/wemo-plug-stapp/signatures/wemo-plug-stapp-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/wemo-plug-stapp/analyses/wemo-plug-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/wemo-plug-stapp/analyses/wemo-plug-stapp-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="1,2,2"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-# ============================================= WEMO INSIGHT PLUG ST APP ===============================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/wemo-insight-plug-stapp/wlan1/wemo-insight-plug-stapp.wlan1.local.pcap"
-
-# Has WAN signature.
-OUTPUT_PCAP="$OUTPUT_DIR/wemo-insight-plug-stapp/wlan1/wemo-insight-plug-stapp-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/wemo-insight-plug-stapp/timestamps/wemo-insight-plug-stapp-apr-4-2019.timestamps"
-DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/wemo-insight-plug-stapp/signatures/wemo-insight-plug-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/wemo-insight-plug-stapp/signatures/wemo-insight-plug-stapp-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/wemo-insight-plug-stapp/analyses/wemo-insight-plug-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/wemo-insight-plug-stapp/analyses/wemo-insight-plug-stapp-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-# ================================================= HUE BULB ST APP ====================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/hue-bulb-stapp/wlan1/hue-bulb-stapp.wlan1.local.pcap"
-
-# Has WAN signature.
-OUTPUT_PCAP="$OUTPUT_DIR/hue-bulb-stapp/wlan1/hue-bulb-stapp-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/hue-bulb-stapp/timestamps/hue-bulb-stapp-apr-5-2019.timestamps"
-DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/hue-bulb-stapp/signatures/hue-bulb-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/hue-bulb-stapp/signatures/hue-bulb-stapp-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/hue-bulb-stapp/analyses/hue-bulb-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/hue-bulb-stapp/analyses/hue-bulb-stapp-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-# ================================================= LIFX BULB ST APP ===================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/lifx-bulb-stapp/wlan1/lifx-bulb-stapp.wlan1.local.pcap"
-
-# Has WAN signature.
-OUTPUT_PCAP="$OUTPUT_DIR/lifx-bulb-stapp/wlan1/lifx-bulb-stapp-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/lifx-bulb-stapp/timestamps/lifx-bulb-stapp-apr-5-2019.timestamps"
-DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/lifx-bulb-stapp/signatures/lifx-bulb-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/lifx-bulb-stapp/signatures/lifx-bulb-stapp-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/lifx-bulb-stapp/analyses/lifx-bulb-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/lifx-bulb-stapp/analyses/lifx-bulb-stapp-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================

@@ -29,7 +29,7 @@ SIGNATURE_DURATION="548"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -47,7 +47,7 @@ SIGNATURE_DURATION="9274"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/blossom-sprinkler/analyses/blossom-sprinkler-onClusters-phone-side.cls"
@@ -59,7 +59,7 @@ SIGNATURE_DURATION="3670"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -77,7 +77,7 @@ SIGNATURE_DURATION="8866"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/dlink-plug/analyses/dlink-plug-onClusters-phone-side.cls"
@@ -89,7 +89,7 @@ SIGNATURE_DURATION="193"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -107,7 +107,7 @@ SIGNATURE_DURATION="71"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -126,7 +126,7 @@ SIGNATURE_DURATION="25"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -146,7 +146,7 @@ SIGNATURE_DURATION="3161"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -166,7 +166,7 @@ SIGNATURE_DURATION="1179"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -186,7 +186,7 @@ SIGNATURE_DURATION="2445"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -206,7 +206,7 @@ SIGNATURE_DURATION="162"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -224,7 +224,7 @@ SIGNATURE_DURATION="3660"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 
 PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap"
 
@@ -238,7 +238,7 @@ SIGNATURE_DURATION="224"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 
 # Phone side does not make sense as it is merely a subset of the device side and does not differentiate ONs from OFFs.
 # ======================================================================================================================
@@ -260,7 +260,7 @@ SIGNATURE_DURATION="106"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -280,79 +280,61 @@ SIGNATURE_DURATION="147"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
 
 
-# NEW DEVICES WITH ST APP
-# ================================================= WEMO PLUG ST APP ===================================================
-PCAP_FILE="$SIGNATURES_BASE_DIR/wemo-plug-stapp/wlan1/wemo-plug-stapp.wlan1.local.pcap"
+# NEW DEVICES
+# ================================================= TP LINK BULB COLOR =================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-color/wlan1/tplink-bulb-color.wlan1.local.pcap"
 
 # Has no device side signature.
 
 # PHONE SIDE
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-plug-stapp/analyses/wemo-plug-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-plug-stapp/analyses/wemo-plug-stapp-offClusters-phone-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug-stapp/signatures/wemo-plug-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-plug-stapp/signatures/wemo-plug-stapp-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/wemo-plug-stapp/wemo-plug-stapp.wlan1.validation.pcap___phone-side.detectionresults"
-SIGNATURE_DURATION="2073"
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-color/analyses/tplink-bulb-color-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-color/analyses/tplink-bulb-color-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-color/signatures/tplink-bulb-color-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-color/signatures/tplink-bulb-color-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/tplink-bulb-color/tplink-bulb-color.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="191"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# ================================================= WEMO PLUG ST APP ===================================================
-PCAP_FILE="$SIGNATURES_BASE_DIR/wemo-insight-plug-stapp/wlan1/wemo-insight-plug-stapp.wlan1.local.pcap"
+# =============================================== TP LINK BULB INTENSITY ===============================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/wlan1/tplink-bulb-intensity.wlan1.local.pcap"
 
 # Has no device side signature.
 
 # PHONE SIDE
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-insight-plug-stapp/analyses/wemo-insight-plug-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-insight-plug-stapp/analyses/wemo-insight-plug-stapp-offClusters-phone-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug-stapp/signatures/wemo-insight-plug-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug-stapp/signatures/wemo-insight-plug-stapp-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/wemo-insight-plug-stapp/wemo-insight-plug-stapp.wlan1.validation.pcap___phone-side.detectionresults"
-SIGNATURE_DURATION="5457"
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/signatures/tplink-bulb-intensity-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/signatures/tplink-bulb-intensity-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/tplink-bulb-intensity/tplink-bulb-intensity.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="209"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# ================================================= HUE BULB ST APP ====================================================
-PCAP_FILE="$SIGNATURES_BASE_DIR/hue-bulb-stapp/wlan1/hue-bulb-stapp.wlan1.local.pcap"
+# =============================================== BLOSSOM SPRINKLER MODE ===============================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/wlan1/blossom-sprinkler-mode.wlan1.local.pcap"
 
 # Has no device side signature.
 
-# PHONE SIDE
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb-stapp/analyses/hue-bulb-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb-stapp/analyses/hue-bulb-stapp-offClusters-phone-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb-stapp/signatures/hue-bulb-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb-stapp/signatures/hue-bulb-stapp-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/hue-bulb-stapp/hue-bulb-stapp.wlan1.validation.pcap___phone-side.detectionresults"
-SIGNATURE_DURATION="3086"
-EPSILON="10.0"
-
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-# ================================================= LIFX BULB ST APP ===================================================
-PCAP_FILE="$SIGNATURES_BASE_DIR/lifx-bulb-stapp/wlan1/lifx-bulb-stapp.wlan1.local.pcap"
-
-# Has no device side signature.
-
-# PHONE SIDE
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/lifx-bulb-stapp/analyses/lifx-bulb-stapp-onClusters-phone-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/lifx-bulb-stapp/analyses/lifx-bulb-stapp-offClusters-phone-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/lifx-bulb-stapp/signatures/lifx-bulb-stapp-onSignature-phone-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/lifx-bulb-stapp/signatures/lifx-bulb-stapp-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/lifx-bulb-stapp/lifx-bulb-stapp.wlan1.validation.pcap___phone-side.detectionresults"
-SIGNATURE_DURATION="3086"
+# PHONE SIDE (TODO: may possibly be the .incomplete signatures)
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/signatures/blossom-sprinkler-mode-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/signatures/blossom-sprinkler-mode-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/blossom-sprinkler-mode/blossom-sprinkler-mode.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="1977"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"

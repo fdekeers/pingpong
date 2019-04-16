@@ -387,13 +387,19 @@ public final class PcapPacketUtils {
                 // E.g., 111, 222, 333 in one occassion and 222, 333, 111 in the other.
                 throw new Error("OVERLAP WARNING: " + "" +
                         "Two sequences have some overlap. Please remove one of the sequences: " +
-                        sequence1.get(0).length() + " with index " + indexSequence1 + " OR " +
-                        sequence2.get(0).length() + " with index " + indexSequence2);
+                        sequence1.get(0).length() + "... OR " +
+                        sequence2.get(0).length() + "...");
             }
         }
         // Check if p1 is longer than p2 and p2 occurs during the occurrence of p1
         int lastIndexOfSequence1 = sequence1.size() - 1;
+        // Check if the last index is null
+        while (sequence1.get(lastIndexOfSequence1) == null)
+            lastIndexOfSequence1--;
         int lastIndexOfSequence2 = sequence2.size() - 1;
+        // Check if the last index is null
+        while (sequence2.get(lastIndexOfSequence2) == null)
+            lastIndexOfSequence2--;
         int compareLast =
                 sequence1.get(lastIndexOfSequence1).getTimestamp().compareTo(sequence2.get(lastIndexOfSequence2).getTimestamp());
         // Check the signs of compare and compareLast
@@ -456,7 +462,13 @@ public final class PcapPacketUtils {
                 int packetCounter = 0;
                 for(PcapPacket pcapPacket : listPcapPacket) {
                     if(pcapPacket != null) {
-                        PrintWriterUtils.print(pcapPacket.length(), resultsWriter, printToOutput);
+                        String srcIp = pcapPacket.get(IpV4Packet.class).getHeader().getSrcAddr().getHostAddress();
+                        String dstIp = pcapPacket.get(IpV4Packet.class).getHeader().getDstAddr().getHostAddress();
+                        String direction = srcIp.startsWith("10.") || srcIp.startsWith("192.168.") ?
+                                "(C-" : "(S-";
+                        direction = dstIp.startsWith("10.") || dstIp.startsWith("192.168.") ?
+                                direction + "C)" : direction + "S)";
+                        PrintWriterUtils.print(pcapPacket.length() + direction, resultsWriter, printToOutput);
                     }
                     if(packetCounter < listPcapPacket.size() - 1) {
                         // Provide space if not last packet
