@@ -388,10 +388,10 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 # =============================================== NEST THERMOSTAT MODE =================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode.wlan1.local.pcap"
 
-# No signature found for both phone and device sides
+# Phone side - TODO: THIS SIDE GENERATES SOME FALSE POSITIVES
 OUTPUT_PCAP="$OUTPUT_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/timestamps/nest-thermostat-mode-apr-15-2019.timestamps"
-DEVICE_IP="192.168.1.246"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/timestamps/nest-thermostat-mode-apr-16-2019.timestamps"
+DEVICE_IP="192.168.1.130"
 ON_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-onSignature-phone-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-offSignature-phone-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-onClusters-phone-side.cls"
@@ -407,7 +407,7 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 # ================================================= ARLO CAMERA RECORD =================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-record/wlan1/arlo-camera-record.wlan1.local.pcap"
 
-# No signature found for both phone and device sides
+# Signature
 OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-record/wlan1/arlo-camera-record-processed.pcap"
 TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-record/timestamps/arlo-camera-record-apr-15-2019.timestamps"
 # We used a different phone here
@@ -421,5 +421,181 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= ARLO CAMERA SOUND ==================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-sound/wlan1/arlo-camera-sound.wlan1.local.pcap"
+
+# Signature
+OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-sound/wlan1/arlo-camera-sound-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-sound/timestamps/arlo-camera-sound-apr-17-2019.timestamps"
+# We used a different phone here
+DEVICE_IP="192.168.1.130"
+ON_SIGNATURE="$OUTPUT_DIR/arlo-camera-sound/signatures/arlo-camera-sound-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/arlo-camera-sound/signatures/arlo-camera-sound-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/arlo-camera-sound/analyses/arlo-camera-sound-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/arlo-camera-sound/analyses/arlo-camera-sound-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =================================================== AMAZON PLUG ======================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/amazon-plug/wlan1/amazon-plug.wlan1.local.pcap"
+
+# TODO: The phone side does not really have a clear signature
+# Device Signature
+OUTPUT_PCAP="$OUTPUT_DIR/amazon-plug/wlan1/amazon-plug-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/amazon-plug/timestamps/amazon-plug-apr-16-2019.timestamps"
+DEVICE_IP="192.168.1.189"
+ON_SIGNATURE="$OUTPUT_DIR/amazon-plug/signatures/amazon-plug-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/amazon-plug/signatures/amazon-plug-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/amazon-plug/analyses/amazon-plug-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/amazon-plug/analyses/amazon-plug-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =================================================== SENGLED BULB =====================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/sengled-bulb/wlan1/sengled-bulb.wlan1.local.pcap"
+
+# Phone Signature
+OUTPUT_PCAP="$OUTPUT_DIR/sengled-bulb/wlan1/sengled-bulb-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-apr-16-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/sengled-bulb/signatures/sengled-bulb-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/sengled-bulb/signatures/sengled-bulb-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/sengled-bulb/analyses/sengled-bulb-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/sengled-bulb/analyses/sengled-bulb-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+
+INPUT_PCAP="$SIGNATURES_BASE_DIR/sengled-bulb/eth1/sengled-bulb.eth1.local.pcap"
+
+# Device Signature
+DEVICE_IP="192.168.1.201"
+ON_SIGNATURE="$OUTPUT_DIR/sengled-bulb/signatures/sengled-bulb-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/sengled-bulb/signatures/sengled-bulb-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/sengled-bulb/analyses/sengled-bulb-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/sengled-bulb/analyses/sengled-bulb-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== SENGLED BULB INTENSITY ===============================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/wlan1/sengled-bulb-intensity.wlan1.local.pcap"
+
+# Phone Signature
+OUTPUT_PCAP="$OUTPUT_DIR/sengled-bulb-intensity/wlan1/sengled-bulb-intensity-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/timestamps/sengled-bulb-intensity-apr-17-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+
+INPUT_PCAP="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/eth1/sengled-bulb-intensity.eth1.local.pcap"
+
+# Device Signature
+DEVICE_IP="192.168.1.201"
+ON_SIGNATURE="$OUTPUT_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== RACHIO SPRINKLER STANDBY =============================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby.wlan1.local.pcap"
+
+# Phone Signature
+OUTPUT_PCAP="$OUTPUT_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/timestamps/rachio-sprinkler-standby-apr-17-2019.timestamps"
+DEVICE_IP="192.168.1.246"
+ON_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+
+# Device Signature
+OUTPUT_PCAP="$OUTPUT_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/timestamps/rachio-sprinkler-standby-apr-17-2019.timestamps"
+DEVICE_IP="192.168.1.143"
+ON_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 ./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =================================================== RING DOORBELL RING ===============================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/ring-doorbell-ring/wlan1/ring-doorbell-ring.wlan1.local.pcap"
+
+# Phone Signature
+OUTPUT_PCAP="$OUTPUT_DIR/ring-doorbell-ring/wlan1/ring-doorbell-ring-standby-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/ring-doorbell-ring/timestamps/ring-doorbell-ring-apr-17-2019.timestamps"
+DEVICE_IP="192.168.1.130"
+ON_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+
+# Device Signature
+OUTPUT_PCAP="$OUTPUT_DIR/ring-doorbell-ring/wlan1/ring-doorbell-ring-standby-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/ring-doorbell-ring/timestamps/ring-doorbell-ring-apr-17-2019.timestamps"
+DEVICE_IP="192.168.1.130"
+ON_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================

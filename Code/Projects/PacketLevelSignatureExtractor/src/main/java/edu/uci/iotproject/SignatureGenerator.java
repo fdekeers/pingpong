@@ -282,7 +282,7 @@ public class SignatureGenerator {
             }
             PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOn, sequenceToDelete);
         }
-        PrintWriterUtils.println("ON Sequences after removal: ", resultsWriter,
+        PrintWriterUtils.println("ON Sequences: ", resultsWriter,
                 DUPLICATE_OUTPUT_TO_STD_OUT);
         for(List<List<PcapPacket>> listOfList : ppListOfListListOn) {
             PrintWriterUtils.println(listOfList.get(0).get(0).length() + "...", resultsWriter,
@@ -303,7 +303,7 @@ public class SignatureGenerator {
             }
             PcapPacketUtils.removeSequenceFromSignature(ppListOfListListOff, sequenceToDelete);
         }
-        PrintWriterUtils.println("OFF Sequences after removal: ", resultsWriter,
+        PrintWriterUtils.println("OFF Sequences: ", resultsWriter,
                 DUPLICATE_OUTPUT_TO_STD_OUT);
         for(List<List<PcapPacket>> listOfList : ppListOfListListOff) {
             PrintWriterUtils.println(listOfList.get(0).get(0).length() + "...", resultsWriter,
@@ -328,6 +328,9 @@ public class SignatureGenerator {
         PrintWriterUtils.println("========================================", resultsWriter,
                 DUPLICATE_OUTPUT_TO_STD_OUT);
         PcapPacketUtils.printSignatures(ppListOfListListOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        // Clean signatures from null elements
+        PcapPacketUtils.cleanSignature(ppListOfListListOn);
+        PcapPacketUtils.cleanSignature(ppListOfListListOff);
         // Printing signatures into files
         PrintUtils.serializeIntoFile(onSignatureFile, ppListOfListListOn);
         PrintUtils.serializeIntoFile(offSignatureFile, ppListOfListListOff);

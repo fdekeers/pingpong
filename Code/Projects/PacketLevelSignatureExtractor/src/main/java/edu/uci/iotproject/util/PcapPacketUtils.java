@@ -234,7 +234,11 @@ public final class PcapPacketUtils {
         List<List<List<PcapPacket>>> copySignatures = new ArrayList<>();
         listDeepCopy(copySignatures, signatures);
         // Traverse and look into the pairs.
-        for (int first = 0; first < signatures.size(); first++) {
+        //for (int first = 0; first < signatures.size(); first++) {
+        int first = 0;
+        int signaturesSize = signatures.size();
+        while(first < signaturesSize) {
+//            System.out.println("First: " + first + " Signatures: " + signatures.get(0).size());
             List<List<PcapPacket>> firstList = signatures.get(first);
             for (int second = first+1; second < signatures.size(); second++) {
                 int maxSignatureEl = 0;
@@ -255,7 +259,9 @@ public final class PcapPacketUtils {
                         if (position == TcpConversationUtils.SignaturePosition.LEFT_ADJACENT) {
                             // Merge to the left side of the first sequence.
                             ppList.addAll(signature);
-                            signature = ppList;
+                            // Remove and then add again to keep the same reference
+                            signature.removeAll(signature);
+                            signature.addAll(ppList);
                             maxSignatureEl = signature.size() > maxSignatureEl ? signature.size() : maxSignatureEl;
                             secondList.remove(ppList); // Remove as we merge.
                             break;
@@ -268,6 +274,7 @@ public final class PcapPacketUtils {
                         } // TcpConversationUtils.SignaturePosition.NOT_ADJACENT.
                     }
                 }
+//                System.out.println("First list size: " + firstList.get(35).size());
                 // Call it a successful merging if there are only less than 5 elements from the second list that
                 // cannot be merged.
                 if (secondList.size() < SIGNATURE_MERGE_THRESHOLD) {
@@ -285,17 +292,40 @@ public final class PcapPacketUtils {
                     return copySignatures;
                 }
             }
+            if (signatures.size() < signaturesSize) {
+                // If there is a concatenation, we check again from index 0
+                signaturesSize = signatures.size();
+                first = 0;
+            } else {
+                signaturesSize = signatures.size();
+                first++;
+            }
+
         }
         return signatures;
     }
 
     /**
-     * Deep copy to create an entirely new {@link List} of {@link List} of {@link List} of {@link PcapPacket} objects.
-     * @param destList A {@link List} of {@link List} of {@link List} of
-     *          {@link PcapPacket} objects that will be the final container of the deep copy
-     * @param sourceList A {@link List} of {@link List} of {@link List} of
-     *          {@link PcapPacket} objects that will be the source of the deep copy.
+     * Clean up null values in in {@code List} of {@code List} of {@code List} of {@code PcapPacket} objects.
+     * @param signature A {@link List} of {@link List} of {@link List} of
+     *          {@link PcapPacket} objects that needs to be cleaned up from null values.
      */
+    public static void cleanSignature(List<List<List<PcapPacket>>> signature) {
+
+        for(List<List<PcapPacket>> listOfListPcap : signature) {
+            for(List<PcapPacket> listOfPcap : listOfListPcap) {
+                listOfPcap.removeIf(el -> el == null);
+            }
+        }
+    }
+
+        /**
+         * Deep copy to create an entirely new {@link List} of {@link List} of {@link List} of {@link PcapPacket} objects.
+         * @param destList A {@link List} of {@link List} of {@link List} of
+         *          {@link PcapPacket} objects that will be the final container of the deep copy
+         * @param sourceList A {@link List} of {@link List} of {@link List} of
+         *          {@link PcapPacket} objects that will be the source of the deep copy.
+         */
     private static void listDeepCopy(List<List<List<PcapPacket>>> destList, List<List<List<PcapPacket>>> sourceList) {
 
         for(List<List<PcapPacket>> llPcapPacket : sourceList) {

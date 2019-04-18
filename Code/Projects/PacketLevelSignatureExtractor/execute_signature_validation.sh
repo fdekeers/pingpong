@@ -308,8 +308,6 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 # =============================================== TP LINK BULB INTENSITY ===============================================
 PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/wlan1/tplink-bulb-intensity.wlan1.local.pcap"
 
-# Has no device side signature.
-
 # PHONE SIDE
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-onClusters-phone-side.cls"
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-offClusters-phone-side.cls"
@@ -326,9 +324,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 # =============================================== BLOSSOM SPRINKLER MODE ===============================================
 PCAP_FILE="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/wlan1/blossom-sprinkler-mode.wlan1.local.pcap"
 
-# Has no device side signature.
-
-# PHONE SIDE (TODO: may possibly be the .incomplete signatures)
+# PHONE SIDE
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-onClusters-phone-side.cls"
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/analyses/blossom-sprinkler-mode-offClusters-phone-side.cls"
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler-mode/signatures/blossom-sprinkler-mode-onSignature-phone-side.sig"
@@ -339,4 +335,95 @@ EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== NEST THERMOSTAT MODE =================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode.wlan1.local.pcap"
+
+# PHONE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/nest-thermostat-mode/nest-thermostat-mode.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="13456"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ==================================================== AMAZON PLUG =====================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/amazon-plug/wlan1/amazon-plug.wlan1.local.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/amazon-plug/analyses/amazon-plug-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/amazon-plug/analyses/amazon-plug-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/amazon-plug/signatures/amazon-plug-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/amazon-plug/signatures/amazon-plug-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/amazon-plug/amazon-plug.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="4990"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =================================================== SENGLED BULB =====================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb/wlan1/sengled-bulb.wlan1.local.pcap"
+
+# PHONE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb/analyses/sengled-bulb-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb/analyses/sengled-bulb-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/sengled-bulb/sengled-bulb.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="8545"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+
+
+PCAP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb/eth1/sengled-bulb.eth1.local.pcap"
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb/analyses/sengled-bulb-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb/analyses/sengled-bulb-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/sengled-bulb/sengled-bulb.eth1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="8467"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== SENGLED BULB INTENSITY ===============================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/wlan1/sengled-bulb-intensity.wlan1.local.pcap"
+
+# PHONE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/sengled-bulb-intensity/sengled-bulb-intensity.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="7888"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+
+PCAP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/eth1/sengled-bulb-intensity.eth1.local.pcap"
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/analyses/sengled-bulb-intensity-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb-intensity/signatures/sengled-bulb-intensity-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/sengled-bulb-intensity/sengled-bulb-intensity.eth1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="906"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
