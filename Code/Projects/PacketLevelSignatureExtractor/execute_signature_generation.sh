@@ -294,26 +294,6 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 
 
 # NEW DEVICES
-# ================================================= DLINK MOTION SENSOR ================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/dlink-sensor/wlan1/dlink-sensor.wlan1.local.pcap"
-
-# No signature found for both phone and device sides
-OUTPUT_PCAP="$OUTPUT_DIR/dlink-sensor/wlan1/dlink-sensor-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/dlink-sensor/timestamps/dlink-sensor-apr-12-2019.timestamps"
-DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/dlink-sensor/signatures/dlink-sensor-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/dlink-sensor/signatures/dlink-sensor-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/dlink-sensor/analyses/dlink-sensor-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/dlink-sensor/analyses/dlink-sensor-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-
 # ================================================= TP LINK BULB COLOR =================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-bulb-color/wlan1/tplink-bulb-color.wlan1.local.pcap"
 
@@ -396,46 +376,6 @@ ON_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-o
 OFF_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-offSignature-phone-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-onClusters-phone-side.cls"
 OFF_ANALYSIS="$OUTPUT_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-# ================================================= ARLO CAMERA RECORD =================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-record/wlan1/arlo-camera-record.wlan1.local.pcap"
-
-# Signature
-OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-record/wlan1/arlo-camera-record-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-record/timestamps/arlo-camera-record-apr-15-2019.timestamps"
-# We used a different phone here
-DEVICE_IP="192.168.1.130"
-ON_SIGNATURE="$OUTPUT_DIR/arlo-camera-record/signatures/arlo-camera-record-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/arlo-camera-record/signatures/arlo-camera-record-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/arlo-camera-record/analyses/arlo-camera-record-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/arlo-camera-record/analyses/arlo-camera-record-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-# ================================================= ARLO CAMERA SOUND ==================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/arlo-camera-sound/wlan1/arlo-camera-sound.wlan1.local.pcap"
-
-# Signature
-OUTPUT_PCAP="$OUTPUT_DIR/arlo-camera-sound/wlan1/arlo-camera-sound-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/arlo-camera-sound/timestamps/arlo-camera-sound-apr-17-2019.timestamps"
-# We used a different phone here
-DEVICE_IP="192.168.1.130"
-ON_SIGNATURE="$OUTPUT_DIR/arlo-camera-sound/signatures/arlo-camera-sound-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/arlo-camera-sound/signatures/arlo-camera-sound-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/arlo-camera-sound/analyses/arlo-camera-sound-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/arlo-camera-sound/analyses/arlo-camera-sound-offClusters-phone-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
@@ -532,27 +472,108 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# =============================================== RACHIO SPRINKLER STANDBY =============================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby.wlan1.local.pcap"
+# ================================================= ECOBEE THERMOSTAT ==================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/ecobee-thermostat/wlan1/ecobee-thermostat.wlan1.local.pcap"
 
 # Phone Signature
-OUTPUT_PCAP="$OUTPUT_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/timestamps/rachio-sprinkler-standby-apr-17-2019.timestamps"
-DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-offClusters-phone-side.cls"
+OUTPUT_PCAP="$OUTPUT_DIR/ecobee-thermostat/wlan1/ecobee-thermostat-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/ecobee-thermostat/timestamps/ecobee-thermostat-apr-17-2019.timestamps"
+DEVICE_IP="192.168.1.130"
+ON_SIGNATURE="$OUTPUT_DIR/ecobee-thermostat/signatures/ecobee-thermostat-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/ecobee-thermostat/signatures/ecobee-thermostat-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/ecobee-thermostat/analyses/ecobee-thermostat-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/ecobee-thermostat/analyses/ecobee-thermostat-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="1,1,1"
+DELETED_SEQUENCES_OFF="1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== ECOBEE THERMOSTAT FAN ================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/ecobee-thermostat-fan/wlan1/ecobee-thermostat-fan.wlan1.local.pcap"
+
+# Phone Signature
+OUTPUT_PCAP="$OUTPUT_DIR/ecobee-thermostat-fan/wlan1/ecobee-thermostat-fan-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/ecobee-thermostat-fan/timestamps/ecobee-thermostat-fan-apr-18-2019.timestamps"
+DEVICE_IP="192.168.1.130"
+ON_SIGNATURE="$OUTPUT_DIR/ecobee-thermostat-fan/signatures/ecobee-thermostat-fan-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/ecobee-thermostat-fan/signatures/ecobee-thermostat-fan-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/ecobee-thermostat-fan/analyses/ecobee-thermostat-fan-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/ecobee-thermostat-fan/analyses/ecobee-thermostat-fan-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="1,1"
+DELETED_SEQUENCES_OFF="1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# TODO: No signature???
+# ===================================================== NEST CAMERA ====================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-camera/wlan1/nest-camera.wlan1.local.pcap"
+
+# Phone Signature
+OUTPUT_PCAP="$OUTPUT_DIR/nest-camera/wlan1/nest-camera-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-camera/timestamps/nest-camera-apr-18-2019.timestamps"
+DEVICE_IP="192.168.1.130"
+ON_SIGNATURE="$OUTPUT_DIR/nest-camera/signatures/nest-camera-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/nest-camera/signatures/nest-camera-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/nest-camera/analyses/nest-camera-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/nest-camera/analyses/nest-camera-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="2"
+DELETED_SEQUENCES_OFF="0"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =================================================== NEST CAMERA MIC ==================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-camera-mic/wlan1/nest-camera-mic.wlan1.local.pcap"
+
+# Phone Signature
+OUTPUT_PCAP="$OUTPUT_DIR/nest-camera-mic/wlan1/nest-camera-mic-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-camera-mic/timestamps/nest-camera-mic-apr-18-2019.timestamps"
+DEVICE_IP="192.168.1.130"
+ON_SIGNATURE="$OUTPUT_DIR/nest-camera-mic/signatures/nest-camera-mic-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/nest-camera-mic/signatures/nest-camera-mic-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/nest-camera-mic/analyses/nest-camera-mic-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/nest-camera-mic/analyses/nest-camera-mic-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= RACHIO SPRINKLER ===================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/rachio-sprinkler/wlan1/rachio-sprinkler.wlan1.local.pcap"
+
+# Device Signature
+OUTPUT_PCAP="$OUTPUT_DIR/rachio-sprinkler/wlan1/rachio-sprinkler-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler/timestamps/rachio-sprinkler-apr-18-2019.timestamps"
+DEVICE_IP="192.168.1.143"
+ON_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler/signatures/rachio-sprinkler-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler/signatures/rachio-sprinkler-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler/analyses/rachio-sprinkler-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/rachio-sprinkler/analyses/rachio-sprinkler-offClusters-device-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# =============================================== RACHIO SPRINKLER STANDBY =============================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby.wlan1.local.pcap"
 
 # Device Signature
 OUTPUT_PCAP="$OUTPUT_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/timestamps/rachio-sprinkler-standby-apr-17-2019.timestamps"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/timestamps/rachio-sprinkler-standby-apr-18-2019.timestamps"
 DEVICE_IP="192.168.1.143"
 ON_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-onSignature-device-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-offSignature-device-side.sig"
@@ -563,9 +584,31 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
+# TODO: NEED TO REDO THIS???
+# ================================================= ROOMBA VACUUM ROBOT ================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/wlan1/roomba-vacuum-robot.wlan1.local.pcap"
+
+# Device Signature
+OUTPUT_PCAP="$OUTPUT_DIR/roomba-vacuum-robot/wlan1/roomba-vacuum-robot-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-apr-18-2019.timestamps"
+DEVICE_IP="192.168.1.153"
+ON_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# TODO: NEED TO REDO THIS ON/OFF EXPERIMENT???
 # =================================================== RING DOORBELL RING ===============================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/ring-doorbell-ring/wlan1/ring-doorbell-ring.wlan1.local.pcap"
 

@@ -425,5 +425,90 @@ SIGNATURE_DURATION="906"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= ECOBEE THERMOSTAT ==================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/ecobee-thermostat/wlan1/ecobee-thermostat.wlan1.local.pcap"
+
+# PHONE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/ecobee-thermostat/analyses/ecobee-thermostat-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/ecobee-thermostat/analyses/ecobee-thermostat-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/ecobee-thermostat/signatures/ecobee-thermostat-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/ecobee-thermostat/signatures/ecobee-thermostat-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/ecobee-thermostat/ecobee-thermostat.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="733"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+
+# ======================================================================================================================
+
+# =============================================== ECOBEE THERMOSTAT FAN ================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/ecobee-thermostat-fan/wlan1/ecobee-thermostat-fan.wlan1.local.pcap"
+
+# PHONE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/ecobee-thermostat-fan/analyses/ecobee-thermostat-fan-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/ecobee-thermostat-fan/analyses/ecobee-thermostat-fan-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/ecobee-thermostat-fan/signatures/ecobee-thermostat-fan-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/ecobee-thermostat-fan/signatures/ecobee-thermostat-fan-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/ecobee-thermostat-fan/ecobee-thermostat-fan.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="1953"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+
+# ======================================================================================================================
+
+# =================================================== NEST CAMERA MIC ==================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/nest-camera-mic/wlan1/nest-camera-mic.wlan1.local.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/nest-camera-mic/analyses/nest-camera-mic-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/nest-camera-mic/analyses/nest-camera-mic-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/nest-camera-mic/signatures/nest-camera-mic-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/nest-camera-mic/signatures/nest-camera-mic-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/nest-camera-mic/nest-camera-mic.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="97"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= RACHIO SPRINKLER ===================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler/wlan1/rachio-sprinkler.wlan1.local.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/rachio-sprinkler/analyses/rachio-sprinkler-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/rachio-sprinkler/analyses/rachio-sprinkler-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/rachio-sprinkler/signatures/rachio-sprinkler-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/rachio-sprinkler/signatures/rachio-sprinkler-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/rachio-sprinkler/rachio-sprinkler.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="2695"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# TODO: NEED TO REDO THIS ON/OFF EXPERIMENT???
+# =============================================== RACHIO SPRINKLER STANDBY =============================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby.wlan1.local.pcap"
+
+# PHONE SIDE - too many false positives so we don't take it
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/signatures/rachio-sprinkler-standby-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/rachio-sprinkler-standby/rachio-sprinkler-standby.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="2791"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
