@@ -48,7 +48,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      * Keeping track of maximum number of skipped packets
      */
     private int mMaxSkippedPackets;
-//    private List<Integer> mMaxSkippedPackets;
+    private List<Integer> mSkippedPackets;
 
     private int mLimitSkippedPackets;
 
@@ -84,7 +84,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
         mMaxSkippedPackets = 0;
-//        mMaxSkippedPackets = new ArrayList<>();
+        mSkippedPackets = new ArrayList<>();
         // Give integer's MAX_VALUE if -1
         mLimitSkippedPackets = limitSkippedPackets == -1 ? Integer.MAX_VALUE : limitSkippedPackets;
     }
@@ -174,7 +174,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
             if (mLimitSkippedPackets < skippedPackets) {
                 stillMatch = false;
             }
-//            mMaxSkippedPackets.add(skippedPackets);
+            mSkippedPackets.add(skippedPackets);
         }
         return stillMatch;
     }
@@ -283,7 +283,11 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
     public int getMaxSkippedPackets() {
        return mMaxSkippedPackets;
     }
-//    public List<Integer> getMaxSkippedPackets() {
-//        return mMaxSkippedPackets;
-//    }
+
+    /**
+     * Return the numbers of skipped packets.
+     */
+    public List<Integer> getSkippedPackets() {
+        return mSkippedPackets;
+    }
 }

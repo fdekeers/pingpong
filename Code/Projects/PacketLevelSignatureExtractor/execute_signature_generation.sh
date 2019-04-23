@@ -368,7 +368,7 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 # =============================================== NEST THERMOSTAT MODE =================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode.wlan1.local.pcap"
 
-# Phone side - TODO: THIS SIDE GENERATES SOME FALSE POSITIVES
+# Phone side
 OUTPUT_PCAP="$OUTPUT_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode-processed.pcap"
 TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/timestamps/nest-thermostat-mode-apr-16-2019.timestamps"
 DEVICE_IP="192.168.1.130"
@@ -381,7 +381,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # =================================================== AMAZON PLUG ======================================================
@@ -510,45 +510,6 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: No signature???
-# ===================================================== NEST CAMERA ====================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-camera/wlan1/nest-camera.wlan1.local.pcap"
-
-# Phone Signature
-OUTPUT_PCAP="$OUTPUT_DIR/nest-camera/wlan1/nest-camera-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-camera/timestamps/nest-camera-apr-18-2019.timestamps"
-DEVICE_IP="192.168.1.130"
-ON_SIGNATURE="$OUTPUT_DIR/nest-camera/signatures/nest-camera-onSignature-device-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/nest-camera/signatures/nest-camera-offSignature-device-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/nest-camera/analyses/nest-camera-onClusters-device-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/nest-camera/analyses/nest-camera-offClusters-device-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="2"
-DELETED_SEQUENCES_OFF="0"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
-# =================================================== NEST CAMERA MIC ==================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-camera-mic/wlan1/nest-camera-mic.wlan1.local.pcap"
-
-# Phone Signature
-OUTPUT_PCAP="$OUTPUT_DIR/nest-camera-mic/wlan1/nest-camera-mic-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-camera-mic/timestamps/nest-camera-mic-apr-18-2019.timestamps"
-DEVICE_IP="192.168.1.130"
-ON_SIGNATURE="$OUTPUT_DIR/nest-camera-mic/signatures/nest-camera-mic-onSignature-device-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/nest-camera-mic/signatures/nest-camera-mic-offSignature-device-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/nest-camera-mic/analyses/nest-camera-mic-onClusters-device-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/nest-camera-mic/analyses/nest-camera-mic-offClusters-device-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
 # ================================================= RACHIO SPRINKLER ===================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/rachio-sprinkler/wlan1/rachio-sprinkler.wlan1.local.pcap"
 
@@ -593,15 +554,16 @@ INPUT_PCAP="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/wlan1/roomba-vacuum-robot.w
 
 # Device Signature
 OUTPUT_PCAP="$OUTPUT_DIR/roomba-vacuum-robot/wlan1/roomba-vacuum-robot-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-apr-18-2019.timestamps"
-DEVICE_IP="192.168.1.153"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-apr-21-2019.timestamps"
+#DEVICE_IP="192.168.1.153"
+DEVICE_IP="192.168.1.246"
 ON_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-onSignature-device-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-offSignature-device-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-onClusters-device-side.cls"
 OFF_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-offClusters-device-side.cls"
 EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
+DELETED_SEQUENCES_ON="3,4"
+DELETED_SEQUENCES_OFF="2,4"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"

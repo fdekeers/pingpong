@@ -187,21 +187,18 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                 detectedEvents.stream().filter(ua -> ua.getType() == UserAction.Type.TOGGLE_OFF).count();
         String onMaximumSkippedPackets = "# Maximum number of skipped packets in ON signature " +
                 Integer.toString(onDetector.getMaxSkippedPackets());
-//        String onMaxSkippedPackets = "# Number of skipped packets in ON signature: ";
-//        for(Integer skippedPackets : onDetector.getMaxSkippedPackets()) {
-//            System.out.println(skippedPackets);
-//        }
         String offMaximumSkippedPackets = "# Maximum number of skipped packets in OFF signature " +
                 Integer.toString(offDetector.getMaxSkippedPackets());
-//        String offMaxSkippedPackets = "# Number of skipped packets in OFF signature: ";
-//        for(Integer skippedPackets : offDetector.getMaxSkippedPackets()) {
-//            System.out.println(skippedPackets);
-//        }
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(onMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        for(Integer skippedPackets : onDetector.getSkippedPackets()) {
+            PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        }
         PrintWriterUtils.println(offMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-
+        for(Integer skippedPackets : offDetector.getSkippedPackets()) {
+            PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        }
         // Flush output to results file and close it.
         resultsWriter.flush();
         resultsWriter.close();
@@ -240,8 +237,11 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     private int mInclusionTimeMillis;
 
+    /**
+     * Skipped-packet analysis.
+     */
     private int mMaxSkippedPackets;
-//    private List<Integer> mMaxSkippedPackets;
+    private List<Integer> mSkippedPackets;
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, int signatureDuration,
                                    boolean isRangeBased, double eps, int limitSkippedPackets) {
@@ -280,15 +280,19 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
         mMaxSkippedPackets = 0;
-//        mMaxSkippedPackets = new ArrayList<>();
+        mSkippedPackets = new ArrayList<>();
     }
 
     public int getMaxSkippedPackets() {
         return mMaxSkippedPackets;
     }
-//    public List<Integer> getMaxSkippedPackets() {
-//        return mMaxSkippedPackets;
-//    }
+
+    public List<Integer> getSkippedPackets() {
+        for (Layer2ClusterMatcher matcher : mClusterMatchers) {
+            mSkippedPackets.addAll(matcher.getSkippedPackets());
+        }
+        return mSkippedPackets;
+    }
 
     @Override
     public void gotPacket(PcapPacket packet) {
@@ -307,7 +311,10 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             if (mMaxSkippedPackets < ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets()) {
                 mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
             }
-//            mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
+            //if (mSkippedPackets.size() < ((Layer2ClusterMatcher) clusterMatcher).getSkippedPackets().size()) {
+            //    mSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getSkippedPackets();
+            //}
+            //mSkippedPackets.addAll(((Layer2ClusterMatcher) clusterMatcher).getSkippedPackets());
         }
     }
 

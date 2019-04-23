@@ -462,22 +462,6 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 # ======================================================================================================================
 
-# =================================================== NEST CAMERA MIC ==================================================
-PCAP_FILE="$SIGNATURES_BASE_DIR/nest-camera-mic/wlan1/nest-camera-mic.wlan1.local.pcap"
-
-# DEVICE SIDE
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/nest-camera-mic/analyses/nest-camera-mic-onClusters-device-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/nest-camera-mic/analyses/nest-camera-mic-offClusters-device-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/nest-camera-mic/signatures/nest-camera-mic-onSignature-device-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/nest-camera-mic/signatures/nest-camera-mic-offSignature-device-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/nest-camera-mic/nest-camera-mic.wlan1.validation.pcap___device-side.detectionresults"
-SIGNATURE_DURATION="97"
-EPSILON="10.0"
-
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
 # ================================================= RACHIO SPRINKLER ===================================================
 PCAP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler/wlan1/rachio-sprinkler.wlan1.local.pcap"
 
@@ -494,11 +478,8 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: NEED TO REDO THIS ON/OFF EXPERIMENT???
 # =============================================== RACHIO SPRINKLER STANDBY =============================================
 PCAP_FILE="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/wlan1/rachio-sprinkler-standby.wlan1.local.pcap"
-
-# PHONE SIDE - too many false positives so we don't take it
 
 # DEVICE SIDE
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/rachio-sprinkler-standby/analyses/rachio-sprinkler-standby-onClusters-device-side.cls"
@@ -512,3 +493,6 @@ EPSILON="10.0"
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
+
+
+
