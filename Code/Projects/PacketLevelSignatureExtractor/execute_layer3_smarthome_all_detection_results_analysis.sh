@@ -226,17 +226,128 @@ RESULTS_FILE="$RESULTS_BASE_DIR/blossom-sprinkler-mode/blossom-sprinkler-mode.et
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="false"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
-# =============================================== NEST THERMOSTAT MODE =================================================
-TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/nest-thermostat-mode/timestamps/nest-thermostat-mode-smarthome-apr-23-2019.timestamps"
+# ==================================================== AMAZON PLUG =====================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/amazon-plug/timestamps/amazon-plug-smarthome-apr-23-2019.timestamps"
 
-# PHONE SIDE
-RESULTS_FILE="$RESULTS_BASE_DIR/nest-thermostat-mode/nest-thermostat-mode.eth0.detection.pcap___phone-side.detectionresults"
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/amazon-plug/amazon-plug.eth0.detection.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
-EXACT_MATCH="true"
+EXACT_MATCH="false"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
 #./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
+
+
+# =================================================== SENGLED BULB =====================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-smarthome-apr-23-2019.timestamps"
+
+# PHONE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb/sengled-bulb.eth0.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb/sengled-bulb.eth0.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# =============================================== SENGLED BULB INTENSITY ===============================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/sengled-bulb-intensity/timestamps/sengled-bulb-intensity-smarthome-apr-24-2019.timestamps"
+
+# PHONE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb-intensity/sengled-bulb-intensity.eth0.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb-intensity/sengled-bulb-intensity.eth0.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= ECOBEE THERMOSTAT ==================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/ecobee-thermostat/timestamps/ecobee-thermostat-smarthome-apr-24-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/ecobee-thermostat/ecobee-thermostat.eth0.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# =============================================== ECOBEE THERMOSTAT FAN ================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/ecobee-thermostat-fan/timestamps/ecobee-thermostat-fan-smarthome-apr-24-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/ecobee-thermostat-fan/ecobee-thermostat-fan.eth0.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= RACHIO SPRINKLER ===================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/rachio-sprinkler/timestamps/rachio-sprinkler-smarthome-apr-25-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/rachio-sprinkler/rachio-sprinkler.eth0.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# =============================================== RACHIO SPRINKLER STANDBY =============================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/rachio-sprinkler-standby/timestamps/rachio-sprinkler-standby-smarthome-apr-25-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/rachio-sprinkler-standby/rachio-sprinkler-standby.eth0.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= ROOMBA VACUUM ROBOT ================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-smarthome-apr-27-2019.timestamps"
+
+# PHONE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/roomba-vacuum-robot/roomba-vacuum-robot.eth0.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ===================================================== RING ALARM =====================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/ring-alarm/timestamps/ring-alarm-smarthome-apr-26-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/ring-alarm/ring-alarm.eth0.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="false"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+

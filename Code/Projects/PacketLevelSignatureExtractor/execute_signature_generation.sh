@@ -318,18 +318,19 @@ INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/wlan1/tplink-bulb-intensi
 
 # No signature found for both phone and device sides
 OUTPUT_PCAP="$OUTPUT_DIR/tplink-bulb-intensity/wlan1/tplink-bulb-intensity-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/timestamps/tplink-bulb-intensity-apr-12-2019.timestamps"
+#TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/timestamps/tplink-bulb-intensity-apr-12-2019.timestamps"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-intensity/timestamps/tplink-bulb-intensity-apr-26-2019.timestamps"
 DEVICE_IP="192.168.1.246"
 ON_SIGNATURE="$OUTPUT_DIR/tplink-bulb-intensity/signatures/tplink-bulb-intensity-onSignature-phone-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/tplink-bulb-intensity/signatures/tplink-bulb-intensity-offSignature-phone-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-onClusters-phone-side.cls"
 OFF_ANALYSIS="$OUTPUT_DIR/tplink-bulb-intensity/analyses/tplink-bulb-intensity-offClusters-phone-side.cls"
 EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
+DELETED_SEQUENCES_ON="0"
+DELETED_SEQUENCES_OFF="0"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # =============================================== BLOSSOM SPRINKLER MODE ===============================================
@@ -365,29 +366,9 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# =============================================== NEST THERMOSTAT MODE =================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode.wlan1.local.pcap"
-
-# Phone side
-OUTPUT_PCAP="$OUTPUT_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/timestamps/nest-thermostat-mode-apr-16-2019.timestamps"
-DEVICE_IP="192.168.1.130"
-ON_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
 # =================================================== AMAZON PLUG ======================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/amazon-plug/wlan1/amazon-plug.wlan1.local.pcap"
 
-# TODO: The phone side does not really have a clear signature
 # Device Signature
 OUTPUT_PCAP="$OUTPUT_DIR/amazon-plug/wlan1/amazon-plug-processed.pcap"
 TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/amazon-plug/timestamps/amazon-plug-apr-16-2019.timestamps"
@@ -409,7 +390,8 @@ INPUT_PCAP="$SIGNATURES_BASE_DIR/sengled-bulb/wlan1/sengled-bulb.wlan1.local.pca
 
 # Phone Signature
 OUTPUT_PCAP="$OUTPUT_DIR/sengled-bulb/wlan1/sengled-bulb-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-apr-16-2019.timestamps"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-apr-24-2019.timestamps"
+#TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-apr-16-2019.timestamps"
 DEVICE_IP="192.168.1.246"
 ON_SIGNATURE="$OUTPUT_DIR/sengled-bulb/signatures/sengled-bulb-onSignature-phone-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/sengled-bulb/signatures/sengled-bulb-offSignature-phone-side.sig"
@@ -548,55 +530,36 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: NEED TO REDO THIS???
 # ================================================= ROOMBA VACUUM ROBOT ================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/wlan1/roomba-vacuum-robot.wlan1.local.pcap"
 
 # Device Signature
 OUTPUT_PCAP="$OUTPUT_DIR/roomba-vacuum-robot/wlan1/roomba-vacuum-robot-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-apr-21-2019.timestamps"
-#DEVICE_IP="192.168.1.153"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-apr-25-2019.timestamps"
 DEVICE_IP="192.168.1.246"
-ON_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-onSignature-device-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-offSignature-device-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-onClusters-device-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-offClusters-device-side.cls"
+ON_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-offClusters-phone-side.cls"
 EPSILON="10.0"
-DELETED_SEQUENCES_ON="3,4"
-DELETED_SEQUENCES_OFF="2,4"
+DELETED_SEQUENCES_ON="0"
+DELETED_SEQUENCES_OFF="0"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-
-# TODO: NEED TO REDO THIS ON/OFF EXPERIMENT???
-# =================================================== RING DOORBELL RING ===============================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/ring-doorbell-ring/wlan1/ring-doorbell-ring.wlan1.local.pcap"
-
-# Phone Signature
-OUTPUT_PCAP="$OUTPUT_DIR/ring-doorbell-ring/wlan1/ring-doorbell-ring-standby-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/ring-doorbell-ring/timestamps/ring-doorbell-ring-apr-17-2019.timestamps"
-DEVICE_IP="192.168.1.130"
-ON_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-onSignature-phone-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-offClusters-phone-side.cls"
-EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
-
-PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
-#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ===================================================== RING ALARM =====================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/ring-alarm/wlan1/ring-alarm.wlan1.local.pcap"
 
 # Device Signature
-OUTPUT_PCAP="$OUTPUT_DIR/ring-doorbell-ring/wlan1/ring-doorbell-ring-standby-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/ring-doorbell-ring/timestamps/ring-doorbell-ring-apr-17-2019.timestamps"
-DEVICE_IP="192.168.1.130"
-ON_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-onSignature-device-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/ring-doorbell-ring/signatures/ring-doorbell-ring-offSignature-phone-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-onClusters-phone-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/ring-doorbell-ring/analyses/ring-doorbell-ring-offClusters-phone-side.cls"
+OUTPUT_PCAP="$OUTPUT_DIR/ring-alarm/wlan1/alarm-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/ring-alarm/timestamps/ring-alarm-apr-26-2019.timestamps"
+DEVICE_IP="192.168.1.113"
+ON_SIGNATURE="$OUTPUT_DIR/ring-alarm/signatures/ring-alarm-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/ring-alarm/signatures/ring-alarm-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/ring-alarm/analyses/ring-alarm-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/ring-alarm/analyses/ring-alarm-offClusters-device-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"

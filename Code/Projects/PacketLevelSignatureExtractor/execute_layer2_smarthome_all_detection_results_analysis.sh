@@ -20,7 +20,7 @@ EXACT_MATCH="true"
 
 
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -33,14 +33,14 @@ RESULTS_FILE="$RESULTS_BASE_DIR/blossom-sprinkler/blossom-sprinkler.wlan1.detect
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="false"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 RESULTS_FILE="$RESULTS_BASE_DIR/blossom-sprinkler/blossom-sprinkler.wlan1.detection.pcap___phone-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="false"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -53,14 +53,14 @@ RESULTS_FILE="$RESULTS_BASE_DIR/dlink-plug/dlink-plug.wlan1.detection.pcap___dev
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 
 # PHONE SIDE
 RESULTS_FILE="$RESULTS_BASE_DIR/dlink-plug/dlink-plug.wlan1.detection.pcap___phone-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -73,7 +73,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/dlink-siren/dlink-siren.wlan1.detection.pcap___p
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -88,7 +88,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/kwikset-doorlock/kwikset-doorlock.wlan1.detectio
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -103,7 +103,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/nest-thermostat/nest-thermostat.wlan1.detection.
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -118,7 +118,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/st-plug/st-plug.wlan1.detection.pcap___phone-sid
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -133,7 +133,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/tplink-bulb/tplink-bulb.wlan1.detection.pcap___p
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -146,14 +146,14 @@ RESULTS_FILE="$RESULTS_BASE_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___d
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 
 # DEVICE SIDE OUTBOUND
 RESULTS_FILE="$RESULTS_BASE_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side-outbound.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -168,7 +168,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/wemo-insight-plug/wemo-insight-plug.wlan1.detect
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
@@ -183,5 +183,168 @@ RESULTS_FILE="$RESULTS_BASE_DIR/wemo-plug/wemo-plug.wlan1.detection.pcap___phone
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+
+# NEW DEVICES
+# ================================================ TP-LINK BULB COLOR ==================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-bulb-color/timestamps/tplink-bulb-color-smarthome-apr-22-2019.timestamps"
+
+# PHONE SIDE
+# This one is going to generate >100 FPs because every event is counted twice (same signatures for ON and OFF).
+RESULTS_FILE="$RESULTS_BASE_DIR/tplink-bulb-color/tplink-bulb-color.wlan1.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ============================================== TP-LINK BULB INTENSITY ================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-bulb-intensity/timestamps/tplink-bulb-intensity-smarthome-apr-23-2019.timestamps"
+
+# PHONE SIDE
+# This one is going to generate >100 FPs because every event is counted twice (same signatures for ON and OFF).
+RESULTS_FILE="$RESULTS_BASE_DIR/tplink-bulb-intensity/tplink-bulb-intensity.wlan1.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= BLOSSOM SPRINKLER ==================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/blossom-sprinkler-mode/timestamps/blossom-sprinkler-mode-smarthome-apr-22-2019.timestamps"
+
+# PHONE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/blossom-sprinkler-mode/blossom-sprinkler-mode.wlan1.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ==================================================== AMAZON PLUG =====================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/amazon-plug/timestamps/amazon-plug-smarthome-apr-23-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/amazon-plug/amazon-plug.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# =================================================== SENGLED BULB =====================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-smarthome-apr-23-2019.timestamps"
+
+# PHONE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb/sengled-bulb.eth0.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb/sengled-bulb.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# =============================================== SENGLED BULB INTENSITY ===============================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/sengled-bulb-intensity/timestamps/sengled-bulb-intensity-smarthome-apr-24-2019.timestamps"
+
+# PHONE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb-intensity/sengled-bulb-intensity.wlan1.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb-intensity/sengled-bulb-intensity.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= ECOBEE THERMOSTAT ==================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/ecobee-thermostat/timestamps/ecobee-thermostat-smarthome-apr-24-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/ecobee-thermostat/ecobee-thermostat.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# =============================================== ECOBEE THERMOSTAT FAN ================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/ecobee-thermostat-fan/timestamps/ecobee-thermostat-fan-smarthome-apr-24-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/ecobee-thermostat-fan/ecobee-thermostat-fan.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= RACHIO SPRINKLER ===================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/rachio-sprinkler/timestamps/rachio-sprinkler-smarthome-apr-25-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/rachio-sprinkler/rachio-sprinkler.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# =============================================== RACHIO SPRINKLER STANDBY =============================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/rachio-sprinkler-standby/timestamps/rachio-sprinkler-standby-smarthome-apr-25-2019.timestamps"
+
+# This one is going to generate 100 FPs because every event is counted twice (same signatures for ON and OFF).
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/rachio-sprinkler-standby/rachio-sprinkler-standby.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
 ./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ================================================= ROOMBA VACUUM ROBOT ================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-smarthome-apr-27-2019.timestamps"
+
+# PHONE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/roomba-vacuum-robot/roomba-vacuum-robot.wlan1.detection.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+
+# ===================================================== RING ALARM =====================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/ring-alarm/timestamps/ring-alarm-smarthome-apr-26-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/ring-alarm/ring-alarm.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================

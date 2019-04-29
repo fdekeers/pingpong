@@ -192,13 +192,14 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(onMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        for(Integer skippedPackets : onDetector.getSkippedPackets()) {
-            PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        }
+        // TODO: We do not use the feature for now because it is essentially the same as signature duration.
+        //for(Integer skippedPackets : onDetector.getSkippedPackets()) {
+        //    PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        //}
         PrintWriterUtils.println(offMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        for(Integer skippedPackets : offDetector.getSkippedPackets()) {
-            PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        }
+        //for(Integer skippedPackets : offDetector.getSkippedPackets()) {
+        //    PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+        //}
         // Flush output to results file and close it.
         resultsWriter.flush();
         resultsWriter.close();
@@ -311,10 +312,6 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             if (mMaxSkippedPackets < ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets()) {
                 mMaxSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getMaxSkippedPackets();
             }
-            //if (mSkippedPackets.size() < ((Layer2ClusterMatcher) clusterMatcher).getSkippedPackets().size()) {
-            //    mSkippedPackets = ((Layer2ClusterMatcher) clusterMatcher).getSkippedPackets();
-            //}
-            //mSkippedPackets.addAll(((Layer2ClusterMatcher) clusterMatcher).getSkippedPackets());
         }
     }
 

@@ -216,8 +216,8 @@ public class SignatureGenerator {
         int numberOfEventsPerType = triggerTimes.size() / 2;
         int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.1);
         int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.1);
-        //int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.5);
-        //int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.5);
+        //int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.8);
+        //int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.8);
         int minPts = lowerBound;
         DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(eps, minPts);
         List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);

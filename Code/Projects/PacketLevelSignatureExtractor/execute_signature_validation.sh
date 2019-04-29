@@ -337,22 +337,6 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# =============================================== NEST THERMOSTAT MODE =================================================
-PCAP_FILE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/wlan1/nest-thermostat-mode.wlan1.local.pcap"
-
-# PHONE SIDE
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-onClusters-phone-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/nest-thermostat-mode/analyses/nest-thermostat-mode-offClusters-phone-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-onSignature-phone-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/nest-thermostat-mode/signatures/nest-thermostat-mode-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/nest-thermostat-mode/nest-thermostat-mode.wlan1.validation.pcap___phone-side.detectionresults"
-SIGNATURE_DURATION="13456"
-EPSILON="10.0"
-
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
-# ======================================================================================================================
-
 # ==================================================== AMAZON PLUG =====================================================
 PCAP_FILE="$SIGNATURES_BASE_DIR/amazon-plug/wlan1/amazon-plug.wlan1.local.pcap"
 
@@ -378,7 +362,7 @@ OFF_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb/analyses/sengled-bulb-offCluster
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-onSignature-phone-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-offSignature-phone-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/sengled-bulb/sengled-bulb.wlan1.validation.pcap___phone-side.detectionresults"
-SIGNATURE_DURATION="8545"
+SIGNATURE_DURATION="10045"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -392,7 +376,7 @@ OFF_ANALYSIS="$SIGNATURES_BASE_DIR/sengled-bulb/analyses/sengled-bulb-offCluster
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/signatures/sengled-bulb-offSignature-device-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/sengled-bulb/sengled-bulb.eth1.validation.pcap___device-side.detectionresults"
-SIGNATURE_DURATION="8467"
+SIGNATURE_DURATION="8959"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -494,5 +478,36 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
+# ================================================= ROOMBA VACUUM ROBOT ================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/wlan1/roomba-vacuum-robot.wlan1.local.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/analyses/roomba-vacuum-robot-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/signatures/roomba-vacuum-robot-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/roomba-vacuum-robot/roomba-vacuum-robot.wlan1.validation.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="5959"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ===================================================== RING ALARM =====================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/ring-alarm/wlan1/ring-alarm.wlan1.local.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/ring-alarm/analyses/ring-alarm-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/ring-alarm/analyses/ring-alarm-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/ring-alarm/signatures/ring-alarm-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/ring-alarm/signatures/ring-alarm-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/ring-alarm/ring-alarm.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="665"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
 
 

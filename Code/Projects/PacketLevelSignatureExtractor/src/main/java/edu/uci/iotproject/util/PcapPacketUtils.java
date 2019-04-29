@@ -670,6 +670,12 @@ public final class PcapPacketUtils {
                                                        PcapPacket lowerBound, PcapPacket upperBound) {
 
         List<PcapPacket> listBounds = new ArrayList<>();
+        // Just return the lower and upper bounds when their values are the same --- faster
+        if (lowerBound.length() == upperBound.length()) {
+            listBounds.add(0, lowerBound);
+            listBounds.add(1, upperBound);
+            return listBounds;
+        }
         // Iterate over PcapPacket one by one
         for(List<List<PcapPacket>> listOfListPcapPacket : corePointRange) {
             List<PcapPacket> listCorePointLowerBound = listOfListPcapPacket.get(0);

@@ -262,7 +262,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ======================================================================================================================
 
 # =================================================== SENGLED BULB =====================================================
-TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-apr-16-2019.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/sengled-bulb/timestamps/sengled-bulb-apr-24-2019.timestamps"
 
 # PHONE SIDE
 RESULTS_FILE="$RESULTS_BASE_DIR/sengled-bulb/sengled-bulb.wlan1.validation.pcap___phone-side.detectionresults"
@@ -339,4 +339,26 @@ ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
 #./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= ROOMBA VACUUM ROBOT ================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/roomba-vacuum-robot/timestamps/roomba-vacuum-robot-apr-25-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/roomba-vacuum-robot/roomba-vacuum-robot.wlan1.validation.pcap___phone-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ===================================================== RING ALARM =====================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/ring-alarm/timestamps/ring-alarm-apr-26-2019.timestamps"
+
+# DEVICE SIDE
+RESULTS_FILE="$RESULTS_BASE_DIR/ring-alarm/ring-alarm.wlan1.validation.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
