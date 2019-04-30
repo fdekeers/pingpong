@@ -290,7 +290,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 
 # ============================================== TP-LINK BULB INTENSITY ================================================
-PCAP_FILE="$PCAPS_BASE_DIR/tplink-bulb-color/wlan1/tplink-bulb-color.wlan1.detection.pcap"
+PCAP_FILE="$PCAPS_BASE_DIR/tplink-bulb-intensity/wlan1/tplink-bulb-intensity.wlan1.detection.pcap"
 
 # Has no device side signature.
 
@@ -304,7 +304,7 @@ SIGNATURE_DURATION="209"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
-#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 
