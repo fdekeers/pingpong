@@ -159,10 +159,10 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
         }
     }
 
-    // Update the maximum number of skipped packets
+    // Update the maximum number of skipped packets.
     private boolean checkMaxSkippedPackets(List<PcapPacket> flowPackets, List<PcapPacket> matchedPackets) {
         // Count number of skipped packets by looking into
-        // the difference of indices of two matched packets
+        // the difference of indices of two matched packets.
         boolean stillMatch = true;
         for(int i = 1; i < matchedPackets.size(); ++i) {
             int currIndex = flowPackets.indexOf(matchedPackets.get(i-1));
@@ -212,6 +212,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
         // Make a shallow copy of the list so that we can clean up the actual list when a matcher is terminated.
         // Otherwise, we would get an exception for changing the list while iterating on it.
         List<Layer2RangeMatcher> listMatchersCopy = new ArrayList<>(listMatchers);
+        Layer2RangeMatcher previousMatcher = null;
         for(Layer2RangeMatcher matcher : listMatchersCopy) {
             Layer2RangeMatcher sm = matcher;
             // Check if no packets are matched yet or if there are matched packets, the next packet to be matched
@@ -224,6 +225,21 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                     newPacket.getTimestamp().isAfter(sm.getLastPacket().getTimestamp())) {
                 boolean matched = sm.matchPacket(newPacket);
                 if (matched) {
+                    // BUG: found on May 29, 2019
+                    // We need to remove a previous match if the current match is later in time.
+                    // This is done only if we have matched at least 1 packet (we are about to match the second or
+                    // later packets) and we match for the same packet position in the signature (check the size!).
+                    if (previousMatcher != null && sm.getMatchedPacketsCount() > 1 &&
+                            previousMatcher.getMatchedPacketsCount() == sm.getMatchedPacketsCount()) {
+                        List<PcapPacket> previouslyMatchedPackets = previousMatcher.getMatchedPackets();
+                        List<PcapPacket> currentlyMatchedPackets = sm.getMatchedPackets();
+                        // We need to check 1 packet before the last matched packet from the previous matcher.
+                        int packetIndexToCheck = (sm.getMatchedPacketsCount() - 1) - 1;
+                        if (currentlyMatchedPackets.get(packetIndexToCheck).getTimestamp().
+                            isAfter(previouslyMatchedPackets.get(packetIndexToCheck).getTimestamp())) {
+                            listMatchers.remove(previousMatcher);
+                        }
+                    }
                     if (sm.getMatchedPacketsCount() == sm.getTargetSequencePacketCount()) {
                         // Update maximum skipped packets
                         boolean stillMatch = checkMaxSkippedPackets(flow.getPackets(), sm.getMatchedPackets());
@@ -234,6 +250,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                         // Terminate sequence matcher since matching is complete.
                         listMatchers.remove(matcher);
                     }
+                    previousMatcher = sm;
                 }
             }
         }
