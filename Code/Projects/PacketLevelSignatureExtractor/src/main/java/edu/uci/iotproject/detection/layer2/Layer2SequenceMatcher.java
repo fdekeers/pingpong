@@ -28,9 +28,12 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
     /**
      * Create a {@code Layer2SequenceMatcher}.
      * @param sequence The sequence to match against (search for).
+     * @param trainingRouterWlanMac The training router's WLAN MAC (used for determining the direction of packets).
+     * @param routerWlanMac The target trace router's WLAN MAC (used for determining the direction of packets).
      */
-    public Layer2SequenceMatcher(List<PcapPacket> sequence, int inclusionTimeMillis) {
-        super(sequence);
+    public Layer2SequenceMatcher(List<PcapPacket> sequence, int inclusionTimeMillis, String trainingRouterWlanMac,
+                                 String routerWlanMac) {
+        super(sequence, trainingRouterWlanMac, routerWlanMac);
         mSequence = sequence;
         // Compute packet directions for sequence.
         for (int i = 0; i < sequence.size(); i++) {

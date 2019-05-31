@@ -2,8 +2,13 @@ package edu.uci.iotproject.detection.layer2;
 
 import edu.uci.iotproject.util.PcapPacketUtils;
 import org.pcap4j.core.PcapPacket;
+import org.pcap4j.util.MacAddress;
 
+import javax.crypto.Mac;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,11 +33,25 @@ abstract public class Layer2AbstractMatcher {
     protected final boolean[] mPacketDirections;
 
     /**
+     * Router's WLAN MAC.
+     */
+    protected MacAddress mTrainingRouterWlanMac;
+    protected MacAddress mRouterWlanMac;
+
+    /**
      * Create a {@code Layer2AbstractMatcher}.
      * @param sequence The sequence of the signature.
+     * @param routerWlanMac The router's WLAN MAC (used for determining the direction of packets).
      */
-    public Layer2AbstractMatcher(List<PcapPacket> sequence) {
+    public Layer2AbstractMatcher(List<PcapPacket> sequence, String trainingRouterWlanMac, String routerWlanMac) {
         mPacketDirections = new boolean[sequence.size()];
+        if (mTrainingRouterWlanMac != null && mRouterWlanMac != null) {
+            mTrainingRouterWlanMac = MacAddress.getByName(trainingRouterWlanMac);
+            mRouterWlanMac = MacAddress.getByName(routerWlanMac);
+        } else {
+            mTrainingRouterWlanMac = null;
+            mRouterWlanMac = null;
+        }
         // Compute packet directions for sequence.
         for (int i = 0; i < sequence.size(); i++) {
             if (i == 0) {
@@ -56,16 +75,31 @@ abstract public class Layer2AbstractMatcher {
      * @return The direction of {@code currPkt}.
      */
     protected boolean getPacketDirection(PcapPacket prevPkt, boolean prevPktDirection, PcapPacket currPkt) {
-        if (prevPkt == null) {
-            // By definition, use true as direction marker for first packet
-            return true;
-        }
-        if (PcapPacketUtils.getEthSrcAddr(prevPkt).equals(PcapPacketUtils.getEthSrcAddr(currPkt))) {
-            // Current packet goes in same direction as previous packet.
-            return prevPktDirection;
+
+        // No Router's WLAN MAC is given; no reference for direction
+        if (mTrainingRouterWlanMac == null && mRouterWlanMac == null) {
+            if (prevPkt == null) {
+                // By definition, use true as direction marker for first packet
+                return true;
+            }
+
+            if (PcapPacketUtils.getEthSrcAddr(prevPkt).equals(PcapPacketUtils.getEthSrcAddr(currPkt))) {
+                // Current packet goes in same direction as previous packet.
+                return prevPktDirection;
+            } else {
+                // Current packet goes in opposite direction of previous packet.
+                return !prevPktDirection;
+            }
         } else {
-            // Current packet goes in opposite direction of previous packet.
-            return !prevPktDirection;
+            // If we determine direction based on Router's WLAN MAC (only for traffic with
+            // 1) We assign true for the packet if the source is router (meaning S->C direction).
+            // 2) We assign false for the packet if the source is device (meaning C->S direction).
+            if (PcapPacketUtils.getEthSrcAddr(currPkt).equals(mTrainingRouterWlanMac) ||
+                PcapPacketUtils.getEthSrcAddr(currPkt).equals(mRouterWlanMac)) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

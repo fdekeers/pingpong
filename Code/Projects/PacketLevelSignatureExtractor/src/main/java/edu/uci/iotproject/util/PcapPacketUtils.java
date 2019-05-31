@@ -13,6 +13,7 @@ import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.util.MacAddress;
 
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -846,5 +847,18 @@ public final class PcapPacketUtils {
 
         // Sequence index starts from 0
         signatures.remove(sequenceIndex);
+    }
+
+    /**
+     * Convert a String MAC address into a byte array.
+     *
+     * @param macAddress A String that contains a MAC address to be converted into byte array.
+     */
+    public static byte[] stringToByteMacAddress(String macAddress) {
+
+        BigInteger biMacAddress = new BigInteger(macAddress, 16);
+        byte[] byteMacAddress = biMacAddress.toByteArray();
+        // Return from 1 to 6 since element 0 is 0 because of using BigInteger's method.
+        return Arrays.copyOfRange(byteMacAddress, 1, 7);
     }
 }

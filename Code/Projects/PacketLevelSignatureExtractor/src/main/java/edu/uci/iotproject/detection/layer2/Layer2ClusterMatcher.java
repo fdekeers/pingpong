@@ -53,18 +53,27 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
     private int mLimitSkippedPackets;
 
     /**
+     * Router's WLAN MAC.
+     */
+    private String mTrainingRouterWlanMac;
+    private String mRouterWlanMac;
+
+    /**
      * Create a new {@link Layer2ClusterMatcher} that attempts to find occurrences of {@code cluster}'s members.
      * @param cluster The sequence mutations that the new {@link Layer2ClusterMatcher} should search for.
      */
-    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, int inclusionTimeMillis,
+    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, String trainingRouterWlanMac, String routerWlanMac, int inclusionTimeMillis,
                                 boolean isRangeBased, double eps, int limitSkippedPackets) {
         // Consider all flows if no flow filter specified.
-        this(cluster, flow -> true, inclusionTimeMillis, isRangeBased, eps, limitSkippedPackets);
+        this(cluster, trainingRouterWlanMac, routerWlanMac, flow -> true, inclusionTimeMillis, isRangeBased, eps,
+                limitSkippedPackets);
     }
 
     /**
      * Create a new {@link Layer2ClusterMatcher} that attempts to find occurrences of {@code cluster}'s members.
      * @param cluster The sequence mutations that the new {@link Layer2ClusterMatcher} should search for.
+     * @param trainingRouterWlanMac The training router's WLAN MAC (used for determining the direction of packets).
+     * @param routerWlanMac The target trace router's WLAN MAC (used for determining the direction of packets).
      * @param flowFilter A filter that defines what {@link Layer2Flow}s the new {@link Layer2ClusterMatcher} should
      *                   search for {@code cluster}'s members in. If {@code flowFilter} returns {@code true}, the flow
      *                   will be included (searched). Note that {@code flowFilter} is only queried once for each flow,
@@ -75,10 +84,13 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
      * @param isRangeBased The boolean that decides if it is range-based vs. strict matching.
      * @param eps The epsilon value used in the DBSCAN algorithm.
      */
-    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, Function<Layer2Flow, Boolean> flowFilter,
-                                int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets) {
+    public Layer2ClusterMatcher(List<List<PcapPacket>> cluster, String trainingRouterWlanMac, String routerWlanMac,
+                                Function<Layer2Flow, Boolean> flowFilter, int inclusionTimeMillis, boolean isRangeBased,
+                                double eps, int limitSkippedPackets) {
         super(cluster, isRangeBased);
         mFlowFilter = flowFilter;
+        mTrainingRouterWlanMac = trainingRouterWlanMac;
+        mRouterWlanMac = routerWlanMac;
         mRangeBased = isRangeBased;
         mEps = eps;
         mInclusionTimeMillis =
@@ -108,7 +120,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
             Layer2SequenceMatcher[][] matchers = new Layer2SequenceMatcher[mCluster.size()][mCluster.get(0).size()];
             // Prepare a "state 0" sequence matcher for each sequence variation in the cluster.
             for (int i = 0; i < matchers.length; i++) {
-                matchers[i][0] = new Layer2SequenceMatcher(mCluster.get(i), mInclusionTimeMillis);
+                matchers[i][0] = new Layer2SequenceMatcher(mCluster.get(i), mInclusionTimeMillis, mTrainingRouterWlanMac,
+                        mRouterWlanMac);
             }
             // Associate the new sequence matcher table with the new flow
             mPerFlowSeqMatchers.put(flow, matchers);
@@ -152,7 +165,8 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
                     // We always want to have a sequence matcher in state 0, regardless of if the one that advanced
                     // from state zero completed its matching or if it replaced a different one in state 1 or not.
                     if (sm.getMatchedPacketsCount() == 1) {
-                        matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence(), mInclusionTimeMillis);
+                        matchers[i][j] = new Layer2SequenceMatcher(sm.getTargetSequence(), mInclusionTimeMillis,
+                                mTrainingRouterWlanMac, mRouterWlanMac);
                     }
                 }
             }
@@ -187,7 +201,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
             List<Layer2RangeMatcher> listMatchers = new ArrayList<>();
             // Prepare a "state 0" sequence matcher.
             Layer2RangeMatcher matcher = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1),
-                    mInclusionTimeMillis, mEps);
+                    mInclusionTimeMillis, mEps, mTrainingRouterWlanMac, mRouterWlanMac);
             listMatchers.add(matcher);
             // Associate the new sequence matcher table with the new flow.
             mPerFlowRangeMatcher.put(flow, listMatchers);
@@ -205,7 +219,7 @@ public class Layer2ClusterMatcher extends AbstractClusterMatcher implements Laye
         // Add the new matcher into the list
         if (addOneArray) {
             Layer2RangeMatcher newMatcher = new Layer2RangeMatcher(mCluster.get(0), mCluster.get(1),
-                    mInclusionTimeMillis, mEps);
+                    mInclusionTimeMillis, mEps, mTrainingRouterWlanMac, mRouterWlanMac);
             listMatchers.add(newMatcher);
         }
         // Present packet to the sequence matchers.

@@ -31,12 +31,14 @@ public class Layer2RangeMatcher extends Layer2AbstractMatcher {
      * @param lowerBound The lower bound of the sequence to match against (search for).
      * @param upperBound The upper bound of the sequence to match against (search for).
      * @param eps The epsilon value used in the DBSCAN algorithm.
+     * @param trainingRouterWlanMac The training router's WLAN MAC (used for determining the direction of packets).
+     * @param routerWlanMac The target trace router's WLAN MAC (used for determining the direction of packets).
      */
     public Layer2RangeMatcher(List<PcapPacket> lowerBound, List<PcapPacket> upperBound,
-                              int inclusionTimeMillis, double eps) {
+                              int inclusionTimeMillis, double eps, String trainingRouterWlanMac, String routerWlanMac) {
         // TODO: Just use the lower bound since both lower and upper bounds' packets essentially have the same direction
         // TODO: for the same position in the array. Both arrays also have the same length.
-        super(lowerBound);
+        super(lowerBound, trainingRouterWlanMac, routerWlanMac);
         mLowerBound = lowerBound;
         mUpperBound = upperBound;
         mEps = eps;

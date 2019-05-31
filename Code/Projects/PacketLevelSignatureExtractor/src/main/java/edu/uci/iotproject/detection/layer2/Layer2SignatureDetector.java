@@ -39,6 +39,17 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
      */
     private static boolean DUPLICATE_OUTPUT_TO_STD_OUT = true;
 
+    /**
+     * Router's MAC.
+     * This is only useful for the filter for direction when it is a WAN signature (Phone-Cloud or Device-Cloud).
+     * Phone-Device signatures do not have router MAC address in it.
+     */
+    // TODO: MAKE THESE INPUT PARAMETERS
+    private static String TRAINING_ROUTER_WLAN_MAC = "b0:b9:8a:73:69:8e";
+    private static String ROUTER_WLAN_MAC = "00:c1:b1:14:eb:31";
+    //private static String TRAINING_ROUTER_WLAN_MAC = null;
+    //private static String ROUTER_WLAN_MAC = null;
+
     private static List<Function<Layer2Flow, Boolean>> parseSignatureMacFilters(String filtersString) {
         List<Function<Layer2Flow, Boolean>> filters = new ArrayList<>();
         String[] filterRegexes = filtersString.split(";");
@@ -151,13 +162,15 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             offSignature = PcapPacketUtils.useRangeBasedMatching(offSignature, offClusterAnalysis);
         }
         Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
-                new Layer2SignatureDetector(onSignature, signatureDuration, isRangeBasedForOn, eps, onMaxSkippedPackets) :
-                new Layer2SignatureDetector(onSignature, onSignatureMacFilters, signatureDuration,
-                        isRangeBasedForOn, eps, onMaxSkippedPackets);
+                new Layer2SignatureDetector(onSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, signatureDuration,
+                        isRangeBasedForOn, eps, onMaxSkippedPackets) :
+                new Layer2SignatureDetector(onSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC,
+                        onSignatureMacFilters, signatureDuration, isRangeBasedForOn, eps, onMaxSkippedPackets);
         Layer2SignatureDetector offDetector = offSignatureMacFilters == null ?
-                new Layer2SignatureDetector(offSignature, signatureDuration, isRangeBasedForOff, eps, offMaxSkippedPackets) :
-                new Layer2SignatureDetector(offSignature, offSignatureMacFilters, signatureDuration,
-                        isRangeBasedForOff, eps, offMaxSkippedPackets);
+                new Layer2SignatureDetector(offSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, signatureDuration,
+                        isRangeBasedForOff, eps, offMaxSkippedPackets) :
+                new Layer2SignatureDetector(offSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, offSignatureMacFilters,
+                        signatureDuration, isRangeBasedForOff, eps, offMaxSkippedPackets);
         final List<UserAction> detectedEvents = new ArrayList<>();
         onDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
@@ -244,13 +257,18 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
     private int mMaxSkippedPackets;
     private List<Integer> mSkippedPackets;
 
-    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, int signatureDuration,
-                                   boolean isRangeBased, double eps, int limitSkippedPackets) {
-        this(searchedSignature, null, signatureDuration, isRangeBased, eps, limitSkippedPackets);
+
+
+    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String trainingRouterWlanMac,
+                                   String routerWlanMac, int signatureDuration, boolean isRangeBased, double eps,
+                                   int limitSkippedPackets) {
+        this(searchedSignature, trainingRouterWlanMac, routerWlanMac, null, signatureDuration, isRangeBased,
+                eps, limitSkippedPackets);
     }
 
-    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, List<Function<Layer2Flow,
-            Boolean>> flowFilters, int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets) {
+    public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String trainingRouterWlanMac,
+                                   String routerWlanMac, List<Function<Layer2Flow, Boolean>> flowFilters,
+                                   int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets) {
         if (flowFilters != null && flowFilters.size() != searchedSignature.size()) {
             throw new IllegalArgumentException("If flow filters are used, there must be a flow filter for each cluster " +
                     "of the signature.");
@@ -260,9 +278,10 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         for (int i = 0; i < mSignature.size(); i++) {
             List<List<PcapPacket>> cluster = mSignature.get(i);
             Layer2ClusterMatcher clusterMatcher = flowFilters == null ?
-                    new Layer2ClusterMatcher(cluster, inclusionTimeMillis, isRangeBased, eps, limitSkippedPackets) :
-                    new Layer2ClusterMatcher(cluster, flowFilters.get(i), inclusionTimeMillis, isRangeBased,
-                            eps, limitSkippedPackets);
+                    new Layer2ClusterMatcher(cluster, trainingRouterWlanMac, routerWlanMac, inclusionTimeMillis,
+                            isRangeBased, eps, limitSkippedPackets) :
+                    new Layer2ClusterMatcher(cluster, trainingRouterWlanMac, routerWlanMac, flowFilters.get(i),
+                            inclusionTimeMillis, isRangeBased, eps, limitSkippedPackets);
             clusterMatcher.addObserver(this);
             clusterMatchers.add(clusterMatcher);
         }
