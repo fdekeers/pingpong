@@ -103,6 +103,23 @@ abstract public class Layer2AbstractMatcher {
         }
     }
 
+    /* TODO: We can reuse this getPacketDirection if we do remove the router's MAC address filtering for directions
+    protected boolean getPacketDirection(PcapPacket prevPkt, boolean prevPktDirection, PcapPacket currPkt) {
+
+        if (prevPkt == null) {
+            // By definition, use true as direction marker for first packet
+            return true;
+        }
+
+        if (PcapPacketUtils.getEthSrcAddr(prevPkt).equals(PcapPacketUtils.getEthSrcAddr(currPkt))) {
+            // Current packet goes in same direction as previous packet.
+            return prevPktDirection;
+        } else {
+            // Current packet goes in opposite direction of previous packet.
+            return !prevPktDirection;
+        }
+    }*/
+
     /**
      * See the implementer class for the following method.
      *

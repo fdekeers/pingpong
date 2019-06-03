@@ -44,11 +44,11 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
      * This is only useful for the filter for direction when it is a WAN signature (Phone-Cloud or Device-Cloud).
      * Phone-Device signatures do not have router MAC address in it.
      */
-    // TODO: MAKE THESE INPUT PARAMETERS
-    private static String TRAINING_ROUTER_WLAN_MAC = "b0:b9:8a:73:69:8e";
-    private static String ROUTER_WLAN_MAC = "00:c1:b1:14:eb:31";
-    //private static String TRAINING_ROUTER_WLAN_MAC = null;
-    //private static String ROUTER_WLAN_MAC = null;
+    // TODO: We can remove the following constants if we do remove router's MAC filtering for directions
+    private static String TRAINING_ROUTER_WLAN_MAC = null;
+    private static String ROUTER_WLAN_MAC = null;
+    //private static String TRAINING_ROUTER_WLAN_MAC = "b0:b9:8a:73:69:8e";
+    //private static String ROUTER_WLAN_MAC = "00:c1:b1:14:eb:31";
 
     private static List<Function<Layer2Flow, Boolean>> parseSignatureMacFilters(String filtersString) {
         List<Function<Layer2Flow, Boolean>> filters = new ArrayList<>();
