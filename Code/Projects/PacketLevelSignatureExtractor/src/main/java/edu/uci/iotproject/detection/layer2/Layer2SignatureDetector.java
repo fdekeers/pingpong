@@ -109,6 +109,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
+        String vpnClientMacAddress = null;
         final int optParamsStartIdx = 7;
         if (args.length > optParamsStartIdx) {
             for (int i = optParamsStartIdx; i < args.length; i++) {
@@ -121,6 +122,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                 } else if (args[i].equalsIgnoreCase("-sout")) {
                     // Next argument is a boolean true/false literal.
                     DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[i+1]);
+                } else if (args[i].equalsIgnoreCase("-vpn")) {
+                    vpnClientMacAddress = args[i+1];
                 }
             }
         }
@@ -163,14 +166,15 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         }
         Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
                 new Layer2SignatureDetector(onSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, signatureDuration,
-                        isRangeBasedForOn, eps, onMaxSkippedPackets) :
+                        isRangeBasedForOn, eps, onMaxSkippedPackets, vpnClientMacAddress) :
                 new Layer2SignatureDetector(onSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC,
-                        onSignatureMacFilters, signatureDuration, isRangeBasedForOn, eps, onMaxSkippedPackets);
+                        onSignatureMacFilters, signatureDuration, isRangeBasedForOn, eps, onMaxSkippedPackets,
+                        vpnClientMacAddress);
         Layer2SignatureDetector offDetector = offSignatureMacFilters == null ?
                 new Layer2SignatureDetector(offSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, signatureDuration,
-                        isRangeBasedForOff, eps, offMaxSkippedPackets) :
+                        isRangeBasedForOff, eps, offMaxSkippedPackets, vpnClientMacAddress) :
                 new Layer2SignatureDetector(offSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, offSignatureMacFilters,
-                        signatureDuration, isRangeBasedForOff, eps, offMaxSkippedPackets);
+                        signatureDuration, isRangeBasedForOff, eps, offMaxSkippedPackets, vpnClientMacAddress);
         final List<UserAction> detectedEvents = new ArrayList<>();
         onDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
@@ -245,7 +249,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
     /**
      * In charge of reassembling layer 2 packet flows.
      */
-    private final Layer2FlowReassembler mFlowReassembler = new Layer2FlowReassembler();
+    private Layer2FlowReassembler mFlowReassembler;
 
     private final List<SignatureDetectorObserver> mObservers = new ArrayList<>();
 
@@ -261,14 +265,15 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String trainingRouterWlanMac,
                                    String routerWlanMac, int signatureDuration, boolean isRangeBased, double eps,
-                                   int limitSkippedPackets) {
+                                   int limitSkippedPackets, String vpnClientMacAddress) {
         this(searchedSignature, trainingRouterWlanMac, routerWlanMac, null, signatureDuration, isRangeBased,
-                eps, limitSkippedPackets);
+                eps, limitSkippedPackets, vpnClientMacAddress);
     }
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String trainingRouterWlanMac,
                                    String routerWlanMac, List<Function<Layer2Flow, Boolean>> flowFilters,
-                                   int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets) {
+                                   int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets,
+                                   String vpnClientMacAddress) {
         if (flowFilters != null && flowFilters.size() != searchedSignature.size()) {
             throw new IllegalArgumentException("If flow filters are used, there must be a flow filter for each cluster " +
                     "of the signature.");
@@ -296,6 +301,11 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         }
         mClusterMatcherIds = Collections.unmodifiableMap(clusterMatcherIds);
         // Register all cluster matchers to receive a notification whenever a new flow is encountered.
+        if (vpnClientMacAddress != null) {
+            mFlowReassembler = new Layer2FlowReassembler(vpnClientMacAddress);
+        } else {
+            mFlowReassembler = new Layer2FlowReassembler();
+        }
         mClusterMatchers.forEach(cm -> mFlowReassembler.addObserver(cm));
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;

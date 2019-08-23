@@ -27,6 +27,14 @@ public class Layer2FlowReassembler implements PacketListener {
 
     private final List<Layer2FlowReassemblerObserver> mObservers = new ArrayList<>();
 
+    private String mVpnClientMacAddress = null;
+
+    public Layer2FlowReassembler() { }
+
+    public Layer2FlowReassembler(String vpnClientMacAddress) {
+        mVpnClientMacAddress = vpnClientMacAddress;
+    }
+
     @Override
     public void gotPacket(PcapPacket packet) {
         // TODO: update to 802.11 packet...?
@@ -35,7 +43,18 @@ public class Layer2FlowReassembler implements PacketListener {
         MacAddress srcAddr = ethPkt.getHeader().getSrcAddr();
         MacAddress dstAddr = ethPkt.getHeader().getDstAddr();
 
-        String key = keyFromAddresses(srcAddr, dstAddr);
+        String key = null;
+        if (mVpnClientMacAddress != null) {
+            if (srcAddr.toString().equals(mVpnClientMacAddress)) {
+                key = srcAddr.toString();
+            } else if (dstAddr.toString().equals(mVpnClientMacAddress)) {
+                key = dstAddr.toString();
+            } else {
+                return;
+            }
+        } else {
+            key = keyFromAddresses(srcAddr, dstAddr);
+        }
         // Create a new list if this pair of MAC addresses where not previously encountered and add packet to that list,
         // or simply add to an existing list if one is present.
         mFlows.computeIfAbsent(key, k -> {
