@@ -14,6 +14,12 @@ readonly SIGNATURES_BASE_DIR
 OUTPUT_DIR=$3
 readonly OUTPUT_DIR
 
+if [ -z "$4" ] then
+		VPN="-vpn 14:cc:20:51:33:ea"
+else
+		VPN=$4
+fi
+
 # ==================================================== AMAZON PLUG =====================================================
 
 # DEVICE SIDE
@@ -26,7 +32,6 @@ SIGNATURE_DURATION="4990"
 EPSILON="10.0"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -47,7 +52,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="10"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -67,7 +71,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="4"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -85,7 +88,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="8"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -101,7 +103,6 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blossom-sprinkler/blossom-sprinkler-mode/sig
 RESULTS_FILE="$OUTPUT_DIR/blossom-sprinkler/blossom-sprinkler-mode/blossom-sprinkler-mode.wlan1.validation.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="1977"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -120,7 +121,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="33"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -138,7 +138,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="4"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -157,7 +156,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="5"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -173,7 +171,6 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/ecobee-thermostat/ecobee-thermostat-hvac/sig
 RESULTS_FILE="$OUTPUT_DIR/ecobee-thermostat/ecobee-thermostat-hvac/ecobee-thermostat-hvac.wlan1.validation.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="733"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -190,11 +187,30 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/ecobee-thermostat/ecobee-thermostat-fan/sign
 RESULTS_FILE="$OUTPUT_DIR/ecobee-thermostat/ecobee-thermostat-fan/ecobee-thermostat-fan.wlan1.validation.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="1953"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 
+# ======================================================================================================================
+
+# ===================================================== HUE BULB =======================================================
+# Has no device side signature.
+
+# PHONE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb/analyses/hue-bulb-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb/analyses/hue-bulb-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/signatures/hue-bulb-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/signatures/hue-bulb-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/hue-bulb/hue-bulb.eth0.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="27"
+EPSILON="10.0"
+#ON_SKIPPED_PACKETS="2"
+#OFF_SKIPPED_PACKETS="2"
+ON_SKIPPED_PACKETS="-1"
+OFF_SKIPPED_PACKETS="-1"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
+./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ================================================= KWIKSET DOORLOCK ===================================================
@@ -213,7 +229,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="33"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -234,7 +249,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="39"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -250,7 +264,6 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/rachio-sprinkler/rachio-sprinkler-quickrun/s
 RESULTS_FILE="$OUTPUT_DIR/rachio-sprinkler/rachio-sprinkler-quickrun/rachio-sprinkler-quickrun.wlan1.validation.pcap___device-side.detectionresults"
 SIGNATURE_DURATION="2695"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -265,7 +278,6 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/rachio-sprinkler/rachio-sprinkler-mode/signa
 RESULTS_FILE="$OUTPUT_DIR/rachio-sprinkler/rachio-sprinkler-mode/rachio-sprinkler-mode.wlan1.validation.pcap___device-side.detectionresults"
 SIGNATURE_DURATION="2791"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -280,7 +292,6 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/ring-alarm/signatures/ring-alarm-offSignatur
 RESULTS_FILE="$OUTPUT_DIR/ring-alarm/ring-alarm.wlan1.detection.pcap___device-side.detectionresults"
 SIGNATURE_DURATION="665"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -295,7 +306,6 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/roomba-vacuum-robot/signatures/roomba-vacuum
 RESULTS_FILE="$OUTPUT_DIR/roomba-vacuum-robot/roomba-vacuum-robot.wlan1.detection.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="5959"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -311,7 +321,6 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/sengled-bulb-onoff/signatures/s
 RESULTS_FILE="$OUTPUT_DIR/sengled-bulb/sengled-bulb-onoff/sengled-bulb-onoff.wlan1.validation.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="10045"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -327,11 +336,11 @@ OFF_SIGNATURE="$SIGNATURES_BASE_DIR/sengled-bulb/sengled-bulb-intensity/signatur
 RESULTS_FILE="$OUTPUT_DIR/sengled-bulb/sengled-bulb-intensity/sengled-bulb-intensity.wlan1.validation.pcap___phone-side.detectionresults"
 SIGNATURE_DURATION="7888"
 EPSILON="10.0"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
+
 
 # ====================================================== ST PLUG =======================================================
 # Has no device side signature.
@@ -348,7 +357,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="9"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
@@ -367,7 +375,6 @@ EPSILON="10.0"
 #OFF_SKIPPED_PACKETS="4"
 ON_SKIPPED_PACKETS="-1"
 OFF_SKIPPED_PACKETS="-1"
-VPN="-vpn 14:cc:20:51:33:ea"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
