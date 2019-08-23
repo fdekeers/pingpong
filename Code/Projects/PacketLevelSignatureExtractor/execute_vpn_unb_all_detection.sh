@@ -14,10 +14,11 @@ readonly SIGNATURES_BASE_DIR
 OUTPUT_DIR=$3
 readonly OUTPUT_DIR
 
-if [ -z "$4" ] then
-		VPN="-vpn 14:cc:20:51:33:ea"
+if [ -z "$4" ] 
+then
+	VPN="-vpn 14:cc:20:51:33:ea"
 else
-		VPN=$4
+	VPN=$4
 fi
 
 # ==================================================== AMAZON PLUG =====================================================
@@ -191,26 +192,6 @@ EPSILON="10.0"
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
 ./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 
-# ======================================================================================================================
-
-# ===================================================== HUE BULB =======================================================
-# Has no device side signature.
-
-# PHONE SIDE
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb/analyses/hue-bulb-onClusters-phone-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb/analyses/hue-bulb-offClusters-phone-side.cls"
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/signatures/hue-bulb-onSignature-phone-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/signatures/hue-bulb-offSignature-phone-side.sig"
-RESULTS_FILE="$OUTPUT_DIR/hue-bulb/hue-bulb.eth0.detection.pcap___phone-side.detectionresults"
-SIGNATURE_DURATION="27"
-EPSILON="10.0"
-#ON_SKIPPED_PACKETS="2"
-#OFF_SKIPPED_PACKETS="2"
-ON_SKIPPED_PACKETS="-1"
-OFF_SKIPPED_PACKETS="-1"
-
-PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$ON_SKIPPED_PACKETS' '$OFF_SKIPPED_PACKETS' '$VPN'"
-./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # ================================================= KWIKSET DOORLOCK ===================================================
