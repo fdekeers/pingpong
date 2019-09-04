@@ -199,7 +199,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 # ======================================================================================================================
 
 # =============================================== ECOBEE THERMOSTAT FAN ================================================
-PCAP_FILE="$PCAPS_BASE_DIR/ecobee-thermostat/ecobee-thermostat-fan/vpn/ecobee-thermostat-fan.vpn.stpvpn.pcap"
+PCAP_FILE="$PCAPS_BASE_DIR/ecobee-thermostat/ecobee-thermostat-fan/vpn/ecobee-thermostat-fan.stpvpn.pcap"
 
 # PHONE SIDE
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/ecobee-thermostat/ecobee-thermostat-fan/analyses/ecobee-thermostat-fan-onClusters-phone-side.cls"
