@@ -105,7 +105,8 @@ public class Layer2Flow {
             // All is good.
             return;
         }
-        throw new IllegalArgumentException("Mismatch in MACs: packet does not pertain to this flow");
+        // TODO: Comment this out for VPN experiments
+        //throw new IllegalArgumentException("Mismatch in MACs: packet does not pertain to this flow");
     }
 
     @Override
