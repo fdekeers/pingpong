@@ -63,7 +63,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         // Parse required parameters.
-        if (args.length < 10) {
+        if (args.length < 8) {
             String errMsg = String.format("SPECTO version 1.0\n" +
                             "Copyright (C) 2018-2019 Janus Varmarken and Rahmadi Trimananda.\n" +
                             "University of California, Irvine.\n" +
@@ -77,9 +77,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                             "\n  offSignatureFile: the file that contains the OFF signature to search for" +
                             "\n  resultsFile: where to write the results of the detection" +
                             "\n  signatureDuration: the maximum duration of signature detection" +
-                            "\n  eps: the epsilon value for the DBSCAN algorithm" +
-                            "\n  onMaxSkippedPackets: the maximum duration of ON signature detection (put -1 if not used)" +
-                            "\n  offMaxSkippedPackets: the maximum duration of OFF signature detection (put -1 if not used)",
+                            "\n  eps: the epsilon value for the DBSCAN algorithm",
                     Layer2SignatureDetector.class.getSimpleName());
             System.out.println(errMsg);
             String optParamsExplained = "Above are the required, positional arguments. In addition to these, the " +
@@ -92,7 +90,10 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                     "that matches the vendor's prefix).\n" +
                     "  '-offmacfilters <regex>;<regex>;...;<regex>' works exactly the same as onmacfilters, but " +
                     "applies to the OFF signature instead of the ON signature.\n" +
-                    "  '-sout <boolean literal>' true/false literal indicating if output should also be printed to std out; default is true.";
+                    "  '-sout <boolean literal>' true/false literal indicating if output should also be printed to std out; default is true.\n" +
+                    "  '-vpn <router mac>' router's MAC address; this is to simulate a VPN that combines all flows even when the traffic is not a VPN traffic.\n" +
+                    "  '-onskipped <max duration of on-signature>' the maximum duration of ON signature detection.\n" +
+                    "  '-offskipped <max duration of off-signature>' the maximum duration of OFF signature detection.\n";
             System.out.println(optParamsExplained);
             return;
         }
@@ -104,13 +105,13 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         final String resultsFile = args[5];
         final int signatureDuration = Integer.parseInt(args[6]);
         final double eps = Double.parseDouble(args[7]);
-        final int onMaxSkippedPackets = Integer.parseInt(args[8]);
-        final int offMaxSkippedPackets = Integer.parseInt(args[9]);
 
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
         String vpnClientMacAddress = null;
-        final int optParamsStartIdx = 7;
+        int onMaxSkippedPackets = -1;
+        int offMaxSkippedPackets = -1;
+        final int optParamsStartIdx = 8;
         if (args.length > optParamsStartIdx) {
             for (int i = optParamsStartIdx; i < args.length; i++) {
                 if (args[i].equalsIgnoreCase("-onMacFilters")) {
@@ -124,6 +125,14 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                     DUPLICATE_OUTPUT_TO_STD_OUT = Boolean.parseBoolean(args[i+1]);
                 } else if (args[i].equalsIgnoreCase("-vpn")) {
                     vpnClientMacAddress = args[i+1];
+                } else if (args[i].equalsIgnoreCase("-onskipped")) {
+                    if (i+2 > args.length - 1 || !args[i+2].equalsIgnoreCase("-offskipped")) {
+                        throw new Error("Please make sure that the -onskipped and -offskipped options are both used at the same time...");
+                    }
+                    if (args[i+2].equalsIgnoreCase("-offskipped")) {
+                        onMaxSkippedPackets = Integer.parseInt(args[i+1]);
+                        offMaxSkippedPackets = Integer.parseInt(args[i+3]);
+                    }
                 }
             }
         }
@@ -208,15 +217,17 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                 Integer.toString(offDetector.getMaxSkippedPackets());
         PrintWriterUtils.println(resultOn, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
         PrintWriterUtils.println(resultOff, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        PrintWriterUtils.println(onMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        // TODO: We do not use the feature for now because it is essentially the same as signature duration.
-        //for(Integer skippedPackets : onDetector.getSkippedPackets()) {
-        //    PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        //}
-        PrintWriterUtils.println(offMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        //for(Integer skippedPackets : offDetector.getSkippedPackets()) {
-        //    PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
-        //}
+        // Perform the skipped packet analysis if needed
+        if (onMaxSkippedPackets != -1 && offMaxSkippedPackets != -1) {
+            PrintWriterUtils.println(onMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+            for (Integer skippedPackets : onDetector.getSkippedPackets()) {
+                PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+            }
+            PrintWriterUtils.println(offMaximumSkippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+            for (Integer skippedPackets : offDetector.getSkippedPackets()) {
+                PrintWriterUtils.println(skippedPackets, resultsWriter, DUPLICATE_OUTPUT_TO_STD_OUT);
+            }
+        }
         // Flush output to results file and close it.
         resultsWriter.flush();
         resultsWriter.close();
