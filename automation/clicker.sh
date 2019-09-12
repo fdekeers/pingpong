@@ -39,7 +39,7 @@ do
 	#	./adb shell input tap 520 1211
 	#fi
 	# Hue bulb
-	#./adb shell input tap 923 383
+    #./adb shell input tap 900 550
 	# Lifx bulb
 	#./adb shell input tap 506 580
 	# Amcrest camera
