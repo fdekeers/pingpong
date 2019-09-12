@@ -207,19 +207,17 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# ===================================================== HUE BULB ON/OFF ================================================
-#INPUT_PCAP="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-onoff/wlan1/hue-bulb-onoff.wlan1.local.pcap"
-INPUT_PCAP="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-onoff/eth1/hue-bulb-onoff.eth1.local.pcap"
+# ======================================================= HUE BULB =====================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/hue-bulb/eth1/hue-bulb.eth1.local.pcap"
 
 # DEVICE SIDE
-OUTPUT_PCAP="$OUTPUT_DIR/hue-bulb/hue-bulb-onoff/wlan1/hue-bulb-onoff-processed.pcap"
-TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-onoff/timestamps/hue-bulb-onoff-sept-11-2019.timestamps"
-#DEVICE_IP="192.168.1.130"
+OUTPUT_PCAP="$OUTPUT_DIR/hue-bulb/eth1/hue-bulb-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/hue-bulb/timestamps/hue-bulb-sept-11-2019.timestamps"
 DEVICE_IP="192.168.1.100"
-ON_SIGNATURE="$OUTPUT_DIR/hue-bulb/hue-bulb-onoff/signatures/hue-bulb-onoff-onSignature-device-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/hue-bulb/hue-bulb-onoff/signatures/hue-bulb-onoff-offSignature-device-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/hue-bulb/hue-bulb-onoff/analyses/hue-bulb-onoff-onClusters-device-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/hue-bulb/hue-bulb-onoff/analyses/hue-bulb-onoff-offClusters-device-side.cls"
+ON_SIGNATURE="$OUTPUT_DIR/hue-bulb/signatures/hue-bulb-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/hue-bulb/signatures/hue-bulb-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/hue-bulb/analyses/hue-bulb-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/hue-bulb/analyses/hue-bulb-offClusters-device-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
