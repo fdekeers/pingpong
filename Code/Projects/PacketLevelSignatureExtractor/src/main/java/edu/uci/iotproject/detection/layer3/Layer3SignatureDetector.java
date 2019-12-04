@@ -42,8 +42,11 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
 
     /**
      * Router's IP.
+     *
+     * TODO: The following was the router address for EH (Networking Lab)
+     * private static String ROUTER_WAN_IP = "128.195.205.105";
      */
-    private static String ROUTER_WAN_IP = "128.195.205.105";
+    private static String ROUTER_WAN_IP = "128.195.55.242";
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
         if (args.length < 8) {
