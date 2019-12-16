@@ -24,12 +24,12 @@ readonly OUTPUT_DIR
 # Then there are subfolders inside 2018/ such as 2018/03/20/
 for SUBFOLDER1 in $YT_TRACES_DIR/*; do
 	for SUBFOLDER2 in $SUBFOLDER1/*; do
-		for PCAP_FILE in $SUBFOLDER2/*.pcap; do
-				# skip non pcap files
-				[ -e "$PCAP_FILE" ] || continue
-				# make an output sub dir in the base output dir that is the filename minus extension
-				OUTPUT_SUB_DIR=$(basename "$PCAP_FILE" .pcap)
-				./execute_layer3_unb_all_detection.sh $PCAP_FILE $SIGNATURES_BASE_DIR $OUTPUT_DIR/$OUTPUT_SUB_DIR
+		for PCAP_FILE in $SUBFOLDER2/*; do
+			# skip non pcap files
+			[ -e "$PCAP_FILE" ] || continue
+			# make an output sub dir in the base output dir that is the filename minus extension
+			OUTPUT_SUB_DIR=$(basename "$PCAP_FILE" .pcap)
+			./execute_layer3_unb_all_detection.sh $PCAP_FILE $SIGNATURES_BASE_DIR $OUTPUT_DIR/$OUTPUT_SUB_DIR
 		done
 	done
 done
