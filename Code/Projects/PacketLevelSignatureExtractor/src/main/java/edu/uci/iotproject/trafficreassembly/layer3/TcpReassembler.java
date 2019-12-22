@@ -36,6 +36,20 @@ public class TcpReassembler implements PacketListener {
      * Holds <em>terminated</em> {@link Conversation}s.
      */
     private final List<Conversation> mTerminatedConversations = new ArrayList<>();
+		
+		/**
+     * IP of the router's WAN port (if analyzed traffic is captured at the ISP's point of view).
+     */
+    private final String mRouterWanIp;
+		private static final String ROUTER_WAN_IP = "128.195.205.105";
+		
+    public TcpReassembler() {
+        mRouterWanIp = ROUTER_WAN_IP;
+    }
+		
+    public TcpReassembler(String routerWanIp) {
+        mRouterWanIp = routerWanIp;
+    }
 
     @Override
     public void gotPacket(PcapPacket pcapPacket) {
@@ -250,7 +264,7 @@ public class TcpReassembler implements PacketListener {
                 // network, but that obviously won't be a useful strategy for an observer at the WAN port.
                 String srcIp = pcapPacket.get(IpV4Packet.class).getHeader().getSrcAddr().getHostAddress();
                 // TODO: REPLACE THE ROUTER'S IP WITH A PARAMETER!!!
-                boolean clientIsSrc = srcIp.startsWith("10.") || srcIp.startsWith("192.168.") || srcIp.equals("128.195.205.105");
+                boolean clientIsSrc = srcIp.startsWith("10.") || srcIp.startsWith("192.168.") || srcIp.equals(mRouterWanIp);
                 conv = Conversation.fromPcapPacket(pcapPacket, clientIsSrc);
             }
             mOpenConversations.put(conv, conv);

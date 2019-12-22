@@ -33,7 +33,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
     /**
      * For reassembling the observed traffic into TCP connections.
      */
-    private final TcpReassembler mTcpReassembler = new TcpReassembler();
+    private final TcpReassembler mTcpReassembler;
 
     /**
      * IP of the router's WAN port (if analyzed traffic is captured at the ISP's point of view).
@@ -91,6 +91,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
         }
         mEps = eps;
         mRouterWanIp = routerWanIp;
+				mTcpReassembler = new TcpReassembler(mRouterWanIp);
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
     }
@@ -397,6 +398,138 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
         }
         return Optional.empty();
     }
+
+    // TODO: EXPERIMENT WITH ONLY PACKET DIRECTION AND TIMING
+//    private Optional<List<PcapPacket>> findSubsequenceInSequence(List<PcapPacket> subsequence,
+//                                                                 List<PcapPacket> sequence,
+//                                                                 Conversation.Direction[] subsequenceDirections,
+//                                                                 Conversation.Direction[] sequenceDirections) {
+//        if (sequence.size() < subsequence.size()) {
+//            // If subsequence is longer, it cannot be contained in sequence.
+//            return Optional.empty();
+//        }
+//        if (isTlsSequence(subsequence) != isTlsSequence(sequence)) {
+//            // We consider it a mismatch if one is a TLS application data sequence and the other is not.
+//            return Optional.empty();
+//        }
+//        // If packet directions have not been precomputed by calling code, we need to construct them.
+//        if (subsequenceDirections == null) {
+//            subsequenceDirections = getPacketDirections(subsequence, mRouterWanIp);
+//        }
+//        if (sequenceDirections == null) {
+//            sequenceDirections = getPacketDirections(sequence, mRouterWanIp);
+//        }
+//        int subseqIdx = 0;
+//        int seqIdx = 0;
+//        while (subseqIdx < subsequence.size() && seqIdx < sequence.size()) {
+//            // We only have a match if packet lengths and directions match.
+//            if (subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) {
+//                // A match; advance both indices to consider next packet in subsequence vs. next packet in sequence.
+//                subseqIdx++;
+//                seqIdx++;
+//                if (subseqIdx == subsequence.size()) {
+//                    // We managed to match the entire subsequence in sequence.
+//                    // Return the sublist of sequence that matches subsequence.
+//                    /*
+//                     * TODO:
+//                     * ASSUMES THE BACKING LIST (i.e., 'sequence') IS _NOT_ STRUCTURALLY MODIFIED, hence may not work
+//                     * for live traces!
+//                     */
+//                    // TODO: ALSO CHECK TIMING CONSTRAINT
+//                    PcapPacket firstPacket = sequence.get(seqIdx - subsequence.size());
+//                    PcapPacket lastPacket = sequence.get(seqIdx-1);
+//                    if (!lastPacket.getTimestamp().isAfter(firstPacket.getTimestamp().plusMillis(mInclusionTimeMillis))) {
+//                        return Optional.of(sequence.subList(seqIdx - subsequence.size(), seqIdx));
+//                    }
+//                }
+//            } else {
+//                // Mismatch.
+//                if (subseqIdx > 0) {
+//                    /*
+//                     * If we managed to match parts of subsequence, we restart the search for subsequence in sequence at
+//                     * the index of sequence where the current mismatch occurred. I.e., we must reset subseqIdx, but
+//                     * leave seqIdx untouched.
+//                     */
+//                    subseqIdx = 0;
+//                } else {
+//                    /*
+//                     * First packet of subsequence didn't match packet at seqIdx of sequence, so we move forward in
+//                     * sequence, i.e., we continue the search for subsequence in sequence starting at index seqIdx+1 of
+//                     * sequence.
+//                     */
+//                    seqIdx++;
+//                }
+//            }
+//        }
+//        return Optional.empty();
+//    }
+//
+//    private Optional<List<PcapPacket>> findSubsequenceInSequence(List<PcapPacket> lowerBound,
+//                                                                 List<PcapPacket> upperBound,
+//                                                                 List<PcapPacket> sequence,
+//                                                                 Conversation.Direction[] subsequenceDirections,
+//                                                                 Conversation.Direction[] sequenceDirections) {
+//        // Just do the checks for either lower or upper bound!
+//        // TODO: For now we use just the lower bound
+//        if (sequence.size() < lowerBound.size()) {
+//            // If subsequence is longer, it cannot be contained in sequence.
+//            return Optional.empty();
+//        }
+//        if (isTlsSequence(lowerBound) != isTlsSequence(sequence)) {
+//            // We consider it a mismatch if one is a TLS application data sequence and the other is not.
+//            return Optional.empty();
+//        }
+//        // If packet directions have not been precomputed by calling code, we need to construct them.
+//        if (subsequenceDirections == null) {
+//            subsequenceDirections = getPacketDirections(lowerBound, mRouterWanIp);
+//        }
+//        if (sequenceDirections == null) {
+//            sequenceDirections = getPacketDirections(sequence, mRouterWanIp);
+//        }
+//        int subseqIdx = 0;
+//        int seqIdx = 0;
+//        while (subseqIdx < lowerBound.size() && seqIdx < sequence.size()) {
+//            // TODO: ONLY MATCH PACKET DIRECTIONS
+//            if (subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) {
+//                // A match; advance both indices to consider next packet in subsequence vs. next packet in sequence.
+//                subseqIdx++;
+//                seqIdx++;
+//                if (subseqIdx == lowerBound.size()) {
+//                    // We managed to match the entire subsequence in sequence.
+//                    // Return the sublist of sequence that matches subsequence.
+//                    /*
+//                     * TODO:
+//                     * ASSUMES THE BACKING LIST (i.e., 'sequence') IS _NOT_ STRUCTURALLY MODIFIED, hence may not work
+//                     * for live traces!
+//                     */
+//                    // TODO: ALSO CHECK TIMING CONSTRAINT
+//                    PcapPacket firstPacket = sequence.get(seqIdx - lowerBound.size());
+//                    PcapPacket lastPacket = sequence.get(seqIdx);
+//                    if (!lastPacket.getTimestamp().isAfter(firstPacket.getTimestamp().plusMillis(mInclusionTimeMillis))) {
+//                        return Optional.of(sequence.subList(seqIdx - lowerBound.size(), seqIdx));
+//                    }
+//                }
+//            } else {
+//                // Mismatch.
+//                if (subseqIdx > 0) {
+//                    /*
+//                     * If we managed to match parts of subsequence, we restart the search for subsequence in sequence at
+//                     * the index of sequence where the current mismatch occurred. I.e., we must reset subseqIdx, but
+//                     * leave seqIdx untouched.
+//                     */
+//                    subseqIdx = 0;
+//                } else {
+//                    /*
+//                     * First packet of subsequence didn't match packet at seqIdx of sequence, so we move forward in
+//                     * sequence, i.e., we continue the search for subsequence in sequence starting at index seqIdx+1 of
+//                     * sequence.
+//                     */
+//                    seqIdx++;
+//                }
+//            }
+//        }
+//        return Optional.empty();
+//    }
 
     /**
      * Given a cluster, produces a pruned version of that cluster. In the pruned version, there are no duplicate cluster

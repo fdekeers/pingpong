@@ -214,10 +214,10 @@ public class SignatureGenerator {
         // Perform clustering on conversation logged as part of all ON events.
         // Calculate number of events per type (only ON/only OFF), which means half of the number of all timestamps.
         int numberOfEventsPerType = triggerTimes.size() / 2;
-        int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.1);
-        int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.1);
-        //int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.8);
-        //int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.8);
+//        int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.1);
+//        int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.1);
+        int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.2);
+        int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.2);
         int minPts = lowerBound;
         DBSCANClusterer<PcapPacketPair> onClusterer = new DBSCANClusterer<>(eps, minPts);
         List<Cluster<PcapPacketPair>> onClusters = onClusterer.cluster(onPairs);
