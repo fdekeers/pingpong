@@ -294,7 +294,7 @@ OFF_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/analyses/hue-bulb
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/signatures/hue-bulb-intensity-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/signatures/hue-bulb-intensity-offSignature-device-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/hue-bulb/hue-bulb-intensity/hue-bulb-intensity.eth1.validation.pcap___device-side.detectionresults"
-SIGNATURE_DURATION="84"
+SIGNATURE_DURATION="106"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -777,14 +777,14 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 # TODO: SAME VENDOR OBSERVATION (TP-LINK DEVICES)
 # =============================================== TP-LINK TWO-OUTLET PLUG ==============================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/wlan1/tplink-two-outlet-plug.wlan1.local.pcap"
+PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/wlan1/tplink-two-outlet-plug.wlan1.local.pcap"
 
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/signatures/tplink-two-outlet-plug-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/signatures/tplink-two-outlet-plug-offSignature-device-side.sig"
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/analyses/tplink-two-outlet-plug-onClusters-device-side.cls"
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/analyses/tplink-two-outlet-plug-offClusters-device-side.cls"
 RESULTS_FILE="$OUTPUT_DIR/tplink-two-outlet-plug/tplink-two-outlet-plug.wlan1.validation.pcap___device-side.detectionresults"
-# TODO: SIGNATURE_DURATION=""
+SIGNATURE_DURATION="2428"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -792,14 +792,14 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 # ======================================================================================================================
 
 # ================================================= TP-LINK POWER STRIP ================================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-power-strip/wlan1/tplink-power-strip.wlan1.local.pcap"
+PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-power-strip/wlan1/tplink-power-strip.wlan1.local.pcap"
 
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-power-strip/signatures/tplink-power-strip-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-power-strip/signatures/tplink-power-strip-offSignature-device-side.sig"
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-power-strip/analyses/tplink-power-strip-onClusters-device-side.cls"
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-power-strip/analyses/tplink-power-strip-offClusters-device-side.cls"
 RESULTS_FILE="$OUTPUT_DIR/tplink-power-strip/tplink-power-strip.wlan1.validation.pcap___device-side.detectionresults"
-# TODO: SIGNATURE_DURATION=""
+SIGNATURE_DURATION="5472"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -808,14 +808,14 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 # ============================================== TP-LINK LIGHT BULB ON/OFF =============================================
 # KL-110 (newer model than LB-130 but no color---only dimmable white)
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/wlan1/tplink-light-bulb-white-onoff.wlan1.local.pcap"
+PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/wlan1/tplink-bulb-white-onoff.wlan1.local.pcap"
 
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/signatures/tplink-light-bulb-white-onoff-onSignature-device-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/signatures/tplink-light-bulb-white-onoff-offSignature-device-side.sig"
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/analyses/tplink-light-bulb-white-onoff-onClusters-device-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/analyses/tplink-light-bulb-white-onoff-offClusters-device-side.cls"
-RESULTS_FILE="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/tplink-light-bulb-white-onoff.wlan1.validation.pcap___device-side.detectionresults"
-# TODO: SIGNATURE_DURATION=""
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/signatures/tplink-bulb-white-onoff-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/signatures/tplink-bulb-white-onoff-offSignature-device-side.sig"
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/analyses/tplink-bulb-white-onoff-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/analyses/tplink-bulb-white-onoff-offClusters-device-side.cls"
+RESULTS_FILE="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-onoff/tplink-bulb-white-onoff.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="2373"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -824,14 +824,14 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 # ============================================= TP-LINK LIGHT BULB INTENSITY ===========================================
 # KL-110 (newer model than LB-130 but no color---only dimmable white)
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/wlan1/tplink-light-bulb-white-intensity.wlan1.local.pcap"
+PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/wlan1/tplink-bulb-white-intensity.wlan1.local.pcap"
 
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/signatures/tplink-light-bulb-white-intensity-onSignature-device-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/signatures/tplink-light-bulb-white-intensity-offSignature-device-side.sig"
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/analyses/tplink-light-bulb-white-intensity-onClusters-device-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/analyses/tplink-light-bulb-white-intensity-offClusters-device-side.cls"
-RESULTS_FILE="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/tplink-light-bulb-white-intensity.wlan1.validation.pcap___device-side.detectionresults"
-# TODO: SIGNATURE_DURATION=""
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/signatures/tplink-bulb-white-intensity-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/signatures/tplink-bulb-white-intensity-offSignature-device-side.sig"
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/analyses/tplink-bulb-white-intensity-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/analyses/tplink-bulb-white-intensity-offClusters-device-side.cls"
+RESULTS_FILE="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-intensity/tplink-bulb-white-intensity.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="3971"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -839,29 +839,46 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 # ======================================================================================================================
 
 # ================================================ TP-LINK CAMERA ON/OFF ===============================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/wlan1/tplink-camera-onoff.wlan1.local.pcap"
+PCAP_FILE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/wlan1/tplink-camera-onoff.wlan1.local.pcap"
 
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/signatures/tplink-camera-onoff-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/signatures/tplink-camera-onoff-offSignature-device-side.sig"
 ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/analyses/tplink-camera-onoff-onClusters-device-side.cls"
 OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/analyses/tplink-camera-onoff-offClusters-device-side.cls"
 RESULTS_FILE="$OUTPUT_DIR/tplink-camera/tplink-camera-onoff/tplink-camera-onoff.wlan1.validation.pcap___device-side.detectionresults"
-# TODO: SIGNATURE_DURATION=""
+SIGNATURE_DURATION="1913"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# =============================================== TP-LINK CAMERA RECORDING =============================================
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/wlan1/tplink-camera-recording.wlan1.local.pcap"
+# TODO: IMC (NEW DEVICE)
+# ================================================= BLINK CAMERA WATCH =================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/wlan1/blink-camera-watch.wlan1.local.pcap"
 
-ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/signatures/tplink-camera-recording-onSignature-device-side.sig"
-OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/signatures/tplink-camera-recording-offSignature-device-side.sig"
-ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/analyses/tplink-camera-recording-onClusters-device-side.cls"
-OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/analyses/tplink-camera-recording-offClusters-device-side.cls"
-RESULTS_FILE="$OUTPUT_DIR/tplink-camera/tplink-camera-recording/tplink-camera-recording.wlan1.validation.pcap___device-side.detectionresults"
-# TODO: SIGNATURE_DURATION=""
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/signatures/blink-camera-watch-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/signatures/blink-camera-watch-offSignature-device-side.sig"
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/analyses/blink-camera-watch-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/analyses/blink-camera-watch-offClusters-device-side.cls"
+RESULTS_FILE="$OUTPUT_DIR/blink-camera/blink-camera-watch/blink-camera-watch.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="365"
+EPSILON="10.0"
+
+# TODO: The signature is only for ON (Watch feature) so, the OFF doesn't have anything (false negatives)
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= BLINK CAMERA PHOTO =================================================
+PCAP_FILE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/wlan1/blink-camera-photo.wlan1.local.pcap"
+
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/signatures/blink-camera-photo-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/signatures/blink-camera-photo-offSignature-device-side.sig"
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/analyses/blink-camera-photo-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/analyses/blink-camera-photo-offClusters-device-side.cls"
+RESULTS_FILE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/blink-camera-photo.wlan1.validation.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="1429"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"

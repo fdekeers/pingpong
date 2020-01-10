@@ -62,38 +62,43 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
     }
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
+        String errMsg = String.format("SPECTO version 1.0\n" +
+                        "Copyright (C) 2018-2019 Janus Varmarken and Rahmadi Trimananda.\n" +
+                        "University of California, Irvine.\n" +
+                        "All rights reserved.\n\n" +
+                        "Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile " +
+                        "resultsFile signatureDuration eps onMaxSkippedPackets offMaxSkippedPackets" +
+                        "\n  inputPcapFile: the target of the detection" +
+                        "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
+                        "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
+                        "\n  onSignatureFile: the file that contains the ON signature to search for" +
+                        "\n  offSignatureFile: the file that contains the OFF signature to search for" +
+                        "\n  resultsFile: where to write the results of the detection" +
+                        "\n  signatureDuration: the maximum duration of signature detection" +
+                        "\n  epsilon: the epsilon value for the DBSCAN algorithm\n" +
+                        "\n  Additional options (add '-r' before the following two parameters):" +
+                        "\n  delta: delta for relaxed matching" +
+                        "\n  packetId: packet number in the sequence" +
+                        "\n            (could be more than one packet whose matching is relaxed, " +
+                        "\n             e.g., 0,1 for packets 0 and 1)",
+                Layer2SignatureDetector.class.getSimpleName());
+        String optParamsExplained = "Above are the required, positional arguments. In addition to these, the " +
+                "following options and associated positional arguments may be used:\n" +
+                "  '-onmacfilters <regex>;<regex>;...;<regex>' which specifies that sequence matching should ONLY" +
+                " be performed on flows where the MAC of one of the two endpoints matches the given regex. Note " +
+                "that you MUST specify a regex for each cluster of the signature. This is to facilitate more " +
+                "aggressive filtering on parts of the signature (e.g., the communication that involves the " +
+                "smart home device itself as one can drop all flows that do not include an endpoint with a MAC " +
+                "that matches the vendor's prefix).\n" +
+                "  '-offmacfilters <regex>;<regex>;...;<regex>' works exactly the same as onmacfilters, but " +
+                "applies to the OFF signature instead of the ON signature.\n" +
+                "  '-sout <boolean literal>' true/false literal indicating if output should also be printed to std out; default is true.\n" +
+                "  '-vpn <router mac>' router's MAC address; this is to simulate a VPN that combines all flows even when the traffic is not a VPN traffic.\n" +
+                "  '-onskipped <max duration of on-signature>' the maximum duration of ON signature detection.\n" +
+                "  '-offskipped <max duration of off-signature>' the maximum duration of OFF signature detection.\n";
         // Parse required parameters.
         if (args.length < 8) {
-            String errMsg = String.format("SPECTO version 1.0\n" +
-                            "Copyright (C) 2018-2019 Janus Varmarken and Rahmadi Trimananda.\n" +
-                            "University of California, Irvine.\n" +
-                            "All rights reserved.\n\n" +
-                            "Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile " +
-                            "resultsFile signatureDuration eps onMaxSkippedPackets offMaxSkippedPackets" +
-                            "\n  inputPcapFile: the target of the detection" +
-                            "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
-                            "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
-                            "\n  onSignatureFile: the file that contains the ON signature to search for" +
-                            "\n  offSignatureFile: the file that contains the OFF signature to search for" +
-                            "\n  resultsFile: where to write the results of the detection" +
-                            "\n  signatureDuration: the maximum duration of signature detection" +
-                            "\n  eps: the epsilon value for the DBSCAN algorithm",
-                    Layer2SignatureDetector.class.getSimpleName());
             System.out.println(errMsg);
-            String optParamsExplained = "Above are the required, positional arguments. In addition to these, the " +
-                    "following options and associated positional arguments may be used:\n" +
-                    "  '-onmacfilters <regex>;<regex>;...;<regex>' which specifies that sequence matching should ONLY" +
-                    " be performed on flows where the MAC of one of the two endpoints matches the given regex. Note " +
-                    "that you MUST specify a regex for each cluster of the signature. This is to facilitate more " +
-                    "aggressive filtering on parts of the signature (e.g., the communication that involves the " +
-                    "smart home device itself as one can drop all flows that do not include an endpoint with a MAC " +
-                    "that matches the vendor's prefix).\n" +
-                    "  '-offmacfilters <regex>;<regex>;...;<regex>' works exactly the same as onmacfilters, but " +
-                    "applies to the OFF signature instead of the ON signature.\n" +
-                    "  '-sout <boolean literal>' true/false literal indicating if output should also be printed to std out; default is true.\n" +
-                    "  '-vpn <router mac>' router's MAC address; this is to simulate a VPN that combines all flows even when the traffic is not a VPN traffic.\n" +
-                    "  '-onskipped <max duration of on-signature>' the maximum duration of ON signature detection.\n" +
-                    "  '-offskipped <max duration of off-signature>' the maximum duration of OFF signature detection.\n";
             System.out.println(optParamsExplained);
             return;
         }
@@ -105,6 +110,22 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         final String resultsFile = args[5];
         final int signatureDuration = Integer.parseInt(args[6]);
         final double eps = Double.parseDouble(args[7]);
+        // Additional feature---relaxed matching
+        int delta = 0;
+        final Set<Integer> packetSet = new HashSet<>();
+        if (args.length > 8 && args[8].equals("-r")) {
+            delta = Integer.parseInt(args[9]);
+            StringTokenizer stringTokenizerOff = new StringTokenizer(args[10], ",");
+            // Add the list of packet IDs
+            while(stringTokenizerOff.hasMoreTokens()) {
+                int id = Integer.parseInt(stringTokenizerOff.nextToken());
+                packetSet.add(id);
+            }
+        } else {
+            System.out.println(errMsg);
+            System.out.println(optParamsExplained);
+            return;
+        }
 
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
@@ -175,15 +196,15 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         }
         Layer2SignatureDetector onDetector = onSignatureMacFilters == null ?
                 new Layer2SignatureDetector(onSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, signatureDuration,
-                        isRangeBasedForOn, eps, onMaxSkippedPackets, vpnClientMacAddress) :
+                        isRangeBasedForOn, eps, onMaxSkippedPackets, vpnClientMacAddress, delta, packetSet) :
                 new Layer2SignatureDetector(onSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC,
                         onSignatureMacFilters, signatureDuration, isRangeBasedForOn, eps, onMaxSkippedPackets,
-                        vpnClientMacAddress);
+                        vpnClientMacAddress, delta, packetSet);
         Layer2SignatureDetector offDetector = offSignatureMacFilters == null ?
                 new Layer2SignatureDetector(offSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, signatureDuration,
-                        isRangeBasedForOff, eps, offMaxSkippedPackets, vpnClientMacAddress) :
+                        isRangeBasedForOff, eps, offMaxSkippedPackets, vpnClientMacAddress, delta, packetSet) :
                 new Layer2SignatureDetector(offSignature, TRAINING_ROUTER_WLAN_MAC, ROUTER_WLAN_MAC, offSignatureMacFilters,
-                        signatureDuration, isRangeBasedForOff, eps, offMaxSkippedPackets, vpnClientMacAddress);
+                        signatureDuration, isRangeBasedForOff, eps, offMaxSkippedPackets, vpnClientMacAddress, delta, packetSet);
         final List<UserAction> detectedEvents = new ArrayList<>();
         onDetector.addObserver((signature, match) -> {
             UserAction event = new UserAction(UserAction.Type.TOGGLE_ON, match.get(0).get(0).getTimestamp());
@@ -276,15 +297,15 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String trainingRouterWlanMac,
                                    String routerWlanMac, int signatureDuration, boolean isRangeBased, double eps,
-                                   int limitSkippedPackets, String vpnClientMacAddress) {
+                                   int limitSkippedPackets, String vpnClientMacAddress, int delta, Set<Integer> packetSet) {
         this(searchedSignature, trainingRouterWlanMac, routerWlanMac, null, signatureDuration, isRangeBased,
-                eps, limitSkippedPackets, vpnClientMacAddress);
+                eps, limitSkippedPackets, vpnClientMacAddress, delta, packetSet);
     }
 
     public Layer2SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String trainingRouterWlanMac,
                                    String routerWlanMac, List<Function<Layer2Flow, Boolean>> flowFilters,
                                    int inclusionTimeMillis, boolean isRangeBased, double eps, int limitSkippedPackets,
-                                   String vpnClientMacAddress) {
+                                   String vpnClientMacAddress, int delta, Set<Integer> packetSet) {
         if (flowFilters != null && flowFilters.size() != searchedSignature.size()) {
             throw new IllegalArgumentException("If flow filters are used, there must be a flow filter for each cluster " +
                     "of the signature.");
@@ -295,9 +316,9 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
             List<List<PcapPacket>> cluster = mSignature.get(i);
             Layer2ClusterMatcher clusterMatcher = flowFilters == null ?
                     new Layer2ClusterMatcher(cluster, trainingRouterWlanMac, routerWlanMac, inclusionTimeMillis,
-                            isRangeBased, eps, limitSkippedPackets) :
+                            isRangeBased, eps, limitSkippedPackets, delta, packetSet) :
                     new Layer2ClusterMatcher(cluster, trainingRouterWlanMac, routerWlanMac, flowFilters.get(i),
-                            inclusionTimeMillis, isRangeBased, eps, limitSkippedPackets);
+                            inclusionTimeMillis, isRangeBased, eps, limitSkippedPackets, delta, packetSet);
             clusterMatcher.addObserver(this);
             clusterMatchers.add(clusterMatcher);
         }

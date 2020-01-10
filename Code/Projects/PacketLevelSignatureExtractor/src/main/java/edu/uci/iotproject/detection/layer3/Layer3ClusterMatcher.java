@@ -51,6 +51,12 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
     private int mInclusionTimeMillis;
 
     /**
+     * Relaxed matching
+     */
+    private int mDelta;
+    private Set<Integer> mPacketSet;
+
+    /**
      * Create a {@link Layer3ClusterMatcher}.
      * @param cluster The cluster that traffic is matched against.
      * @param routerWanIp The router's WAN IP if examining traffic captured at the ISP's point of view (used for
@@ -64,7 +70,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
      *                          {@code cluster}.
      */
     public Layer3ClusterMatcher(List<List<PcapPacket>> cluster, String routerWanIp, int inclusionTimeMillis,
-                                boolean isRangeBased, double eps,
+                                boolean isRangeBased, double eps, int delta, Set<Integer> packetSet,
                                 ClusterMatcherObserver... detectionObservers) {
         super(cluster, isRangeBased);
         Objects.requireNonNull(detectionObservers, "detectionObservers cannot be null");
@@ -94,6 +100,8 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
 				mTcpReassembler = new TcpReassembler(mRouterWanIp);
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
+        mDelta = delta;
+        mPacketSet = packetSet;
     }
 
     @Override
@@ -146,6 +154,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
         }
     }
 
+    // TODO: Relaxed matching with delta is only applied to conservative matching for now
     public void performDetectionConservative() {
         /*
          * Let's start out simple by building a version that only works for signatures that do not span across multiple
@@ -172,7 +181,7 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
                  * won't have to be recomputed internally in each call to findSubsequenceInSequence().
                  */
                 Optional<List<PcapPacket>> match;
-                while ((match = findSubsequenceInSequence(signatureSequence, cPkts, mClusterMemberDirections, null)).
+                while ((match = findSubsequenceInSequence(signatureSequence, cPkts, mClusterMemberDirections, null, mDelta, mPacketSet)).
                         isPresent()) {
                     List<PcapPacket> matchSeq = match.get();
                     // Notify observers about the match.
@@ -268,6 +277,95 @@ public class Layer3ClusterMatcher extends AbstractClusterMatcher implements Pack
             // We only have a match if packet lengths and directions match.
             if (subseqPkt.getOriginalLength() == seqPkt.getOriginalLength() &&
                     subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) {
+                // A match; advance both indices to consider next packet in subsequence vs. next packet in sequence.
+                subseqIdx++;
+                seqIdx++;
+                if (subseqIdx == subsequence.size()) {
+                    // We managed to match the entire subsequence in sequence.
+                    // Return the sublist of sequence that matches subsequence.
+                    /*
+                     * TODO:
+                     * ASSUMES THE BACKING LIST (i.e., 'sequence') IS _NOT_ STRUCTURALLY MODIFIED, hence may not work
+                     * for live traces!
+                     */
+                    return Optional.of(sequence.subList(seqIdx - subsequence.size(), seqIdx));
+                }
+            } else {
+                // Mismatch.
+                if (subseqIdx > 0) {
+                    /*
+                     * If we managed to match parts of subsequence, we restart the search for subsequence in sequence at
+                     * the index of sequence where the current mismatch occurred. I.e., we must reset subseqIdx, but
+                     * leave seqIdx untouched.
+                     */
+                    subseqIdx = 0;
+                } else {
+                    /*
+                     * First packet of subsequence didn't match packet at seqIdx of sequence, so we move forward in
+                     * sequence, i.e., we continue the search for subsequence in sequence starting at index seqIdx+1 of
+                     * sequence.
+                     */
+                    seqIdx++;
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Overload the same method with relaxed matching.
+     *
+     * @param subsequence The sequence to search for.
+     * @param sequence The sequence to search.
+     * @param subsequenceDirections The directions of packets in {@code subsequence} such that for all {@code i},
+     *                              {@code subsequenceDirections[i]} is the direction of the packet returned by
+     *                              {@code subsequence.get(i)}. May be set to {@code null}, in which this call will
+     *                              internally compute the packet directions.
+     * @param sequenceDirections The directions of packets in {@code sequence} such that for all {@code i},
+     *                           {@code sequenceDirections[i]} is the direction of the packet returned by
+     *                           {@code sequence.get(i)}. May be set to {@code null}, in which this call will internally
+     *                           compute the packet directions.
+     * @param delta The delta for relaxed matching
+     * @param packetSet The set of unique packet lengths, whose matching is to be relaxed
+     *
+     * @return An {@link Optional} containing the part of {@code sequence} that matches {@code subsequence}, or an empty
+     *         {@link Optional} if no part of {@code sequence} matches {@code subsequence}.
+     */
+    private Optional<List<PcapPacket>> findSubsequenceInSequence(List<PcapPacket> subsequence,
+                                                                 List<PcapPacket> sequence,
+                                                                 Conversation.Direction[] subsequenceDirections,
+                                                                 Conversation.Direction[] sequenceDirections,
+                                                                 int delta,
+                                                                 Set<Integer> packetSet) {
+        if (sequence.size() < subsequence.size()) {
+            // If subsequence is longer, it cannot be contained in sequence.
+            return Optional.empty();
+        }
+        if (isTlsSequence(subsequence) != isTlsSequence(sequence)) {
+            // We consider it a mismatch if one is a TLS application data sequence and the other is not.
+            return Optional.empty();
+        }
+        // If packet directions have not been precomputed by calling code, we need to construct them.
+        if (subsequenceDirections == null) {
+            subsequenceDirections = getPacketDirections(subsequence, mRouterWanIp);
+        }
+        if (sequenceDirections == null) {
+            sequenceDirections = getPacketDirections(sequence, mRouterWanIp);
+        }
+        int subseqIdx = 0;
+        int seqIdx = 0;
+        while (seqIdx < sequence.size()) {
+            PcapPacket subseqPkt = subsequence.get(subseqIdx);
+            PcapPacket seqPkt = sequence.get(seqIdx);
+            // We only have a match if packet lengths and directions match.
+            // Do relaxed matching here if applicable
+            if ((delta > 0 && packetSet.contains(subseqPkt.getOriginalLength()) &&
+                    subseqPkt.getOriginalLength() - delta <= seqPkt.getOriginalLength() &&
+                    seqPkt.getOriginalLength() <= subseqPkt.getOriginalLength() + delta &&
+                    subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx]) ||
+                    // Or just exact matching
+                    (subseqPkt.getOriginalLength() == seqPkt.getOriginalLength() &&
+                     subsequenceDirections[subseqIdx] == sequenceDirections[seqIdx])) {
                 // A match; advance both indices to consider next packet in subsequence vs. next packet in sequence.
                 subseqIdx++;
                 seqIdx++;

@@ -197,10 +197,11 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 
 # ================================================ HUE BULB INTENSITY ==================================================
 # IFTTT
-TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/hue-bulb/hue-bulb-onoff/timestamps/hue-bulb-intensity-ifttt-dec-20-2019.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/hue-bulb/hue-bulb-intensity/timestamps/hue-bulb-intensity-ifttt-dec-20-2019.timestamps"
 
+# TODO: THERE WILL BE 50 FPS BECAUSE EVENTS ARE DETECTED TWICE (ON/OFF SIGNATURES ARE BOTH REFERRING TO THE SAME EVENT)
 #DEVICE SIDE
-RESULTS_FILE="$RESULTS_BASE_DIR/hue-bulb/hue-bulb-onoff/hue-bulb-intensity.eth1.validation.pcap___device-side.detectionresults"
+RESULTS_FILE="$RESULTS_BASE_DIR/hue-bulb/hue-bulb-intensity/hue-bulb-intensity.eth1.validation.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
@@ -414,7 +415,7 @@ RESULTS_FILE="$RESULTS_BASE_DIR/tplink-bulb/tplink-bulb-color/tplink-bulb-color.
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
 # =============================================== TP LINK BULB INTENSITY ===============================================
@@ -482,6 +483,8 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ================================================== WEMO INSIGHT PLUG =================================================
 # LOCAL
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug-nov-21-2018.timestamps"
+# TODO: Timestamp file for retraining PCAP file
+#TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug-retraining-jan-9-2020.timestamps"
 
 # Has no device side signature.
 
@@ -531,7 +534,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 
 # TODO: SAME VENDOR OBSERVATION (TP-LINK DEVICES)
 # =============================================== TP-LINK TWO-OUTLET PLUG ==============================================
-# TODO: TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-two-outlet-plug/timestamps/tplink-two-outlet-dec-16-2019.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-two-outlet-plug/timestamps/tplink-two-outlet-plug-dec-22-2019.timestamps"
 
 RESULTS_FILE="$RESULTS_BASE_DIR/tplink-two-outlet-plug/tplink-two-outlet-plug.wlan1.validation.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
@@ -541,7 +544,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ======================================================================================================================
 
 # ================================================= TP-LINK POWER STRIP ================================================
-# TODO: TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-power-strip/timestamps/tplink-power-strip-dec-16-2019.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-power-strip/timestamps/tplink-power-strip-dec-22-2019.timestamps"
 
 RESULTS_FILE="$RESULTS_BASE_DIR/tplink-power-strip/tplink-power-strip.wlan1.validation.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
@@ -552,9 +555,9 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 
 # ============================================== TP-LINK LIGHT BULB ON/OFF =============================================
 # KL-110 (newer model than LB-130 but no color---only dimmable white)
-# TODO: TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/timestamps/tplink-light-bulb-white-onoff-dec-16-2019.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/timestamps/tplink-bulb-white-onoff-dec-21-2019.timestamps"
 
-RESULTS_FILE="$RESULTS_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/tplink-light-bulb-white-onoff.wlan1.validation.pcap___device-side.detectionresults"
+RESULTS_FILE="$RESULTS_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/tplink-bulb-white-onoff.wlan1.validation.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
@@ -563,9 +566,9 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 
 # ============================================= TP-LINK LIGHT BULB INTENSITY ===========================================
 # KL-110 (newer model than LB-130 but no color---only dimmable white)
-# TODO: TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/timestamps/tplink-light-bulb-white-intensity-dec-16-2019.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/timestamps/tplink-bulb-white-intensity-dec-21-2019.timestamps"
 
-RESULTS_FILE="$RESULTS_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/tplink-light-bulb-white-intensity.wlan1.validation.pcap___device-side.detectionresults"
+RESULTS_FILE="$RESULTS_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/tplink-bulb-white-intensity.wlan1.validation.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
@@ -573,7 +576,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ======================================================================================================================
 
 # ================================================ TP-LINK CAMERA ON/OFF ===============================================
-# TODO: TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-camera/tplink-camera-onoff/timestamps/tplink-camera-onoff-dec-16-2019.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-camera/tplink-camera-onoff/timestamps/tplink-camera-onoff-dec-22-2019.timestamps"
 
 RESULTS_FILE="$RESULTS_BASE_DIR/tplink-camera/tplink-camera-onoff/tplink-camera-onoff.wlan1.validation.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
@@ -582,10 +585,21 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 #./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# =============================================== TP-LINK CAMERA RECORDING =============================================
-# TODO: TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-camera/tplink-camera-intensity/timestamps/tplink-camera-intensity-dec-16-2019.timestamps"
+# TODO: IMC (NEW DEVICE)
+# ================================================= BLINK CAMERA WATCH =================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/blink-camera/blink-camera-watch/timestamps/blink-camera-watch-retraining-dec-23-2019.timestamps"
 
-RESULTS_FILE="$RESULTS_BASE_DIR/tplink-camera/tplink-camera-intensity/tplink-camera-intensity.wlan1.validation.pcap___device-side.detectionresults"
+RESULTS_FILE="$RESULTS_BASE_DIR/blink-camera/blink-camera-watch/blink-camera-watch.wlan1.validation.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= BLINK CAMERA PHOTO =================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/blink-camera/blink-camera-photo/timestamps/blink-camera-photo-retraining-dec-24-2019.timestamps"
+
+RESULTS_FILE="$RESULTS_BASE_DIR/blink-camera/blink-camera-photo/blink-camera-photo.wlan1.validation.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"

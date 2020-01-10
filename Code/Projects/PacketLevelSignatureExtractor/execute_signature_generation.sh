@@ -343,10 +343,14 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 # IFTTT
 INPUT_PCAP="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/eth1/hue-bulb-intensity.eth1.ifttt.pcap"
 
+# TODO: THE LOW INTENSITY PART SEEMS TO BE MISSING THE TRAILING C-378
+# TODO: WE CAN TWEAK THE CODE AND ALLOW THE FOLLOWING LINES
+# int lowerBound = numberOfEventsPerType - (int)(numberOfEventsPerType * 0.2);
+# int upperBound = numberOfEventsPerType + (int)(numberOfEventsPerType * 0.2);
 # DEVICE SIDE
 OUTPUT_PCAP="$OUTPUT_DIR/hue-bulb/hue-bulb-intensity/eth1/hue-bulb-processed.pcap"
 TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/timestamps/hue-bulb-intensity-ifttt-dec-20-2019.timestamps"
-DEVICE_IP="192.168.1.101"
+DEVICE_IP="192.168.1.100"
 ON_SIGNATURE="$OUTPUT_DIR/hue-bulb/hue-bulb-intensity/signatures/hue-bulb-intensity-onSignature-device-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/hue-bulb/hue-bulb-intensity/signatures/hue-bulb-intensity-offSignature-device-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/hue-bulb/hue-bulb-intensity/analyses/hue-bulb-intensity-onClusters-device-side.cls"
@@ -902,8 +906,8 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/wlan1/tplink-two-outlet-plug.wlan1.local.pcap"
 
 OUTPUT_PCAP="$OUTPUT_DIR/tplink-two-outlet-plug/wlan1/tplink-two-outlet-plug-processed.pcap"
-# TODO: TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/timestamps/tplink-two-outlet-plug-dec-21-2019.timestamps"
-# TODO: DEVICE_IP="192.168.1.159"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/timestamps/tplink-two-outlet-plug-dec-22-2019.timestamps"
+DEVICE_IP="192.168.1.178"
 ON_SIGNATURE="$OUTPUT_DIR/tplink-two-outlet-plug/signatures/tplink-two-outlet-plug-onSignature-device-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/tplink-two-outlet-plug/signatures/tplink-two-outlet-plug-offSignature-device-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/tplink-two-outlet-plug/analyses/tplink-two-outlet-plug-onClusters-device-side.cls"
@@ -920,8 +924,8 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-power-strip/wlan1/tplink-power-strip.wlan1.local.pcap"
 
 OUTPUT_PCAP="$OUTPUT_DIR/tplink-power-strip/wlan1/tplink-power-strip-processed.pcap"
-# TODO: TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-power-strip/timestamps/tplink-power-strip-dec-21-2019.timestamps"
-# TODO: DEVICE_IP="192.168.1.159"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-power-strip/timestamps/tplink-power-strip-dec-22-2019.timestamps"
+DEVICE_IP="192.168.1.142"
 ON_SIGNATURE="$OUTPUT_DIR/tplink-power-strip/signatures/tplink-power-strip-onSignature-device-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/tplink-power-strip/signatures/tplink-power-strip-offSignature-device-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/tplink-power-strip/analyses/tplink-power-strip-onClusters-device-side.cls"
@@ -936,15 +940,15 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 
 # ============================================== TP-LINK LIGHT BULB ON/OFF =============================================
 # KL-110 (newer model than LB-130 but no color---only dimmable white)
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/wlan1/tplink-light-bulb-white-onoff.wlan1.local.pcap"
+INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/wlan1/tplink-bulb-white-onoff.wlan1.local.pcap"
 
-OUTPUT_PCAP="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/wlan1/tplink-light-bulb-white-processed.pcap"
-# TODO: TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/timestamps/tplink-two-outlet-plug-dec-21-2019.timestamps"
-# TODO: DEVICE_IP="192.168.1.159"
-ON_SIGNATURE="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/signatures/tplink-light-bulb-white-onoff-onSignature-device-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/signatures/tplink-light-bulb-white-onoff-offSignature-device-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/analyses/tplink-light-bulb-white-onoff-onClusters-device-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/analyses/tplink-light-bulb-white-onoff-offClusters-device-side.cls"
+OUTPUT_PCAP="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-onoff/wlan1/tplink-bulb-white-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-onoff/timestamps/tplink-bulb-white-onoff-dec-21-2019.timestamps"
+DEVICE_IP="192.168.1.227"
+ON_SIGNATURE="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-onoff/signatures/tplink-bulb-white-onoff-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-onoff/signatures/tplink-bulb-white-onoff-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-onoff/analyses/tplink-bulb-white-onoff-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-onoff/analyses/tplink-bulb-white-onoff-offClusters-device-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
@@ -955,15 +959,15 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 
 # ============================================= TP-LINK LIGHT BULB INTENSITY ===========================================
 # KL-110 (newer model than LB-130 but no color---only dimmable white)
-INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/wlan1/tplink-light-bulb-white-intensity.wlan1.local.pcap"
+INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/wlan1/tplink-bulb-white-intensity.wlan1.local.pcap"
 
-OUTPUT_PCAP="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/wlan1/tplink-light-bulb-white-processed.pcap"
-# TODO: TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-light-bulb-white/tplink-light-bulb-white-onoff/timestamps/tplink-light-bulb-white-onoff-dec-21-2019.timestamps"
-# TODO: DEVICE_IP="192.168.1.159"
-ON_SIGNATURE="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/signatures/tplink-light-bulb-white-intensity-onSignature-device-side.sig"
-OFF_SIGNATURE="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/signatures/tplink-light-bulb-white-intensity-offSignature-device-side.sig"
-ON_ANALYSIS="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/analyses/tplink-light-bulb-white-intensity-onClusters-device-side.cls"
-OFF_ANALYSIS="$OUTPUT_DIR/tplink-light-bulb-white/tplink-light-bulb-white-intensity/analyses/tplink-light-bulb-white-intensity-offClusters-device-side.cls"
+OUTPUT_PCAP="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-intensity/wlan1/tplink-bulb-white-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb-white/tplink-bulb-white-intensity/timestamps/tplink-bulb-white-intensity-dec-21-2019.timestamps"
+DEVICE_IP="192.168.1.227"
+ON_SIGNATURE="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-intensity/signatures/tplink-bulb-white-intensity-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-intensity/signatures/tplink-bulb-white-intensity-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-intensity/analyses/tplink-bulb-white-intensity-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/tplink-bulb-white/tplink-bulb-white-intensity/analyses/tplink-bulb-white-intensity-offClusters-device-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
@@ -976,8 +980,8 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/wlan1/tplink-camera-onoff.wlan1.local.pcap"
 
 OUTPUT_PCAP="$OUTPUT_DIR/tplink-camera/tplink-camera-onoff/wlan1/tplink-light-camera-processed.pcap"
-# TODO: TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/timestamps/tplink-camera-onoff-dec-21-2019.timestamps"
-# TODO: DEVICE_IP="192.168.1.159"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-onoff/timestamps/tplink-camera-onoff-dec-22-2019.timestamps"
+DEVICE_IP="192.168.1.235"
 ON_SIGNATURE="$OUTPUT_DIR/tplink-camera/tplink-camera-onoff/signatures/tplink-camera-onoff-onSignature-device-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/tplink-camera/tplink-camera-onoff/signatures/tplink-camera-onoff-offSignature-device-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/tplink-camera/tplink-camera-onoff/analyses/tplink-camera-onoff-onClusters-device-side.cls"
@@ -994,12 +998,106 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/wlan1/tplink-camera-recording.wlan1.local.pcap"
 
 OUTPUT_PCAP="$OUTPUT_DIR/tplink-camera/tplink-camera-recording/wlan1/tplink-light-camera-processed.pcap"
-# TODO: TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/timestamps/tplink-camera-recording-dec-21-2019.timestamps"
-# TODO: DEVICE_IP="192.168.1.159"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-camera/tplink-camera-recording/timestamps/tplink-camera-recording-dec-22-2019.timestamps"
+DEVICE_IP="192.168.1.235"
 ON_SIGNATURE="$OUTPUT_DIR/tplink-camera/tplink-camera-recording/signatures/tplink-camera-recording-onSignature-device-side.sig"
 OFF_SIGNATURE="$OUTPUT_DIR/tplink-camera/tplink-camera-recording/signatures/tplink-camera-recording-offSignature-device-side.sig"
 ON_ANALYSIS="$OUTPUT_DIR/tplink-camera/tplink-camera-recording/analyses/tplink-camera-recording-onClusters-device-side.cls"
 OFF_ANALYSIS="$OUTPUT_DIR/tplink-camera/tplink-camera-recording/analyses/tplink-camera-recording-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# TODO: RETRAINING
+# ==================================================== TP-LINK PLUG ====================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap"
+
+OUTPUT_PCAP="$OUTPUT_DIR/tplink-plug/wlan1/tplink-plug-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-plug/timestamps/tplink-plug-retraining-dec-25-2019.timestamps"
+DEVICE_IP="192.168.1.160"
+ON_SIGNATURE="$OUTPUT_DIR/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/tplink-plug/analyses/tplink-plug-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/tplink-plug/analyses/tplink-plug-offClusters-device-side.cls"
+EPSILON="10.0"
+# TODO: Change the deleted sequences to 0 if we want to get just the outbound signatures
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ==================================================== TP-LINK BULB ====================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-bulb/tplink-bulb-onoff/wlan1/tplink-bulb-onoff.wlan1.local.pcap"
+
+OUTPUT_PCAP="$OUTPUT_DIR/tplink-bulb/tplink-bulb-onoff/wlan1/tplink-bulb-onoff-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/tplink-bulb/tplink-bulb-onoff/timestamps/tplink-bulb-onoff-retraining-dec-23-2019.timestamps"
+DEVICE_IP="192.168.1.140"
+ON_SIGNATURE="$OUTPUT_DIR/tplink-bulb/tplink-bulb-onoff/signatures/tplink-bulb-onoff-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/tplink-bulb/tplink-bulb-onoff/signatures/tplink-bulb-onoff-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/tplink-bulb/tplink-bulb-onoff/analyses/tplink-bulb-onoff-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/tplink-bulb/tplink-bulb-onoff/analyses/tplink-bulb-onoff-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================== WEMO INSIGHT PLUG =================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/wemo-insight-plug/wlan1/wemo-insight-plug.wlan1.local.pcap"
+
+OUTPUT_PCAP="$OUTPUT_DIR/wemo-insight-plug/wlan1/wemo-insight-plug-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug-retraining-jan-9-2020.timestamps"
+# The format 192.168.10 is needed to generate packet length 260
+DEVICE_IP="192.168.10.246"
+ON_SIGNATURE="$OUTPUT_DIR/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/wemo-insight-plug/analyses/wemo-insight-plug-onClusters-phone-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/wemo-insight-plug/analyses/wemo-insight-plug-offClusters-phone-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="0"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# IMC DATASET
+# ================================================= BLINK CAMERA WATCH =================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/wlan1/blink-camera-watch.wlan1.local.pcap"
+
+OUTPUT_PCAP="$OUTPUT_DIR/blink-camera/blink-camera-watch/wlan1/blink-camera-watch-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/timestamps/blink-camera-watch-retraining-dec-23-2019.timestamps"
+DEVICE_IP="192.168.1.228"
+ON_SIGNATURE="$OUTPUT_DIR/blink-camera/blink-camera-watch/signatures/blink-camera-watch-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/blink-camera/blink-camera-watch/signatures/blink-camera-watch-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/blink-camera/blink-camera-watch/analyses/blink-camera-watch-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/blink-camera/blink-camera-watch/analyses/blink-camera-watch-offClusters-device-side.cls"
+EPSILON="10.0"
+DELETED_SEQUENCES_ON="-1"
+DELETED_SEQUENCES_OFF="-1"
+
+PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
+#./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= BLINK CAMERA PHOTO =================================================
+INPUT_PCAP="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/wlan1/blink-camera-photo.wlan1.local.pcap"
+
+OUTPUT_PCAP="$OUTPUT_DIR/blink-camera/blink-camera-photo/wlan1/blink-camera-photo-processed.pcap"
+TIMESTAMP_FILE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/timestamps/blink-camera-photo-retraining-dec-24-2019.timestamps"
+DEVICE_IP="192.168.1.228"
+ON_SIGNATURE="$OUTPUT_DIR/blink-camera/blink-camera-photo/signatures/blink-camera-photo-onSignature-device-side.sig"
+OFF_SIGNATURE="$OUTPUT_DIR/blink-camera/blink-camera-photo/signatures/blink-camera-photo-offSignature-device-side.sig"
+ON_ANALYSIS="$OUTPUT_DIR/blink-camera/blink-camera-photo/analyses/blink-camera-photo-onClusters-device-side.cls"
+OFF_ANALYSIS="$OUTPUT_DIR/blink-camera/blink-camera-photo/analyses/blink-camera-photo-offClusters-device-side.cls"
 EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"

@@ -388,14 +388,16 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ======================================================================================================================
 
 # ==================================================== TP-LINK PLUG ====================================================
-TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug-smarthome-nov-9-2018.timestamps"
+#TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug-smarthome-nov-9-2018.timestamps"
+# TODO: Timestamp file for IMC PCAP file
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug.wlan.timestamps"
 
 # DEVICE SIDE
 RESULTS_FILE="$RESULTS_BASE_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
-EXACT_MATCH="true"
+EXACT_MATCH="false"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
-#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 
 # DEVICE SIDE OUTBOUND
 RESULTS_FILE="$RESULTS_BASE_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side-outbound.detectionresults"
@@ -408,6 +410,8 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ================================================== WEMO INSIGHT PLUG =================================================
 # LOCAL
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug-smarthome-nov-22-2018.timestamps"
+# TODO: Timestamp file for IMC PCAP file
+#TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug.timestamps"
 
 # Has no device side signature.
 
@@ -447,6 +451,28 @@ TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-plug/timestamps/wemo-plug-ifttt-smart
 
 # DEVICE SIDE
 RESULTS_FILE="$RESULTS_BASE_DIR/wemo-plug/wemo-plug.wlan1.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# TODO: IMC DATASET DEVICES
+# TODO: THE LABELS IN THE IMC DATASET ARE NOT STRICTLY 15 SECONDS SO WE HAVE TO LOOSEN THE TIMING CONSTRAINT (30 SECONDS)
+# ================================================= BLINK CAMERA WATCH =================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/blink-camera/blink-camera-watch/timestamps/blink-camera-watch.wlan.timestamps"
+
+RESULTS_FILE="$RESULTS_BASE_DIR/blink-camera/blink-camera-watch/blink-camera-watch.wlan.detection.pcap___device-side.detectionresults"
+ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
+EXACT_MATCH="true"
+PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"
+#./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= BLINK CAMERA PHOTO =================================================
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/blink-camera/blink-camera-photo/timestamps/blink-camera-photo.wlan.timestamps"
+
+RESULTS_FILE="$RESULTS_BASE_DIR/blink-camera/blink-camera-photo/blink-camera-photo.wlan.detection.pcap___device-side.detectionresults"
 ANALYSIS_RESULTS_FILE="$RESULTS_FILE.analysis"
 EXACT_MATCH="true"
 PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXACT_MATCH'"

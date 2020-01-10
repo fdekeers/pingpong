@@ -268,6 +268,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 # ======================================================================================================================
 
 # ================================================== HUE BULB ON/OFF ===================================================
+# TODO: NOT DETECTED BECAUSE IT'S ETH1 SIGNATURE (NOT WLAN)
 # IFTTT
 PCAP_FILE="$PCAPS_BASE_DIR/hue-bulb/hue-bulb-onoff/wlan1/hue-bulb-onoff.wlan1.ifttt.detection.pcap"
 
@@ -285,6 +286,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 # ======================================================================================================================
 
 # ================================================ HUE BULB INTENSITY ==================================================
+# TODO: NOT DETECTED BECAUSE IT'S ETH1 SIGNATURE (NOT WLAN)
 # IFTTT
 PCAP_FILE="$PCAPS_BASE_DIR/hue-bulb/hue-bulb-intensity/wlan1/hue-bulb-intensity.wlan1.ifttt.detection.pcap"
 
@@ -294,7 +296,7 @@ OFF_ANALYSIS="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/analyses/hue-bulb
 ON_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/signatures/hue-bulb-intensity-onSignature-device-side.sig"
 OFF_SIGNATURE="$SIGNATURES_BASE_DIR/hue-bulb/hue-bulb-intensity/signatures/hue-bulb-intensity-offSignature-device-side.sig"
 RESULTS_FILE="$OUTPUT_DIR/hue-bulb/hue-bulb-intensity/hue-bulb-intensity.wlan1.detection.pcap___device-side.detectionresults"
-SIGNATURE_DURATION=""
+SIGNATURE_DURATION="106"
 EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
@@ -649,6 +651,26 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 # Phone side does not make sense as it is merely a subset of the device side and does not differentiate ONs from OFFs.
 # ======================================================================================================================
+# RELAXED MATCHING
+PCAP_FILE="$PCAPS_BASE_DIR/tplink-plug/wlan/tplink-plug.wlan.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analyses/tplink-plug-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/tplink-plug/analyses/tplink-plug-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/tplink-plug/signatures/tplink-plug-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="902"
+EPSILON="10.0"
+MINUS_R="-r"
+DELTA="21"
+PACKETLIST="592,1234,593,1235"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON' '$MINUS_R' '$DELTA' '$PACKETLIST'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
+
+# Phone side does not make sense as it is merely a subset of the device side and does not differentiate ONs from OFFs.
+# ======================================================================================================================
 # REMOTE
 PCAP_FILE="$PCAPS_BASE_DIR/tplink-plug/wlan1/tplink-plug.wlan1.detection.pcap"
 
@@ -749,6 +771,57 @@ SIGNATURE_DURATION="2460"
 EPSILON="10.0"
 #ON_SKIPPED_PACKETS="4"
 #OFF_SKIPPED_PACKETS="4"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# TODO: IMC DATASET DEVICES
+# ================================================= BLINK CAMERA WATCH =================================================
+PCAP_FILE="$PCAPS_BASE_DIR/blink-camera/blink-camera-watch/wlan/blink-camera-watch.wlan.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/analyses/blink-camera-watch-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/analyses/blink-camera-watch-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/signatures/blink-camera-watch-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/signatures/blink-camera-watch-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/blink-camera/blink-camera-watch/blink-camera-watch.wlan.detection.pcap___device-side.detectionresults"
+SIGNATURE_DURATION="365"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================= BLINK CAMERA PHOTO =================================================
+PCAP_FILE="$PCAPS_BASE_DIR/blink-camera/blink-camera-photo/wlan/blink-camera-photo.wlan.pcap"
+
+# DEVICE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/analyses/blink-camera-photo-onClusters-device-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/analyses/blink-camera-photo-offClusters-device-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/signatures/blink-camera-photo-onSignature-device-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-photo/signatures/blink-camera-photo-offSignature-device-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/blink-camera/blink-camera-photo/blink-camera-photo.wan.detection.pcap___device-side.detectionresults"
+#SIGNATURE_DURATION="1429"
+SIGNATURE_DURATION="12000"
+EPSILON="10.0"
+
+PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
+#./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
+# ======================================================================================================================
+
+# ================================================== WEMO INSIGHT PLUG =================================================
+# LOCAL
+PCAP_FILE="$PCAPS_BASE_DIR/wemo-insight-plug/wlan/wemo-insight-plug.wlan.pcap"
+
+# PHONE SIDE
+ON_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-insight-plug/analyses/wemo-insight-plug-onClusters-phone-side.cls"
+OFF_ANALYSIS="$SIGNATURES_BASE_DIR/wemo-insight-plug/analyses/wemo-insight-plug-offClusters-phone-side.cls"
+ON_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug/signatures/wemo-insight-plug-onSignature-phone-side.sig"
+OFF_SIGNATURE="$SIGNATURES_BASE_DIR/wemo-insight-plug/signatures/wemo-insight-plug-offSignature-phone-side.sig"
+RESULTS_FILE="$OUTPUT_DIR/wemo-insight-plug/wemo-insight-plug.wlan1.detection.pcap___phone-side.detectionresults"
+SIGNATURE_DURATION="124"
+EPSILON="10.0"
 
 PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$RESULTS_FILE' '$SIGNATURE_DURATION' '$EPSILON'"
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"

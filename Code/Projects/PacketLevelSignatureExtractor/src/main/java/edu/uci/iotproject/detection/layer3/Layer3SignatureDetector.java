@@ -49,21 +49,26 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
     private static String ROUTER_WAN_IP = "128.195.55.242";
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException, IOException {
+        String errMsg = String.format("SPECTO version 1.0\n" +
+                        "Copyright (C) 2018-2019 Janus Varmarken and Rahmadi Trimananda.\n" +
+                        "University of California, Irvine.\n" +
+                        "All rights reserved.\n\n" +
+                        "Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
+                        "\n  inputPcapFile: the target of the detection" +
+                        "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
+                        "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
+                        "\n  onSignatureFile: the file that contains the ON signature to search for" +
+                        "\n  offSignatureFile: the file that contains the OFF signature to search for" +
+                        "\n  resultsFile: where to write the results of the detection" +
+                        "\n  signatureDuration: the maximum duration of signature detection" +
+                        "\n  epsilon: the epsilon value for the DBSCAN algorithm\n" +
+                        "\n  Additional options (add '-r' before the following two parameters):" +
+                        "\n  delta: delta for relaxed matching" +
+                        "\n  packetId: packet number in the sequence" +
+                        "\n            (could be more than one packet whose matching is relaxed, " +
+                        "\n             e.g., 0,1 for packets 0 and 1)",
+                Layer3SignatureDetector.class.getSimpleName());
         if (args.length < 8) {
-            String errMsg = String.format("SPECTO version 1.0\n" +
-                            "Copyright (C) 2018-2019 Janus Varmarken and Rahmadi Trimananda.\n" +
-                            "University of California, Irvine.\n" +
-                            "All rights reserved.\n\n" +
-                            "Usage: %s inputPcapFile onAnalysisFile offAnalysisFile onSignatureFile offSignatureFile resultsFile" +
-                            "\n  inputPcapFile: the target of the detection" +
-                            "\n  onAnalysisFile: the file that contains the ON clusters analysis" +
-                            "\n  offAnalysisFile: the file that contains the OFF clusters analysis" +
-                            "\n  onSignatureFile: the file that contains the ON signature to search for" +
-                            "\n  offSignatureFile: the file that contains the OFF signature to search for" +
-                            "\n  resultsFile: where to write the results of the detection" +
-                            "\n  signatureDuration: the maximum duration of signature detection" +
-                            "\n  epsilon: the epsilon value for the DBSCAN algorithm",
-                    Layer3SignatureDetector.class.getSimpleName());
             System.out.println(errMsg);
             return;
         }
@@ -79,7 +84,21 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
 //        final int signatureDuration = Integer.parseInt(args[6]);
         final int signatureDuration = TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS;
         final double eps = Double.parseDouble(args[7]);
-
+        // Additional feature---relaxed matching
+        int delta = 0;
+        final Set<Integer> packetSet = new HashSet<>();
+        if (args.length == 11 && args[8].equals("-r")) {
+            delta = Integer.parseInt(args[9]);
+            StringTokenizer stringTokenizerOff = new StringTokenizer(args[10], ",");
+            // Add the list of packet IDs
+            while(stringTokenizerOff.hasMoreTokens()) {
+                int id = Integer.parseInt(stringTokenizerOff.nextToken());
+                packetSet.add(id);
+            }
+        } else {
+            System.out.println(errMsg);
+            return;
+        }
         // Prepare file outputter.
         File outputFile = new File(resultsFile);
         outputFile.getParentFile().mkdirs();
@@ -115,9 +134,9 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
         }
         // WAN
         Layer3SignatureDetector onDetector = new Layer3SignatureDetector(onSignature, ROUTER_WAN_IP,
-                signatureDuration, isRangeBasedForOn, eps);
+                signatureDuration, isRangeBasedForOn, eps, delta, packetSet);
         Layer3SignatureDetector offDetector = new Layer3SignatureDetector(offSignature, ROUTER_WAN_IP,
-                signatureDuration, isRangeBasedForOff, eps);
+                signatureDuration, isRangeBasedForOff, eps, delta, packetSet);
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).
                 withLocale(Locale.US).withZone(ZoneId.of("America/Los_Angeles"));
@@ -253,14 +272,15 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
     }
 
     public Layer3SignatureDetector(List<List<List<PcapPacket>>> searchedSignature, String routerWanIp,
-                             int inclusionTimeMillis, boolean isRangeBased, double eps) {
+                                   int inclusionTimeMillis, boolean isRangeBased, double eps,
+                                   int delta, Set<Integer> packetSet) {
         // note: doesn't protect inner lists from changes :'(
         mSignature = Collections.unmodifiableList(searchedSignature);
         // Generate corresponding/appropriate ClusterMatchers based on the provided signature
         List<Layer3ClusterMatcher> clusterMatchers = new ArrayList<>();
         for (List<List<PcapPacket>> cluster : mSignature) {
             clusterMatchers.add(new Layer3ClusterMatcher(cluster, routerWanIp, inclusionTimeMillis,
-                    isRangeBased, eps, this));
+                    isRangeBased, eps, delta, packetSet, this));
         }
         mClusterMatchers = Collections.unmodifiableList(clusterMatchers);
 

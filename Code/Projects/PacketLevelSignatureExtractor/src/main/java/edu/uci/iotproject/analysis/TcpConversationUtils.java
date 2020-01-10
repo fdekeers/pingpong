@@ -329,7 +329,7 @@ public class TcpConversationUtils {
      * Set of port numbers that we consider TLS traffic.
      * Note: purposefully initialized as a {@link HashSet} to get O(1) {@code contains()} call.
      */
-    private static final Set<Integer> TLS_PORTS = Stream.of(443, 8443, 41143).
+    private static final Set<Integer> TLS_PORTS = Stream.of(443, 8443, 41143, 5671, 30001).
             collect(Collectors.toCollection(HashSet::new));
 
     /**

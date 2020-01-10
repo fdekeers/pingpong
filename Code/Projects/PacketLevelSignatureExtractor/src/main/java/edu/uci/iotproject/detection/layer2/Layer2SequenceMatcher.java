@@ -7,6 +7,7 @@ import org.pcap4j.util.MacAddress;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Attempts to detect the presence of a specific packet sequence in the set of packets provided through multiple calls
@@ -24,6 +25,11 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
 
     private int mInclusionTimeMillis;
 
+    /**
+     * Relaxed matching
+     */
+    private int mDelta;
+    private Set<Integer> mPacketSet;
 
     /**
      * Create a {@code Layer2SequenceMatcher}.
@@ -32,7 +38,7 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
      * @param routerWlanMac The target trace router's WLAN MAC (used for determining the direction of packets).
      */
     public Layer2SequenceMatcher(List<PcapPacket> sequence, int inclusionTimeMillis, String trainingRouterWlanMac,
-                                 String routerWlanMac) {
+                                 String routerWlanMac, int delta, Set<Integer> packetSet) {
         super(sequence, trainingRouterWlanMac, routerWlanMac);
         mSequence = sequence;
         // Compute packet directions for sequence.
@@ -49,6 +55,8 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
         }
         mInclusionTimeMillis =
                 inclusionTimeMillis == 0 ? TriggerTrafficExtractor.INCLUSION_WINDOW_MILLIS : inclusionTimeMillis;
+        mDelta = delta;
+        mPacketSet = packetSet;
     }
 
     /**
@@ -79,7 +87,10 @@ public class Layer2SequenceMatcher extends Layer2AbstractMatcher {
         // Get representative of the packet we expect to match next.
         PcapPacket expected = mSequence.get(mMatchedPackets.size());
         // First verify if the received packet has the length we're looking for.
-        if (packet.getOriginalLength() == expected.getOriginalLength()) {
+        if ((mDelta > 0 && mPacketSet.contains(expected.getOriginalLength()) &&
+                expected.getOriginalLength() - mDelta <= packet.getOriginalLength() &&
+                packet.getOriginalLength() <= expected.getOriginalLength() + mDelta) ||
+                packet.getOriginalLength() == expected.getOriginalLength()) {
             // If this is the first packet, we only need to verify that its length is correct. Time constraints are
             // obviously satisfied as there are no previous packets. Furthermore, direction matches by definition as we
             // don't know the MAC of the device (or phone) in advance, so we can't enforce a rule saying "first packet
