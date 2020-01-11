@@ -121,12 +121,7 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
                 int id = Integer.parseInt(stringTokenizerOff.nextToken());
                 packetSet.add(id);
             }
-        } else {
-            System.out.println(errMsg);
-            System.out.println(optParamsExplained);
-            return;
         }
-
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
         String vpnClientMacAddress = null;

@@ -95,9 +95,6 @@ public class Layer3SignatureDetector implements PacketListener, ClusterMatcherOb
                 int id = Integer.parseInt(stringTokenizerOff.nextToken());
                 packetSet.add(id);
             }
-        } else {
-            System.out.println(errMsg);
-            return;
         }
         // Prepare file outputter.
         File outputFile = new File(resultsFile);
