@@ -29,9 +29,25 @@ import java.util.stream.Stream;
  * lengths with training data to determine certain events
  * or actions for smart home devices.
  *
+ * Notes:
+ * This first version of software is created based on binary events (i.e., ON/OFF).
+ * We first tested it with the TP-Link plug. The events ON and OFF were generated alternately for 100 times using
+ * the automation scripts (see the automation folder). Thus, this program tries to extract signatures by
+ * assuming that:
+ *
+ * (1) there are 2 types of events (binary), and
+ * (2) the two types are triggered alternately.
+ *
+ * Hence, for non-binary events, we still can trigger the same event for 100 times and PingPong still groups them
+ * in 2 groups of 50 occurrences each. Please keep in mind that the 2 groups are simply named "ON" and "OFF"
+ * in this program although we tested PingPong against other types of events. For non-binary events (e.g., Intensity)
+ * we still trigger the phone app alternately between two values---to have a comprehensive understanding, we alternately
+ * triggered the intensity values of 1% and 100%. We suspect that the variation in lengths are due to the different
+ * lengths of the string "1%" to "100%".
+ *
  * @author Janus Varmarken
  * @author Rahmadi Trimananda (rtrimana@uci.edu)
- * @version 0.1
+ * @version 1.0
  */
 public class SignatureGenerator {
 

@@ -1012,7 +1012,7 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: RETRAINING
+# TODO: PUBLIC DATASET
 # ==================================================== TP-LINK PLUG ====================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap"
 
@@ -1025,8 +1025,8 @@ ON_ANALYSIS="$OUTPUT_DIR/tplink-plug/analyses/tplink-plug-onClusters-device-side
 OFF_ANALYSIS="$OUTPUT_DIR/tplink-plug/analyses/tplink-plug-offClusters-device-side.cls"
 EPSILON="10.0"
 # TODO: Change the deleted sequences to 0 if we want to get just the outbound signatures
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
+DELETED_SEQUENCES_ON="0"
+DELETED_SEQUENCES_OFF="0"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"

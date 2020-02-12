@@ -13,7 +13,7 @@
 # TODO: Please don't forget to preprocess the dataset using the instructions
 # TODO:     in PingPong/evaluation-datasets/public-dataset/smarthome/README
 
-# TODO: For a number of devices the upper bound multipliers should be as high as 0.9 or 0.99 due to
+# TODO: For a number of devices the CLUSTER_BOUNDS_MULTIPLIER should be as high as 0.9 or 0.99 due to
 # TODO:     inconsistent network traces (see SignatureGenerator.java).
 # TODO: For most cases, INCLUSION_WINDOW_MILLIS needs to be 30_000 (see TriggerTrafficExtractor.java).
 
@@ -40,7 +40,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -59,7 +59,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -78,7 +78,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -97,7 +97,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -429,7 +429,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="2,0"
 DELETED_SEQUENCES_OFF="2,0"
 
-# TODO: Need to change lower and upper bound multipliers to 0.9 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.9 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -467,7 +467,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -486,7 +486,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="2,1"
 DELETED_SEQUENCES_OFF="2,0"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -506,7 +506,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 # TODO: UDP based device
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -526,7 +526,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 # TODO: UDP based device
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -565,7 +565,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 # TODO: UDP based device
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -585,7 +585,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 # TODO: NO SIGNATURE HERE! BIG CLUSTERS!
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -604,7 +604,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="0"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -623,7 +623,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -642,7 +642,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -661,7 +661,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -680,7 +680,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -699,7 +699,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -718,7 +718,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -737,7 +737,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -756,7 +756,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="2"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -775,7 +775,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -794,7 +794,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="0,1"
 DELETED_SEQUENCES_OFF="1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -813,7 +813,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="0"
 DELETED_SEQUENCES_OFF="1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -832,7 +832,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="0"
 DELETED_SEQUENCES_OFF="0,1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -851,7 +851,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="0"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -870,7 +870,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -889,7 +889,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="3,2"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -908,7 +908,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="0,1"
 DELETED_SEQUENCES_OFF="1,0,1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.4 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.4 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -927,7 +927,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="0,0"
 DELETED_SEQUENCES_OFF="0,1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.4 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.4 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -946,7 +946,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
 # TODO: Also the datapoints could only be 4
 # TODO: 05/04/2019 12:13:20 PM #05/04/2019 12:14:03 PM #05/04/2019 12:31:39 PM #05/04/2019 12:32:21 PM
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
@@ -968,7 +968,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 # TODO: Clusters are small, presumably due to broken PCAP files (their recording seems to be inconsistent and noisy)
-# TODO: Need to change lower and upper bound multipliers to 0.9 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.9 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -987,7 +987,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="2"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1006,7 +1006,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="1,0,0"
 DELETED_SEQUENCES_OFF="0,0,2"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1025,7 +1025,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1044,7 +1044,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1063,7 +1063,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.3 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1082,7 +1082,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1101,7 +1101,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1120,7 +1120,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1139,7 +1139,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1159,7 +1159,7 @@ DELETED_SEQUENCES_ON="0,0"
 DELETED_SEQUENCES_OFF="2,0"
 
 # TODO: Made the dataset smaller (just 10 events)
-# TODO: Need to change lower and upper bound multipliers to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1179,7 +1179,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 # TODO: This contains empty PCAP files
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1199,7 +1199,7 @@ DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
 # TODO: This contains empty PCAP files
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1218,7 +1218,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="3"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.1 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1237,7 +1237,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="3,1,0"
 DELETED_SEQUENCES_OFF="2,0"
 
-# TODO: Need to change lower and upper bound multipliers to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1256,7 +1256,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="1,1"
 DELETED_SEQUENCES_OFF="1,1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.5 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1275,7 +1275,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1294,7 +1294,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.99 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.99 and INCLUSION_WINDOW_MILLIS = 30_000
 # TODO: However, the clusters are really small due to inconsistent traffic patterns (seems to be a PCAP-capturing problem on their end)
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
@@ -1314,7 +1314,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.99 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.99 and INCLUSION_WINDOW_MILLIS = 30_000
 # TODO: However, the clusters are really small due to inconsistent traffic patterns (seems to be a PCAP-capturing problem on their end)
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
@@ -1354,7 +1354,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1373,7 +1373,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1392,7 +1392,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1411,7 +1411,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1430,7 +1430,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="0"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1449,7 +1449,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1468,7 +1468,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1487,7 +1487,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1506,7 +1506,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1525,7 +1525,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="1"
 DELETED_SEQUENCES_OFF="0"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1544,7 +1544,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
@@ -1563,7 +1563,7 @@ EPSILON="10.0"
 DELETED_SEQUENCES_ON="-1"
 DELETED_SEQUENCES_OFF="-1"
 
-# TODO: Need to change lower and upper bound multipliers to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
+# TODO: Need to change CLUSTER_BOUNDS_MULTIPLIER to 0.2 and INCLUSION_WINDOW_MILLIS = 30_000
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
 # ======================================================================================================================
