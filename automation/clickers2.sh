@@ -33,7 +33,7 @@ do
 	#./adb -s "$DEVICE" shell input tap 921 1188
 	#./adb -s "$DEVICE" shell input tap 533 653
 	# WeMo, WeMo Insight, LiFX bulbs, Hue bulbs with ST-app
-	#./adb -s "$DEVICE" shell input tap 533 653
+	./adb -s "$DEVICE" shell input tap 533 653
 	# WeMo
 	#./adb -s "$DEVICE" shell input tap 981 532
 	# WeMo Insight
@@ -121,22 +121,22 @@ do
 	#sleep $[$RAND]s
 
 	# TP-Link bulb - change colors & intensity
-        if (( $i % 2 ))
-        then
+        #if (( $i % 2 ))
+        #then
                 # color 1 - horizontal
                 #./adb -s "$DEVICE" shell input tap 250 1000
 		# color 3 - vertical
                 #./adb -s "$DEVICE" shell input tap 500 1250
 		# intensity change
-                ./adb -s "$DEVICE" shell input tap 150 1405
-        else
+        #        ./adb -s "$DEVICE" shell input tap 150 1405
+        #else
                 # color 2 - horizontal
                 #./adb -s "$DEVICE" shell input tap 750 1000
 		# color 4 - vertical
                 #./adb -s "$DEVICE" shell input tap 500 750
 		# intensity change
-                ./adb -s "$DEVICE" shell input tap 950 1405
-        fi
+        #        ./adb -s "$DEVICE" shell input tap 950 1405
+        #fi
 	# Hue bulb - change intensity
         #if (( $i % 2 ))
         #then
@@ -264,4 +264,3 @@ do
 	sleep 131s
 	#sleep 53s
 done
-#ssh root@192.168.1.1 "kill -9 21280 21287"

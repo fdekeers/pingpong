@@ -5,14 +5,11 @@
 
 # Parameters:
 # $1 : device identification (run "adb devices" to figure out)
-#
-# Command:
-# ./clickers.sh <device-identification>
 
 # Loop variables
 BEGIN=1
-END=100
-#END=4
+#END=100
+END=4
 INC=1
 DEVICE=$1
 

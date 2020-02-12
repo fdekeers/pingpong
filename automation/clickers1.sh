@@ -8,8 +8,8 @@
 
 # Loop variables
 BEGIN=1
-END=100
-#END=2
+#END=100
+END=6
 INC=1
 DEVICE=$1
 
@@ -19,7 +19,28 @@ RAN_END=200
 
 for ((i=$BEGIN; i<=$END; i+=$INC));
 do
-	
+	# Button widget to IFTTT
+	#if (( $i % 2 ))
+        #then
+                # Left button
+        #       ./adb -s "$DEVICE" shell input tap 100 400
+        #else
+                # Right button
+        #       ./adb -s "$DEVICE" shell input tap 300 400
+        #fi
+	# Cloud speech (cloud.google.com/text-to-speech/)
+	#if (( $i % 2 ))
+        #then
+                # speech #1
+        #       ./adb -s "$DEVICE" shell input tap 900 140
+        #       ./adb -s "$DEVICE" shell input tap 600 1600
+        #       ./adb -s "$DEVICE" shell input tap 350 1000
+        #else
+                # speech #2
+        #       ./adb -s "$DEVICE" shell input tap 900 140
+        #       ./adb -s "$DEVICE" shell input tap 600 500
+        #       ./adb -s "$DEVICE" shell input tap 350 1000
+        #fi
 	date +"%m/%d/%Y %r"
 	#./adb shell getevent -l - use this command to get the position
 	# Click on screen
@@ -28,72 +49,44 @@ do
 	#./adb -s "$DEVICE" shell input tap 1002 913
 	# TP-Link bulb on/off
 	#./adb -s "$DEVICE" shell input tap 994 560
-	# D-Link switch
-	#./adb -s "$DEVICE" shell input tap 987 346
-	# D-Link motion sensor
-	#./adb -s "$DEVICE" shell input tap 975 840
-	# SmartThings plug
-	#./adb -s "$DEVICE" shell input tap 921 1188
-	#./adb -s "$DEVICE" shell input tap 533 653
-	# WeMo, WeMo Insight, LiFX bulbs, Hue bulbs with ST-app
-	#./adb -s "$DEVICE" shell input tap 533 653
-	# WeMo
-	#./adb -s "$DEVICE" shell input tap 981 532
-	# WeMo Insight
-	#./adb -s "$DEVICE" shell input tap 981 326
-	# Kwikset doorlock
+	# TP-Link 2-outlet plug (outlet 1)
+        #./adb -s "$DEVICE" shell input tap 1000 550
+	# TP-Link plug/power strip/light bulb ON/OFF (center)
+        #./adb -s "$DEVICE" shell input tap 550 900
+	# TP-Link camera live/stop
+        #./adb -s "$DEVICE" shell input tap 1000 1700
+	# TP-Link camera start/stop recording (after going live)
+        #./adb -s "$DEVICE" shell input tap 950 950
+	# Wemo Insight
+	./adb -s "$DEVICE" shell input tap 1000 300
+	# Blink camera (watch)
 	#if (( $i % 2 ))
-	#then
-		# locking
-	#	./adb -s "$DEVICE" shell input tap 153 1211
-	#else
-		# unlocking
-	#	./adb -s "$DEVICE" shell input tap 520 1211
-	#fi
-	# Hue bulb
-	#./adb -s "$DEVICE" shell input tap 923 383
-	# Lifx bulb
-	#./adb -s "$DEVICE" shell input tap 506 580
-	# Amcrest camera
-	#if (( $i % 2 ))
-	#then
-		# live view
-	#	./adb -s "$DEVICE" shell input tap 92 139
-	#	./adb -s "$DEVICE" shell input tap 92 139
-	#else
-		# stop live view (go to playback)
-	#	./adb -s "$DEVICE" shell input tap 92 139
-	#	./adb -s "$DEVICE" shell input tap 92 250
-	#fi
-	# Arlo camera
-	#if (( $i % 2 ))
-	#then
-		# live view
-		#./adb -s "$DEVICE" shell input tap 532 740
-	#	./adb -s "$DEVICE" shell input tap 533 653
-	#else
-		# stop live view
-		#./adb -s "$DEVICE" shell input tap 101 1012
-	#	./adb -s "$DEVICE" shell input tap 533 653
-	#	./adb -s "$DEVICE" shell input tap 533 653
-	#	./adb -s "$DEVICE" shell input tap 533 653
-	#fi
-	# Blossom - turning on/off 1 zone
-	#if (( $i % 2 ))
-	#then
-		# start watering
-	#	./adb -s "$DEVICE" shell input tap 538 1597
-	#else
-		# stop watering
-	#	./adb -s "$DEVICE" shell input tap 496 1533
-	#fi
-	# Blossom - change mode active/hibernate
-	#./adb -s "$DEVICE" shell input tap 1002 1176
-	# Dlink siren
-	#./adb -s "$DEVICE" shell input tap 994 802
+        #then
+                # Watch
+        #       ./adb -s "$DEVICE" shell input tap 150 850
+        #else
+                # Close
+        #       ./adb -s "$DEVICE" shell input tap 100 150
+        #fi
+	# Blink camera (photo)
+        #./adb -s "$DEVICE" shell input tap 1050 850
+	# Insteon Hub (plug ON/OFF)
+        #if (( $i % 2 ))
+        #then
+                # ON
+        #       ./adb -s "$DEVICE" shell input tap 210 315
+        #       ./adb -s "$DEVICE" shell input tap 500 900
+        #else
+                # OFF
+        #       ./adb -s "$DEVICE" shell input tap 210 315
+        #       ./adb -s "$DEVICE" shell input tap 500 1200
+        #fi
+	# Lightify
+	#./adb -s "$DEVICE" shell input tap 550 1050
 	# Nest thermostat
-	#if (( $i % 2))
-	#then
+        #if (( $i % 2))
+        #then
+
 		# start fan
 	#	./adb -s "$DEVICE" shell input tap 524 1668
 	#	./adb -s "$DEVICE" shell input tap 936 1709
@@ -190,7 +183,7 @@ do
         #fi
 	# Rachio sprinkler - ON/OFF
         #if (( $i % 2 ))
-        #then
+       	#then
                 # ON
         #        ./adb -s "$DEVICE" shell input tap 900 1500
         #        ./adb -s "$DEVICE" shell input tap 300 600
@@ -211,7 +204,7 @@ do
         #        ./adb -s "$DEVICE" shell input tap 600 700
         #fi
 	# Ring doorbell - ring alerts
-        ./adb -s "$DEVICE" shell input tap 1000 570
+        #./adb -s "$DEVICE" shell input tap 1000 570
         # Ring doorbell - motion alerts
         #./adb -s "$DEVICE" shell input tap 1000 750
 	# Ecobee thermostat - ON/OFF
@@ -267,4 +260,3 @@ do
 	sleep 131s
 	#sleep 13s
 done
-#ssh root@192.168.1.1 "kill -9 19327 19332"
