@@ -515,8 +515,8 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 #./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: IMC DATASET DEVICES
-# TODO: THE LABELS IN THE IMC DATASET ARE NOT STRICTLY 15 SECONDS SO WE HAVE TO LOOSEN THE TIMING CONSTRAINT (30 SECONDS)
+# TODO: Mon(IoT)r DATASET DEVICES
+# TODO: THE LABELS IN THE Mon(IoT)r DATASET ARE NOT STRICTLY 15 SECONDS SO WE HAVE TO LOOSEN THE TIMING CONSTRAINT (30 SECONDS)
 # ================================================= BLINK CAMERA WATCH =================================================
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/blink-camera/blink-camera-watch/timestamps/blink-camera-watch.wan.timestamps"
 

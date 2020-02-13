@@ -651,6 +651,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 
 # Phone side does not make sense as it is merely a subset of the device side and does not differentiate ONs from OFFs.
 # ======================================================================================================================
+# TODO: We tested this only for the TP-Link plug on the Mon(IoT)r public dataset
 # RELAXED MATCHING
 PCAP_FILE="$PCAPS_BASE_DIR/tplink-plug/wlan/tplink-plug.wlan.pcap"
 
@@ -774,7 +775,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer2.Layer2SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: IMC DATASET DEVICES
+# TODO: Mon(IoT)r DATASET DEVICES
 # ================================================= BLINK CAMERA WATCH =================================================
 PCAP_FILE="$PCAPS_BASE_DIR/blink-camera/blink-camera-watch/wlan/blink-camera-watch.wlan.pcap"
 

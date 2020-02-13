@@ -389,7 +389,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 
 # ==================================================== TP-LINK PLUG ====================================================
 #TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug-smarthome-nov-9-2018.timestamps"
-# TODO: Timestamp file for IMC PCAP file
+# TODO: Timestamp file for Mon(IoT)r PCAP file
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug.wlan.timestamps"
 
 # DEVICE SIDE
@@ -420,7 +420,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ================================================== WEMO INSIGHT PLUG =================================================
 # LOCAL
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug-smarthome-nov-22-2018.timestamps"
-# TODO: Timestamp file for IMC PCAP file
+# TODO: Timestamp file for Mon(IoT)r PCAP file
 #TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug.timestamps"
 
 # Has no device side signature.
@@ -467,8 +467,8 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 #./gradlew run -DmainClass=edu.uci.iotproject.evaluation.DetectionResultsAnalyzer --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: IMC DATASET DEVICES
-# TODO: THE LABELS IN THE IMC DATASET ARE NOT STRICTLY 15 SECONDS SO WE HAVE TO LOOSEN THE TIMING CONSTRAINT (30 SECONDS)
+# TODO: Mon(IoT)r DATASET DEVICES
+# TODO: THE LABELS IN THE Mon(IoT)r DATASET ARE NOT STRICTLY 15 SECONDS SO WE HAVE TO LOOSEN THE TIMING CONSTRAINT (30 SECONDS)
 # ================================================= BLINK CAMERA WATCH =================================================
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/blink-camera/blink-camera-watch/timestamps/blink-camera-watch.wlan.timestamps"
 

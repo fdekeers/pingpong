@@ -853,7 +853,7 @@ PROGRAM_ARGS="'$PCAP_FILE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$ON_SIGNATURE' '$OFF_
 #./gradlew run -DmainClass=edu.uci.iotproject.detection.layer3.Layer3SignatureDetector --args="$PROGRAM_ARGS"
 # ======================================================================================================================
 
-# TODO: IMC (NEW DEVICE)
+# TODO: Mon(IoT)r (NEW DEVICE)
 # ================================================= BLINK CAMERA WATCH =================================================
 PCAP_FILE="$SIGNATURES_BASE_DIR/blink-camera/blink-camera-watch/wlan1/blink-camera-watch.wlan1.local.pcap"
 
