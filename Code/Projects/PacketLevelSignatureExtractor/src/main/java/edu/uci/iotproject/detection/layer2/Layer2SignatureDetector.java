@@ -125,6 +125,8 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // Parse optional parameters.
         List<Function<Layer2Flow, Boolean>> onSignatureMacFilters = null, offSignatureMacFilters = null;
         String vpnClientMacAddress = null;
+        // TODO: Currently the skipped packets implementation is not activated.
+        // TODO: We looked into limiting the number of skipped packets to declare a signature match at layer-2.
         int onMaxSkippedPackets = -1;
         int offMaxSkippedPackets = -1;
         final int optParamsStartIdx = 8;
@@ -178,10 +180,6 @@ public class Layer2SignatureDetector implements PacketListener, ClusterMatcherOb
         // Check if we should use range-based matching
         boolean isRangeBasedForOn = PcapPacketUtils.isRangeBasedMatching(onSignature, eps, offSignature);
         boolean isRangeBasedForOff = PcapPacketUtils.isRangeBasedMatching(offSignature, eps, onSignature);
-        // TODO: WE DON'T DO RANGE-BASED FOR NOW BECAUSE THE RESULTS ARE TERRIBLE FOR LAYER 2 MATCHING
-        // TODO: THIS WOULD ONLY WORK FOR SIGNATURES LONGER THAN 2 PACKETS
-//        boolean isRangeBasedForOn = false;
-//        boolean isRangeBasedForOff = false;
         // Update the signature with ranges if it is range-based
         if (isRangeBasedForOn) {
             onSignature = PcapPacketUtils.useRangeBasedMatching(onSignature, onClusterAnalysis);

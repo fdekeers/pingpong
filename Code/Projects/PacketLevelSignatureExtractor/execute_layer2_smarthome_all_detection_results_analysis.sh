@@ -388,9 +388,9 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ======================================================================================================================
 
 # ==================================================== TP-LINK PLUG ====================================================
-#TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug-smarthome-nov-9-2018.timestamps"
+TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug-smarthome-nov-9-2018.timestamps"
 # TODO: Timestamp file for Mon(IoT)r PCAP file
-TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug.wlan.timestamps"
+#TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug.wlan.timestamps"
 
 # DEVICE SIDE
 RESULTS_FILE="$RESULTS_BASE_DIR/tplink-plug/tplink-plug.wlan1.detection.pcap___device-side.detectionresults"

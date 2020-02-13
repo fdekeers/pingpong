@@ -804,8 +804,8 @@ OFF_SIGNATURE="$OUTPUT_DIR/tplink-plug/signatures/tplink-plug-offSignature-devic
 ON_ANALYSIS="$OUTPUT_DIR/tplink-plug/analyses/tplink-plug-onClusters-device-side.cls"
 OFF_ANALYSIS="$OUTPUT_DIR/tplink-plug/analyses/tplink-plug-offClusters-device-side.cls"
 EPSILON="10.0"
-DELETED_SEQUENCES_ON="-1"
-DELETED_SEQUENCES_OFF="-1"
+DELETED_SEQUENCES_ON="1"
+DELETED_SEQUENCES_OFF="1"
 
 PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_SIGNATURE' '$OFF_SIGNATURE' '$ON_ANALYSIS' '$OFF_ANALYSIS' '$EPSILON' '$DELETED_SEQUENCES_ON' '$DELETED_SEQUENCES_OFF'"
 #./gradlew run -DmainClass=edu.uci.iotproject.SignatureGenerator --args="$PROGRAM_ARGS"
@@ -903,6 +903,7 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 # ======================================================================================================================
 
 # TODO: SAME VENDOR OBSERVATION (TP-LINK DEVICES)
+# TODO: Use PCAP files in the same-vendor folder
 # =============================================== TP-LINK TWO-OUTLET PLUG ==============================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-two-outlet-plug/wlan1/tplink-two-outlet-plug.wlan1.local.pcap"
 
@@ -1014,6 +1015,8 @@ PROGRAM_ARGS="'$INPUT_PCAP' '$OUTPUT_PCAP' '$TIMESTAMP_FILE' '$DEVICE_IP' '$ON_S
 # ======================================================================================================================
 
 # TODO: Mon(IoT)r PUBLIC DATASET
+# TODO: Use PCAP files in the public-dataset folder
+# TODO: For the TP-Link plug and WeMo Insight plug, the PCAP files in this folder are the results of retraining in December 2019
 # ==================================================== TP-LINK PLUG ====================================================
 INPUT_PCAP="$SIGNATURES_BASE_DIR/tplink-plug/wlan1/tplink-plug.wlan1.local.pcap"
 

@@ -444,7 +444,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ==================================================== TP-LINK PLUG ====================================================
 # LOCAL
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug-nov-8-2018.timestamps"
-# TODO: Timestamp file for retraining PCAP file
+# TODO: Timestamp file for public-dataset PCAP file
 #TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/tplink-plug/timestamps/tplink-plug-retraining-dec-25-2019.timestamps"
 
 # DEVICE SIDE
@@ -485,7 +485,7 @@ PROGRAM_ARGS="'$TIMESTAMPS_FILE' '$RESULTS_FILE' '$ANALYSIS_RESULTS_FILE' '$EXAC
 # ================================================== WEMO INSIGHT PLUG =================================================
 # LOCAL
 TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug-nov-21-2018.timestamps"
-# TODO: Timestamp file for retraining PCAP file
+# TODO: Timestamp file for public-dataset PCAP file
 #TIMESTAMPS_FILE="$TIMESTAMPS_BASE_DIR/wemo-insight-plug/timestamps/wemo-insight-plug-retraining-jan-9-2020.timestamps"
 
 # Has no device side signature.
