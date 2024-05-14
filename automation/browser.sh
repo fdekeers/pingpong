@@ -4,10 +4,10 @@
 # We just need to set up the timer duration
 
 # Range of random number (in seconds)
-# Five websites
+# 10 websites
 BRO_RAN_STA=0
 BRO_RAN_END=9
-# Browsing interval (every 100-500 seconds)
+# Browsing interval (every 10-500 seconds)
 SLP_RAN_STA=10
 SLP_RAN_END=500
 
