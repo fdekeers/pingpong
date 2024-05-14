@@ -1,4 +1,6 @@
-# smart_home_traffic
+# PingPong
 
-This is the released version of PingPong. Please read the NDSS paper titled "Packet-Level Signatures for Smart Home Devices" and the manual PingPong 1.0 for further information.
-
+This repository is a fork of the *PingPong* tool,
+described in the following papers:
+- [NDSS Symposium paper](https://www.ndss-symposium.org/ndss-paper/packet-level-signatures-for-smart-home-devices/)
+- [Technical report](https://arxiv.org/abs/1907.11797)
