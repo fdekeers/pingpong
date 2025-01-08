@@ -1,0 +1,8 @@
+services:
+  pingpong:
+    image: pingpong
+    container_name: pingpong
+    volumes:
+      - .:/PingPong
+    command: ["/PingPong/pingpong/Code/Projects/PacketLevelSignatureExtractor/execute_signature_generation.sh", "/PingPong/data/evaluation-datasets/local-phone", "/PingPong/data/evaluation-datasets/local-phone/standalone"]
+    restart: no
