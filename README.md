@@ -1,8 +1,9 @@
-# PingPong fork
+# PingPong
 
-This is a fork of the "PingPong" tool,
-developed for the article titled
-*Packet-Level Signatures for Smart Home Devices* [published at NDSS 2020](https://www.ndss-symposium.org/ndss-paper/packet-level-signatures-for-smart-home-devices/).
+This is the released version of PingPong.
+Please read the NDSS 2020 paper titled
+"[Packet-Level Signatures for Smart Home Devices](https://www.ndss-symposium.org/ndss-paper/packet-level-signatures-for-smart-home-devices)"
+and the [manual PingPong 1.0](PingPong_1.0_Documentation.pdf) for further information.
 Article reference:
 ```bibtex
 @inproceedings{trimananda_packet-level_2020,
@@ -23,9 +24,11 @@ Article reference:
 
 ## Docker container
 
+To ease usage of the software, a Docker container wrapping the necessary configuration is provided.
+Credits to François De Keersmaeker ([@fdekeers](https://github.com/fdekeers)).
+
 ### Build
 
-The incentive behind this fork was to provide a Docker container wrapping the necessary configuration for the software to run.
 The container's image is describe in the [Dockerfile](Dockerfile).
 
 To build the image from scratch:
@@ -36,7 +39,7 @@ docker build .
 ### Run
 
 You must provide data to run the software on.
-The authors have published a [public dataset of their experimental data](https://athinagroup.eng.uci.edu/projects/pingpong/data/).
+The dataset used for the article's publication was released at https://athinagroup.eng.uci.edu/projects/pingpong/data.
 Place your data inside the [data](data/) folder.
 
 A [Docker compose configuration](docker-compose.yaml) is provided to start the container.
