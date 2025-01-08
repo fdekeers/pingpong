@@ -1,2 +1,4 @@
 # ignore python byte code files
 *.pyc
+
+*.txt
