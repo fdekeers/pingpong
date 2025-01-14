@@ -2,3 +2,5 @@
 *.pyc
 
 *.txt
+*.log
+Dockerfile.local
